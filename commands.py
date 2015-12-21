@@ -32,6 +32,9 @@ def convert_to_base(n, base):
 
     digits = "0123456789abcdefghijklmnopqrstuvwxyz"
 
+    if int(n) == 0:
+        return "0"
+
     try:
         n = int(n)
         base = int(base)

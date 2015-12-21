@@ -5,6 +5,8 @@ from commands import *
 stack = []
 def run_program(commands, debug):
 
+    if debug:
+        print("Full program: " + str(commands))
     pointer_position = -1
     temp_position = 0
     current_command = ""
@@ -52,10 +54,30 @@ def run_program(commands, debug):
                 try:
                     current_command = commands[temp_position]
                 except:
-                    continue
+                    break
                 if is_digit_value(current_command):
                     temp_number += current_command
+                    pointer_position += 1
+                else:
+                    break
             stack.append(temp_number)
+
+        elif current_command == "\"":
+            temp_string = ""
+            temp_position = pointer_position
+            while temp_position < len(commands) - 1:
+                temp_position += 1
+                try:
+                    current_command = commands[temp_position]
+                except:
+                    break
+                if current_command != "\"":
+                    temp_string += current_command
+                    pointer_position += 1
+                else:
+                    break
+            pointer_position += 1
+            stack.append(temp_string)
 
         elif current_command == "!":
             if stack:
@@ -176,11 +198,28 @@ def run_program(commands, debug):
                 a = int(input())
                 stack.append(is_prime(a))
 
+        elif current_command == "u":
+            if stack:
+                a = str(stack.pop())
+                stack.append(a.upper())
+            else:
+                a = str(input())
+                stack.append(a.upper())
+
+        elif current_command == "l":
+            if stack:
+                a = str(stack.pop())
+                stack.append(a.lower())
+            else:
+                a = str(input())
+                stack.append(a.lower())
+
         elif current_command == "_":
             if stack:
                 a = stack.pop()
                 try:
-                    if a:
+                    a = int(a)
+                    if a == 1:
                         stack.append(False)
                     else:
                         stack.append(True)
@@ -195,6 +234,30 @@ def run_program(commands, debug):
                         stack.append(True)
                 except:
                     stack.append(False)
+
+        elif current_command == "s":
+            a = stack.pop()
+            b = stack.pop()
+            stack.append(a)
+            stack.append(b)
+
+        elif current_command == "|":
+            print(stack)
+            has_printed = True
+
+        elif current_command == "L":
+            if stack:
+                a = int(stack.pop())
+                temp_list = []
+                for X in range(1, a + 1):
+                    temp_list.append(X)
+                stack.append(temp_list)
+            else:
+                a = int(input())
+                temp_list = []
+                for X in range(1, a + 1):
+                    temp_list.append(X)
+                stack.append(temp_list)
 
     if not has_printed:
         if stack: print(stack[len(stack) - 1])
