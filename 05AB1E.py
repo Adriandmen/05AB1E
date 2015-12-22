@@ -3,7 +3,7 @@ import math
 from commands import *
 
 stack = []
-def run_program(commands, debug):
+def run_program(commands, debug, suppress_print):
 
     if debug:
         print("Full program: " + str(commands))
@@ -17,7 +17,7 @@ def run_program(commands, debug):
         pointer_position += 1
         current_command = commands[pointer_position]
 
-        if debug:print("current >> " + current_command)
+        if debug:print("current >> " + current_command + "  ||  stack: " + str(stack))
         # Base Conversion // a = to base2, b = to base3, etc...
         if current_command == "h":
             if stack:
@@ -41,8 +41,12 @@ def run_program(commands, debug):
                 b = int(stack.pop())
                 stack.append(convert_to_base(a, b))
             else:
-                a = int(input())
-                b = int(stack.pop())
+                if len(stack) > 0:
+                    a = int(stack.pop())
+                    b = int(input())
+                else:
+                    a = int(input())
+                    b = int(input())
                 stack.append(convert_to_base(a, b))
 
         elif is_digit_value(current_command):
@@ -93,8 +97,12 @@ def run_program(commands, debug):
                 b = int(stack.pop())
                 stack.append(a + b)
             else:
-                a = int(input())
-                b = int(stack.pop())
+                if len(stack) > 0:
+                    a = int(stack.pop())
+                    b = int(input())
+                else:
+                    a = int(input())
+                    b = int(input())
                 stack.append(a + b)
 
         elif current_command == "-":
@@ -103,8 +111,12 @@ def run_program(commands, debug):
                 b = int(stack.pop())
                 stack.append(b - a)
             else:
-                a = int(stack.pop())
-                b = int(input())
+                if len(stack) > 0:
+                    a = int(stack.pop())
+                    b = int(input())
+                else:
+                    a = int(input())
+                    b = int(input())
                 stack.append(b - a)
 
         elif current_command == "*":
@@ -113,8 +125,12 @@ def run_program(commands, debug):
                 b = int(stack.pop())
                 stack.append(a * b)
             else:
-                a = int(stack.pop())
-                b = int(input())
+                if len(stack) > 0:
+                    a = int(stack.pop())
+                    b = int(input())
+                else:
+                    a = int(input())
+                    b = int(input())
                 stack.append(a * b)
 
         elif current_command == "/":
@@ -123,8 +139,12 @@ def run_program(commands, debug):
                 b = int(stack.pop())
                 stack.append(b / a)
             else:
-                a = int(stack.pop())
-                b = int(input())
+                if len(stack) > 0:
+                    a = int(stack.pop())
+                    b = int(input())
+                else:
+                    a = int(input())
+                    b = int(input())
                 stack.append(b / a)
 
         elif current_command == "*":
@@ -133,8 +153,12 @@ def run_program(commands, debug):
                 b = int(stack.pop())
                 stack.append(b % a)
             else:
-                a = int(stack.pop())
-                b = int(input())
+                if len(stack) > 0:
+                    a = int(stack.pop())
+                    b = int(input())
+                else:
+                    a = int(input())
+                    b = int(input())
                 stack.append(b % a)
 
         elif current_command == "D":
@@ -259,12 +283,42 @@ def run_program(commands, debug):
                     temp_list.append(X)
                 stack.append(temp_list)
 
-    if not has_printed:
+        elif current_command == "r":
+            stack.reverse()
+
+        elif current_command == "i":
+            STATEMENT = ""
+            temp_position = pointer_position
+            temp_position += 1
+            current_command = commands[temp_position]
+            amount_brackets = 1
+            while amount_brackets != 0:
+                if current_command == "}":
+                    amount_brackets -= 1
+                elif current_command == "i":
+                    amount_brackets += 1
+                STATEMENT += current_command
+                temp_position += 1
+                current_command = commands[temp_position]
+            if debug:
+                print(STATEMENT)
+            if stack.pop() == 1:
+                run_program(STATEMENT, debug, True)
+            pointer_position = temp_position
+
+        elif current_command == "\\":
+            stack.pop()
+
+        elif current_command == "`":
+            a = stack.pop()
+            for x in a:
+                stack.append(x)
+
+    if not has_printed and not suppress_print:
         if stack: print(stack[len(stack) - 1])
         else: print("-> None")
     if debug:
         print("stack > " + str(stack))
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -276,4 +330,4 @@ if __name__ == "__main__":
     DEBUG = args.debug
 
     code = open(filename, "r").read()
-    run_program(code, DEBUG)
+    run_program(code, DEBUG, False)
