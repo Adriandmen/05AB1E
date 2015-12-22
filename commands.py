@@ -1,3 +1,5 @@
+import collections
+
 letters = list("abcdefghijklmnopqrstuvwxyz")
 numbers = list("0123456789")
 
@@ -12,6 +14,13 @@ def is_digit_value(value):
         return True
     except:
         return False
+
+
+def flatten(x):
+    if isinstance(x, collections.Iterable):
+        return [a for i in x for a in flatten(i)]
+    else:
+        return [x]
 
 
 def is_alpha_value(value):
