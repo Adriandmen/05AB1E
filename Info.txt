@@ -4,7 +4,7 @@ Functions:
 #	=
 $	=
 %	= pop a,b    push (a % b)
-&	=
+&	= pop a,b    push a AND b
 '	=
 (	=
 )	=
@@ -92,7 +92,7 @@ z	=
 {	=
 |	= print full stack
 }	=            used for if statements
-~	=
+~	= pop a,b    push a OR b
 
 128+
 

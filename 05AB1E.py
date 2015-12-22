@@ -382,6 +382,34 @@ def run_program(commands, debug, suppress_print, range_variable=0):
                     b = int(input())
                 stack.append(b ^ a)
 
+        elif current_command == "~":
+            if len(stack) > 1:
+                a = int(stack.pop())
+                b = int(stack.pop())
+                stack.append(b | a)
+            else:
+                if len(stack) > 0:
+                    a = int(stack.pop())
+                    b = int(input())
+                else:
+                    a = int(input())
+                    b = int(input())
+                stack.append(b | a)
+
+        elif current_command == "&":
+            if len(stack) > 1:
+                a = int(stack.pop())
+                b = int(stack.pop())
+                stack.append(b & a)
+            else:
+                if len(stack) > 0:
+                    a = int(stack.pop())
+                    b = int(input())
+                else:
+                    a = int(input())
+                    b = int(input())
+                stack.append(b & a)
+
     if not has_printed and not suppress_print:
         if stack: print(stack[len(stack) - 1])
         else: print("-> None")
