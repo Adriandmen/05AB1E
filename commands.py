@@ -1,4 +1,5 @@
 import collections
+import math
 
 letters = list("abcdefghijklmnopqrstuvwxyz")
 numbers = list("0123456789")
@@ -77,3 +78,14 @@ def is_prime(n):
         if n % N == 0:
             return False
     return True
+
+
+def combinations(n, r):
+    n = int(n)
+    r = int(r)
+    return int(math.factorial(n) / (math.factorial(r) * math.factorial(n - r)))
+
+def permutations(n, r):
+    n = int(n)
+    r = int(r)
+    return int(math.factorial(n) / math.factorial(n - r))

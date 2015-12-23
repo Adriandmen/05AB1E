@@ -137,7 +137,7 @@ def run_program(commands, debug, suppress_print, range_variable=0):
             if len(stack) > 1:
                 a = int(stack.pop())
                 b = int(stack.pop())
-                stack.append(b / a)
+                stack.append(int(b / a))
             else:
                 if len(stack) > 0:
                     a = int(stack.pop())
@@ -145,7 +145,7 @@ def run_program(commands, debug, suppress_print, range_variable=0):
                 else:
                     a = int(input())
                     b = int(input())
-                stack.append(b / a)
+                stack.append(int(b / a))
 
         elif current_command == "*":
             if len(stack) > 1:
@@ -413,6 +413,48 @@ def run_program(commands, debug, suppress_print, range_variable=0):
                     a = int(input())
                     b = int(input())
                 stack.append(b & a)
+
+        elif current_command == "c":
+            if len(stack) > 1:
+                a = int(stack.pop())
+                b = int(stack.pop())
+            else:
+                if len(stack) > 0:
+                    a = int(stack.pop())
+                    b = int(input())
+                else:
+                    a = int(input())
+                    b = int(input())
+            stack.append(combinations(a, b))
+
+        elif current_command == "e":
+            if len(stack) > 1:
+                a = int(stack.pop())
+                b = int(stack.pop())
+            else:
+                if len(stack) > 0:
+                    a = int(stack.pop())
+                    b = int(input())
+                else:
+                    a = int(input())
+                    b = int(input())
+            stack.append(permutations(a, b))
+
+        elif current_command == ">":
+            if stack:
+                a = int(stack.pop())
+                stack.append(a + 1)
+            else:
+                a = int(input())
+                stack.append(a + 1)
+
+        elif current_command == "<":
+            if stack:
+                a = int(stack.pop())
+                stack.append(a - 1)
+            else:
+                a = int(input())
+                stack.append(a - 1)
 
     if not has_printed and not suppress_print:
         if stack: print(stack[len(stack) - 1])
