@@ -1,11 +1,11 @@
 Functions:
 !	= pop a,     push factorial(a)
 "	= start/end string literal
-#	=
+#	= pop a      if true: break/end (used in infinite loops)
 $	=            push 1 and input (used for sequences)
 %	= pop a,b    push (a % b)
 &	= pop a,b    push a AND b
-'	=
+'	=            push char ( 'a pushes "a" )
 (	=
 )	=
 *	= pop a,b    push (a * b)
@@ -27,7 +27,7 @@ $	=            push 1 and input (used for sequences)
 :	=
 ;	=
 <	= pop a      push a - 1
-=	=
+=	=            print last item
 >	= pop a      push a + 1
 ?	=
 @	=
@@ -57,9 +57,9 @@ W	=
 X	=
 Y	=
 Z	=
-[	=
-\	=
-]	=
+[	=            infinite loop start
+\	=            delete last item
+]	=            infinite loop end
 ^	= pop a,b    push a XOR b
 _	= pop a      push negative bool
 `	= pop a      push flattend a
