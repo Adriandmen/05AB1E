@@ -72,6 +72,8 @@ def convert_to_base(n, base):
 
 
 def is_prime(n):
+    if n < 2:
+        return False
     if n == 2:
         return True
     for N in range(2, n):
