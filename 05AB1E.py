@@ -182,6 +182,10 @@ def run_program(commands, debug, suppress_print, range_variable=0):
         elif current_command == "I":
             stack.append(str(input()))
 
+        elif current_command == "$":
+            stack.append(1)
+            stack.append(str(input()))
+
         elif current_command == "H":
             if stack:
                 a = str(stack.pop())

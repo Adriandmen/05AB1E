@@ -2,7 +2,7 @@ Functions:
 !	= pop a,     push factorial(a)
 "	= start/end string literal
 #	=
-$	=
+$	=            push 1 and input (used for sequences)
 %	= pop a,b    push (a % b)
 &	= pop a,b    push a AND b
 '	=
@@ -65,7 +65,7 @@ _	= pop a      push negative bool
 `	= pop a      push flattend a
 a	= pop a      push is_alpha(a)
 b	= pop a      push bin(a)
-c	=
+c	= pop a,b    push a nCr b
 d	= pop a      push is_number(a)
 e	=
 f	=
