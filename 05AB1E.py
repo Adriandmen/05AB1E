@@ -299,11 +299,16 @@ def run_program(commands, debug, suppress_print, range_variable=0):
             while amount_brackets != 0:
                 if current_command == "}":
                     amount_brackets -= 1
+                    if amount_brackets == 0:
+                        break
                 elif current_command == "i" or current_command == "F":
                     amount_brackets += 1
                 STATEMENT += current_command
-                temp_position += 1
-                current_command = commands[temp_position]
+                try:
+                    temp_position += 1
+                    current_command = commands[temp_position]
+                except:
+                    break
             if debug:
                 print(STATEMENT)
             if stack.pop() == 1:
@@ -337,6 +342,8 @@ def run_program(commands, debug, suppress_print, range_variable=0):
             while amount_brackets != 0:
                 if current_command == "}":
                     amount_brackets -= 1
+                    if amount_brackets == 0:
+                        break
                 elif current_command == "i" or current_command == "F":
                     amount_brackets += 1
                 STATEMENT += current_command
@@ -455,6 +462,49 @@ def run_program(commands, debug, suppress_print, range_variable=0):
             else:
                 a = int(input())
                 stack.append(a - 1)
+
+        elif current_command == "'":
+            temp_string = ""
+            pointer_position += 1
+            temp_string = commands[pointer_position]
+            stack.append(temp_string)
+
+        elif current_command == "[":
+            STATEMENT = ""
+            temp_position = pointer_position
+            temp_position += 1
+            current_command = commands[temp_position]
+            amount_brackets = 1
+            while amount_brackets != 0:
+                if current_command == "]":
+                    amount_brackets -= 1
+                    if amount_brackets == 0:
+                        break
+                elif current_command == "[":
+                    amount_brackets += 1
+                STATEMENT += current_command
+                try:
+                    temp_position += 1
+                    current_command = commands[temp_position]
+                except:
+                    break
+            if debug:
+                print(STATEMENT)
+            while True:
+                if run_program(STATEMENT, debug, True, 0):
+                    break
+            pointer_position = temp_position
+
+        elif current_command == "#":
+            a = stack.pop()
+            if a:
+                return True
+
+        elif current_command == "=":
+            if stack:
+                a = str(stack[len(stack) - 1])
+                print(a)
+                has_printed = True
 
     if not has_printed and not suppress_print:
         if stack: print(stack[len(stack) - 1])
