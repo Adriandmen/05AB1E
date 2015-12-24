@@ -12,7 +12,7 @@ Prints all prime numbers starting from 2:
 
     0[>Dpi=}]
 
-
+Of course, if this was really golfed, this would be `0[>Dpi=`, since brackets in the end are unnecessary
 
 Prints the n-th Fibonacci number (0-indexed):
     
