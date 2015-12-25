@@ -593,7 +593,7 @@ def run_program(commands, debug, suppress_print, range_variable=0):
                         for X in str(Q):
                             stack.append(X)
                 else:
-                    for X in a:
+                    for X in str(a):
                         stack.append(X)
             else:
                 a = str(input())
