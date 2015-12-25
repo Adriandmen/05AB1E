@@ -87,6 +87,7 @@ def combinations(n, r):
     r = int(r)
     return int(math.factorial(n) / (math.factorial(r) * math.factorial(n - r)))
 
+
 def permutations(n, r):
     n = int(n)
     r = int(r)
