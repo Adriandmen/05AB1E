@@ -1,11 +1,13 @@
 import argparse
+import time
 import math
 from commands import *
 
 stack = []
+exit_program = []
 
+def run_program(commands, debug, suppress_print, range_variable=0, x_integer=0, y_integer=0, z_integer=0):
 
-def run_program(commands, debug, suppress_print, range_variable=0):
 
     if debug:
         print("Full program: " + str(commands))
@@ -16,6 +18,8 @@ def run_program(commands, debug, suppress_print, range_variable=0):
     has_printed = False
 
     while pointer_position < len(commands) - 1:
+        if exit_program:
+            break
         pointer_position += 1
         current_command = commands[pointer_position]
 
@@ -295,32 +299,32 @@ def run_program(commands, debug, suppress_print, range_variable=0):
                 for Q in a:
                     temp_list_2 = []
                     for R in b:
-                        temp_list_2.append(int(Q) % int(R))
+                        temp_list_2.append(int(R) % int(Q))
                     temp_list.append(temp_list_2)
                 for S in temp_list:
                     stack.append(S)
             elif type(a) is list:
                 temp_list = []
                 for Q in a:
-                    temp_list.append(int(Q) % int(b))
+                    temp_list.append(int(b) % int(Q))
                 for S in temp_list:
                     stack.append(S)
             elif type(b) is list:
                 temp_list = []
                 for Q in b:
-                    temp_list.append(int(a) % int(Q))
+                    temp_list.append(int(Q) % int(a))
                 for S in temp_list:
                     stack.append(S)
             else:
-                stack.append(int(a) % int(b))
+                stack.append(int(b) % int(a))
 
         elif current_command == "D":
             if stack:
-                a = str(stack.pop())
+                a = stack.pop()
                 stack.append(a)
                 stack.append(a)
             else:
-                a = str(input())
+                a = input()
                 stack.append(a)
                 stack.append(a)
 
@@ -528,7 +532,7 @@ def run_program(commands, debug, suppress_print, range_variable=0):
             if debug:
                 print(STATEMENT)
             if stack.pop() == 1:
-                run_program(STATEMENT, debug, True, 0)
+                run_program(STATEMENT, debug, True, range_variable, x_integer, y_integer, z_integer)
             pointer_position = temp_position
 
         elif current_command == "\\":
@@ -576,7 +580,37 @@ def run_program(commands, debug, suppress_print, range_variable=0):
             else:
                 a = int(input())
             for range_variable in range(0, a):
-                run_program(STATEMENT, debug, True, range_variable)
+                run_program(STATEMENT, debug, True, range_variable, x_integer, y_integer, z_integer)
+            pointer_position = temp_position
+
+        elif current_command == "G":
+            STATEMENT = ""
+            temp_position = pointer_position
+            temp_position += 1
+            current_command = commands[temp_position]
+            amount_brackets = 1
+            while amount_brackets != 0:
+                if current_command == "}":
+                    amount_brackets -= 1
+                    if amount_brackets == 0:
+                        break
+                elif current_command == "i" or current_command == "F":
+                    amount_brackets += 1
+                STATEMENT += current_command
+                try:
+                    temp_position += 1
+                    current_command = commands[temp_position]
+                except:
+                    break
+            if debug:
+                print(STATEMENT)
+            a = 0
+            if stack:
+                a = int(stack.pop())
+            else:
+                a = int(input())
+            for range_variable in range(1, a):
+                run_program(STATEMENT, debug, True, range_variable, x_integer, y_integer, z_integer)
             pointer_position = temp_position
 
         elif current_command == "N":
@@ -832,13 +866,13 @@ def run_program(commands, debug, suppress_print, range_variable=0):
             if debug:
                 print(STATEMENT)
             while True:
-                if run_program(STATEMENT, debug, True, 0):
+                if run_program(STATEMENT, debug, True, range_variable, x_integer, y_integer, z_integer):
                     break
             pointer_position = temp_position
 
         elif current_command == "#":
             a = stack.pop()
-            if a:
+            if a == 1:
                 return True
 
         elif current_command == "=":
@@ -905,6 +939,112 @@ def run_program(commands, debug, suppress_print, range_variable=0):
                 stack.append(b)
             except:
                 stack.append(a)
+
+        elif current_command == ")":
+            temp_list = []
+            temp_list_2 = []
+            if stack:
+                for S in stack:
+                    temp_list_2.append(S)
+                for Q in temp_list_2:
+                    R = stack.pop()
+                    temp_list.append(R)
+                temp_list.reverse()
+            stack.append(temp_list)
+
+        elif current_command == "P":
+            temp_number = 1
+            a = stack.pop()
+            for Q in a:
+                temp_number *= int(Q)
+            stack.append(temp_number)
+
+        elif current_command == "O":
+            temp_number = 0
+            temp_list_2 = []
+            for Q in stack:
+                temp_list_2.append(Q)
+            a = temp_list_2.pop()
+            if type(a) is list:
+                for Q in a:
+                    temp_number += int(Q)
+            else:
+                for Q in stack:
+                    temp_number += int(Q)
+            stack.append(temp_number)
+
+        elif current_command == "w":
+            time.sleep(1)
+
+        elif current_command == "m":
+            if len(stack) > 1:
+                a = stack.pop()
+                b = stack.pop()
+            else:
+                if len(stack) > 0:
+                    a = stack.pop()
+                    b = input()
+                else:
+                    a = input()
+                    b = input()
+            if type(a) is list and type(b) is list:
+                temp_list = []
+                temp_list_2 = []
+                for Q in a:
+                    temp_list_2 = []
+                    for R in b:
+                        temp_list_2.append(int(R) ** int(Q))
+                    temp_list.append(temp_list_2)
+                for S in temp_list:
+                    stack.append(S)
+            elif type(a) is list:
+                temp_list = []
+                for Q in a:
+                    temp_list.append(int(b) ** int(Q))
+                for S in temp_list:
+                    stack.append(S)
+            elif type(b) is list:
+                temp_list = []
+                for Q in b:
+                    temp_list.append(int(Q) ** int(a))
+                for S in temp_list:
+                    stack.append(S)
+            else:
+                stack.append(int(b) ** int(a))
+
+        elif current_command == "X":
+            stack.append(x_integer)
+
+        elif current_command == "Y":
+            stack.append(y_integer)
+
+        elif current_command == "Z":
+            stack.append(z_integer)
+
+        elif current_command == "U":  # x variable
+            if stack:
+                a = int(stack.pop())
+            else:
+                a = int(input())
+            x_integer = a
+
+        elif current_command == "V":  # y variable
+            if stack:
+                a = int(stack.pop())
+            else:
+                a = int(input())
+            y_integer = a
+
+        elif current_command == "W":  # z variable
+            if stack:
+                a = int(stack.pop())
+            else:
+                a = int(input())
+            z_integer = a
+
+        elif current_command == "q":
+            exit_program.append(1)
+            break
 
     if not has_printed and not suppress_print:
         if stack: print(stack[len(stack) - 1])
