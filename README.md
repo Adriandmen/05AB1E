@@ -27,7 +27,7 @@ For example. The `+` function adds up the last two items in the stack. Calling t
 
 Determines whether the number is prime or not:
 
-    P
+    p
     
 Another special feature is the `$` command, which is commonly used for sequences (as you can see in the Fibonacci program). This first pushes the number `1` and then pushes the user input.
 
