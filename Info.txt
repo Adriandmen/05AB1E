@@ -40,7 +40,7 @@ F	= pop a      for N in range(0, a) { }: F(commands)} / N = variable
 G	= pop a      for N in range(1, a) { }: F(commands)} / N = variable
 H	= pop a      push int(a, 16)
 I	=            push input()
-J	=
+J	= pop a      push ''.join(a) if a is list / if not, then push ''.join(stack)
 K	=
 L	= pop a      push [1 .. a]
 M	=
@@ -69,9 +69,9 @@ c	= pop a,b    push a nCr b
 d	= pop a      push is_number(a)
 e	= pop a,b    push a nPr b
 f	= 
-g	= 
+g	= pop a      push length of a
 h	= pop a      push hex(a)
-i	=            if statement: iTHEN}: if true { then }
+i	= pop a      if statement: iTHEN}: if true { then }
 j	=
 k	=
 l	= pop a      push lower_case(a)
