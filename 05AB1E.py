@@ -24,6 +24,10 @@ def run_program(commands, debug, suppress_print, range_variable=0, x_integer=0, 
         current_command = commands[pointer_position]
 
         if debug:print("current >> " + current_command + "  ||  stack: " + str(stack))
+        if current_command == ".":
+            pointer_position += 1
+            current_command += commands[pointer_position]
+
         if current_command == "h":
             if stack:
                 a = stack.pop()
@@ -1050,7 +1054,10 @@ def run_program(commands, debug, suppress_print, range_variable=0, x_integer=0, 
                 a = stack.pop()
             else:
                 a = input("> ")
-            stack.append(len(a))
+            if type(a) is int:
+                stack.append(len(str(a)))
+            else:
+                stack.append(len(a))
 
         elif current_command == "J":
             temp_list = []
@@ -1065,9 +1072,6 @@ def run_program(commands, debug, suppress_print, range_variable=0, x_integer=0, 
             stack.append(temp_string)
 
         elif current_command == ":":
-            #Hello llo he > Hehe
-            #[hello, hi] h e
-            #[gello, geli, gela] [ge, l] e
             if len(stack) > 2:
                 c = str(stack.pop())
                 b = stack.pop()
@@ -1129,8 +1133,91 @@ def run_program(commands, debug, suppress_print, range_variable=0, x_integer=0, 
                             temp_string_2 = temp_string
                     stack.append(temp_string)
 
+        elif current_command == "j":
+            a = int(stack.pop())
+            for Q in stack:
+                temp_string = ""
+                if type(Q) is list:
+                    for R in Q:
+                        temp_string += str(R).rjust(a)
+                    print(temp_string)
+                else:
+                    print(str(Q).rjust(a), end="")
+            has_printed = True
 
+        elif current_command == ".j":
+            a = int(stack.pop())
+            temp_string = ""
+            for Q in range(0, len(stack) + 1):
+                temp_string += str(Q).rjust(a)
+            print(temp_string)
+            temp_number = 0
+            for Q in stack:
+                temp_number += 1
+                temp_string = ""
+                if type(Q) is list:
+                    for R in Q:
+                        temp_string += str(R).rjust(a)
+                    print(str(temp_number).rjust(a) + temp_string)
+                else:
+                    print(str(Q).rjust(a), end="")
+            has_printed = True
 
+        elif current_command == ".J":
+            a = int(stack.pop())
+            temp_string = ""
+            for Q in range(1, len(stack) + 2):
+                temp_string += str(Q).rjust(a)
+            print(temp_string)
+            temp_number = 1
+            for Q in stack:
+                temp_number += 1
+                temp_string = ""
+                if type(Q) is list:
+                    for R in Q:
+                        temp_string += str(R).rjust(a)
+                    print(str(temp_number).rjust(a) + temp_string)
+                else:
+                    print(str(Q).rjust(a), end="")
+            has_printed = True
+
+        elif current_command == ".*":
+            if len(stack) > 1:
+                a = stack.pop()
+                b = stack.pop()
+            else:
+                if len(stack) > 0:
+                    a = stack.pop()
+                    b = input("> ")
+                else:
+                    a = input("> ")
+                    b = input("> ")
+            if type(a) is list and type(b) is list:
+                temp_list = []
+                temp_list_2 = []
+                for Q in a:
+                    temp_list_2 = []
+                    for R in b:
+                        temp_list_2.append(int(Q) * int(R))
+                    temp_list.append(temp_list_2)
+                for S in temp_list:
+                    stack.append(S)
+            elif type(a) is list:
+                temp_list = []
+                for Q in a:
+                    temp_list.append(int(Q) * int(b))
+                stack.append(temp_list)
+            elif type(b) is list:
+                temp_list = []
+                for Q in b:
+                    temp_list.append(int(a) * int(Q))
+                stack.append(temp_list)
+            else:
+                stack.append([int(a) * int(b)])
+
+        elif current_command == "@":
+            a = int(stack.pop())
+            stack.append(stack.pop(a))
 
     if not has_printed and not suppress_print:
         if stack: print(stack[len(stack) - 1])
