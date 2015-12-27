@@ -1219,6 +1219,32 @@ def run_program(commands, debug, suppress_print, range_variable=0, x_integer=0, 
             a = int(stack.pop())
             stack.append(stack.pop(a))
 
+        elif current_command == "M":
+            temp_list = []
+            temp_list_2 = []
+            for Q in stack:
+                temp_list_2.append(Q)
+            while True:
+                for Q in temp_list_2:
+                    if type(Q) is list:
+                        for R in Q:
+                            temp_list.append(R)
+                    else:
+                        temp_list.append(Q)
+                if temp_list == temp_list_2:
+                    break
+                else:
+                    temp_list_2 = []
+                    for Q in temp_list:
+                        temp_list_2.append(Q)
+                    temp_list = []
+            max_int = -9999999999999999999999
+            for Q in temp_list:
+                if str(Q).isnumeric():
+                    if int(Q) > max_int:
+                        max_int = int(Q)
+            stack.append(max_int)
+
     if not has_printed and not suppress_print:
         if stack: print(stack[len(stack) - 1])
         else: print("-> None")
