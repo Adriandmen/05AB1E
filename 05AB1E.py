@@ -364,10 +364,10 @@ def run_program(commands,
                     for Q in a:
                         stack.append(int(str(Q), 16))
                 else:
-                    stack.append(int(a, 16))
+                    stack.append(int(str(a), 16))
             else:
                 a = str(input("> "))
-                stack.append(int(a, 16))
+                stack.append(int(str(a), 16))
 
         elif current_command == "C":
             if stack:
@@ -391,7 +391,7 @@ def run_program(commands,
                     stack.append(is_alpha_value(str(a)))
             else:
                 a = input("> ")
-                stack.append(is_alpha_value(a))
+                stack.append(is_alpha_value(str(a)))
 
         elif current_command == "d":
             if stack:
@@ -1225,7 +1225,7 @@ def run_program(commands,
                 a = int(stack.pop())
             else:
                 a = int(input("> "))
-            stack.append(int(math.sqrt(a)))
+            stack.append(int(math.sqrt(int(a))))
 
         elif current_command == "n":
             if stack:
@@ -1233,13 +1233,13 @@ def run_program(commands,
                 temp_list = []
                 if type(a) is list:
                     for Q in a:
-                        temp_list.append(Q ** 2)
+                        temp_list.append(int(Q) ** 2)
                     stack.append(temp_list)
                 else:
-                    stack.append(a ** 2)
+                    stack.append(int(a) ** 2)
             else:
                 a = int(input("> "))
-            stack.append(int(a ** 2))
+            stack.append(int(int(a) ** 2))
 
         elif current_command == "o":
             if stack:
@@ -1250,10 +1250,10 @@ def run_program(commands,
                         temp_list.append(2 ** int(Q))
                     stack.append(temp_list)
                 else:
-                    stack.append(2 ** a)
+                    stack.append(2 ** int(a))
             else:
                 a = int(input("> "))
-                stack.append(int(2 ** a))
+                stack.append(int(2 ** int(a)))
 
         elif current_command == "k":
             a = stack.pop()
