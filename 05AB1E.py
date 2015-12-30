@@ -221,6 +221,10 @@ def run_program(commands,
                     temp_list.append(int(Q) - int(a))
                 for S in temp_list:
                     stack.append(S)
+            elif (type(b) is str and not is_digit_value(b)) or (type(a) is str and not is_digit_value(a)):
+                for Q in str(a):
+                    b = b.replace(Q, "")
+                stack.append(str(b))
             else:
                 stack.append(int(b) - int(a))
 
@@ -1370,6 +1374,48 @@ def run_program(commands,
                 stack.append(temp_list)
             else:
                 stack.append(prime_factorization_powers(int(a)))
+
+        elif current_command == ".d":
+            if stack:
+                a = stack.pop()
+            else:
+                a = str(input())
+            if type(a) is list:
+                temp_list_2 = []
+                for Q in a:
+                    temp_list = []
+                    for R in Q:
+                        if is_digit_value(Q):
+                            temp_list.append(str(Q))
+                        temp_list_2.append(temp_list)
+                stack.append(temp_list_2)
+            else:
+                temp_list = []
+                for Q in str(a):
+                    if is_digit_value(Q):
+                        temp_list.append(Q)
+                stack.append(''.join(temp_list))
+
+        elif current_command == ".a":
+            if stack:
+                a = stack.pop()
+            else:
+                a = str(input())
+            if type(a) is list:
+                temp_list_2 = []
+                for Q in a:
+                    temp_list = []
+                    for R in Q:
+                        if is_alpha_value(Q):
+                            temp_list.append(str(Q))
+                        temp_list_2.append(temp_list)
+                stack.append(temp_list_2)
+            else:
+                temp_list = []
+                for Q in str(a):
+                    if is_alpha_value(Q):
+                        temp_list.append(Q)
+                stack.append(''.join(temp_list))
 
     if not has_printed and not suppress_print:
         if stack: print(stack[len(stack) - 1])
