@@ -92,3 +92,65 @@ def permutations(n, r):
     n = int(n)
     r = int(r)
     return int(math.factorial(n) / math.factorial(n - r))
+
+
+def prime_factorization(n):
+    n = int(n)
+    list_of_factors = []
+
+    if n < 2:
+        return []
+    else:
+        if n == 2:
+            return [2]
+        else:
+            for Q in range(2, n + 1):
+                if is_prime(Q):
+                    if n % Q == 0:
+                        list_of_factors.append(Q)
+    return list_of_factors
+
+
+def prime_factorization_duplicates(n):
+    n = int(n)
+    list_of_factors = []
+
+    if n < 2:
+        return []
+    else:
+        if n == 2:
+            return [2]
+        else:
+            for Q in range(2, n + 1):
+                if is_prime(Q):
+                    while n % Q == 0:
+                        list_of_factors.append(Q)
+                        n = int(int(n) / int(Q))
+
+    return list_of_factors
+
+
+def prime_factorization_powers(n):
+    n = int(n)
+    list_of_factors = []
+
+    if n < 2:
+        return []
+    else:
+        if n == 2:
+            return [1]
+        else:
+            for Q in range(2, n + 1):
+                if is_prime(Q):
+                    value = 0
+                    while n % Q == 0:
+                        value += 1
+                        n = int(int(n) / int(Q))
+                    list_of_factors.append(value)
+
+    try:
+        while list_of_factors[len(list_of_factors) - 1] == 0:
+            list_of_factors.pop()
+    except:0
+
+    return list_of_factors
