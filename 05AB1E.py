@@ -1332,6 +1332,45 @@ def run_program(commands,
             print(str(a))
             has_printed = True
 
+        elif current_command == "f":
+            if stack:
+                a = stack.pop()
+            else:
+                a = int(input())
+            if type(a) is list:
+                temp_list = []
+                for Q in a:
+                    temp_list.append(prime_factorization(int(Q)))
+                stack.append(temp_list)
+            else:
+                stack.append(prime_factorization(int(a)))
+
+        elif current_command == ".f":
+            if stack:
+                a = stack.pop()
+            else:
+                a = int(input())
+            if type(a) is list:
+                temp_list = []
+                for Q in a:
+                    temp_list.append(prime_factorization_duplicates(int(Q)))
+                stack.append(temp_list)
+            else:
+                stack.append(prime_factorization_duplicates(int(a)))
+
+        elif current_command == ".p":
+            if stack:
+                a = stack.pop()
+            else:
+                a = int(input())
+            if type(a) is list:
+                temp_list = []
+                for Q in a:
+                    temp_list.append(prime_factorization_powers(int(Q)))
+                stack.append(temp_list)
+            else:
+                stack.append(prime_factorization_powers(int(a)))
+
     if not has_printed and not suppress_print:
         if stack: print(stack[len(stack) - 1])
         else: print("-> None")
