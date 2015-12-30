@@ -101,3 +101,4 @@ Extended functions:
 .J      = pop a      1-indexed max_spaces.join(stack) grid
 .T      = pop a      push 10 ** a
 .f      = pop a      push list of prime factors (with duplicates)
+.p      = pop a      push list of exponents of prime factors (2^a, 3^b, 5^c, 7^d, etc.)
