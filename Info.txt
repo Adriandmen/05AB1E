@@ -69,7 +69,7 @@ b	= pop a      push bin(a)
 c	= pop a,b    push a nCr b
 d	= pop a      push is_number(a)
 e	= pop a,b    push a nPr b
-f	= pop a      push list of prime factors
+f	= pop a      push list of prime factors (no duplicates)
 g	= pop a      push length of a
 h	= pop a      push hex(a)
 i	= pop a      if statement: iTHEN}: if true { then }
@@ -100,3 +100,4 @@ Extended functions:
 .j	= pop a      0-indexed max_spaces.join(stack) grid
 .J      = pop a      1-indexed max_spaces.join(stack) grid
 .T      = pop a      push 10 ** a
+.f      = pop a      push list of prime factors (with duplicates)
