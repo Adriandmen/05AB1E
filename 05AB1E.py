@@ -1499,7 +1499,7 @@ def run_program(commands,
                         temp_string += commands[pointer_position + 1]
                         pointer_position += 1
                 except:0
-                temp_string = temp_string.replace("#", "stack.")
+                temp_string = temp_string.replace("#", "stack")
                 temp_string = temp_string.replace(";", "\n")
                 if debug:
                     print("-- PYTHON EXEC --")
