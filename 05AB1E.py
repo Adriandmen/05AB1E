@@ -1078,7 +1078,7 @@ def run_program(commands,
                 temp_list = []
                 temp_string = ""
                 for Q in stack:
-                    temp_list.append(Q)
+                    temp_list.append(str(Q))
                 a = temp_list.pop()
                 if type(a) is list:
                     temp_string = ''.join(a)
@@ -1492,13 +1492,27 @@ def run_program(commands,
                 print(a, end="")
                 has_printed.append(True)
 
+            elif current_command == ".e":
+                temp_string = ""
+                try:
+                    while commands[pointer_position + 1] != "}":
+                        temp_string += commands[pointer_position + 1]
+                        pointer_position += 1
+                except:0
+                temp_string = temp_string.replace("#", "stack.")
+                temp_string = temp_string.replace(";", "\n")
+                if debug:
+                    print("-- PYTHON EXEC --")
+                    print(temp_string)
+                    print("------ END ------")
+                exec(temp_string)
+
         except Exception as ex:
             if debug:
                 print(str(ex))
 
     if not has_printed and not suppress_print:
         if stack: print(stack[len(stack) - 1])
-        else: print("-> None")
     if debug:
         print("stack > " + str(stack))
 

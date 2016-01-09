@@ -101,6 +101,7 @@ Extended functions:
 .c      = pop a      push char a
 .C      = pop a      push ASCII value of a
 .d      = pop a      push only digits of a
+.e      = experimental python evaluation
 .f      = pop a      push list of prime factors (with duplicates)
 .j	= pop a      0-indexed max_spaces.join(stack) grid
 .J      = pop a      1-indexed max_spaces.join(stack) grid
