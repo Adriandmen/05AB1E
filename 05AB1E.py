@@ -606,8 +606,10 @@ def run_program(commands,
                     a = int(stack.pop())
                 else:
                     a = int(input("> "))
-                for range_variable in range(0, a):
-                    run_program(STATEMENT, debug, True, range_variable, x_integer, y_integer, z_integer, string_variable)
+
+                if a != 0:
+                    for range_variable in range(0, a):
+                        run_program(STATEMENT, debug, True, range_variable, x_integer, y_integer, z_integer, string_variable)
                 pointer_position = temp_position
 
             elif current_command == "G":
@@ -640,8 +642,10 @@ def run_program(commands,
                     a = int(stack.pop())
                 else:
                     a = int(input("> "))
-                for range_variable in range(1, a):
-                    run_program(STATEMENT, debug, True, range_variable, x_integer, y_integer, z_integer, string_variable)
+
+                if a != 0:
+                    for range_variable in range(1, a):
+                        run_program(STATEMENT, debug, True, range_variable, x_integer, y_integer, z_integer, string_variable)
                 pointer_position = temp_position
 
             elif current_command == "N":
@@ -1083,7 +1087,9 @@ def run_program(commands,
                 if type(a) is list:
                     temp_string = ''.join(a)
                 else:
-                    temp_string = ''.join(stack)
+                    R = len(stack)
+                    for Q in range(R):
+                        temp_string += stack.pop()
                 stack.append(temp_string)
 
             elif current_command == ":":
@@ -1195,6 +1201,19 @@ def run_program(commands,
                     else:
                         print(str(Q).rjust(a), end="")
                 has_printed.append(True)
+
+            elif current_command == ".b":
+                if stack:
+                    a = stack.pop()
+                else:
+                    a = int(input())
+                if type(a) is list:
+                    temp_list = []
+                    for Q in a:
+                        temp_list.append(get_letter(int(Q)))
+                    stack.append(temp_list)
+                else:
+                    stack.append(get_letter(int(a)))
 
             elif current_command == "@":
                 a = int(stack.pop())
