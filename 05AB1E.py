@@ -1,6 +1,7 @@
 import argparse
 import time
 import math
+import binascii
 from commands import *
 
 stack = []
@@ -121,6 +122,7 @@ def run_program(commands,
 
             elif current_command == "\"":
                 temp_string = ""
+                temp_string_2 = ""
                 temp_position = pointer_position
                 while temp_position < len(commands) - 1:
                     temp_position += 1
@@ -128,11 +130,29 @@ def run_program(commands,
                         current_command = commands[temp_position]
                     except:
                         break
-                    if current_command != "\"":
+                    if current_command == "\"":
+                        break
+                    else:
                         temp_string += current_command
                         pointer_position += 1
-                    else:
+                pointer_position += 1
+                stack.append(temp_string)
+
+            elif current_command == "\u201c":
+                temp_string = ""
+                temp_string_2 = ""
+                temp_position = pointer_position
+                while temp_position < len(commands) - 1:
+                    temp_position += 1
+                    try:
+                        current_command = commands[temp_position]
+                    except:
                         break
+                    if current_command == "\"":
+                        break
+                    else:
+                        temp_string += current_command
+                        pointer_position += 1
                 pointer_position += 1
                 stack.append(temp_string)
 
@@ -529,31 +549,42 @@ def run_program(commands,
 
             elif current_command == "i":
                 STATEMENT = ""
+                ELSE_STATEMENT = ""
                 temp_position = pointer_position
                 temp_position += 1
                 current_command = commands[temp_position]
                 amount_brackets = 1
+                amount_else = 1
                 temp_string_mode = False
                 while amount_brackets != 0:
                     if current_command == "\"":
                         temp_string_mode = not temp_string_mode
                     if temp_string_mode == False:
-                        if current_command == "}":
-                            amount_brackets -= 1
+                        if current_command == "}" or current_command == "\u20ac":
+                            if current_command == "}":
+                                amount_brackets -= 1
+                            if current_command == "\u20ac":
+                                amount_else -= 1
                             if amount_brackets == 0:
                                 break
                         elif current_command == "i" or current_command == "F" or current_command == "v":
                             amount_brackets += 1
+                    if amount_else > 0:
                         STATEMENT += current_command
-                        try:
-                            temp_position += 1
-                            current_command = commands[temp_position]
-                        except:
-                            break
+                    else:
+                        ELSE_STATEMENT += current_command
+                    try:
+                        temp_position += 1
+                        current_command = commands[temp_position]
+                    except:
+                        break
                 if debug:
-                    print(STATEMENT)
+                    print("if: " + STATEMENT)
+                    if amount_else == 0: print("else: " + ELSE_STATEMENT)
                 if stack.pop() == 1:
                     run_program(STATEMENT, debug, True, range_variable, x_integer, y_integer, z_integer, string_variable)
+                elif amount_else == 0:
+                    run_program(ELSE_STATEMENT[1:], debug, True, range_variable, x_integer, y_integer, z_integer, string_variable)
                 pointer_position = temp_position
 
             elif current_command == "\\":
@@ -1085,11 +1116,20 @@ def run_program(commands,
                     temp_list.append(str(Q))
                 a = temp_list.pop()
                 if type(a) is list:
-                    temp_string = ''.join(a)
+                    for Q in a:
+                        if type(Q) is bool:
+                            temp_string += str(int(Q))
+                        else:
+                            temp_string += str(Q)
                 else:
                     R = len(stack)
                     for Q in range(R):
-                        temp_string += stack.pop()
+                        a = stack.pop()
+                        if type(a) is bool:
+                            temp_string += str(int(a))
+                        else:
+                            temp_string += str(a)
+                    temp_string = temp_string[::-1]
                 stack.append(temp_string)
 
             elif current_command == ":":
@@ -1350,6 +1390,7 @@ def run_program(commands,
                 range_variable = -1
                 for string_variable in a:
                     range_variable += 1
+                    if debug:print("N = " + str(range_variable))
                     run_program(STATEMENT, debug, True, range_variable, x_integer, y_integer, z_integer, string_variable)
                 pointer_position = temp_position
 
@@ -1480,7 +1521,7 @@ def run_program(commands,
                     else:
                         stack.append(False)
 
-            elif current_command == ".C":
+            elif current_command == "\u00c7":
                 if stack:
                     a = stack.pop()
                 else:
@@ -1493,7 +1534,7 @@ def run_program(commands,
                 else:
                     stack.append(ord(str(a)))
 
-            elif current_command == ".c":
+            elif current_command == "\u00e7":
                 if stack:
                     a = stack.pop()
                 else:
@@ -1505,6 +1546,28 @@ def run_program(commands,
                     stack.append(temp_list)
                 else:
                     stack.append(chr(int(a)))
+
+            elif current_command == "\u00f7":
+                if len(stack) > 1:
+                    b = int(stack.pop())
+                    a = str(stack.pop())
+                elif len(stack) > 0:
+                    b = int(stack.pop())
+                    a = str(input())
+                else:
+                    a = str(input())
+                    b = int(input())
+                temp_string = ""
+                R = 0
+                for Q in a:
+                    temp_string += Q
+                    R += 1
+                    if R == b:
+                        stack.append(temp_string)
+                        temp_string = ""
+                        R = 0
+                if temp_string != "":
+                    stack.append(temp_string)
 
             elif current_command == "?":
                 a = stack.pop()
@@ -1544,5 +1607,5 @@ if __name__ == "__main__":
     filename = args.program_path
     DEBUG = args.debug
 
-    code = open(filename, "r").read()
+    code = open(filename, "r", encoding="utf-8").read()
     run_program(code, DEBUG, False, 0)
