@@ -166,8 +166,7 @@ def run_program(commands,
                     temp_list = []
                     for Q in a:
                         temp_list.append(math.factorial(int(Q)))
-                    for S in temp_list:
-                        stack.append(S)
+                    stack.append(temp_list)
                 else:
                     stack.append(math.factorial(int(a)))
 
@@ -190,20 +189,17 @@ def run_program(commands,
                         for R in b:
                             temp_list_2.append(int(Q) + int(R))
                         temp_list.append(temp_list_2)
-                    for S in temp_list:
-                        stack.append(S)
+                    stack.append(temp_list)
                 elif type(a) is list:
                     temp_list = []
                     for Q in a:
                         temp_list.append(int(Q) + int(b))
-                    for S in temp_list:
-                        stack.append(S)
+                    stack.append(temp_list)
                 elif type(b) is list:
                     temp_list = []
                     for Q in b:
                         temp_list.append(int(a) + int(Q))
-                    for S in temp_list:
-                        stack.append(S)
+                    stack.append(temp_list)
                 else:
                     stack.append(int(a) + int(b))
 
@@ -226,20 +222,17 @@ def run_program(commands,
                         for R in b:
                             temp_list_2.append(int(R) - int(Q))
                         temp_list.append(temp_list_2)
-                    for S in temp_list:
-                        stack.append(S)
+                    stack.append(temp_list)
                 elif type(a) is list:
                     temp_list = []
                     for Q in a:
                         temp_list.append(int(b) - int(Q))
-                    for S in temp_list:
-                        stack.append(S)
+                    stack.append(temp_list)
                 elif type(b) is list:
                     temp_list = []
                     for Q in b:
                         temp_list.append(int(Q) - int(a))
-                    for S in temp_list:
-                        stack.append(S)
+                    stack.append(temp_list)
                 elif (type(b) is str and not is_digit_value(b)) or (type(a) is str and not is_digit_value(a)):
                     for Q in str(a):
                         b = b.replace(Q, "")
@@ -266,20 +259,17 @@ def run_program(commands,
                         for R in b:
                             temp_list_2.append(int(Q) * int(R))
                         temp_list.append(temp_list_2)
-                    for S in temp_list:
-                        stack.append(S)
+                    stack.append(temp_list)
                 elif type(a) is list:
                     temp_list = []
                     for Q in a:
                         temp_list.append(int(Q) * int(b))
-                    for S in temp_list:
-                        stack.append(S)
+                    stack.append(temp_list)
                 elif type(b) is list:
                     temp_list = []
                     for Q in b:
                         temp_list.append(int(a) * int(Q))
-                    for S in temp_list:
-                        stack.append(S)
+                    stack.append(temp_list)
                 else:
                     stack.append(int(a) * int(b))
 
@@ -302,20 +292,17 @@ def run_program(commands,
                         for R in b:
                             temp_list_2.append(int(R) / int(Q))
                         temp_list.append(temp_list_2)
-                    for S in temp_list:
-                        stack.append(S)
+                    stack.append(temp_list)
                 elif type(a) is list:
                     temp_list = []
                     for Q in a:
                         temp_list.append(int(b) / int(Q))
-                    for S in temp_list:
-                        stack.append(S)
+                    stack.append(temp_list)
                 elif type(b) is list:
                     temp_list = []
                     for Q in b:
                         temp_list.append(int(Q) / int(a))
-                    for S in temp_list:
-                        stack.append(S)
+                    stack.append(temp_list)
                 else:
                     stack.append(int(b) / int(a))
 
@@ -338,20 +325,17 @@ def run_program(commands,
                         for R in b:
                             temp_list_2.append(int(R) % int(Q))
                         temp_list.append(temp_list_2)
-                    for S in temp_list:
-                        stack.append(S)
+                    stack.append(temp_list)
                 elif type(a) is list:
                     temp_list = []
                     for Q in a:
                         temp_list.append(int(b) % int(Q))
-                    for S in temp_list:
-                        stack.append(S)
+                    stack.append(temp_list)
                 elif type(b) is list:
                     temp_list = []
                     for Q in b:
                         temp_list.append(int(Q) % int(a))
-                    for S in temp_list:
-                        stack.append(S)
+                    stack.append(temp_list)
                 else:
                     stack.append(int(b) % int(a))
 
@@ -384,8 +368,10 @@ def run_program(commands,
                 if stack:
                     a = stack.pop()
                     if type(a) is list:
+                        temp_list = []
                         for Q in a:
-                            stack.append(int(str(Q), 16))
+                            temp_list.append(int(str(Q), 16))
+                        stack.append(temp_list)
                     else:
                         stack.append(int(str(a), 16))
                 else:
@@ -396,8 +382,10 @@ def run_program(commands,
                 if stack:
                     a = stack.pop()
                     if type(a) is list:
+                        temp_list = []
                         for Q in a:
-                            stack.append(int(str(Q), 2))
+                            temp_list.append(int(str(Q), 2))
+                        stack.append(temp_list)
                     else:
                         stack.append(int(a, 2))
                 else:
@@ -408,8 +396,10 @@ def run_program(commands,
                 if stack:
                     a = stack.pop()
                     if type(a) is list:
+                        temp_list = []
                         for Q in a:
-                            stack.append(is_alpha_value(str(Q)))
+                            temp_list.append(is_alpha_value(str(Q)))
+                        stack.append(temp_list)
                     else:
                         stack.append(is_alpha_value(str(a)))
                 else:
@@ -420,8 +410,10 @@ def run_program(commands,
                 if stack:
                     a = stack.pop()
                     if type(a) is list:
+                        temp_list = []
                         for Q in a:
-                            stack.append(is_digit_value(str(Q)))
+                            temp_list.append(is_digit_value(str(Q)))
+                        stack.append(temp_list)
                     else:
                         stack.append(is_digit_value(str(a)))
                 else:
@@ -432,8 +424,10 @@ def run_program(commands,
                 if stack:
                     a = stack.pop()
                     if type(a) is list:
+                        temp_list = []
                         for Q in a:
-                            stack.append(is_prime(int(Q)))
+                            temp_list.append(is_prime(int(Q)))
+                        stack.append(temp_list)
                     else:
                         stack.append(is_prime(int(a)))
                 else:
@@ -444,8 +438,10 @@ def run_program(commands,
                 if stack:
                     a = stack.pop()
                     if type(a) is list:
+                        temp_list = []
                         for Q in a:
-                            stack.append(str(Q))
+                            temp_list.append(str(Q).upper())
+                        stack.append(temp_list)
                     else:
                         stack.append(str(a).upper())
                 else:
@@ -456,8 +452,10 @@ def run_program(commands,
                 if stack:
                     a = stack.pop()
                     if type(a) is list:
+                        temp_list = []
                         for Q in a:
-                            stack.append(str(a).lower())
+                            temp_list.append(str(a).lower())
+                        stack.append(temp_list)
                     else:
                         stack.append(str(a).lower())
                 else:
@@ -468,15 +466,17 @@ def run_program(commands,
                 if stack:
                     a = stack.pop()
                     if type(a) is list:
+                        temp_list = []
                         for Q in a:
                             try:
                                 a = int(a)
                                 if a == 1:
-                                    stack.append(False)
+                                    temp_list.append(False)
                                 else:
-                                    stack.append(True)
+                                    temp_list.append(True)
                             except:
-                                stack.append(False)
+                                temp_list.append(False)
+                        stack.append(temp_list)
                     else:
                         try:
                             a = int(a)
@@ -689,9 +689,11 @@ def run_program(commands,
                 if stack:
                     a = stack.pop()
                     if type(a) is list:
+                        temp_list = []
                         for Q in a:
                             for X in str(Q):
-                                stack.append(X)
+                                temp_list.append(X)
+                        stack.append(temp_list)
                     else:
                         for X in str(a):
                             stack.append(X)
