@@ -130,7 +130,7 @@ Extended ASCII characters (ISO 8859-1)
 ¤	=
 ¥	=
 ¦	=
-§	=
+§	= pop a      push str(a)
 ¨	=
 ©	=
 ª	=
@@ -184,7 +184,7 @@ Extended ASCII characters (ISO 8859-1)
 Û	= pop a,b    push a with leading b's trimmed off
 Ü	= pop a,b    push a with trailing b's trimmed off
 Ý	=
-Þ	=
+Þ	= pop a      push float(a)
 ß	=
 à	=
 á	=
@@ -201,7 +201,7 @@ Extended ASCII characters (ISO 8859-1)
 ì	=
 í	=
 î	=
-ï	=
+ï	= pop a      push int(a)
 ð	=
 ñ	=
 ò	=

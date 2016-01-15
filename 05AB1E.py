@@ -1649,6 +1649,27 @@ def run_program(commands,
                 for Q in temp_list:
                     stack.append(str(Q))
 
+            elif current_command == "\u00ef":
+                if stack:
+                    a = int(stack.pop())
+                else:
+                    a = int(input())
+                stack.append(a)
+
+            elif current_command == "\u00de":
+                if stack:
+                    a = float(stack.pop())
+                else:
+                    a = float(input())
+                stack.append(a)
+
+            elif current_command == "\u00a7":
+                if stack:
+                    a = str(stack.pop())
+                else:
+                    a = str(input())
+                stack.append(a)
+
             elif current_command == "?":
                 a = stack.pop()
                 print(a, end="")
