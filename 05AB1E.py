@@ -1571,6 +1571,84 @@ def run_program(commands,
                 if temp_string != "":
                     stack.append(temp_string)
 
+            elif current_command == "\u00c6":
+                if stack:
+                    a = stack.pop()
+                else:
+                    a = eval(input())
+                a = a[::-1]
+                result = int(a.pop())
+                for Q in range(0, len(a)):
+                    result -= int(a[Q])
+                stack.append(Q)
+
+            elif current_command == "\u00d9":
+                a = stack.pop()
+                temp_list = []
+                for Q in a:
+                    if Q not in temp_list:
+                        temp_list.append(Q)
+                stack.append(temp_list)
+
+            elif current_command == "\u00da":
+                a = stack.pop()
+                a = a[::-1]
+                temp_list = []
+                for Q in a:
+                    if Q not in temp_list:
+                        temp_list.append(Q)
+                stack.append(temp_list[::-1])
+
+            elif current_command == "\u00db":
+                if len(stack) > 1:
+                    b = str(stack.pop())
+                    a = str(stack.pop())
+                elif stack:
+                    b = str(stack.pop())
+                    a = input()
+                else:
+                    b = input()
+                    a = input()
+                length_of_str = len(b)
+                while True:
+                    if a[0:length_of_str] == b:
+                        a = a[length_of_str:]
+                    else:
+                        break
+                stack.append(a)
+
+            elif current_command == "\u00dc":
+                if len(stack) > 1:
+                    b = str(stack.pop())
+                    a = str(stack.pop())
+                elif stack:
+                    b = str(stack.pop())
+                    a = input()
+                else:
+                    b = input()
+                    a = input()
+                length_of_str = len(b)
+                while True:
+                    if a[len(a) - length_of_str:len(a)] == b:
+                        a = a[0:len(a) - length_of_str]
+                    else:
+                        break
+                stack.append(a)
+
+            elif current_command == "\u00a1":
+                if len(stack) > 1:
+                    b = str(stack.pop())
+                    a = str(stack.pop())
+                elif stack:
+                    b = str(stack.pop())
+                    a = input()
+                else:
+                    b = input()
+                    a = input()
+                temp_list = str(a).split(b)
+                for Q in temp_list:
+                    stack.append(str(Q))
+
             elif current_command == "?":
                 a = stack.pop()
                 print(a, end="")

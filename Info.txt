@@ -124,7 +124,7 @@ Extended ASCII characters (ISO 8859-1)
 œ	=
 ž	=
 Ÿ	=
-¡	=
+¡	= pop a,b    push a.split(b)  
 ¢	=
 £	=
 ¤	=
@@ -160,7 +160,7 @@ Extended ASCII characters (ISO 8859-1)
 Ã	=
 Ä	=
 Å	=
-Æ	=
+Æ	= pop a      push reduced a
 Ç	= pop a      push ASCII value of a
 È	=
 É	=
@@ -180,9 +180,9 @@ Extended ASCII characters (ISO 8859-1)
 ×	=
 Ø	=
 Ù	= pop a      push uniquified a
-Ú	=
-Û	=
-Ü	=
+Ú	= pop a      push reverse uniquified a
+Û	= pop a,b    push a with leading b's trimmed off
+Ü	= pop a,b    push a with trailing b's trimmed off
 Ý	=
 Þ	=
 ß	=
