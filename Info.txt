@@ -97,7 +97,7 @@ z	= pop a      push 1 / a
 
 Extended ASCII characters (ISO 8859-1)
 
-€	=
+€	= else statement
 ‚	=
 ƒ	=
 „	=
@@ -107,7 +107,7 @@ Extended ASCII characters (ISO 8859-1)
 ˆ	=
 ‰	= 
 Š	=
-‹	=
+‹	= pop a,b    push a < b
 Œ	=
 Ž	=
 ‘	=
@@ -120,13 +120,13 @@ Extended ASCII characters (ISO 8859-1)
 ˜	=
 ™	=
 š	=
-›	=
+›	= pop a,b    push a > b
 œ	=
 ž	=
 Ÿ	=
 ¡	= pop a,b    push a.split(b)  
 ¢	=
-£	=
+£	= pop a,b    push a[0:b]
 ¤	=
 ¥	=
 ¦	=
@@ -134,7 +134,7 @@ Extended ASCII characters (ISO 8859-1)
 ¨	=
 ©	=
 ª	=
-«	=
+«	= 
 ¬	=
 ®	=
 ¯	=
@@ -185,8 +185,8 @@ Extended ASCII characters (ISO 8859-1)
 Ü	= pop a,b    push a with trailing b's trimmed off
 Ý	=
 Þ	= pop a      push float(a)
-ß	=
-à	=
+ß	= pop smallest element of list
+à	= pop greatest element of list
 á	=
 â	=
 ã	=

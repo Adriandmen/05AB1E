@@ -22,7 +22,8 @@ def run_program(commands,
     commands = commands.replace(".J", "Mg>.J")
 
     if debug:
-        print("Full program: " + str(commands))
+        try:print("Full program: " + str(commands))
+        except:0
     pointer_position = -1
     temp_position = 0
     current_command = ""
@@ -34,7 +35,9 @@ def run_program(commands,
             pointer_position += 1
             current_command = commands[pointer_position]
 
-            if debug:print("current >> " + current_command + "  ||  stack: " + str(stack))
+            if debug:
+                try:print("current >> " + current_command + "  ||  stack: " + str(stack))
+                except:0
             if current_command == ".":
                 pointer_position += 1
                 current_command += commands[pointer_position]
@@ -351,11 +354,13 @@ def run_program(commands,
 
             elif current_command == "R":
                 if stack:
-                    a = str(stack.pop())
-                    stack.append(a[::-1])
+                    a = stack.pop()
                 else:
                     a = str(input("> "))
+                if type(a) is list:
                     stack.append(a[::-1])
+                else:
+                    stack.append(str(a)[::-1])
 
             elif current_command == "I":
                 stack.append(str(input("> ")))
@@ -1669,6 +1674,64 @@ def run_program(commands,
                 else:
                     a = str(input())
                 stack.append(a)
+
+            elif current_command == "\u00a3":
+                if len(stack) > 1:
+                    b = int(stack.pop())
+                    a = stack.pop()
+                elif stack:
+                    b = int(stack.pop())
+                    a = input()
+                else:
+                    b = int(input())
+                    a = input()
+                stack.append(a[0:b])
+
+            elif current_command == "\u00df":
+                a = stack[-1]
+                b = stack.pop()
+                a = sorted(a)[::-1].pop()
+                temp_list = []
+                has_done = False
+                for Q in b:
+                    if Q == a and has_done == False:
+                        has_done = True
+                        continue
+                    else:
+                        temp_list.append(Q)
+                stack.append(temp_list)
+                stack.append(a)
+
+            elif current_command == "\u00e0":
+                a = stack[-1]
+                b = stack.pop()
+                a = sorted(a).pop()
+                temp_list = []
+                has_done = False
+                for Q in b:
+                    if Q == a and has_done == False:
+                        has_done = True
+                        continue
+                    else:
+                        temp_list.append(Q)
+                stack.append(temp_list)
+                stack.append(a)
+
+            elif current_command == "\u2039":
+                b = stack.pop()
+                a = stack.pop()
+                if int(a) < int(b):
+                    stack.append(True)
+                else:
+                    stack.append(False)
+
+            elif current_command == "\u203A":
+                b = stack.pop()
+                a = stack.pop()
+                if int(a) > int(b):
+                    stack.append(True)
+                else:
+                    stack.append(False)
 
             elif current_command == "?":
                 a = stack.pop()
