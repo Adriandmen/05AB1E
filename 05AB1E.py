@@ -1663,9 +1663,26 @@ def run_program(commands,
 
             elif current_command == "\u00de":
                 if stack:
-                    a = float(stack.pop())
+                    a = str(stack.pop())
                 else:
-                    a = float(input())
+                    a = str(input())
+                is_neg = False
+                if a[0] == "-":
+                    is_neg = True
+                    a = a[1:]
+                if not str(a).__contains__("."):
+                    a += "."
+                while a[0] == "0":
+                    a = a[1:]
+                while a[-1] == "0":
+                    a = a[0:-1]
+                if a[0] == ".":
+                    a = "0" + a
+                if a[-1] == ".":
+                    a += "0"
+
+                if a != "0.0" and is_neg:
+                    a = "-" + a
                 stack.append(a)
 
             elif current_command == "\u00a7":
