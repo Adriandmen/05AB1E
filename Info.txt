@@ -106,7 +106,7 @@ Extended ASCII characters (ISO 8859-1)
 ‡	=
 ˆ	=
 ‰	= 
-Š	=
+Š	= pop a,b,c  push c,a,b
 ‹	= pop a,b    push a < b
 Œ	=
 Ž	=
