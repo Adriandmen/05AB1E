@@ -1768,6 +1768,17 @@ def run_program(commands,
                 else:
                     stack.append(False)
 
+            elif current_command == "\u0160":
+                c = stack.pop()
+                b = stack.pop()
+                a = stack.pop()
+
+                # a b c -> c a b
+
+                stack.append(c)
+                stack.append(a)
+                stack.append(b)
+
             elif current_command == "?":
                 a = stack.pop()
                 print(a, end="")
