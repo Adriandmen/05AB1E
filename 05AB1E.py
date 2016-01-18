@@ -1681,7 +1681,7 @@ def run_program(commands,
                 if a[-1] == ".":
                     a += "0"
 
-                if a != "0.0" and is_neg:
+                if is_neg:
                     a = "-" + a
                 stack.append(a)
 
