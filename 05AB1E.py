@@ -888,8 +888,10 @@ def run_program(commands,
                 if stack:
                     a = stack.pop()
                     if type(a) is list:
+                        temp_list = []
                         for Q in a:
-                            stack.append(int(Q) + 1)
+                            temp_list.append(int(Q) + 1)
+                        stack.append(temp_list)
                     else:
                         stack.append(int(a) + 1)
                 else:
@@ -900,8 +902,10 @@ def run_program(commands,
                 if stack:
                     a = stack.pop()
                     if type(a) is list:
+                        temp_list = []
                         for Q in a:
-                            stack.append(int(Q) - 1)
+                            temp_list.append(int(Q) - 1)
+                        stack.append(temp_list)
                     else:
                         stack.append(int(a) - 1)
                 else:
