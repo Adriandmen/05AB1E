@@ -162,8 +162,8 @@ Extended ASCII characters (ISO 8859-1)
 Å	=
 Æ	= pop a      push reduced a
 Ç	= pop a      push ASCII value of a
-È	=
-É	=
+È	= pop a      push a % 2 == 0 (is even)
+É	= pop a      push a % 2 == 1 (is uneven)
 Ê	=
 Ë	=
 Ì	=

@@ -1644,6 +1644,20 @@ def run_program(commands,
                         break
                 stack.append(a)
 
+            elif current_command == "\u00c8":
+                if stack:
+                    a = int(stack.pop())
+                else:
+                    a = int(input())
+                stack.append(a % 2 == 0)
+
+            elif current_command == "\u00c9":
+                if stack:
+                    a = int(stack.pop())
+                else:
+                    a = int(input())
+                stack.append(a % 2 == 1)
+
             elif current_command == "\u00a1":
                 if len(stack) > 1:
                     b = str(stack.pop())
