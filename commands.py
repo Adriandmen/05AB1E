@@ -184,3 +184,16 @@ def prime_factorization_powers(n):
     except:0
 
     return list_of_factors
+
+
+def get_nth_prime(n):
+    n = int(n) + 1
+    current_prime = 2
+    while n > 0:
+        if is_prime(current_prime):
+            n -= 1
+            if n > 0:
+                current_prime += 1
+        else:
+            current_prime += 1
+    return current_prime

@@ -97,7 +97,7 @@ z	= pop a      push 1 / a
 
 Extended ASCII characters (ISO 8859-1)
 
-€	= else statement
+€ 0     = else statement
 ‚	=
 ƒ	=
 „	=
@@ -113,7 +113,7 @@ Extended ASCII characters (ISO 8859-1)
 ‘	=
 ’	=
 “	= for compressed strings (normal)
-”	=
+”	= end compressed strings
 •	=
 –	=
 —	=
@@ -178,7 +178,7 @@ Extended ASCII characters (ISO 8859-1)
 Õ	=
 Ö	=
 ×	=
-Ø	=
+Ø	= pop a      push ath prime (zero-indexed)
 Ù	= pop a      push uniquified a
 Ú	= pop a      push reverse uniquified a
 Û	= pop a,b    push a with leading b's trimmed off
@@ -196,7 +196,7 @@ Extended ASCII characters (ISO 8859-1)
 ç	= pop a      push char a
 è	=
 é	=
-ê	=
+ê 99    =
 ë	=
 ì	=
 í	=

@@ -151,7 +151,7 @@ def run_program(commands,
                         current_command = commands[temp_position]
                     except:
                         break
-                    if current_command == "\"":
+                    if current_command == "\u201d":
                         break
                     else:
                         temp_string += current_command
@@ -1767,6 +1767,22 @@ def run_program(commands,
                     stack.append(True)
                 else:
                     stack.append(False)
+
+            elif current_command == "\u00d8":
+                if stack:
+                    a = stack.pop()
+                else:
+                    a = int(input())
+
+                if type(a) is list:
+                    temp_list = []
+                    for Q in a:
+                        temp_list.append(get_nth_prime(int(Q)))
+                    stack.append(temp_list)
+                else:
+                    stack.append(get_nth_prime(int(a)))
+
+
 
             elif current_command == "\u0160":
                 c = stack.pop()
