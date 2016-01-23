@@ -111,7 +111,7 @@ Extended ASCII characters (ISO 8859-1)
 Œ 11	=
 Ž 12	=
 ‘ -	= for compressed strings (upper)
-’ 14	=
+’ - 	= for compressed strings (no implicit space)
 “ -	= for compressed strings (normal)
 ” -	= for compressed strings (title)
 • 15	=

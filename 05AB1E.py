@@ -142,6 +142,37 @@ def run_program(commands,
                 pointer_position += 1
                 stack.append(temp_string)
 
+            elif current_command == "\u2019":
+                temp_string = ""
+                temp_string_2 = ""
+                temp_index = ""
+                temp_position = pointer_position
+                while temp_position < len(commands) - 1:
+                    temp_position += 1
+                    try:
+                        current_command = commands[temp_position]
+                        if dictionary.unicode_index.__contains__(current_command):
+                            temp_index += str(dictionary.unicode_index.index(current_command))
+                            temp_position += 1
+                            pointer_position += 2
+                            current_command = commands[temp_position]
+                            temp_index += str(dictionary.unicode_index.index(current_command))
+                            temp_string += dictionary.dictionary[int(temp_index)]
+                            temp_index = ""
+                        elif current_command == "\u2019":
+                            pointer_position += 1
+                            break
+                        else:
+                            temp_string += current_command
+                            pointer_position += 1
+                    except:
+                        pointer_position += 1
+                        break
+                    if debug:print(str(pointer_position) + " with " + str(hex(ord(current_command))))
+
+                pointer_position += 1
+                stack.append(temp_string)
+
             elif current_command == "\u2018":
                 temp_string = ""
                 temp_string_2 = ""
