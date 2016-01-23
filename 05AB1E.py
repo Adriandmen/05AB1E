@@ -2,6 +2,7 @@ import argparse
 import time
 import math
 import binascii
+import dictionary
 from commands import *
 
 stack = []
@@ -141,21 +142,105 @@ def run_program(commands,
                 pointer_position += 1
                 stack.append(temp_string)
 
-            elif current_command == "\u201c":
+            elif current_command == "\u2018":
                 temp_string = ""
                 temp_string_2 = ""
+                temp_index = ""
                 temp_position = pointer_position
                 while temp_position < len(commands) - 1:
                     temp_position += 1
                     try:
                         current_command = commands[temp_position]
+                        if dictionary.unicode_index.__contains__(current_command):
+                            temp_index += str(dictionary.unicode_index.index(current_command))
+                            temp_position += 1
+                            pointer_position += 2
+                            current_command = commands[temp_position]
+                            temp_index += str(dictionary.unicode_index.index(current_command))
+                            if temp_string == "":
+                                temp_string += dictionary.dictionary[int(temp_index)].upper()
+                            else:
+                                temp_string += " " + dictionary.dictionary[int(temp_index)].upper()
+                            temp_index = ""
+                        elif current_command == "\u2018":
+                            pointer_position += 1
+                            break
+                        else:
+                            temp_string += current_command
+                            pointer_position += 1
                     except:
-                        break
-                    if current_command == "\u201d":
-                        break
-                    else:
-                        temp_string += current_command
                         pointer_position += 1
+                        break
+                    if debug:print(str(pointer_position) + " with " + str(hex(ord(current_command))))
+
+                pointer_position += 1
+                stack.append(temp_string)
+
+            elif current_command == "\u201c":
+                temp_string = ""
+                temp_string_2 = ""
+                temp_index = ""
+                temp_position = pointer_position
+                while temp_position < len(commands) - 1:
+                    temp_position += 1
+                    try:
+                        current_command = commands[temp_position]
+                        if dictionary.unicode_index.__contains__(current_command):
+                            temp_index += str(dictionary.unicode_index.index(current_command))
+                            temp_position += 1
+                            pointer_position += 2
+                            current_command = commands[temp_position]
+                            temp_index += str(dictionary.unicode_index.index(current_command))
+                            if temp_string == "":
+                                temp_string += dictionary.dictionary[int(temp_index)]
+                            else:
+                                temp_string += " " + dictionary.dictionary[int(temp_index)]
+                            temp_index = ""
+                        elif current_command == "\u201c":
+                            pointer_position += 1
+                            break
+                        else:
+                            temp_string += current_command
+                            pointer_position += 1
+                    except:
+                        pointer_position += 1
+                        break
+                    if debug:print(str(pointer_position) + " with " + str(hex(ord(current_command))))
+
+                pointer_position += 1
+                stack.append(temp_string)
+
+            elif current_command == "\u201d":
+                temp_string = ""
+                temp_string_2 = ""
+                temp_index = ""
+                temp_position = pointer_position
+                while temp_position < len(commands) - 1:
+                    temp_position += 1
+                    try:
+                        current_command = commands[temp_position]
+                        if dictionary.unicode_index.__contains__(current_command):
+                            temp_index += str(dictionary.unicode_index.index(current_command))
+                            temp_position += 1
+                            pointer_position += 2
+                            current_command = commands[temp_position]
+                            temp_index += str(dictionary.unicode_index.index(current_command))
+                            if temp_string == "":
+                                temp_string += dictionary.dictionary[int(temp_index)].title()
+                            else:
+                                temp_string += " " + dictionary.dictionary[int(temp_index)].title()
+                            temp_index = ""
+                        elif current_command == "\u201d":
+                            pointer_position += 1
+                            break
+                        else:
+                            temp_string += current_command
+                            pointer_position += 1
+                    except:
+                        pointer_position += 1
+                        break
+                    if debug:print(str(pointer_position) + " with " + str(hex(ord(current_command))))
+
                 pointer_position += 1
                 stack.append(temp_string)
 
@@ -584,8 +669,11 @@ def run_program(commands,
                     except:
                         break
                 if debug:
-                    print("if: " + STATEMENT)
-                    if amount_else == 0: print("else: " + ELSE_STATEMENT)
+                    try:
+                        print("if: " + STATEMENT)
+                        if amount_else == 0: print("else: " + ELSE_STATEMENT)
+                    except:
+                        0
                 if stack.pop() == 1:
                     run_program(STATEMENT, debug, True, range_variable, x_integer, y_integer, z_integer, string_variable)
                 elif amount_else == 0:
@@ -636,7 +724,8 @@ def run_program(commands,
                     except:
                         break
                 if debug:
-                    print(STATEMENT)
+                    try:print(STATEMENT)
+                    except:0
                 a = 0
                 if stack:
                     a = int(stack.pop())
@@ -672,7 +761,8 @@ def run_program(commands,
                         except:
                             break
                 if debug:
-                    print(STATEMENT)
+                    try:print(STATEMENT)
+                    except:0
                 a = 0
                 if stack:
                     a = int(stack.pop())
@@ -1124,7 +1214,7 @@ def run_program(commands,
                 temp_list = []
                 temp_string = ""
                 for Q in stack:
-                    temp_list.append(str(Q))
+                    temp_list.append(Q)
                 a = temp_list.pop()
                 if type(a) is list:
                     for Q in a:
@@ -1132,6 +1222,7 @@ def run_program(commands,
                             temp_string += str(int(Q))
                         else:
                             temp_string += str(Q)
+                    stack.pop()
                 else:
                     R = len(stack)
                     for Q in range(R):
@@ -1392,7 +1483,8 @@ def run_program(commands,
                         except:
                             break
                 if debug:
-                    print(STATEMENT)
+                    try:print(STATEMENT)
+                    except:0
                 a = 0
                 if stack:
                     a = str(stack.pop())
@@ -1781,8 +1873,6 @@ def run_program(commands,
                     stack.append(temp_list)
                 else:
                     stack.append(get_nth_prime(int(a)))
-
-
 
             elif current_command == "\u0160":
                 c = stack.pop()
