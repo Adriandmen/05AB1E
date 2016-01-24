@@ -119,7 +119,7 @@ Extended ASCII characters (ISO 8859-1)
 — 17	=
 ˜ 18	=
 ™ 19	=
-š 20	=
+š 20	= pop a      push switch_cased(a)
 › 21	= pop a,b    push a > b
 œ 22	=
 ž 23	=
@@ -135,7 +135,7 @@ Extended ASCII characters (ISO 8859-1)
 © 33	=
 ª 34	=
 « 35	= 
-¬ 36	=
+¬ 36	= pop a      push head(a)
 ® 37	=
 ¯ 38	=
 ° 39	=
@@ -200,7 +200,7 @@ Extended ASCII characters (ISO 8859-1)
 ë 98	=
 ì 99	=
 í 13	=
-î	=
+î 14	=
 ï	= pop a      push int(a)
 ð	=
 ñ	=

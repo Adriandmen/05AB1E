@@ -1833,6 +1833,22 @@ def run_program(commands,
                     a = str(input())
                 stack.append(a)
 
+            elif current_command == "\u0161":
+                if stack:
+                    a = str(stack.pop())
+                    temp_string = ""
+                    for Q in a:
+                        if Q.isupper(): temp_string += Q.lower()
+                        else: temp_string += Q.upper()
+                else:
+                    a = str(input())
+                    temp_string = ""
+                    for Q in a:
+                        if Q.isupper(): temp_string += Q.lower()
+                        else: temp_string += Q.upper()
+
+                stack.append(temp_string)
+
             elif current_command == "\u00a3":
                 if len(stack) > 1:
                     b = int(stack.pop())
@@ -1915,6 +1931,16 @@ def run_program(commands,
                 stack.append(c)
                 stack.append(a)
                 stack.append(b)
+
+            elif current_command == "\u00ac":
+                if stack:
+                    if type(stack[-1]) is int:
+                        stack.append(str(stack[-1])[0])
+                    else:
+                        stack.append(stack[-1][0])
+                else:
+                    stack.append(input())
+                    stack.append(stack[-1][0])
 
             elif current_command == "?":
                 a = stack.pop()
