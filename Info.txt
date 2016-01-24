@@ -42,7 +42,7 @@ G	= pop a      for N in range(1, a) { }: F(commands)} / N = variable
 H	= pop a      push int(a, 16)
 I	=            push input()
 J	= pop a      push ''.join(a) if a is list / if not, then push ''.join(stack)
-K	=
+K	= pop a,b    push a with no b's
 L	= pop a      push [1 .. a]
 M	=            push the largest number in the stack
 N	=            reserved for variables

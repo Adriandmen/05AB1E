@@ -1862,6 +1862,15 @@ def run_program(commands,
                     a = input()
                 stack.append(a[0:b])
 
+            elif current_command == "K":
+                b = stack.pop()
+                a = stack.pop()
+                temp_list = []
+                for Q in a:
+                    if str(Q) != str(b):
+                        temp_list.append(Q)
+                stack.append(temp_list)
+
             elif current_command == "\u00df":
                 a = stack[-1]
                 b = stack.pop()
@@ -1895,18 +1904,36 @@ def run_program(commands,
             elif current_command == "\u2039":
                 b = stack.pop()
                 a = stack.pop()
-                if int(a) < int(b):
-                    stack.append(True)
+                if type(a) is list:
+                    temp_list = []
+                    for Q in a:
+                        if int(Q) < int(b):
+                            temp_list.append(True)
+                        else:
+                            temp_list.append(False)
+                    stack.append(temp_list)
                 else:
-                    stack.append(False)
+                    if int(a) < int(b):
+                        stack.append(True)
+                    else:
+                        stack.append(False)
 
             elif current_command == "\u203A":
                 b = stack.pop()
                 a = stack.pop()
-                if int(a) > int(b):
-                    stack.append(True)
+                if type(a) is list:
+                    temp_list = []
+                    for Q in a:
+                        if int(Q) > int(b):
+                            temp_list.append(True)
+                        else:
+                            temp_list.append(False)
+                    stack.append(temp_list)
                 else:
-                    stack.append(False)
+                    if int(a) > int(b):
+                        stack.append(True)
+                    else:
+                        stack.append(False)
 
             elif current_command == "\u00d8":
                 if stack:
