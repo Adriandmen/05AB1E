@@ -705,7 +705,8 @@ def run_program(commands,
                         if amount_else == 0: print("else: " + ELSE_STATEMENT)
                     except:
                         0
-                if stack.pop() == 1:
+                a = stack.pop()
+                if a == 1 or a == "1":
                     run_program(STATEMENT, debug, True, range_variable, x_integer, y_integer, z_integer, string_variable)
                 elif amount_else == 0:
                     run_program(ELSE_STATEMENT[1:], debug, True, range_variable, x_integer, y_integer, z_integer, string_variable)
@@ -1092,15 +1093,15 @@ def run_program(commands,
                 elif type(a) is list:
                     temp_list = []
                     for Q in a:
+                        if is_digit_value(str(Q)): Q = eval(str(Q))
                         temp_list.append(eval("\"" + str(b) + "\"" + "==" + "\"" + str(Q) + "\""))
-                    for S in temp_list:
-                        stack.append(S)
+                    stack.append(temp_list)
                 elif type(b) is list:
                     temp_list = []
                     for Q in b:
+                        if is_digit_value(str(Q)): Q = eval(str(Q))
                         temp_list.append(eval("\"" + str(Q) + "\"" + "==" + "\"" + str(a) + "\""))
-                    for S in temp_list:
-                        stack.append(S)
+                    stack.append(temp_list)
                 else:
                     stack.append(eval("\"" + str(a) + "\"" + "==" + "\"" + str(b) + "\""))
 
