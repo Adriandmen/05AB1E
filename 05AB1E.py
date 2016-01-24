@@ -1438,7 +1438,7 @@ def run_program(commands,
                         stack.append(int(a) ** 2)
                 else:
                     a = int(input("> "))
-                stack.append(int(int(a) ** 2))
+                    stack.append(int(int(a) ** 2))
 
             elif current_command == "o":
                 if stack:
