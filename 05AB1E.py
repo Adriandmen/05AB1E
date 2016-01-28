@@ -1269,13 +1269,13 @@ def run_program(commands,
                     stack.pop()
                 else:
                     R = len(stack)
+                    stack.reverse()
                     for Q in range(R):
                         a = stack.pop()
                         if type(a) is bool:
                             temp_string += str(int(a))
                         else:
                             temp_string += str(a)
-                    temp_string = temp_string[::-1]
                 stack.append(temp_string)
 
             elif current_command == ":":
@@ -2056,6 +2056,6 @@ if __name__ == "__main__":
 
     code = open(filename, "r", encoding="utf-8").read()
 
-    if code == "\ufeff":
+    if code == "":
         code = "$FDR+{"
     run_program(code, DEBUG, False, 0)
