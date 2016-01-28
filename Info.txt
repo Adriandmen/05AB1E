@@ -14,7 +14,7 @@ $	=            push 1 and input (used for sequences)
 ,	= pop a      print(a)
 -	= pop a,b    push (a - b) or if a or b is not a decimal, push a.remove(all chars of b)
 .	= two char functions
-/	= pop a,b    push (a / b) floored division
+/	= pop a,b    push (a / b)
 0	= numeric literal
 1	= numeric literal
 2	= numeric literal
@@ -95,7 +95,7 @@ z	= pop a      push 1 / a
 }	=            used for if statements
 ~	= pop a,b    push a OR b
 
-Extended ASCII characters (ISO 8859-1)
+Extended ASCII characters (CP-1252)
 
 € 0     = else statement
 ‚ 1	=
@@ -176,7 +176,7 @@ Extended ASCII characters (ISO 8859-1)
 Ó 74	=
 Ô 75	=
 Õ 76	=
-Ö 77	=
+Ö 77	= pop a,b    push a % b == 0
 × 78	=
 Ø 79	= pop a      push ath prime (zero-indexed)
 Ù 80	= pop a      push uniquified a

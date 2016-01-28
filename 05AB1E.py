@@ -681,15 +681,17 @@ def run_program(commands,
                     if current_command == "\"":
                         temp_string_mode = not temp_string_mode
                     if temp_string_mode == False:
-                        if current_command == "}" or current_command == "\u20ac":
+                        if current_command == "}" or current_command == "\u00eb":
                             if current_command == "}":
                                 amount_brackets -= 1
-                            if current_command == "\u20ac":
+                            if current_command == "\u00eb":
                                 amount_else -= 1
                             if amount_brackets == 0:
                                 break
                         elif current_command == "i" or current_command == "F" or current_command == "v":
                             amount_brackets += 1
+                            if current_command == "i":
+                                amount_else += 1
                     if amount_else > 0:
                         STATEMENT += current_command
                     else:
@@ -700,11 +702,21 @@ def run_program(commands,
                     except:
                         break
                 if debug:
-                    try:
-                        print("if: " + STATEMENT)
-                        if amount_else == 0: print("else: " + ELSE_STATEMENT)
-                    except:
-                        0
+                    print("if: ", end="")
+                    for Q in STATEMENT:
+                        try:
+                            print(Q, end="")
+                        except:
+                            print("?", end="")
+                    print()
+                    if amount_else < 1:
+                        print("else: ", end="")
+                        for Q in ELSE_STATEMENT:
+                            try:
+                                print(Q, end="")
+                            except:
+                                print("?", end="")
+                        print()
                 a = stack.pop()
                 if a == 1 or a == "1":
                     run_program(STATEMENT, debug, True, range_variable, x_integer, y_integer, z_integer, string_variable)
@@ -1478,7 +1490,7 @@ def run_program(commands,
                 else:
                     stack.append(''.join(sorted(str(a))))
 
-            elif current_command == ".T":
+            elif current_command == "\u2122":
                 if stack:
                     a = stack.pop()
                 else:
@@ -1519,10 +1531,11 @@ def run_program(commands,
                     except:0
                 a = 0
                 if stack:
-                    a = str(stack.pop())
+                    a = stack.pop()
                 else:
                     a = str(input("> "))
                 range_variable = -1
+                if type(a) is int: a = str(a)
                 for string_variable in a:
                     range_variable += 1
                     if debug:print("N = " + str(range_variable))
@@ -1960,6 +1973,39 @@ def run_program(commands,
                 stack.append(a)
                 stack.append(b)
 
+            elif current_command == "\u00d6":
+                if len(stack) > 1:
+                    a = stack.pop()
+                    b = stack.pop()
+                else:
+                    if len(stack) > 0:
+                        a = stack.pop()
+                        b = input("> ")
+                    else:
+                        a = input("> ")
+                        b = input("> ")
+                if type(a) is list and type(b) is list:
+                    temp_list = []
+                    temp_list_2 = []
+                    for Q in a:
+                        temp_list_2 = []
+                        for R in b:
+                            temp_list_2.append(int(R) % int(Q) == 0)
+                        temp_list.append(temp_list_2)
+                    stack.append(temp_list)
+                elif type(a) is list:
+                    temp_list = []
+                    for Q in a:
+                        temp_list.append(int(b) % int(Q) == 0)
+                    stack.append(temp_list)
+                elif type(b) is list:
+                    temp_list = []
+                    for Q in b:
+                        temp_list.append(int(Q) % int(a) == 0)
+                    stack.append(temp_list)
+                else:
+                    stack.append(int(b) % int(a) == 0)
+
             elif current_command == "\u00ac":
                 if stack:
                     if type(stack[-1]) is int:
@@ -2009,4 +2055,7 @@ if __name__ == "__main__":
     DEBUG = args.debug
 
     code = open(filename, "r", encoding="utf-8").read()
+
+    if code == "\ufeff":
+        code = "$FDR+{"
     run_program(code, DEBUG, False, 0)
