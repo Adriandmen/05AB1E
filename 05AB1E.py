@@ -1995,7 +1995,7 @@ def run_program(commands,
                         b = input("> ")
                         a = input("> ")
                 temp_list = []
-                for Q in range(int(b), int(a)):
+                for Q in range(int(b), int(a) + 1):
                     temp_list.append(Q)
                 stack.append(temp_list)
 
