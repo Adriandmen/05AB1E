@@ -1962,6 +1962,43 @@ def run_program(commands,
                 else:
                     stack.append(get_nth_prime(int(a)))
 
+            elif current_command == "\u00a2":
+                a = stack.pop()
+                b = stack.pop()
+                stack.append(str(b).count(str(a)))
+
+            elif current_command == "\u00dd":
+                if len(stack) > 1:
+                    a = stack.pop()
+                    b = stack.pop()
+                else:
+                    if len(stack) > 0:
+                        b = input("> ")
+                        a = stack.pop()
+                    else:
+                        b = input("> ")
+                        a = input("> ")
+                temp_list = []
+                for Q in range(int(b), int(a)):
+                    temp_list.append(Q)
+                stack.append(temp_list)
+
+            elif current_command == "\u0178":
+                if len(stack) > 1:
+                    a = stack.pop()
+                    b = stack.pop()
+                else:
+                    if len(stack) > 0:
+                        b = input("> ")
+                        a = stack.pop()
+                    else:
+                        b = input("> ")
+                        a = input("> ")
+                temp_list = []
+                for Q in range(int(b), int(a)):
+                    temp_list.append(Q)
+                stack.append(temp_list)
+
             elif current_command == "\u0160":
                 c = stack.pop()
                 b = stack.pop()
