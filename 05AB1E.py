@@ -1102,6 +1102,10 @@ def run_program(commands,
             elif current_command == "A":
                 stack.append('abcdefghijklmnopqrstuvwxyz')
 
+            elif current_command == "\u2122":
+                a = stack.pop()
+                stack.append(str(a).title())
+
             elif current_command == "E":
                 a = input("> ")
                 try:

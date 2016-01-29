@@ -118,7 +118,7 @@ Extended ASCII characters (CP-1252)
 – 16	=
 — 17	=
 ˜ 18	=
-™ 19	=
+™ 19	= pop a      push title_cased(a)
 š 20	= pop a      push switch_cased(a)
 › 21	= pop a,b    push a > b
 œ 22	=
