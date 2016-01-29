@@ -170,7 +170,7 @@ Extended ASCII characters (CP-1252)
 Í 68	=
 Î 69	=
 Ï 70	=
-Ð 71	=
+Ð 71	= triplicate top of stack (pop a, push a, push a, push a)
 Ñ 72	=
 Ò 73	=
 Ó 74	=

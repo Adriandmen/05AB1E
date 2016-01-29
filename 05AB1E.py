@@ -1967,6 +1967,12 @@ def run_program(commands,
                 b = stack.pop()
                 stack.append(str(b).count(str(a)))
 
+            elif current_command == "\u00d0":
+                a = stack.pop()
+                stack.append(a)
+                stack.append(a)
+                stack.append(a)
+
             elif current_command == "\u00dd":
                 if len(stack) > 1:
                     a = stack.pop()
