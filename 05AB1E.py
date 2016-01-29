@@ -941,20 +941,17 @@ def run_program(commands,
                         for R in b:
                             temp_list_2.append(combinations(int(Q), int(R)))
                         temp_list.append(temp_list_2)
-                    for S in temp_list:
-                        stack.append(S)
+                    stack.append(temp_list)
                 elif type(a) is list:
                     temp_list = []
                     for Q in a:
                         temp_list.append(combinations(int(Q), int(b)))
-                    for S in temp_list:
-                        stack.append(S)
+                    stack.append(temp_list)
                 elif type(b) is list:
                     temp_list = []
                     for Q in b:
                         temp_list.append(combinations(int(a), int(Q)))
-                    for S in temp_list:
-                        stack.append(S)
+                    stack.append(temp_list)
                 else:
                     stack.append(combinations(int(b), int(a)))
 
@@ -977,20 +974,17 @@ def run_program(commands,
                         for R in b:
                             temp_list_2.append(permutations(int(Q), int(R)))
                         temp_list.append(temp_list_2)
-                    for S in temp_list:
-                        stack.append(S)
+                    stack.append(temp_list)
                 elif type(a) is list:
                     temp_list = []
                     for Q in a:
                         temp_list.append(permutations(int(Q), int(b)))
-                    for S in temp_list:
-                        stack.append(S)
+                    stack.append(temp_list)
                 elif type(b) is list:
                     temp_list = []
                     for Q in b:
                         temp_list.append(permutations(int(a), int(Q)))
-                    for S in temp_list:
-                        stack.append(S)
+                    stack.append(temp_list)
                 else:
                     stack.append(combinations(int(b), int(a)))
 
@@ -1171,20 +1165,17 @@ def run_program(commands,
                         for R in b:
                             temp_list_2.append(int(R) ** int(Q))
                         temp_list.append(temp_list_2)
-                    for S in temp_list:
-                        stack.append(S)
+                    stack.append(temp_list)
                 elif type(a) is list:
                     temp_list = []
                     for Q in a:
                         temp_list.append(int(b) ** int(Q))
-                    for S in temp_list:
-                        stack.append(S)
+                    stack.append(temp_list)
                 elif type(b) is list:
                     temp_list = []
                     for Q in b:
                         temp_list.append(int(Q) ** int(a))
-                    for S in temp_list:
-                        stack.append(S)
+                    stack.append(temp_list)
                 else:
                     stack.append(int(b) ** int(a))
 
