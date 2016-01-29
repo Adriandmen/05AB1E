@@ -90,20 +90,17 @@ def run_program(commands,
                         for R in b:
                             temp_list_2.append(convert_to_base(int(Q), int(R)))
                         temp_list.append(temp_list_2)
-                    for S in temp_list:
-                        stack.append(S)
+                    stack.append(temp_list)
                 elif type(a) is list:
                     temp_list = []
                     for Q in a:
                         temp_list.append(convert_to_base(int(Q), int(b)))
-                    for S in temp_list:
-                        stack.append(S)
+                    stack.append(temp_list)
                 elif type(b) is list:
                     temp_list = []
                     for Q in b:
                         temp_list.append(convert_to_base(int(a), int(Q)))
-                    for S in temp_list:
-                        stack.append(S)
+                    stack.append(temp_list)
                 else:
                     stack.append(convert_to_base(a, b))
 
