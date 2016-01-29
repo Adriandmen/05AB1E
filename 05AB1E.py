@@ -1973,6 +1973,10 @@ def run_program(commands,
                 stack.append(a)
                 stack.append(a)
 
+            elif current_command == "\u00c4":
+                a = stack.pop()
+                stack.append(abs(int(a)))
+
             elif current_command == "\u00dd":
                 if len(stack) > 1:
                     a = stack.pop()

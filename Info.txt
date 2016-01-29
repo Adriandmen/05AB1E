@@ -158,7 +158,7 @@ Extended ASCII characters (CP-1252)
 Á 56	=
 Â 57	=
 Ã 58	=
-Ä 59	=
+Ä 59	= pop a      push abs(a)
 Å 60	=
 Æ 61	= pop a      push reduced a
 Ç 62	= pop a      push ASCII value of a
