@@ -123,7 +123,7 @@ Extended ASCII characters (CP-1252)
 › 21	= pop a,b    push a > b
 œ 22	=
 ž 23	=
-Ÿ 24	=
+Ÿ 24	= pop a,b    push [a, ..., b]
 ¡ 25	= pop a,b    push a.split(b)  
 ¢ 26	= pop a,b    push a.count(b)
 £ 27	= pop a,b    push a[0:b]
