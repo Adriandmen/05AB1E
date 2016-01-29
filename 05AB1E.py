@@ -592,7 +592,7 @@ def run_program(commands,
                         temp_list.append(int(not int(a)))
                 else:
                     a = input("> ")
-                    temp_list.append(int(not int(a)))
+                    stack.append(int(not int(a)))
 
             elif current_command == "s":
                 a = stack.pop()
