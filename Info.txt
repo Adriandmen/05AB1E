@@ -125,7 +125,7 @@ Extended ASCII characters (CP-1252)
 ž 23	=
 Ÿ 24	=
 ¡ 25	= pop a,b    push a.split(b)  
-¢ 26	=
+¢ 26	= pop a,b    push a.count(b)
 £ 27	= pop a,b    push a[0:b]
 ¤ 28	=
 ¥ 29	=
@@ -183,7 +183,7 @@ Extended ASCII characters (CP-1252)
 Ú 81	= pop a      push reverse uniquified a
 Û 82	= pop a,b    push a with leading b's trimmed off
 Ü 83	= pop a,b    push a with trailing b's trimmed off
-Ý 84	=
+Ý 84	= pop a,b    push [a, ..., b - 1]
 Þ 85	= pop a      push float(a)
 ß 86	= pop smallest element of list
 à 87	= pop greatest element of list
