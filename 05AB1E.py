@@ -586,34 +586,13 @@ def run_program(commands,
                     if type(a) is list:
                         temp_list = []
                         for Q in a:
-                            try:
-                                a = int(a)
-                                if a == 1:
-                                    temp_list.append(False)
-                                else:
-                                    temp_list.append(True)
-                            except:
-                                temp_list.append(False)
+                            temp_list.append(int(not int(Q)))
                         stack.append(temp_list)
                     else:
-                        try:
-                            a = int(a)
-                            if a == 1:
-                                stack.append(False)
-                            else:
-                                stack.append(True)
-                        except:
-                            stack.append(False)
+                        temp_list.append(int(not int(a)))
                 else:
                     a = input("> ")
-                    try:
-                        a = int(a)
-                        if a == 1:
-                            stack.append(False)
-                        else:
-                            stack.append(True)
-                    except:
-                        stack.append(False)
+                    temp_list.append(int(not int(a)))
 
             elif current_command == "s":
                 a = stack.pop()
