@@ -2013,8 +2013,14 @@ def run_program(commands,
                         b = input("> ")
                         a = input("> ")
                 temp_list = []
-                for Q in range(int(b), int(a) + 1):
-                    temp_list.append(Q)
+                if int(b) > int(a):
+                    for Q in range(int(a), int(b) + 1):
+                        temp_list.append(Q)
+                    temp_list = temp_list[::-1]
+                else:
+                    for Q in range(int(b), int(a) + 1):
+                        temp_list.append(Q)
+
                 stack.append(temp_list)
 
             elif current_command == "\u0160":
