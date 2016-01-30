@@ -1441,10 +1441,10 @@ def run_program(commands,
 
             elif current_command == "t":
                 if stack:
-                    a = int(stack.pop())
+                    a = stack.pop()
                 else:
-                    a = int(input("> "))
-                stack.append(int(math.sqrt(int(a))))
+                    a = input("> ")
+                stack.append(math.sqrt(float(a)))
 
             elif current_command == "n":
                 if stack:
