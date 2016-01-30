@@ -99,7 +99,7 @@ Extended ASCII characters (CP-1252)
 
 € 0     = else statement
 ‚ 1	=
-ƒ 2	=
+ƒ 2	= pop a      push for N in range(0, a + 1)
 „ 3	=
 … 4	=
 † 5	=

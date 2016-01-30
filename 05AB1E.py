@@ -664,7 +664,7 @@ def run_program(commands,
                                 amount_else -= 1
                             if amount_brackets == 0:
                                 break
-                        elif current_command == "i" or current_command == "F" or current_command == "v":
+                        elif current_command == "i" or current_command == "F" or current_command == "v" or current_command == "G" or current_command == "\u0192":
                             amount_brackets += 1
                             if current_command == "i":
                                 amount_else += 1
@@ -733,7 +733,7 @@ def run_program(commands,
                             amount_brackets -= 1
                             if amount_brackets == 0:
                                 break
-                        elif current_command == "i" or current_command == "F" or current_command == "v":
+                        elif current_command == "i" or current_command == "F" or current_command == "v" or current_command == "G" or current_command == "\u0192":
                             amount_brackets += 1
                         STATEMENT += current_command
                     else:
@@ -772,7 +772,7 @@ def run_program(commands,
                             amount_brackets -= 1
                             if amount_brackets == 0:
                                 break
-                        elif current_command == "i" or current_command == "F" or current_command == "v":
+                        elif current_command == "i" or current_command == "F" or current_command == "v" or current_command == "G" or current_command == "\u0192":
                             amount_brackets += 1
                         STATEMENT += current_command
                         try:
@@ -789,8 +789,45 @@ def run_program(commands,
                 else:
                     a = int(input("> "))
 
-                if a != 0:
+                if a > 1:
                     for range_variable in range(1, a):
+                        run_program(STATEMENT, debug, True, range_variable, x_integer, y_integer, z_integer, string_variable)
+                pointer_position = temp_position
+
+            elif current_command == "\u0192":
+                STATEMENT = ""
+                temp_position = pointer_position
+                temp_position += 1
+                current_command = commands[temp_position]
+                amount_brackets = 1
+                temp_string_mode = False
+                while amount_brackets != 0:
+                    if current_command == "\"":
+                        temp_string_mode = not temp_string_mode
+                    if temp_string_mode == False:
+                        if current_command == "}":
+                            amount_brackets -= 1
+                            if amount_brackets == 0:
+                                break
+                        elif current_command == "i" or current_command == "F" or current_command == "v" or current_command == "G" or current_command == "\u0192":
+                            amount_brackets += 1
+                        STATEMENT += current_command
+                        try:
+                            temp_position += 1
+                            current_command = commands[temp_position]
+                        except:
+                            break
+                if debug:
+                    try:print(STATEMENT)
+                    except:0
+                a = 0
+                if stack:
+                    a = int(stack.pop())
+                else:
+                    a = int(input("> "))
+
+                if a > -1:
+                    for range_variable in range(0, a + 1):
                         run_program(STATEMENT, debug, True, range_variable, x_integer, y_integer, z_integer, string_variable)
                 pointer_position = temp_position
 
@@ -1489,7 +1526,7 @@ def run_program(commands,
                             amount_brackets -= 1
                             if amount_brackets == 0:
                                 break
-                        elif current_command == "i" or current_command == "F" or current_command == "v":
+                        elif current_command == "i" or current_command == "F" or current_command == "v" or current_command == "G" or current_command == "\u0192":
                             amount_brackets += 1
                         STATEMENT += current_command
                         try:
