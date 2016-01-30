@@ -1461,7 +1461,7 @@ def run_program(commands,
                 else:
                     stack.append(''.join(sorted(str(a))))
 
-            elif current_command == "\u2122":
+            elif current_command == "\u00b0":
                 if stack:
                     a = stack.pop()
                 else:

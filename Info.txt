@@ -138,7 +138,7 @@ Extended ASCII characters (CP-1252)
 ¬ 36	= pop a      push head(a)
 ® 37	=
 ¯ 38	=
-° 39	=
+° 39	= pop a      push 10 ** a
 ± 40	=
 ² 41	=
 ³ 42	=
@@ -230,5 +230,4 @@ Extended functions:
 .J      = pop a      1-indexed max_spaces.join(stack) grid
 .l      = pop a      push is_lower(a)
 .p      = pop a      push list of exponents of prime factors (2^a, 3^b, 5^c, 7^d, etc.)
-.T      = pop a      push 10 ** a
 .u      = pop a      push is_upper(a)
