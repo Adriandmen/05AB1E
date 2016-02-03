@@ -167,7 +167,6 @@ def run_program(commands,
                         break
                     if debug:print(str(pointer_position) + " with " + str(hex(ord(current_command))))
 
-                pointer_position += 1
                 stack.append(temp_string)
 
             elif current_command == "\u2018":
@@ -201,7 +200,6 @@ def run_program(commands,
                         break
                     if debug:print(str(pointer_position) + " with " + str(hex(ord(current_command))))
 
-                pointer_position += 1
                 stack.append(temp_string)
 
             elif current_command == "\u201c":
@@ -235,7 +233,6 @@ def run_program(commands,
                         break
                     if debug:print(str(pointer_position) + " with " + str(hex(ord(current_command))))
 
-                pointer_position += 1
                 stack.append(temp_string)
 
             elif current_command == "\u201d":
@@ -269,7 +266,6 @@ def run_program(commands,
                         break
                     if debug:print(str(pointer_position) + " with " + str(hex(ord(current_command))))
 
-                pointer_position += 1
                 stack.append(temp_string)
 
             elif current_command == "!":
