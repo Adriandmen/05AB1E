@@ -133,7 +133,7 @@ Extended ASCII characters (CP-1252)
 § 31	= pop a      push str(a)
 ¨ 32	=
 © 33	=
-ª 34	=
+ª 34	= pop a      push sentence_cased(a)
 « 35	= 
 ¬ 36	= pop a      push head(a)
 ® 37	=

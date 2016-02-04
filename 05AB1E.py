@@ -350,6 +350,22 @@ def run_program(commands,
 
                 stack.append(temp_string)
 
+            elif current_command == "\u00aa":
+                a = pop_stack(1)
+                a = str(a)
+                temp_string = ""
+                begin_sentence = True
+                for Q in a:
+                    if begin_sentence:
+                        temp_string += Q.upper()
+                        if not Q == " ":
+                            begin_sentence = False
+                    else:
+                        temp_string += Q
+                    if Q == ".":
+                        begin_sentence = True
+                stack.append(temp_string)
+
             elif current_command == "!":
                 a = pop_stack(1)
 
