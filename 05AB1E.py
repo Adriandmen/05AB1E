@@ -514,11 +514,15 @@ def run_program(commands,
                     stack.append(str(a)[::-1])
 
             elif current_command == "I":
-                stack.append(str(input()))
+                a = str(input())
+                stack.append(a)
+                recent_inputs.append(a)
 
             elif current_command == "$":
+                a = str(input())
                 stack.append(1)
-                stack.append(str(input()))
+                stack.append(a)
+                recent_inputs.append(a)
 
             elif current_command == "H":
                 a = pop_stack(1)
@@ -742,7 +746,8 @@ def run_program(commands,
                 if stack:
                     a = int(stack.pop())
                 else:
-                    a = int(input("> "))
+                    a = int(input())
+                    recent_inputs.append(a)
 
                 if a != 0:
                     for range_variable in range(0, a):
@@ -779,7 +784,8 @@ def run_program(commands,
                 if stack:
                     a = int(stack.pop())
                 else:
-                    a = int(input("> "))
+                    a = int(input())
+                    recent_inputs.append(a)
 
                 if a > 1:
                     for range_variable in range(1, a):
@@ -816,7 +822,8 @@ def run_program(commands,
                 if stack:
                     a = int(stack.pop())
                 else:
-                    a = int(input("> "))
+                    a = int(input())
+                    recent_inputs.append(a)
 
                 if a > -1:
                     for range_variable in range(0, a + 1):
@@ -1069,8 +1076,10 @@ def run_program(commands,
                 try:
                     b = eval(a)
                     stack.append(b)
+                    recent_inputs.append(b)
                 except:
                     stack.append(a)
+                    recent_inputs.append(a)
 
             elif current_command == ")":
                 temp_list = []
@@ -1094,9 +1103,8 @@ def run_program(commands,
             elif current_command == "O":
                 temp_number = 0
                 temp_list_2 = []
-                for Q in stack:
-                    temp_list_2.append(Q)
-                a = temp_list_2.pop()
+                a = pop_stack(1)
+
                 if type(a) is list:
                     for Q in a:
                         temp_number += int(Q)
@@ -1156,6 +1164,7 @@ def run_program(commands,
                 a = input()
                 z_integer = a
                 stack.append(a)
+                recent_inputs.append(a)
 
             elif current_command == "q":
                 exit_program.append(1)
@@ -1410,7 +1419,9 @@ def run_program(commands,
                 if stack:
                     a = stack.pop()
                 else:
-                    a = str(input("> "))
+                    a = str(input(a))
+                    recent_inputs.append(a)
+
                 range_variable = -1
                 if type(a) is int: a = str(a)
                 for string_variable in a:
@@ -1552,7 +1563,9 @@ def run_program(commands,
                     a = str(a)
                 else:
                     a = str(input())
+                    recent_inputs.append(a)
                     b = int(input())
+                    recent_inputs.append(b)
                 temp_string = ""
                 R = 0
                 for Q in a:
