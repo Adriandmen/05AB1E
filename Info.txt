@@ -117,7 +117,7 @@ Extended ASCII characters (CP-1252)
 • 15	=
 – 16	=
 — 17	=
-˜ 18	=
+˜   	=
 ™ 19	= pop a      push title_cased(a)
 š 20	= pop a      push switch_cased(a)
 › 21	= pop a,b    push a > b
@@ -201,7 +201,7 @@ Extended ASCII characters (CP-1252)
 ì 99	=
 í 13	=
 î 14	=
-ï	= pop a      push int(a)
+ï 18	= pop a      push int(a)
 ð	=
 ñ	=
 ò	=
