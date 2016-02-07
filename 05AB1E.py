@@ -1861,6 +1861,20 @@ def run_program(commands,
                     stack.append(a)
                     stack.append(stack[-1][0])
 
+            elif current_command == "\u00f2":
+                a = pop_stack(1)
+                stack.append(int(a) + 1)
+
+            elif current_command == "\u00f3":
+                a = pop_stack(1)
+                c = float(a)
+                if str(c)[-1] == "0" and str(c)[-2] == ".":
+                    c -= 1
+                    c = int(c)
+                else:
+                    c = int(c)
+                stack.append(c)
+
             elif current_command == "?":
                 a = pop_stack(1)
                 print(a, end="")

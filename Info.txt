@@ -204,8 +204,8 @@ Extended ASCII characters (CP-1252)
 ï 18	= pop a      push int(a)
 ð	=
 ñ	=
-ò	=
-ó	=
+ò	= pop a      push inclusive round up a
+ó	= pop a      push inclusive round down a
 ô	=
 õ	=
 ö	=
