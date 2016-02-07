@@ -109,7 +109,7 @@ Extended ASCII characters (CP-1252)
 Š 9	= pop a,b,c  push c,a,b
 ‹ 10	= pop a,b    push a < b
 Œ 11	=
-Ž 12	=
+Ž 12	= break if stack is empty
 ‘ -	= for compressed strings (upper)
 ’ - 	= for compressed strings (no implicit space)
 “ -	= for compressed strings (normal)

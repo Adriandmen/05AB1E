@@ -1861,6 +1861,10 @@ def run_program(commands,
                     stack.append(a)
                     stack.append(stack[-1][0])
 
+            elif current_command == "\u017d":
+                if not stack:
+                    return True
+
             elif current_command == "\u00f2":
                 a = pop_stack(1)
                 stack.append(int(a) + 1)
