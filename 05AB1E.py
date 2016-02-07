@@ -3,6 +3,7 @@ import time
 import math
 import binascii
 import dictionary
+import ast
 from commands import *
 
 stack = []
@@ -28,7 +29,7 @@ def pop_stack(amount=1):
             a = input()
             if is_array(a):
                 recent_inputs.append(a)
-                return eval(a)
+                return ast.literal_eval(a)
             else:
                 recent_inputs.append(a)
                 return a
@@ -43,7 +44,7 @@ def pop_stack(amount=1):
             a = stack.pop()
             b = input()
             if is_array(b):
-                b = eval(b)
+                b = ast.literal_eval(b)
             recent_inputs.append(b)
             return a, b
 
@@ -51,9 +52,9 @@ def pop_stack(amount=1):
             a = input()
             b = input()
             if is_array(a):
-                a = eval(a)
+                a = ast.literal_eval(a)
             if is_array(b):
-                b = eval(b)
+                b = ast.literal_eval(b)
 
             recent_inputs.append(a)
             recent_inputs.append(b)
@@ -71,7 +72,7 @@ def pop_stack(amount=1):
             b = stack.pop()
             c = input()
             if is_array(c):
-                c = eval(c)
+                c = ast.literal_eval(c)
 
             recent_inputs.append(c)
             return a, b, c
@@ -81,9 +82,9 @@ def pop_stack(amount=1):
             b = input()
             c = input()
             if is_array(b):
-                b = eval(b)
+                b = ast.literal_eval(b)
             if is_array(c):
-                c = eval(c)
+                c = ast.literal_eval(c)
 
             recent_inputs.append(b)
             recent_inputs.append(c)
@@ -94,11 +95,11 @@ def pop_stack(amount=1):
             b = input()
             c = input()
             if is_array(a):
-                a = eval(a)
+                a = ast.literal_eval(a)
             if is_array(b):
-                b = eval(b)
+                b = ast.literal_eval(b)
             if is_array(c):
-                c = eval(c)
+                c = ast.literal_eval(c)
 
             recent_inputs.append(a)
             recent_inputs.append(b)
@@ -108,6 +109,7 @@ def pop_stack(amount=1):
 
 def run_program(commands,
                 debug,
+                safe_mode,
                 suppress_print,
                 range_variable=0,
                 x_integer=1,
@@ -696,9 +698,9 @@ def run_program(commands,
                         print()
                 a = stack.pop()
                 if a == 1 or a == "1":
-                    run_program(STATEMENT, debug, True, range_variable, x_integer, y_integer, z_integer, string_variable)
+                    run_program(STATEMENT, debug, safe_mode, True, range_variable, x_integer, y_integer, z_integer, string_variable)
                 elif amount_else == 0:
-                    run_program(ELSE_STATEMENT[1:], debug, True, range_variable, x_integer, y_integer, z_integer, string_variable)
+                    run_program(ELSE_STATEMENT[1:], debug, safe_mode, True, range_variable, x_integer, y_integer, z_integer, string_variable)
                 pointer_position = temp_position
 
             elif current_command == "\\":
@@ -751,7 +753,7 @@ def run_program(commands,
 
                 if a != 0:
                     for range_variable in range(0, a):
-                        run_program(STATEMENT, debug, True, range_variable, x_integer, y_integer, z_integer, string_variable)
+                        run_program(STATEMENT, debug, safe_mode, True, range_variable, x_integer, y_integer, z_integer, string_variable)
                 pointer_position = temp_position
 
             elif current_command == "G":
@@ -789,7 +791,7 @@ def run_program(commands,
 
                 if a > 1:
                     for range_variable in range(1, a):
-                        run_program(STATEMENT, debug, True, range_variable, x_integer, y_integer, z_integer, string_variable)
+                        run_program(STATEMENT, debug, safe_mode, True, range_variable, x_integer, y_integer, z_integer, string_variable)
                 pointer_position = temp_position
 
             elif current_command == "\u0192":
@@ -827,7 +829,7 @@ def run_program(commands,
 
                 if a > -1:
                     for range_variable in range(0, a + 1):
-                        run_program(STATEMENT, debug, True, range_variable, x_integer, y_integer, z_integer, string_variable)
+                        run_program(STATEMENT, debug, safe_mode, True, range_variable, x_integer, y_integer, z_integer, string_variable)
                 pointer_position = temp_position
 
             elif current_command == "N":
@@ -1022,7 +1024,7 @@ def run_program(commands,
                 if debug:
                     print(STATEMENT)
                 while True:
-                    if run_program(STATEMENT, debug, True, range_variable, x_integer, y_integer, z_integer, string_variable):
+                    if run_program(STATEMENT, debug, safe_mode, True, range_variable, x_integer, y_integer, z_integer, string_variable):
                         break
                 pointer_position = temp_position
 
@@ -1040,21 +1042,21 @@ def run_program(commands,
             elif current_command == "Q":
                 a, b = pop_stack(2)
                 if type(a) is list and type(b) is list:
-                    stack.append(eval("\"" + str(a) + "\"" + "==" + "\"" + str(b) + "\""))
+                    stack.append(ast.literal_eval("\"" + str(a) + "\"" + "==" + "\"" + str(b) + "\""))
                 elif type(a) is list:
                     temp_list = []
                     for Q in a:
-                        if is_digit_value(str(Q)): Q = eval(str(Q))
-                        temp_list.append(eval("\"" + str(b) + "\"" + "==" + "\"" + str(Q) + "\""))
+                        if is_digit_value(str(Q)): Q = ast.literal_eval(str(Q))
+                        temp_list.append(ast.literal_eval("\"" + str(b) + "\"" + "==" + "\"" + str(Q) + "\""))
                     stack.append(temp_list)
                 elif type(b) is list:
                     temp_list = []
                     for Q in b:
-                        if is_digit_value(str(Q)): Q = eval(str(Q))
-                        temp_list.append(eval("\"" + str(Q) + "\"" + "==" + "\"" + str(a) + "\""))
+                        if is_digit_value(str(Q)): Q = ast.literal_eval(str(Q))
+                        temp_list.append(ast.literal_eval("\"" + str(Q) + "\"" + "==" + "\"" + str(a) + "\""))
                     stack.append(temp_list)
                 else:
-                    stack.append(eval("\"" + str(a) + "\"" + "==" + "\"" + str(b) + "\""))
+                    stack.append(ast.literal_eval("\"" + str(a) + "\"" + "==" + "\"" + str(b) + "\""))
 
             elif current_command == "(":
                 a = pop_stack(1)
@@ -1076,7 +1078,7 @@ def run_program(commands,
             elif current_command == "E":
                 a = input()
                 try:
-                    b = eval(a)
+                    b = ast.literal_eval(a)
                     stack.append(b)
                     recent_inputs.append(b)
                 except:
@@ -1439,7 +1441,7 @@ def run_program(commands,
                 for string_variable in a:
                     range_variable += 1
                     if debug:print("N = " + str(range_variable))
-                    run_program(STATEMENT, debug, True, range_variable, x_integer, y_integer, z_integer, string_variable)
+                    run_program(STATEMENT, debug, True, safe_mode, range_variable, x_integer, y_integer, z_integer, string_variable)
                 pointer_position = temp_position
 
             elif current_command == "y":
@@ -1899,19 +1901,22 @@ def run_program(commands,
                 has_printed.append(True)
 
             elif current_command == ".e":
-                temp_string = ""
-                try:
-                    while commands[pointer_position + 1] != "}":
-                        temp_string += commands[pointer_position + 1]
-                        pointer_position += 1
-                except:0
-                temp_string = temp_string.replace("#", "stack")
-                temp_string = temp_string.replace(";", "\n")
-                if debug:
-                    print("-- PYTHON EXEC --")
-                    print(temp_string)
-                    print("------ END ------")
-                exec(temp_string)
+                if safe_mode:
+                    print("exec commands are ignored in safe mode")
+                else:
+                    temp_string = ""
+                    try:
+                        while commands[pointer_position + 1] != "}":
+                            temp_string += commands[pointer_position + 1]
+                            pointer_position += 1
+                    except:0
+                    temp_string = temp_string.replace("#", "stack")
+                    temp_string = temp_string.replace(";", "\n")
+                    if debug:
+                        print("-- PYTHON EXEC --")
+                        print(temp_string)
+                        print("------ END ------")
+                    exec(temp_string)
 
             elif current_command == "\u00b9":
                 if len(recent_inputs) > 0:
@@ -1937,14 +1942,16 @@ def run_program(commands,
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', '--debug', help="Debug mode", action="store_true")
+    parser.add_argument('-s', '--safe', help="Safe mode", action="store_true")
     parser.add_argument("program_path", help="Program path", type=str)
 
     args = parser.parse_args()
     filename = args.program_path
     DEBUG = args.debug
+    SAFE_MODE = args.safe
 
     code = open(filename, "r", encoding="utf-8").read()
 
     if code == "":
         code = "$FDR+{"
-    run_program(code, DEBUG, False, 0)
+    run_program(code, DEBUG, SAFE_MODE, False, 0)
