@@ -1059,8 +1059,10 @@ def run_program(commands,
             elif current_command == "(":
                 a = pop_stack(1)
                 if type(a) is list:
+                    temp_list = []
                     for Q in a:
-                        stack.append(int(Q) * -1)
+                        temp_list.append(int(Q) * -1)
+                    stack.append(temp_list)
                 else:
                     stack.append(int(a) * -1)
 
@@ -1864,6 +1866,18 @@ def run_program(commands,
             elif current_command == "\u017d":
                 if not stack:
                     return True
+
+            elif current_command == "\u00ab":
+                if len(stack) > 1:
+                    b, a = pop_stack(2)
+                else:
+                    a, b  = pop_stack(2)
+                temp_list = []
+                for Q in a:
+                    temp_list.append(Q)
+                for Q in b:
+                    temp_list.append(Q)
+                stack.append(temp_list)
 
             elif current_command == "\u00f2":
                 a = pop_stack(1)

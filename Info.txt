@@ -134,7 +134,7 @@ Extended ASCII characters (CP-1252)
 ¨ 32	=
 © 33	=
 ª 34	= pop a      push sentence_cased(a)
-« 35	= 
+« 35	= pop a,b    push concatenated(a, b)
 ¬ 36	= pop a      push head(a)
 ® 37	=
 ¯ 38	=
