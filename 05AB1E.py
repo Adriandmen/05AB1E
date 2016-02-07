@@ -1113,6 +1113,16 @@ def run_program(commands,
                         temp_number += int(Q)
                 stack.append(temp_number)
 
+            elif current_command == ";":
+                a = pop_stack(1)
+                if type(a) is list:
+                    temp_list = []
+                    for Q in a:
+                        temp_list.append(int(Q) // 2)
+                    stack.append(temp_list)
+                else:
+                    stack.append(int(a) // 2)
+
             elif current_command == "w":
                 time.sleep(1)
 
