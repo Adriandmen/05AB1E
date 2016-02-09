@@ -1684,7 +1684,7 @@ def run_program(commands,
                 if type(a) is list:
                     temp_list = []
                     for Q in a:
-                        temp_list.append(int(int(Q) % 2 == 0))
+                        temp_list.append(int(int(Q) % 2 == 1))
                     stack.append(temp_list)
                 else:
                     stack.append(int(a) % 2 == 1)
