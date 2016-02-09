@@ -1633,10 +1633,17 @@ def run_program(commands,
                 b, a = pop_stack(2)
                 if type(a) is not list:
                     a = str(a)
-                b = str(b)
-                length_of_str = len(b)
+                    b = str(b)
+                    length_of_str = len(b)
+                else:
+                    b = str(b)
+                    length_of_str = 1
                 while True:
-                    if a[0:length_of_str] == b:
+                    if type(a[0:length_of_str]) is list:
+                        x = str(a[0:length_of_str])[1:-1]
+                    else:
+                        x = str(a[0:length_of_str])
+                    if x == b:
                         a = a[length_of_str:]
                     else:
                         break
@@ -1644,12 +1651,20 @@ def run_program(commands,
 
             elif current_command == "\u00dc":
                 b, a = pop_stack(2)
-                b = str(b)
                 if type(a) is not list:
                     a = str(a)
-                length_of_str = len(b)
+                    b = str(b)
+                    length_of_str = len(b)
+                else:
+                    b = str(b)
+                    length_of_str = 1
+
                 while True:
-                    if a[len(a) - length_of_str:len(a)] == b:
+                    if type(a[len(a) - length_of_str:len(a)]) is list:
+                        x = str(a[len(a) - length_of_str:len(a)])[1:-1]
+                    else:
+                        x = str(a[len(a) - length_of_str:len(a)])
+                    if x == str(b):
                         a = a[0:len(a) - length_of_str]
                     else:
                         break
