@@ -1,7 +1,6 @@
 import argparse
 import time
 import math
-import binascii
 import dictionary
 import ast
 from commands import *
