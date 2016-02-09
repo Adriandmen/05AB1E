@@ -1,8 +1,8 @@
 # 05AB1E
-A new (experimental) golfing language
+A new (experimental) golfing language. If the name **05AB1E** was interpreted as a hexadecimal number and converted to base64, it would result into "Base". I wanted to make a language which has an advantage in base conversion, but now it more of an overall language.
 
 
-For information about all the commands, goto _Info.txt_
+For information about all the commands, go to _Info.txt_
 
 
 ###Sample programs:
