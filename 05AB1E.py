@@ -1943,14 +1943,19 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', '--debug', help="Debug mode", action="store_true")
     parser.add_argument('-s', '--safe', help="Safe mode", action="store_true")
+    parser.add_argument('-c', '--cp1252', help="Encode from CP-1252", action="store_true")
     parser.add_argument("program_path", help="Program path", type=str)
 
     args = parser.parse_args()
     filename = args.program_path
     DEBUG = args.debug
     SAFE_MODE = args.safe
+    ENCODE_CP1252 = args.cp1252
 
-    code = open(filename, "r", encoding="utf-8").read()
+    if ENCODE_CP1252:
+        code = open(filename, "r", encoding="cp1252").read()
+    else:
+        code = open(filename, "r", encoding="utf-8").read()
 
     if code == "":
         code = "$FDR+{"
