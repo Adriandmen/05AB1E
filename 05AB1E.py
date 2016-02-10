@@ -1979,6 +1979,9 @@ def run_program(commands,
                 else:
                     stack.append(int(a) + 1)
 
+            elif current_command == "\u00f0":
+                stack.append(" ")
+
             elif current_command == "\u00f3":
                 a = pop_stack(1)
                 if type(a) is list:
