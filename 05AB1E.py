@@ -1394,14 +1394,20 @@ def run_program(commands,
                     stack.append(2 ** int(a))
 
             elif current_command == "k":
-                a, b = pop_stack(2)
+                if stack:
+                    b, a = pop_stack(2)
+                else:
+                    a, b = pop_stack(2)
                 index_value = 0
+                found = False
                 for Q in a:
                     index_value += 1
                     if str(Q) == str(b):
                         stack.append(index_value)
+                        found = True
                         break
-                stack.append(-1)
+                if not found:
+                    stack.append(-1)
 
             elif current_command == "{":
                 a = pop_stack(1)
