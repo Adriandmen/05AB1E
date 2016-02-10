@@ -1043,25 +1043,25 @@ def run_program(commands,
                 if type(a) is list and type(b) is list:
                     a = ast.literal_eval(str(a))
                     b = ast.literal_eval(str(b))
-                    stack.append(eval("\"" + a + "\"" + "==" + "\"" + b + "\""))
+                    stack.append(int(str(a) == str(b)))
                 elif type(a) is list:
                     temp_list = []
-                    b = ast.literal_eval(str(b))
+                    b = ast.literal_eval("\"" + str(b) + "\"")
                     for Q in a:
                         if is_digit_value(str(Q)): Q = ast.literal_eval(str(Q))
-                        temp_list.append(eval("\"" + b + "\"" + "==" + "\"" + str(Q) + "\""))
+                        temp_list.append(int(str(Q) == str(b)))
                     stack.append(temp_list)
                 elif type(b) is list:
                     temp_list = []
-                    a = ast.literal_eval(str(a))
+                    a = ast.literal_eval("\"" + str(a) + "\"")
                     for Q in b:
                         if is_digit_value(str(Q)): Q = ast.literal_eval(str(Q))
-                        temp_list.append(ast.literal_eval("\"" + Q + "\"" + "==" + "\"" + str(a) + "\""))
+                        temp_list.append(int(str(Q) == str(a)))
                     stack.append(temp_list)
                 else:
-                    a = ast.literal_eval(str(a))
-                    b = ast.literal_eval(str(b))
-                    stack.append(eval("\"" + str(a) + "\"" + "==" + "\"" + str(b) + "\""))
+                    a = ast.literal_eval("\"" + str(a) + "\"")
+                    b = ast.literal_eval("\"" + str(b) + "\"")
+                    stack.append(int(str(a) == str(b)))
 
             elif current_command == "(":
                 a = pop_stack(1)
