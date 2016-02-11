@@ -1714,8 +1714,10 @@ def run_program(commands,
             elif current_command == "\u00de":
                 a = pop_stack(1)
                 if type(a) is list:
-                    for Q in a:
-                        Q = str(Q)
+                    print(a)
+                    temp_list = []
+                    for R in a:
+                        Q = str(R)
                         is_neg = False
                         if Q[0] == "-":
                             is_neg = True
