@@ -102,7 +102,7 @@ Extended ASCII characters (CP-1252)
 ƒ 2	= pop a      push for N in range(0, a + 1)
 „ 3	=
 … 4	=
-† 5	=
+† 5	= pop a,b    push a with b filtered to the front
 ‡ 6	=
 ˆ 7	=
 ‰ 8	= 
@@ -202,7 +202,7 @@ Extended ASCII characters (CP-1252)
 í 13	=
 î 14	=
 ï 18	= pop a      push int(a)
-ð	=
+ð	=            push a space character
 ñ	=
 ò	= pop a      push inclusive round up a
 ó	= pop a      push inclusive round down a
@@ -224,7 +224,7 @@ Extended functions:
 
 .a      = pop a      push only letters of a
 .d      = pop a      push only digits of a
-.e      = experimental python evaluation
+.e      = experimental python evaluation (does not work in safe mode)
 .f      = pop a      push list of prime factors (with duplicates)
 .j	= pop a      0-indexed max_spaces.join(stack) grid
 .J      = pop a      1-indexed max_spaces.join(stack) grid
