@@ -1709,7 +1709,13 @@ def run_program(commands,
 
             elif current_command == "\u00ef":
                 a = pop_stack(1)
-                stack.append(int(a))
+                if type(a) is list:
+                    temp_list = []
+                    for Q in a:
+                        temp_list.append(int(Q))
+                    stack.append(temp_list)
+                else:
+                    stack.append(int(a))
 
             elif current_command == "\u00de":
                 a = pop_stack(1)
@@ -1760,7 +1766,13 @@ def run_program(commands,
 
             elif current_command == "\u00a7":
                 a = pop_stack(1)
-                stack.append(str(a))
+                if type(a) is list:
+                    temp_list = []
+                    for Q in a:
+                        temp_list.append(str(Q))
+                    stack.append(temp_list)
+                else:
+                    stack.append(str(a))
 
             elif current_command == "\u0161":
                 a = pop_stack(1)
@@ -1983,6 +1995,27 @@ def run_program(commands,
 
             elif current_command == "\u00f0":
                 stack.append(" ")
+
+            elif current_command == "\u2020":
+                if len(stack) > 0:
+                    a, b = pop_stack(2)
+                else:
+                    b, a = pop_stack(2)
+
+                if type(b) is not list:
+                    b = str(b)
+
+                temp_list = []
+                temp_list_2 = []
+
+                for Q in b:
+                    if str(Q) == str(a):
+                        temp_list.append(str(Q))
+                    else:
+                        temp_list_2.append(str(Q))
+                for P in temp_list_2:
+                    temp_list.append(P)
+                stack.append(temp_list)
 
             elif current_command == "\u00f3":
                 a = pop_stack(1)
