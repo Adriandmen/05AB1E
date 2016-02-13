@@ -147,7 +147,6 @@ def run_program(commands,
                     temp_list = []
                     for Q in a:
                         temp_list.append(convert_to_base(int(Q), 16))
-                        print(Q)
                     stack.append(temp_list)
                 else:
                     stack.append(convert_to_base(int(a), 16))
@@ -157,11 +156,10 @@ def run_program(commands,
                 if type(a) is list:
                     temp_list = []
                     for Q in a:
-                        temp_list.append(convert_to_base(int(Q), 2))
-                        print(Q)
+                        temp_list.append(convert_to_base(abs(int(Q)), 2))
                     stack.append(temp_list)
                 else:
-                    stack.append(convert_to_base(int(a), 2))
+                    stack.append(convert_to_base(abs(int(a)), 2))
 
             elif current_command == "B":
                 a, b = pop_stack(2)
@@ -171,18 +169,18 @@ def run_program(commands,
                     for Q in a:
                         temp_list_2 = []
                         for R in b:
-                            temp_list_2.append(convert_to_base(int(Q), int(R)))
+                            temp_list_2.append(convert_to_base(abs(int(Q)), int(R)))
                         temp_list.append(temp_list_2)
                     stack.append(temp_list)
                 elif type(a) is list:
                     temp_list = []
                     for Q in a:
-                        temp_list.append(convert_to_base(int(Q), int(b)))
+                        temp_list.append(convert_to_base(abs(int(Q)), int(b)))
                     stack.append(temp_list)
                 elif type(b) is list:
                     temp_list = []
                     for Q in b:
-                        temp_list.append(convert_to_base(int(a), int(Q)))
+                        temp_list.append(convert_to_base(abs(int(a)), int(Q)))
                     stack.append(temp_list)
                 else:
                     stack.append(convert_to_base(a, b))
