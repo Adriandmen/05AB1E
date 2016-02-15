@@ -166,10 +166,10 @@ Extended ASCII characters (CP-1252)
 É 64	= pop a      push a % 2 == 1 (is uneven)
 Ê 65	=
 Ë 66	=
-Ì 67	=
-Í 68	=
+Ì 67	= pop a      push a + 2
+Í 68	= pop a      push a - 2
 Î 69	=
-Ï 70	=
+Ï 70	= 
 Ð 71	= triplicate top of stack (pop a, push a, push a, push a)
 Ñ 72	=
 Ò 73	=
@@ -217,7 +217,7 @@ Extended ASCII characters (CP-1252)
 ü	=
 ý	=
 þ	=
-ÿ	=
+ÿ	= used for string interpolation, pop a and replace ÿ with str(a)
 
 
 Extended functions:

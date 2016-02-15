@@ -214,6 +214,9 @@ def run_program(commands,
                         break
                     if current_command == "\"":
                         break
+                    elif current_command == "\u00ff":
+                        temp_string += str(pop_stack(1))
+                        pointer_position += 1
                     else:
                         temp_string += current_command
                         pointer_position += 1
@@ -240,6 +243,9 @@ def run_program(commands,
                         elif current_command == "\u2019":
                             pointer_position += 1
                             break
+                        elif current_command == "\u00ff":
+                            temp_string += str(pop_stack(1))
+                            pointer_position += 1
                         else:
                             temp_string += current_command
                             pointer_position += 1
@@ -273,6 +279,9 @@ def run_program(commands,
                         elif current_command == "\u2018":
                             pointer_position += 1
                             break
+                        elif current_command == "\u00ff":
+                            temp_string += str(pop_stack(1))
+                            pointer_position += 1
                         else:
                             temp_string += current_command
                             pointer_position += 1
@@ -306,6 +315,9 @@ def run_program(commands,
                         elif current_command == "\u201c":
                             pointer_position += 1
                             break
+                        elif current_command == "\u00ff":
+                            temp_string += str(pop_stack(1))
+                            pointer_position += 1
                         else:
                             temp_string += current_command
                             pointer_position += 1
@@ -339,6 +351,9 @@ def run_program(commands,
                         elif current_command == "\u201d":
                             pointer_position += 1
                             break
+                        elif current_command == "\u00ff":
+                            temp_string += str(pop_stack(1))
+                            pointer_position += 1
                         else:
                             temp_string += current_command
                             pointer_position += 1
@@ -1718,7 +1733,6 @@ def run_program(commands,
             elif current_command == "\u00de":
                 a = pop_stack(1)
                 if type(a) is list:
-                    print(a)
                     temp_list = []
                     for R in a:
                         Q = str(R)
@@ -1993,6 +2007,26 @@ def run_program(commands,
 
             elif current_command == "\u00f0":
                 stack.append(" ")
+
+            elif current_command == "\u00cc":
+                a = pop_stack(1)
+                if type(a) is list:
+                    temp_list = []
+                    for Q in a:
+                        temp_list.append(int(Q) + 2)
+                    stack.append(temp_list)
+                else:
+                    stack.append(int(a) + 2)
+
+            elif current_command == "\u00cd":
+                a = pop_stack(1)
+                if type(a) is list:
+                    temp_list = []
+                    for Q in a:
+                        temp_list.append(int(Q) - 2)
+                    stack.append(temp_list)
+                else:
+                    stack.append(int(a) - 2)
 
             elif current_command == "\u2020":
                 if len(stack) > 0:
