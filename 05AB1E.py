@@ -550,7 +550,6 @@ def run_program(commands,
 
             elif current_command == "C":
                 a = pop_stack(1)
-                a = stack.pop()
                 if type(a) is list:
                     temp_list = []
                     for Q in a:
@@ -620,8 +619,8 @@ def run_program(commands,
                     temp_list.append(int(not int(a)))
 
             elif current_command == "s":
-                a = stack.pop()
-                b = stack.pop()
+                a = pop_stack(1)
+                b = pop_stack(1)
                 stack.append(a)
                 stack.append(b)
 
@@ -708,7 +707,7 @@ def run_program(commands,
                             except:
                                 print("?", end="")
                         print()
-                a = stack.pop()
+                a = pop_stack(1)
                 if a == 1 or a == "1":
                     run_program(STATEMENT, debug, safe_mode, True, range_variable, x_integer, y_integer, z_integer, string_variable)
                 elif amount_else == 0:
@@ -716,7 +715,7 @@ def run_program(commands,
                 pointer_position = temp_position
 
             elif current_command == "\\":
-                stack.pop()
+                pop_stack(1)
 
             elif current_command == "`":
                 a = pop_stack(1)
@@ -758,7 +757,7 @@ def run_program(commands,
                     except:0
                 a = 0
                 if stack:
-                    a = int(stack.pop())
+                    a = int(pop_stack(1))
                 else:
                     a = int(input())
                     recent_inputs.append(a)
@@ -796,7 +795,7 @@ def run_program(commands,
                     except:0
                 a = 0
                 if stack:
-                    a = int(stack.pop())
+                    a = int(pop_stack(1))
                 else:
                     a = int(input())
                     recent_inputs.append(a)
@@ -834,7 +833,7 @@ def run_program(commands,
                     except:0
                 a = 0
                 if stack:
-                    a = int(stack.pop())
+                    a = int(pop_stack(1))
                 else:
                     a = int(input())
                     recent_inputs.append(a)
@@ -1041,7 +1040,7 @@ def run_program(commands,
                 pointer_position = temp_position
 
             elif current_command == "#":
-                a = stack.pop()
+                a = pop_stack(1)
                 if a == 1:
                     return True
 
@@ -1116,7 +1115,7 @@ def run_program(commands,
                     for S in stack:
                         temp_list_2.append(S)
                     for Q in temp_list_2:
-                        R = stack.pop()
+                        R = pop_stack(1)
                         temp_list.append(R)
                     temp_list.reverse()
                 stack.append(temp_list)
@@ -1190,6 +1189,10 @@ def run_program(commands,
             elif current_command == "Z":
                 stack.append(z_integer)
 
+            elif current_command == "z":
+                a = pop_stack(1)
+                stack.append(1 / float(a))
+
             elif current_command == "U":  # x variable
                 a = pop_stack(1)
                 x_integer = a
@@ -1227,12 +1230,12 @@ def run_program(commands,
                             temp_string += str(int(Q))
                         else:
                             temp_string += str(Q)
-                    stack.pop()
+                    pop_stack(1)
                 else:
                     R = len(stack)
                     stack.reverse()
                     for Q in range(R):
-                        a = stack.pop()
+                        a = pop_stack(1)
                         if type(a) is bool:
                             temp_string += str(int(a))
                         else:
@@ -1347,7 +1350,7 @@ def run_program(commands,
                     stack.append(get_letter(int(a)))
 
             elif current_command == "@":
-                a = int(stack.pop())
+                a = int(pop_stack(1))
                 stack.append(stack.pop(a))
 
             elif current_command == "M":
@@ -1467,7 +1470,7 @@ def run_program(commands,
                     except:0
                 a = 0
                 if stack:
-                    a = stack.pop()
+                    a = pop_stack(1)
                 else:
                     a = str(input(a))
                     recent_inputs.append(a)
@@ -1484,7 +1487,7 @@ def run_program(commands,
                 stack.append(string_variable)
 
             elif current_command == ",":
-                a = stack.pop()
+                a = pop_stack(1)
                 print(str(a))
                 has_printed.append(True)
 
