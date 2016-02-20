@@ -177,7 +177,7 @@ Extended ASCII characters (CP-1252)
 Ô 75	=
 Õ 76	=
 Ö 77	= pop a,b    push a % b == 0
-× 78	=
+× 78	= pop a,b    push a × b (strings)
 Ø 79	= pop a      push ath prime (zero-indexed)
 Ù 80	= pop a      push uniquified a
 Ú 81	= pop a      push reverse uniquified a
