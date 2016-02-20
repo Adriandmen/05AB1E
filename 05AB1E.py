@@ -1991,12 +1991,44 @@ def run_program(commands,
                     b, a = pop_stack(2)
                 else:
                     a, b = pop_stack(2)
-                temp_list = []
-                for Q in a:
-                    temp_list.append(Q)
-                for Q in b:
-                    temp_list.append(Q)
-                stack.append(temp_list)
+
+                if type(a) is list and type(b) is list:
+                    temp_list = []
+                    for Q in a:
+                        temp_list.append(Q)
+                    for Q in b:
+                        temp_list.append(Q)
+                    stack.append(temp_list)
+                elif type(a) is list:
+                    temp_list = []
+                    for Q in a:
+                        temp_list.append(str(Q) + str(b))
+                    stack.append(temp_list)
+                elif type(b) is list:
+                    temp_list = []
+                    for Q in b:
+                        temp_list.append(str(a) + str(Q))
+                    stack.append(temp_list)
+                else:
+                    stack.append(str(a) + str(b))
+
+            elif current_command == "\u00d7":
+                if len(stack) > 1:
+                    b, a = pop_stack(2)
+                else:
+                    a, b = pop_stack(2)
+
+                if is_digit_value(b):
+                    b = int(b)
+                elif is_digit_value(a):
+                    a, b = b, a
+                    b = int(b)
+
+                temp_string = ""
+                if b != 0:
+                    for Q in range(0, b):
+                        temp_string += str(a)
+                stack.append(temp_string)
 
             elif current_command == "\u00f2":
                 a = pop_stack(1)
