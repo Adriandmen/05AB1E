@@ -172,8 +172,8 @@ Extended ASCII characters (CP-1252)
 Ï 70	= 
 Ð 71	= triplicate top of stack (pop a, push a, push a, push a)
 Ñ 72	=
-Ò 73	=
-Ó 74	=
+Ò 73	= pop a      push list of prime factors (with duplicates)
+Ó 74	= pop a      push list of exponents of prime factors (2^a, 3^b, 5^c, 7^d, etc.)
 Ô 75	=
 Õ 76	=
 Ö 77	= pop a,b    push a % b == 0
@@ -187,7 +187,7 @@ Extended ASCII characters (CP-1252)
 Þ 85	= pop a      push float(a)
 ß 86	= pop smallest element of list
 à 87	= pop greatest element of list
-á 88	=
+á 88	= pop a      push only letters of a
 â 89	=
 ã 90	=
 ä 91	=
@@ -216,18 +216,14 @@ Extended ASCII characters (CP-1252)
 û	=
 ü	=
 ý	=
-þ	=
+þ	= pop a      push only digits of a
 ÿ	= used for string interpolation, pop a and replace ÿ with str(a)
 
 
 Extended functions:
 
-.a      = pop a      push only letters of a
-.d      = pop a      push only digits of a
 .e      = experimental python evaluation (does not work in safe mode)
-.f      = pop a      push list of prime factors (with duplicates)
 .j	= pop a      0-indexed max_spaces.join(stack) grid
 .J      = pop a      1-indexed max_spaces.join(stack) grid
 .l      = pop a      push is_lower(a)
-.p      = pop a      push list of exponents of prime factors (2^a, 3^b, 5^c, 7^d, etc.)
 .u      = pop a      push is_upper(a)

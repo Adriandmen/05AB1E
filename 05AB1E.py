@@ -1501,7 +1501,7 @@ def run_program(commands,
                 else:
                     stack.append(prime_factorization(int(a)))
 
-            elif current_command == ".f":
+            elif current_command == "\u00d2":
                 a = pop_stack(1)
                 if type(a) is list:
                     temp_list = []
@@ -1511,7 +1511,7 @@ def run_program(commands,
                 else:
                     stack.append(prime_factorization_duplicates(int(a)))
 
-            elif current_command == ".p":
+            elif current_command == "\u00d3":
                 a = pop_stack(1)
                 if type(a) is list:
                     temp_list = []
@@ -1521,7 +1521,7 @@ def run_program(commands,
                 else:
                     stack.append(prime_factorization_powers(int(a)))
 
-            elif current_command == ".d":
+            elif current_command == "\u00fe":
                 a = pop_stack(1)
                 if type(a) is list:
                     temp_list_2 = []
@@ -1539,7 +1539,7 @@ def run_program(commands,
                             temp_list.append(Q)
                     stack.append(''.join(temp_list))
 
-            elif current_command == ".a":
+            elif current_command == "\u00e1":
                 a = pop_stack(1)
                 if type(a) is list:
                     temp_list_2 = []
@@ -1923,18 +1923,40 @@ def run_program(commands,
                 stack.append(temp_list)
 
             elif current_command == "\u0178":
-                if len(stack) > 1:
-                    a, b = pop_stack(2)
+                if type(stack[-1]) is list:
+                    current_list = pop_stack(1)
+                    temp_list = []
+                    is_inclusive = False
+                    for N in range(0, len(current_list) - 1):
+                        b = int(current_list[N])
+                        a = int(current_list[N + 1])
+                        temp_list_2 = []
+                        if int(b) > int(a):
+                            for Q in range(int(a), int(b) + 1):
+                                temp_list_2.append(Q)
+                            temp_list_2 = temp_list_2[::-1]
+                        else:
+                            for Q in range(int(b), int(a) + 1):
+                                temp_list_2.append(Q)
+                        for Q in temp_list_2:
+                            if is_inclusive and len(temp_list_2) > 1:
+                                is_inclusive = False
+                                continue
+                            temp_list.append(Q)
+                        is_inclusive = True
                 else:
-                    b, a = pop_stack(2)
-                temp_list = []
-                if int(b) > int(a):
-                    for Q in range(int(a), int(b) + 1):
-                        temp_list.append(Q)
-                    temp_list = temp_list[::-1]
-                else:
-                    for Q in range(int(b), int(a) + 1):
-                        temp_list.append(Q)
+                    if len(stack) > 1:
+                        a, b = pop_stack(2)
+                    else:
+                        b, a = pop_stack(2)
+                    temp_list = []
+                    if int(b) > int(a):
+                        for Q in range(int(a), int(b) + 1):
+                            temp_list.append(Q)
+                        temp_list = temp_list[::-1]
+                    else:
+                        for Q in range(int(b), int(a) + 1):
+                            temp_list.append(Q)
 
                 stack.append(temp_list)
 
