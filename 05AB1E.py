@@ -1798,7 +1798,7 @@ def run_program(commands,
                         temp_list.append(str(Q).swapcase())
                     stack.append(temp_list)
                 else:
-                    stack.append(temp_string.swapcase())
+                    stack.append(a.swapcase())
 
             elif current_command == "\u00a3":
                 b, a = pop_stack(2)
