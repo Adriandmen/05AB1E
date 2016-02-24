@@ -11,6 +11,12 @@ has_printed = []
 
 recent_inputs = []
 
+# Global registers
+register_x = [1]
+register_y = [2]
+register_z = [3]
+register_c = []
+
 
 def is_array(array):
     array = str(array)
@@ -111,9 +117,6 @@ def run_program(commands,
                 safe_mode,
                 suppress_print,
                 range_variable=0,
-                x_integer=1,
-                y_integer=2,
-                z_integer=0,
                 string_variable=""):
 
     # Replace short expressions
@@ -130,7 +133,7 @@ def run_program(commands,
     while pointer_position < len(commands) - 1:
         try:
             if exit_program:
-                break
+                return True
             pointer_position += 1
             current_command = commands[pointer_position]
 
@@ -709,9 +712,9 @@ def run_program(commands,
                         print()
                 a = pop_stack(1)
                 if a == 1 or a == "1":
-                    run_program(STATEMENT, debug, safe_mode, True, range_variable, x_integer, y_integer, z_integer, string_variable)
+                    run_program(STATEMENT, debug, safe_mode, True, range_variable, string_variable)
                 elif amount_else == 0:
-                    run_program(ELSE_STATEMENT[1:], debug, safe_mode, True, range_variable, x_integer, y_integer, z_integer, string_variable)
+                    run_program(ELSE_STATEMENT[1:], debug, safe_mode, True, range_variable, string_variable)
                 pointer_position = temp_position
 
             elif current_command == "\\":
@@ -764,7 +767,7 @@ def run_program(commands,
 
                 if a != 0:
                     for range_variable in range(0, a):
-                        run_program(STATEMENT, debug, safe_mode, True, range_variable, x_integer, y_integer, z_integer, string_variable)
+                        run_program(STATEMENT, debug, safe_mode, True, range_variable, string_variable)
                 pointer_position = temp_position
 
             elif current_command == "G":
@@ -802,7 +805,7 @@ def run_program(commands,
 
                 if a > 1:
                     for range_variable in range(1, a):
-                        run_program(STATEMENT, debug, safe_mode, True, range_variable, x_integer, y_integer, z_integer, string_variable)
+                        run_program(STATEMENT, debug, safe_mode, True, range_variable, string_variable)
                 pointer_position = temp_position
 
             elif current_command == "\u0192":
@@ -840,7 +843,7 @@ def run_program(commands,
 
                 if a > -1:
                     for range_variable in range(0, a + 1):
-                        run_program(STATEMENT, debug, safe_mode, True, range_variable, x_integer, y_integer, z_integer, string_variable)
+                        run_program(STATEMENT, debug, safe_mode, True, range_variable, string_variable)
                 pointer_position = temp_position
 
             elif current_command == "N":
@@ -1035,7 +1038,7 @@ def run_program(commands,
                 if debug:
                     print(STATEMENT)
                 while True:
-                    if run_program(STATEMENT, debug, safe_mode, True, range_variable, x_integer, y_integer, z_integer, string_variable):
+                    if run_program(STATEMENT, debug, safe_mode, True, range_variable, string_variable):
                         break
                 pointer_position = temp_position
 
@@ -1181,13 +1184,13 @@ def run_program(commands,
                     stack.append(int(b) ** int(a))
 
             elif current_command == "X":
-                stack.append(x_integer)
+                stack.append(register_x[-1])
 
             elif current_command == "Y":
-                stack.append(y_integer)
+                stack.append(register_y[-1])
 
             elif current_command == "Z":
-                stack.append(z_integer)
+                stack.append(register_z[-1])
 
             elif current_command == "z":
                 a = pop_stack(1)
@@ -1195,15 +1198,15 @@ def run_program(commands,
 
             elif current_command == "U":  # x variable
                 a = pop_stack(1)
-                x_integer = a
+                register_x.append(a)
 
             elif current_command == "V":  # y variable
                 a = pop_stack(1)
-                y_integer = a
+                register_y.append(a)
 
             elif current_command == "W":  # z variable
                 a = input()
-                z_integer = a
+                register_z.append(a)
                 stack.append(a)
                 recent_inputs.append(a)
 
@@ -1480,7 +1483,7 @@ def run_program(commands,
                 for string_variable in a:
                     range_variable += 1
                     if debug:print("N = " + str(range_variable))
-                    run_program(STATEMENT, debug, True, safe_mode, range_variable, x_integer, y_integer, z_integer, string_variable)
+                    run_program(STATEMENT, debug, True, safe_mode, range_variable, string_variable)
                 pointer_position = temp_position
 
             elif current_command == "y":
@@ -1645,7 +1648,10 @@ def run_program(commands,
                 for Q in a:
                     if Q not in temp_list:
                         temp_list.append(Q)
-                stack.append(temp_list)
+                if type(a) is list:
+                    stack.append(temp_list)
+                else:
+                    stack.append(''.join(temp_list))
 
             elif current_command == "\u00da":
                 a = pop_stack(1)
@@ -1654,7 +1660,10 @@ def run_program(commands,
                 for Q in a:
                     if Q not in temp_list:
                         temp_list.append(Q)
-                stack.append(temp_list[::-1])
+                if type(a) is list:
+                    stack.append(temp_list[::-1])
+                else:
+                    stack.append(''.join(temp_list[::-1]))
 
             elif current_command == "\u00db":
                 b, a = pop_stack(2)
@@ -1675,6 +1684,24 @@ def run_program(commands,
                     else:
                         break
                 stack.append(a)
+
+            elif current_command == "\u00a5":
+                a = pop_stack(1)
+                temp_list = []
+                length_of_list = len(a)
+                for Q in range(0, length_of_list - 1):
+                    temp_list.append(int(a[Q + 1]) - int(a[Q]))
+                stack.append(temp_list)
+
+            elif current_command == "\u00a9":
+                a = stack[-1]
+                register_c.append(a)
+
+            elif current_command == "\u00ae":
+                if len(register_c) > 0:
+                    stack.append(register_c[-1])
+                else:
+                    stack.append(-1)
 
             elif current_command == "\u00dc":
                 b, a = pop_stack(2)
@@ -1842,6 +1869,19 @@ def run_program(commands,
                         temp_list.append(Q)
                 stack.append(temp_list)
                 stack.append(a)
+
+            elif current_command == "\u00a4":
+                if stack:
+                    a = stack[-1]
+                else:
+                    a = pop_stack(1)
+                    stack.append(a)
+
+                if type(a) is int:
+                    stack.append(str(a)[-1])
+                else:
+                    stack.append(a[-1])
+
 
             elif current_command == "\u2039":
                 b, a = pop_stack(2)
