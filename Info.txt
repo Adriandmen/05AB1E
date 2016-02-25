@@ -108,7 +108,7 @@ Extended ASCII characters (CP-1252)
 ‰ 8	= 
 Š 9	= pop a,b,c  push c,a,b
 ‹ 10	= pop a,b    push a < b
-Œ 11	=
+Œ 11	= pop a      push substrings(a)
 Ž 12	= break if stack is empty
 ‘ -	= for compressed strings (upper)
 ’ - 	= for compressed strings (no implicit space)
@@ -121,7 +121,7 @@ Extended ASCII characters (CP-1252)
 ™ 19	= pop a      push title_cased(a)
 š 20	= pop a      push switch_cased(a)
 › 21	= pop a,b    push a > b
-œ 22	=
+œ 22	= pop a      push permutations(a)
 ž 23	=
 Ÿ 24	= pop a,b    push [a, ..., b]
 ¡ 25	= pop a,b    push a.split(b)  
@@ -129,9 +129,9 @@ Extended ASCII characters (CP-1252)
 £ 27	= pop a,b    push a[0:b]
 ¤ 28	= get a      push tail(a)
 ¥ 29	= pop a      push delta's a
-¦ 30	=
+¦ 30	= pop a      push a[1:]
 § 31	= pop a      push str(a)
-¨ 32	=
+¨ 32	= pop a      push a[0:-1]
 © 33	= store a in register_c without popping
 ª 34	= pop a      push sentence_cased(a)
 « 35	= pop a,b    push concatenated(a, b)
@@ -154,8 +154,8 @@ Extended ASCII characters (CP-1252)
 ½ 52	=
 ¾ 53	=
 ¿ 54	=
-À 55	=
-Á 56	=
+À 55	= pop a      push a rotated 1 left
+Á 56	= pop a      push a rotated 1 right
 Â 57	=
 Ã 58	=
 Ä 59	= pop a      push abs(a)
@@ -192,7 +192,7 @@ Extended ASCII characters (CP-1252)
 ã 90	=
 ä 91	=
 å 92	=
-æ 93	=
+æ 93	= pop a      push powerset(a)
 ç 94	= pop a      push char a
 è 95	=
 é 96	=

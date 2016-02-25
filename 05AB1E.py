@@ -3,6 +3,7 @@ import time
 import math
 import dictionary
 import ast
+import itertools
 from commands import *
 
 stack = []
@@ -1816,6 +1817,13 @@ def run_program(commands,
                 else:
                     stack.append(str(a))
 
+            elif current_command == "\u00a6":
+                a = pop_stack(1)
+                if type(a) is int:
+                    stack.append(str(a)[1:])
+                else:
+                    stack.append(a[1:])
+
             elif current_command == "\u0161":
                 a = pop_stack(1)
 
@@ -1915,6 +1923,33 @@ def run_program(commands,
                     else:
                         stack.append(False)
 
+            elif current_command == "\u00c0":
+                a = pop_stack(1)
+                if type(a) is list:
+                    a.append(a[0])
+                    a = a[1:]
+                    stack.append(a)
+                else:
+                    a = str(a)
+                    a += a[0]
+                    a = a[1:]
+                    stack.append(a)
+
+            elif current_command == "\u00c1":
+                a = pop_stack(1)
+                if type(a) is list:
+                    b = []
+                    b.append(a[-1])
+                    for Q in a:
+                        b.append(Q)
+                    a = b[:-1]
+                    stack.append(a)
+                else:
+                    a = str(a)
+                    a = a[-1] + a
+                    a = a[:-1]
+                    stack.append(a)
+
             elif current_command == "\u00d8":
                 a = pop_stack(1)
 
@@ -1935,6 +1970,35 @@ def run_program(commands,
                     stack.append(temp_list)
                 else:
                     stack.append(str(b).count(str(a)))
+
+            elif current_command == "\u00a8":
+                a = pop_stack(1)
+                if type(a) is int:
+                    stack.append(str(a)[0:-1])
+                else:
+                    stack.append(a[0:-1])
+
+            elif current_command == "\u00e6":
+                a = pop_stack(1)
+                if type(a) is int or type(a) is str:
+                    a = list(str(a))
+                s = list(a)
+                s = list(itertools.chain.from_iterable(itertools.combinations(s, r) for r in range(len(s)+1)))
+                list_of_lists = [list(elem) for elem in s]
+                stack.append(list_of_lists)
+
+            elif current_command == "\u0153":
+                a = pop_stack(1)
+                if type(a) is int or type(a) is str:
+                    a = list(str(a))
+                a = list(itertools.permutations(list(a)))
+                list_of_lists = [list(elem) for elem in a]
+                stack.append(list_of_lists)
+
+            elif current_command == "\u0152":
+                a = pop_stack(1)
+                a = get_all_substrings(a)
+                stack.append(a)
 
             elif current_command == "\u00d0":
                 a = pop_stack(1)

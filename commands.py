@@ -197,3 +197,8 @@ def get_nth_prime(n):
         else:
             current_prime += 1
     return current_prime
+
+
+def get_all_substrings(input_string):
+  length = len(input_string)
+  return [input_string[i:j+1] for i in range(length) for j in range(i,length)]
