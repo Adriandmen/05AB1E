@@ -1,5 +1,7 @@
 import collections
 import math
+import fractions
+from functools import reduce
 
 letters = list("abcdefghijklmnopqrstuvwxyz")
 numbers = list("0123456789")
@@ -202,3 +204,10 @@ def get_nth_prime(n):
 def get_all_substrings(input_string):
   length = len(input_string)
   return [input_string[i:j+1] for i in range(length) for j in range(i,length)]
+
+
+def command_gcd(numbers):
+    if type(numbers) is list:
+        return reduce(fractions.gcd, numbers)
+    else:
+        return 0

@@ -1473,11 +1473,7 @@ def run_program(commands,
                     try:print(STATEMENT)
                     except:0
                 a = 0
-                if stack:
-                    a = pop_stack(1)
-                else:
-                    a = str(input(a))
-                    recent_inputs.append(a)
+                a = pop_stack(1)
 
                 range_variable = -1
                 if type(a) is int: a = str(a)
@@ -1734,6 +1730,17 @@ def run_program(commands,
                     stack.append(temp_list)
                 else:
                     stack.append(int(int(a) % 2 == 0))
+
+            elif current_command == "\u00bf":
+                a = pop_stack(1)
+                if type(a) is list:
+                    temp_list = []
+                    for Q in a:
+                        temp_list.append(int(Q))
+                    stack.append(command_gcd(temp_list))
+                else:
+                    b = pop_stack(1)
+                    stack.append(command_gcd([int(a), int(b)]))
 
             elif current_command == "\u00c9":
                 a = pop_stack(1)
