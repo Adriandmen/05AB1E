@@ -219,7 +219,9 @@ def get_all_substrings(input_string):
 
 
 def command_gcd(numbers):
-    if type(numbers) is list:
-        return reduce(fractions.gcd, numbers)
-    else:
+    if 0 in numbers:
         return 0
+    try:
+        return reduce(fractions.gcd, numbers)
+    except:
+        return 1
