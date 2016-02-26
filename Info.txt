@@ -143,16 +143,16 @@ Extended ASCII characters (CP-1252)
 ² 41	=            push the second item from the input history
 ³ 42	=            push the third item from the input history
 ´ 43	=
-µ 44	=
+µ 44	= pop a      while counter_variable != a, do...
 ¶ 45	=
 · 46	=
 ¸ 47	=
 ¹ 48	=            push the first item from the input history
 º 49	=
 » 50	=
-¼ 51	=
-½ 52	=
-¾ 53	=
+¼ 51	= counter_variable += 1
+½ 52	= counter_variable -= 1
+¾ 53	=            push counter_variable
 ¿ 54	= pop a      push gcd(a)
 À 55	= pop a      push a rotated 1 left
 Á 56	= pop a      push a rotated 1 right

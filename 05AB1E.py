@@ -18,6 +18,11 @@ register_y = [2]
 register_z = [3]
 register_c = []
 
+# Global values
+counter_variable = [0]
+
+# Looping commands:
+loop_commands = ["F", "i", "v", "G", "\u0192"]
 
 def is_array(array):
     array = str(array)
@@ -682,7 +687,7 @@ def run_program(commands,
                                 amount_else -= 1
                             if amount_brackets == 0:
                                 break
-                        elif current_command == "i" or current_command == "F" or current_command == "v" or current_command == "G" or current_command == "\u0192":
+                        elif current_command in loop_commands:
                             amount_brackets += 1
                             if current_command == "i":
                                 amount_else += 1
@@ -746,7 +751,7 @@ def run_program(commands,
                             amount_brackets -= 1
                             if amount_brackets == 0:
                                 break
-                        elif current_command == "i" or current_command == "F" or current_command == "v" or current_command == "G" or current_command == "\u0192":
+                        elif current_command in loop_commands:
                             amount_brackets += 1
                         STATEMENT += current_command
                     else:
@@ -786,7 +791,7 @@ def run_program(commands,
                             amount_brackets -= 1
                             if amount_brackets == 0:
                                 break
-                        elif current_command == "i" or current_command == "F" or current_command == "v" or current_command == "G" or current_command == "\u0192":
+                        elif current_command in loop_commands:
                             amount_brackets += 1
                         STATEMENT += current_command
                         try:
@@ -809,6 +814,60 @@ def run_program(commands,
                         run_program(STATEMENT, debug, safe_mode, True, range_variable, string_variable)
                 pointer_position = temp_position
 
+            elif current_command == "\u00b5":
+                STATEMENT = ""
+                ELSE_STATEMENT = ""
+                temp_position = pointer_position
+                temp_position += 1
+                current_command = commands[temp_position]
+                amount_brackets = 1
+                amount_else = 1
+                temp_string_mode = False
+                while amount_brackets != 0:
+                    if current_command == "\"":
+                        temp_string_mode = not temp_string_mode
+                    if temp_string_mode == False:
+                        if current_command == "}" or current_command == "\u00eb":
+                            if current_command == "}":
+                                amount_brackets -= 1
+                            if current_command == "\u00eb":
+                                amount_else -= 1
+                            if amount_brackets == 0:
+                                break
+                        elif current_command in loop_commands:
+                            amount_brackets += 1
+                            if current_command == "i":
+                                amount_else += 1
+                    if amount_else > 0:
+                        STATEMENT += current_command
+                    else:
+                        ELSE_STATEMENT += current_command
+                    try:
+                        temp_position += 1
+                        current_command = commands[temp_position]
+                    except:
+                        break
+                if debug:
+                    print("if: ", end="")
+                    for Q in STATEMENT:
+                        try:
+                            print(Q, end="")
+                        except:
+                            print("?", end="")
+                    print()
+                    if amount_else < 1:
+                        print("else: ", end="")
+                        for Q in ELSE_STATEMENT:
+                            try:
+                                print(Q, end="")
+                            except:
+                                print("?", end="")
+                        print()
+                a = pop_stack(1)
+                while counter_variable[-1] != int(a):
+                    run_program(STATEMENT, debug, safe_mode, True, range_variable, string_variable)
+                pointer_position = temp_position
+
             elif current_command == "\u0192":
                 STATEMENT = ""
                 temp_position = pointer_position
@@ -824,7 +883,7 @@ def run_program(commands,
                             amount_brackets -= 1
                             if amount_brackets == 0:
                                 break
-                        elif current_command == "i" or current_command == "F" or current_command == "v" or current_command == "G" or current_command == "\u0192":
+                        elif current_command in loop_commands:
                             amount_brackets += 1
                         STATEMENT += current_command
                         try:
@@ -1461,7 +1520,7 @@ def run_program(commands,
                             amount_brackets -= 1
                             if amount_brackets == 0:
                                 break
-                        elif current_command == "i" or current_command == "F" or current_command == "v" or current_command == "G" or current_command == "\u0192":
+                        elif current_command in loop_commands:
                             amount_brackets += 1
                         STATEMENT += current_command
                         try:
@@ -2216,6 +2275,21 @@ def run_program(commands,
                 for P in temp_list_2:
                     temp_list.append(P)
                 stack.append(temp_list)
+
+            elif current_command == "\u00bc":
+                a = counter_variable[-1]
+                a += 1
+                counter_variable.pop()
+                counter_variable.append(a)
+
+            elif current_command == "\u00bd":
+                a = counter_variable[-1]
+                a -= 1
+                counter_variable.pop()
+                counter_variable.append(a)
+
+            elif current_command == "\u00be":
+                stack.append(counter_variable[-1])
 
             elif current_command == "\u00f3":
                 a = pop_stack(1)
