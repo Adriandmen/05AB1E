@@ -75,13 +75,25 @@ def convert_to_base(n, base):
 
 def is_prime(n):
     if n < 2:
-        return False
-    if n == 2:
-        return True
-    for N in range(2, n):
-        if n % N == 0:
-            return False
-    return True
+        return 0
+    if n == 2 or n == 3:
+        return 1
+    if n < 2 or n % 2 == 0:
+        return 0
+    if n < 9:
+        return 1
+    if n % 3 == 0:
+        return 0
+    r = int(n ** 0.5)
+    f = 5
+    while f <= r:
+        if n % f == 0:
+            return 0
+        if n % (f + 2) == 0:
+            return 0
+        f += 6
+
+    return 1
 
 
 def combinations(n, r):
