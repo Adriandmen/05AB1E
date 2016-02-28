@@ -4,6 +4,8 @@ import math
 import dictionary
 import ast
 import itertools
+import datetime
+
 from commands import *
 
 stack = []
@@ -146,7 +148,12 @@ def run_program(commands,
             if debug:
                 try:print("current >> " + current_command + "  ||  stack: " + str(stack))
                 except:0
+
             if current_command == ".":
+                pointer_position += 1
+                current_command += commands[pointer_position]
+
+            if current_command == "\u017e":
                 pointer_position += 1
                 current_command += commands[pointer_position]
 
@@ -2357,6 +2364,27 @@ def run_program(commands,
             elif current_command == "\u00b3":
                 if len(recent_inputs) > 2:
                     stack.append(recent_inputs[2])
+
+            elif current_command == "\u017ea":
+                stack.append(int(datetime.datetime.now().hour))
+
+            elif current_command == "\u017eb":
+                stack.append(int(datetime.datetime.now().minute))
+
+            elif current_command == "\u017ec":
+                stack.append(int(datetime.datetime.now().second))
+
+            elif current_command == "\u017ed":
+                stack.append(int(datetime.datetime.now().microsecond))
+
+            elif current_command == "\u017ee":
+                stack.append(int(datetime.datetime.now().day))
+
+            elif current_command == "\u017ef":
+                stack.append(int(datetime.datetime.now().month))
+
+            elif current_command == "\u017eg":
+                stack.append(int(datetime.datetime.now().year))
 
         except Exception as ex:
             if debug:

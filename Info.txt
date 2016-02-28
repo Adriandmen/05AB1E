@@ -122,7 +122,15 @@ Extended ASCII characters (CP-1252)
 š 20	= pop a      push switch_cased(a)
 › 21	= pop a,b    push a > b
 œ 22	= pop a      push permutations(a)
-ž 23	=
+
+ž 23  > ža           push current hours
+        žb           push current minutes
+        žc           push current seconds
+        žd           push current microseconds
+        že	     push current day
+        žf           push current month
+        žg           push current year
+
 Ÿ 24	= pop a,b    push [a, ..., b]
 ¡ 25	= pop a,b    push a.split(b)  
 ¢ 26	= pop a,b    push a.count(b)
