@@ -171,7 +171,7 @@ Extended ASCII characters (CP-1252)
 Î 69	=
 Ï 70	= 
 Ð 71	= triplicate top of stack (pop a, push a, push a, push a)
-Ñ 72	=
+Ñ 72	= pop a      push divisors(a)
 Ò 73	= pop a      push list of prime factors (with duplicates)
 Ó 74	= pop a      push list of exponents of prime factors (2^a, 3^b, 5^c, 7^d, etc.)
 Ô 75	=

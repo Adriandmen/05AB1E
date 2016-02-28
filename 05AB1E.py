@@ -1873,6 +1873,16 @@ def run_program(commands,
                         a = "-" + a
                     stack.append(a)
 
+            elif current_command == "\u00d1":
+                a = pop_stack(1)
+
+                temp_list = []
+                for N in range(1, int(a) + 1):
+                    if int(a) % N == 0:
+                        temp_list.append(N)
+
+                stack.append(temp_list)
+
             elif current_command == "\u00a7":
                 a = pop_stack(1)
                 if type(a) is list:
