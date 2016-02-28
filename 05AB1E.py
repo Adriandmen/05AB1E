@@ -1062,20 +1062,46 @@ def run_program(commands,
                 if type(a) is list:
                     temp_list = []
                     for Q in a:
-                        temp_list.append(int(Q) + 1)
+                        if is_digit_value(Q):
+                            temp_list.append(int(Q) + 1)
+                        else:
+                            temp_string = ""
+                            for N in str(Q):
+                                temp_string += chr(ord(N) + 1)
+                            temp_list.append(temp_string)
+
                     stack.append(temp_list)
                 else:
-                    stack.append(int(a) + 1)
+                    if is_digit_value(a):
+                        stack.append(int(a) + 1)
+                    else:
+                        temp_string = ""
+                        for Q in str(a):
+                            temp_string += chr(ord(Q) + 1)
+                        stack.append(temp_string)
 
             elif current_command == "<":
                 a = pop_stack(1)
                 if type(a) is list:
                     temp_list = []
                     for Q in a:
-                        temp_list.append(int(Q) - 1)
+                        if is_digit_value(Q):
+                            temp_list.append(int(Q) - 1)
+                        else:
+                            temp_string = ""
+                            for N in str(Q):
+                                temp_string += chr(ord(N) - 1)
+                            temp_list.append(temp_string)
+
                     stack.append(temp_list)
                 else:
-                    stack.append(int(a) - 1)
+                    if is_digit_value(a):
+                        stack.append(int(a) - 1)
+                    else:
+                        temp_string = ""
+                        for Q in str(a):
+                            temp_string += chr(ord(Q) - 1)
+                        stack.append(temp_string)
 
             elif current_command == "'":
                 temp_string = ""
@@ -1104,7 +1130,9 @@ def run_program(commands,
                         break
                 if debug:
                     print(STATEMENT)
+                range_variable = 0
                 while True:
+                    range_variable += 1
                     if run_program(STATEMENT, debug, safe_mode, True, range_variable, string_variable):
                         break
                 pointer_position = temp_position
@@ -1629,15 +1657,15 @@ def run_program(commands,
                     temp_list = []
                     for Q in a:
                         if str(Q).upper() == str(Q):
-                            temp_list.append(True)
+                            temp_list.append(1)
                         else:
-                            temp_list.append(False)
+                            temp_list.append(0)
                     stack.append(temp_list)
                 else:
                     if str(a).upper() == str(a):
-                        stack.append(True)
+                        stack.append(1)
                     else:
-                        stack.append(False)
+                        stack.append(0)
 
             elif current_command == ".l":
                 a = pop_stack(1)
@@ -1645,15 +1673,15 @@ def run_program(commands,
                     temp_list = []
                     for Q in a:
                         if str(Q).lower() == str(Q):
-                            temp_list.append(True)
+                            temp_list.append(1)
                         else:
-                            temp_list.append(False)
+                            temp_list.append(0)
                     stack.append(temp_list)
                 else:
                     if str(a).lower() == str(a):
-                        stack.append(True)
+                        stack.append(1)
                     else:
-                        stack.append(False)
+                        stack.append(0)
 
             elif current_command == "\u00c7":
                 a = pop_stack(1)
@@ -1980,15 +2008,15 @@ def run_program(commands,
                     temp_list = []
                     for Q in a:
                         if int(Q) < int(b):
-                            temp_list.append(True)
+                            temp_list.append(1)
                         else:
-                            temp_list.append(False)
+                            temp_list.append(0)
                     stack.append(temp_list)
                 else:
                     if int(a) < int(b):
-                        stack.append(True)
+                        stack.append(1)
                     else:
-                        stack.append(False)
+                        stack.append(0)
 
             elif current_command == "\u203A":
                 b, a = pop_stack(2)
@@ -1996,15 +2024,15 @@ def run_program(commands,
                     temp_list = []
                     for Q in a:
                         if int(Q) > int(b):
-                            temp_list.append(True)
+                            temp_list.append(1)
                         else:
-                            temp_list.append(False)
+                            temp_list.append(0)
                     stack.append(temp_list)
                 else:
                     if int(a) > int(b):
-                        stack.append(True)
+                        stack.append(1)
                     else:
-                        stack.append(False)
+                        stack.append(0)
 
             elif current_command == "\u00c0":
                 a = pop_stack(1)
