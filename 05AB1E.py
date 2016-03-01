@@ -871,7 +871,9 @@ def run_program(commands,
                                 print("?", end="")
                         print()
                 a = pop_stack(1)
+                range_variable = 0
                 while counter_variable[-1] != int(a):
+                    range_variable += 1
                     run_program(STATEMENT, debug, safe_mode, True, range_variable, string_variable)
                 pointer_position = temp_position
 
