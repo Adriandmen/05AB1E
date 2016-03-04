@@ -683,10 +683,16 @@ def run_program(commands,
                 amount_brackets = 1
                 amount_else = 1
                 temp_string_mode = False
+                temp_char_mode = False
+
                 while amount_brackets != 0:
                     if current_command == "\"":
                         temp_string_mode = not temp_string_mode
-                    if temp_string_mode == False:
+
+                    elif current_command == "'" and temp_char_mode == False:
+                        temp_char_mode = True
+
+                    if temp_string_mode == False and temp_char_mode == False:
                         if current_command == "}" or current_command == "\u00eb":
                             if current_command == "}":
                                 amount_brackets -= 1
@@ -698,15 +704,20 @@ def run_program(commands,
                             amount_brackets += 1
                             if current_command == "i":
                                 amount_else += 1
+                                
+                    temp_char_mode = True
+
                     if amount_else > 0:
                         STATEMENT += current_command
                     else:
                         ELSE_STATEMENT += current_command
+
                     try:
                         temp_position += 1
                         current_command = commands[temp_position]
                     except:
                         break
+
                 if debug:
                     print("if: ", end="")
                     for Q in STATEMENT:
