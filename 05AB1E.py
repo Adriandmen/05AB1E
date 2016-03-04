@@ -2462,7 +2462,10 @@ def run_program(commands,
                 a = str(pop_stack(1))
 
                 if len(b) > len(a):
-                    a, b = b, a
+                    a = str(a).ljust(len(b), c)
+
+                if len(a) > len(b):
+                    b = str(b).ljust(len(a), c)
 
                 temp_string = ""
 
@@ -2473,7 +2476,6 @@ def run_program(commands,
                         temp_string += a[Q]
 
                 stack.append(temp_string)
-
 
             elif current_command == ".e":
                 if safe_mode:
