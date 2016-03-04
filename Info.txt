@@ -97,13 +97,13 @@ z	= pop a      push 1 / a
 
 Extended ASCII characters (CP-1252)
 
-€ 0     = else statement
+€ 0     =
 ‚ 1	=
 ƒ 2	= pop a      push for N in range(0, a + 1)
 „ 3	=
 … 4	=
 † 5	= pop a,b    push a with b filtered to the front
-‡ 6	=
+‡ 6	= pop a,b,c  push a.transliterate(b -> c)
 ˆ 7	=
 ‰ 8	= 
 Š 9	= pop a,b,c  push c,a,b
@@ -130,6 +130,16 @@ Extended ASCII characters (CP-1252)
         že	     push current day
         žf           push current month
         žg           push current year
+        žh           push [0-9]
+        ži           push [a-zA-Z]
+        žj           push [a-zA-Z0-9_]
+        žk           push [z-aZ-A]
+        žl           push [z-aZ-A9-0_]
+        žm           push [9-0]
+        žn           push [A-Za-z]
+        žo           push [Z-Az-a]
+        žp           push [Z-A]
+
 
 Ÿ 24	= pop a,b    push [a, ..., b]
 ¡ 25	= pop a,b    push a.split(b)  
@@ -152,7 +162,7 @@ Extended ASCII characters (CP-1252)
 ³ 42	=            push the third item from the input history
 ´ 43	=
 µ 44	= pop a      while counter_variable != a, do...
-¶ 45	=
+¶ 45	=            push newline character
 · 46	=
 ¸ 47	=
 ¹ 48	=            push the first item from the input history
@@ -176,7 +186,7 @@ Extended ASCII characters (CP-1252)
 Ë 66	=
 Ì 67	= pop a      push a + 2
 Í 68	= pop a      push a - 2
-Î 69	=
+Î 69	= push 0 and input
 Ï 70	= 
 Ð 71	= triplicate top of stack (pop a, push a, push a, push a)
 Ñ 72	= pop a      push divisors(a)
@@ -205,13 +215,13 @@ Extended ASCII characters (CP-1252)
 è 95	=
 é 96	=
 ê 97    =
-ë 98	=
+ë 98	= else statement
 ì 99	=
 í 13	=
 î 14	=
 ï 18	= pop a      push int(a)
 ð	=            push a space character
-ñ	=
+ñ	= pop a,b,c  push a + b merged with c as merge character
 ò	= pop a      push inclusive round up a
 ó	= pop a      push inclusive round down a
 ô	=
@@ -223,7 +233,7 @@ Extended ASCII characters (CP-1252)
 ú	= 
 û	=
 ü	=
-ý	=
+ý	= pop (a),b  push b.join(a) if a is list, else b.join(stack)
 þ	= pop a      push only digits of a
 ÿ	= used for string interpolation, pop a and replace ÿ with str(a)
 

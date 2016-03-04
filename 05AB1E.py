@@ -930,8 +930,10 @@ def run_program(commands,
                             temp_list.append(X)
                     stack.append(temp_list)
                 else:
+                    temp_list = []
                     for X in str(a):
-                        stack.append(X)
+                        temp_list.append(X)
+                    stack.append(temp_list)
 
             elif current_command == "^":
                 a, b = pop_stack(2)
@@ -1920,6 +1922,12 @@ def run_program(commands,
 
                 stack.append(temp_list)
 
+            elif current_command == "\u00ce":
+                stack.append(0)
+                a = input()
+                stack.append(a)
+                recent_inputs.append(a)
+
             elif current_command == "\u00a7":
                 a = pop_stack(1)
                 if type(a) is list:
@@ -2138,6 +2146,22 @@ def run_program(commands,
                 for Q in range(int(b), int(a)):
                     temp_list.append(Q)
                 stack.append(temp_list)
+
+            elif current_command == "\u00b6":
+                stack.append("\n")
+
+            elif current_command == "\u00fd":
+                b = pop_stack(1)
+
+                a = []
+                if stack and type(stack[-1]) is list:
+                    a = pop_stack(1)
+                else:
+                    for Q in stack:
+                        a.append(Q)
+                    stack.clear()
+
+                stack.append(str(b).join(a))
 
             elif current_command == "\u0178":
                 try:
@@ -2399,6 +2423,47 @@ def run_program(commands,
                 print(a, end="")
                 has_printed.append(True)
 
+            elif current_command == "\u2021":
+                c = pop_stack(1)
+                b = pop_stack(1)
+                a = pop_stack(1)
+
+                a = str(a)
+                temp_string = ""
+                has_transliterated = False
+
+                for S in a:
+                    for Q in range(0, len(b)):
+                        if S != S.replace(b[Q], c[Q]):
+                            temp_string += S.replace(b[Q], c[Q])
+                            has_transliterated = True
+                            break
+
+                    if not has_transliterated:
+                        temp_string += S
+                    has_transliterated = False
+
+                stack.append(temp_string)
+
+            elif current_command == "\u00f1":
+                c = str(pop_stack(1))
+                b = str(pop_stack(1))
+                a = str(pop_stack(1))
+
+                if len(b) > len(a):
+                    a, b = b, a
+
+                temp_string = ""
+
+                for Q in range(0, len(a)):
+                    if a[Q] == c and b[Q] != c:
+                        temp_string += b[Q]
+                    else:
+                        temp_string += a[Q]
+
+                stack.append(temp_string)
+
+
             elif current_command == ".e":
                 if safe_mode:
                     print("exec commands are ignored in safe mode")
@@ -2449,6 +2514,33 @@ def run_program(commands,
 
             elif current_command == "\u017eg":
                 stack.append(int(datetime.datetime.now().year))
+
+            elif current_command == "\u017eh":
+                stack.append("0123456789")
+
+            elif current_command == "\u017ei":
+                stack.append("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+            elif current_command == "\u017ej":
+                stack.append("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_")
+
+            elif current_command == "\u017ek":
+                stack.append("zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA")
+
+            elif current_command == "\u017el":
+                stack.append("zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA9876543210_")
+
+            elif current_command == "\u017em":
+                stack.append("9876543210")
+
+            elif current_command == "\u017en":
+                stack.append("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
+
+            elif current_command == "\u017eo":
+                stack.append("ZYXWVUTSRQPONMLKJIHGFEDCBAzyxwvutsrqponmlkjihgfedcba")
+
+            elif current_command == "\u017ep":
+                stack.append("ZYXWVUTSRQPONMLKJIHGFEDCBA")
 
         except Exception as ex:
             if debug:
