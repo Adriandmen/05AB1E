@@ -166,7 +166,7 @@ Extended ASCII characters (CP-1252)
 · 46	=
 ¸ 47	=
 ¹ 48	=            push the first item from the input history
-º 49	=
+º 49	=            push len(stack) > 0
 » 50	=
 ¼ 51	= counter_variable += 1
 ½ 52	= counter_variable -= 1
@@ -178,7 +178,7 @@ Extended ASCII characters (CP-1252)
 Ã 58	=
 Ä 59	= pop a      push abs(a)
 Å 60	=
-Æ 61	= pop a      push reduced a
+Æ 61	= pop a      push reduced substraction a
 Ç 62	= pop a      push ASCII value of a
 È 63	= pop a      push a % 2 == 0 (is even)
 É 64	= pop a      push a % 2 == 1 (is uneven)
@@ -209,7 +209,7 @@ Extended ASCII characters (CP-1252)
 â 89	=
 ã 90	=
 ä 91	=
-å 92	=
+å 92	= pop a,b    push a in b
 æ 93	= pop a      push powerset(a)
 ç 94	= pop a      push char a
 è 95	=

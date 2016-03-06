@@ -249,11 +249,11 @@ def run_program(commands,
                     try:
                         current_command = commands[temp_position]
                         if dictionary.unicode_index.__contains__(current_command):
-                            temp_index += str(dictionary.unicode_index.index(current_command))
+                            temp_index += str(dictionary.unicode_index.index(current_command)).rjust(2, "0")
                             temp_position += 1
                             pointer_position += 2
                             current_command = commands[temp_position]
-                            temp_index += str(dictionary.unicode_index.index(current_command))
+                            temp_index += str(dictionary.unicode_index.index(current_command)).rjust(2, "0")
                             temp_string += dictionary.dictionary[int(temp_index)]
                             temp_index = ""
                         elif current_command == "\u2019":
@@ -282,11 +282,11 @@ def run_program(commands,
                     try:
                         current_command = commands[temp_position]
                         if dictionary.unicode_index.__contains__(current_command):
-                            temp_index += str(dictionary.unicode_index.index(current_command))
+                            temp_index += str(dictionary.unicode_index.index(current_command)).rjust(2, "0")
                             temp_position += 1
                             pointer_position += 2
                             current_command = commands[temp_position]
-                            temp_index += str(dictionary.unicode_index.index(current_command))
+                            temp_index += str(dictionary.unicode_index.index(current_command)).rjust(2, "0")
                             if temp_string == "":
                                 temp_string += dictionary.dictionary[int(temp_index)].upper()
                             else:
@@ -318,11 +318,11 @@ def run_program(commands,
                     try:
                         current_command = commands[temp_position]
                         if dictionary.unicode_index.__contains__(current_command):
-                            temp_index += str(dictionary.unicode_index.index(current_command))
+                            temp_index += str(dictionary.unicode_index.index(current_command)).rjust(2, "0")
                             temp_position += 1
                             pointer_position += 2
                             current_command = commands[temp_position]
-                            temp_index += str(dictionary.unicode_index.index(current_command))
+                            temp_index += str(dictionary.unicode_index.index(current_command)).rjust(2, "0")
                             if temp_string == "":
                                 temp_string += dictionary.dictionary[int(temp_index)]
                             else:
@@ -354,11 +354,11 @@ def run_program(commands,
                     try:
                         current_command = commands[temp_position]
                         if dictionary.unicode_index.__contains__(current_command):
-                            temp_index += str(dictionary.unicode_index.index(current_command))
+                            temp_index += str(dictionary.unicode_index.index(current_command)).rjust(2, "0")
                             temp_position += 1
                             pointer_position += 2
                             current_command = commands[temp_position]
-                            temp_index += str(dictionary.unicode_index.index(current_command))
+                            temp_index += str(dictionary.unicode_index.index(current_command)).rjust(2, "0")
                             if temp_string == "":
                                 temp_string += dictionary.dictionary[int(temp_index)].title()
                             else:
@@ -1485,7 +1485,7 @@ def run_program(commands,
                         for Q in temp_list:
                             temp_list_2.append(Q)
                         temp_list = []
-                max_int = -9999999999999999999999
+                max_int = -float("inf")
                 for Q in temp_list:
                     if str(Q).isnumeric():
                         if int(Q) > max_int:
@@ -1554,6 +1554,24 @@ def run_program(commands,
                     stack.append(temp_list)
                 else:
                     stack.append(int(10 ** int(a)))
+
+            elif current_command == "\u00ba":
+                if len(stack) > 0:
+                    stack.append(False)
+                else:
+                    stack.append(True)
+
+            elif current_command == "\u00e5":
+                b = pop_stack(1)
+                a = pop_stack(1)
+
+                if type(a) is list:
+                    temp_list = []
+                    for Q in a:
+                        temp_list.append(str(Q) in str(b))
+                    stack.append(temp_list)
+                else:
+                    stack.append(str(a) in str(b))
 
             elif current_command == "v":
                 STATEMENT = ""
