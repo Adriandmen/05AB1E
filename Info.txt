@@ -167,7 +167,7 @@ Extended ASCII characters (CP-1252)
 ¸ 47	=
 ¹ 48	=            push the first item from the input history
 º 49	=            push len(stack) > 0
-» 50	=
+» 50	= (pop a)    suspend / restore function
 ¼ 51	= counter_variable += 1
 ½ 52	= counter_variable -= 1
 ¾ 53	=            push counter_variable

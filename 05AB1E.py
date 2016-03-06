@@ -20,6 +20,8 @@ register_y = [2]
 register_z = [3]
 register_c = []
 
+suspend_restore_register = []
+
 # Global values
 counter_variable = [0]
 
@@ -1572,6 +1574,18 @@ def run_program(commands,
                     stack.append(temp_list)
                 else:
                     stack.append(str(a) in str(b))
+
+            elif current_command == "\u00bb":
+                if len(suspend_restore_register) == 0:
+                    a = pop_stack(1)
+                    a = int(a)
+                    b = stack.pop(a)
+                    suspend_restore_register.append(b)
+                    suspend_restore_register.append(a)
+                else:
+                    stack.insert(int(suspend_restore_register[-1]), suspend_restore_register[-2])
+                    suspend_restore_register.pop()
+                    suspend_restore_register.pop()
 
             elif current_command == "v":
                 STATEMENT = ""
