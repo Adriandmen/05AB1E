@@ -1574,11 +1574,11 @@ def run_program(commands,
 
                 if type(a) is list:
                     temp_list = []
-                    for Q in a:
-                        temp_list.append(str(Q) in str(b))
+                    for Q in b:
+                        temp_list.append(str(b) in str(Q))
                     stack.append(temp_list)
                 else:
-                    stack.append(str(a) in str(b))
+                    stack.append(str(b) in str(a))
 
             elif current_command == "\u00bb":
                 if len(suspend_restore_register) == 0:
