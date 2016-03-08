@@ -2488,6 +2488,18 @@ def run_program(commands,
 
                 stack.append(temp_string)
 
+            elif current_command == "\u00cf":
+                b = pop_stack(1)
+                a = pop_stack(1)
+
+                temp_list = []
+                for Q in range(0, len(a)):
+                    try:
+                        if b[Q] == 1:
+                            temp_list.append(a[Q])
+                    except:0
+                stack.append(temp_list)
+
             elif current_command == "\u00f1":
                 c = str(pop_stack(1))
                 b = str(pop_stack(1))
@@ -2508,6 +2520,18 @@ def run_program(commands,
                         temp_string += a[Q]
 
                 stack.append(temp_string)
+
+            elif current_command == "\u2013":
+                a = pop_stack(1)
+                if a == "1" or a == 1:
+                    print(range_variable)
+                    has_printed.append(1)
+
+            elif current_command == "\u2014":
+                a = pop_stack(1)
+                if a == "1" or a == 1:
+                    print(string_variable)
+                    has_printed.append(1)
 
             elif current_command == ".e":
                 if safe_mode:
@@ -2530,13 +2554,80 @@ def run_program(commands,
             elif current_command == "\u00b9":
                 if len(recent_inputs) > 0:
                     stack.append(recent_inputs[0])
+                else:
+                    a = input()
+                    if is_array(a):
+                        recent_inputs.append(ast.literal_eval(a))
+                    else:
+                        recent_inputs.append(a)
+                    stack.append(recent_inputs[0])
 
             elif current_command == "\u00b2":
                 if len(recent_inputs) > 1:
                     stack.append(recent_inputs[1])
+                elif len(recent_inputs) == 1:
+                    a = input()
+                    if is_array(a):
+                        recent_inputs.append(ast.literal_eval(a))
+                    else:
+                        recent_inputs.append(a)
+                    stack.append(recent_inputs[1])
+                else:
+                    a = input()
+                    if is_array(a):
+                        recent_inputs.append(ast.literal_eval(a))
+                    else:
+                        recent_inputs.append(a)
+
+                    b = input()
+                    if is_array(b):
+                        recent_inputs.append(ast.literal_eval(b))
+                    else:
+                        recent_inputs.append(b)
+                    stack.append(recent_inputs[1])
 
             elif current_command == "\u00b3":
                 if len(recent_inputs) > 2:
+                    stack.append(recent_inputs[2])
+                elif len(recent_inputs) == 2:
+                    a = input()
+                    if is_array(a):
+                        recent_inputs.append(ast.literal_eval(a))
+                    else:
+                        recent_inputs.append(a)
+                    stack.append(recent_inputs[2])
+                elif len(recent_inputs) == 1:
+                    a = input()
+                    if is_array(a):
+                        recent_inputs.append(ast.literal_eval(a))
+                    else:
+                        recent_inputs.append(a)
+
+                    b = input()
+                    if is_array(b):
+                        recent_inputs.append(ast.literal_eval(b))
+                    else:
+                        recent_inputs.append(b)
+                    stack.append(recent_inputs[2])
+                elif len(recent_inputs) == 0:
+                    a = input()
+                    if is_array(a):
+                        recent_inputs.append(ast.literal_eval(a))
+                    else:
+                        recent_inputs.append(a)
+
+                    b = input()
+                    if is_array(b):
+                        recent_inputs.append(ast.literal_eval(b))
+                    else:
+                        recent_inputs.append(b)
+
+                    c = input()
+                    if is_array(c):
+                        recent_inputs.append(ast.literal_eval(c))
+                    else:
+                        recent_inputs.append(c)
+
                     stack.append(recent_inputs[2])
 
             elif current_command == "\u017ea":

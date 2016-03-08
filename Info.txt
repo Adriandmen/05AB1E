@@ -115,8 +115,8 @@ Extended ASCII characters (CP-1252)
 “ -	= for compressed strings (normal)
 ” -	= for compressed strings (title)
 • 15	=
-– 16	=
-— 17	=
+– 16	= pop a      if 1, print N (used in loops)
+— 17	= pop a      if 1, print y (used in loops)
 ˜   	=
 ™ 19	= pop a      push title_cased(a)
 š 20	= pop a      push switch_cased(a)
@@ -187,7 +187,7 @@ Extended ASCII characters (CP-1252)
 Ì 67	= pop a      push a + 2
 Í 68	= pop a      push a - 2
 Î 69	= push 0 and input
-Ï 70	= 
+Ï 70	= pop a,b    push the elements from a at which the same index at b is 1
 Ð 71	= triplicate top of stack (pop a, push a, push a, push a)
 Ñ 72	= pop a      push divisors(a)
 Ò 73	= pop a      push list of prime factors (with duplicates)
