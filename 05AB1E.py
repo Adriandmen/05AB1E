@@ -28,6 +28,11 @@ counter_variable = [0]
 # Looping commands:
 loop_commands = ["F", "i", "v", "G", "\u0192"]
 
+# Global data
+
+VERSION = "version 7.7"
+DATE = "16:10 - 8 march 2016"
+
 def is_array(array):
     array = str(array)
     if array[0] == "[" and array[-1] == "]":
@@ -2707,4 +2712,8 @@ if __name__ == "__main__":
 
     if code == "":
         code = "$FDR+{"
-    run_program(code, DEBUG, SAFE_MODE, False, 0)
+    if code == "\\version":
+        print(VERSION)
+        print(DATE)
+    else:
+        run_program(code, DEBUG, SAFE_MODE, False, 0)
