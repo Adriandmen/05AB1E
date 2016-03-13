@@ -1901,8 +1901,7 @@ def run_program(commands,
             elif current_command == "\u00a1":
                 b, a = pop_stack(2)
                 temp_list = str(a).split(str(b))
-                for Q in temp_list:
-                    stack.append(str(Q))
+                stack.append(temp_list)
 
             elif current_command == "\u00ef":
                 a = pop_stack(1)
