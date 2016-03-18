@@ -185,7 +185,7 @@ def run_program(commands,
                     stack.append(convert_to_base(abs(int(a)), 2))
 
             elif current_command == "B":
-                a, b = pop_stack(2)
+                b, a = pop_stack(2)
                 if type(a) is list and type(b) is list:
                     temp_list = []
                     temp_list_2 = []
@@ -2633,6 +2633,63 @@ def run_program(commands,
                         recent_inputs.append(c)
 
                     stack.append(recent_inputs[2])
+
+            elif current_command == "\u2022":
+                a = pop_stack(1)
+                stack.append(convert_from_base(a, 190))
+
+            elif current_command == ".\u20AC":
+                a = pop_stack(1)
+                for Q in a:
+                    try:
+                        print(Q, end="")
+                    except:
+                        print(str(Q).encode("cp1252"), end="")
+                print()
+                has_printed.append(1)
+
+            elif current_command == ".\u00e4":
+                a = pop_stack(1)
+                print(str(a).encode("cp1252"))
+                has_printed.append(1)
+
+            elif current_command == "\u2030":
+                b = pop_stack(1)
+                a = pop_stack(1)
+                temp_list = []
+
+                temp_list.append(int(a) // int(b))
+                temp_list.append(int(a) % int(b))
+
+                stack.append(temp_list)
+
+            elif current_command == "\u00b7":
+                a = pop_stack(1)
+                if type(a) is list:
+                    temp_list = []
+                    for Q in a:
+                        temp_list.append(2 * int(Q))
+                    stack.append(temp_list)
+                else:
+                    stack.append(2 * int(a))
+
+            elif current_command == ".L":
+                if len(stack) > 0:
+                    b = pop_stack(1)
+                    a = pop_stack(1)
+                else:
+                    a = pop_stack(1)
+                    b = pop_stack(1)
+
+                stack.append(math.log(int(a), int(b)))
+
+            elif current_command == ".\u00b2":
+                a = pop_stack(1)
+                stack.append(math.log(int(a), 2))
+
+            elif current_command == "\u00ee":
+                a = pop_stack(1)
+                stack.append(math.ceil(float(a)))
 
             elif current_command == "\u017ea":
                 stack.append(int(datetime.datetime.now().hour))

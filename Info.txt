@@ -105,7 +105,7 @@ Extended ASCII characters (CP-1252)
 † 5	= pop a,b    push a with b filtered to the front
 ‡ 6	= pop a,b,c  push a.transliterate(b -> c)
 ˆ 7	=
-‰ 8	= 
+‰ 8	= pop a,b    push a divmod b
 Š 9	= pop a,b,c  push c,a,b
 ‹ 10	= pop a,b    push a < b
 Œ 11	= pop a      push substrings(a)
@@ -114,7 +114,7 @@ Extended ASCII characters (CP-1252)
 ’ - 	= for compressed strings (no implicit space)
 “ -	= for compressed strings (normal)
 ” -	= for compressed strings (title)
-• 15	=
+• 15	= start/end a 1-9 char compressed string
 – 16	= pop a      if 1, print N (used in loops)
 — 17	= pop a      if 1, print y (used in loops)
 ˜   	=
@@ -163,7 +163,7 @@ Extended ASCII characters (CP-1252)
 ´ 43	=
 µ 44	= pop a      while counter_variable != a, do...
 ¶ 45	=            push newline character
-· 46	=
+· 46	= pop a      push 2 * a
 ¸ 47	=
 ¹ 48	=            push the first item from the input history
 º 49	=            push len(stack) > 0
@@ -218,7 +218,7 @@ Extended ASCII characters (CP-1252)
 ë 98	= else statement
 ì 99	=
 í 13	=
-î 14	=
+î 14	= pop a      push round_up(a)
 ï 18	= pop a      push int(a)
 ð	=            push a space character
 ñ	= pop a,b,c  push a + b merged with c as merge character
@@ -237,12 +237,15 @@ Extended ASCII characters (CP-1252)
 þ	= pop a      push only digits of a
 ÿ	= used for string interpolation, pop a and replace ÿ with str(a)
 
-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!"#$%&'()*+/:;<=>?@[\]^_`
+0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!"#$%&'()*+/:;<=>?@[\]^_`{|}
 
 Extended functions:
 
+.€	= debug printer
+.ä	= debug printer
 .e      = experimental python evaluation (does not work in safe mode)
 .j	= pop a      0-indexed max_spaces.join(stack) grid
 .J      = pop a      1-indexed max_spaces.join(stack) grid
 .l      = pop a      push is_lower(a)
 .u      = pop a      push is_upper(a)
+.L	= pop a,b    push log_a(b)
