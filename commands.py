@@ -42,7 +42,14 @@ def is_alpha_value(value):
 def convert_to_base(n, base):
     """convert positive decimal integer n to equivalent in another base (2-36)"""
 
-    digits = "0123456789abcdefghijklmnopqrstuvwxyz"
+    digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!\"#$%&'()*+/:;<=>?@[\]^_`{|}" \
+             "\u20AC\u201A\u0192\u201E\u2026\u2020\u2021\u02C6\u2030\u0160\u2039\u0152\u017D\u00ED\u00EE" \
+             "\u2022\u2013\u2014\u00EF\u2122\u0161\u203A\u0153\u017E\u0178\u00A1\u00A2\u00A3\u00A4\u00A5" \
+             "\u00A6\u00A7\u00A8\u00A9\u00AA\u00AB\u00AC\u00AE\u00AF\u00B0\u00B1\u00B2\u00B3\u00B4\u00B5" \
+             "\u00B6\u00B7\u00B8\u00B9\u00BA\u00BB\u00BC\u00BD\u00BE\u00BF\u00C0\u00C1\u00C2\u00C3\u00C4" \
+             "\u00C5\u00C6\u00C7\u00C8\u00C9\u00CA\u00CB\u00CC\u00CD\u00CE\u00CF\u00D0\u00D1\u00D2\u00D3" \
+             "\u00D4\u00D5\u00D6\u00D7\u00D8\u00D9\u00DA\u00DB\u00DC\u00DD\u00DE\u00DF\u00E0\u00E1\u00E2" \
+             "\u00E3\u00E4\u00E5\u00E6\u00E7\u00E8\u00E9\u00EA\u00EB\u00EC"
 
     if int(n) == 0:
         return "0"
@@ -53,7 +60,7 @@ def convert_to_base(n, base):
     except:
         return ""
 
-    if n < 0 or base < 2 or base > 36:
+    if n < 0 or base < 2 or base > 190:
         return ""
 
     s = ""
@@ -65,12 +72,34 @@ def convert_to_base(n, base):
             break
 
     try:
-        while s[0]=="0":
+        while s[0] == "0":
             s = s[1:]
     except:
         0
 
     return s
+
+
+def convert_from_base(n, base):
+
+    digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!\"#$%&'()*+/:;<=>?@[\]^_`{|}" \
+             "\u20AC\u201A\u0192\u201E\u2026\u2020\u2021\u02C6\u2030\u0160\u2039\u0152\u017D\u00ED\u00EE" \
+             "\u2022\u2013\u2014\u00EF\u2122\u0161\u203A\u0153\u017E\u0178\u00A1\u00A2\u00A3\u00A4\u00A5" \
+             "\u00A6\u00A7\u00A8\u00A9\u00AA\u00AB\u00AC\u00AE\u00AF\u00B0\u00B1\u00B2\u00B3\u00B4\u00B5" \
+             "\u00B6\u00B7\u00B8\u00B9\u00BA\u00BB\u00BC\u00BD\u00BE\u00BF\u00C0\u00C1\u00C2\u00C3\u00C4" \
+             "\u00C5\u00C6\u00C7\u00C8\u00C9\u00CA\u00CB\u00CC\u00CD\u00CE\u00CF\u00D0\u00D1\u00D2\u00D3" \
+             "\u00D4\u00D5\u00D6\u00D7\u00D8\u00D9\u00DA\u00DB\u00DC\u00DD\u00DE\u00DF\u00E0\u00E1\u00E2" \
+             "\u00E3\u00E4\u00E5\u00E6\u00E7\u00E8\u00E9\u00EA\u00EB\u00EC"
+
+    n = str(n)[::-1]
+    r = 0
+    range_v = 0
+
+    for Q in n:
+        r += digits.index(Q) * base ** range_v
+        range_v += 1
+
+    return r
 
 
 def is_prime(n):
@@ -154,6 +183,7 @@ def get_letter(n):
     if n == 25:return "Y"
     if n == 26:return "Z"
     return None
+
 
 def prime_factorization_duplicates(n):
     n = int(n)
