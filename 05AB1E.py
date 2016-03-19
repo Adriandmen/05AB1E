@@ -30,8 +30,9 @@ loop_commands = ["F", "i", "v", "G", "\u0192"]
 
 # Global data
 
-VERSION = "version 7.7"
-DATE = "16:10 - 8 march 2016"
+VERSION = "version 7.7a"
+DATE = "10:11 - March 19, 2016"
+
 
 def is_array(array):
     array = str(array)
@@ -127,6 +128,15 @@ def pop_stack(amount=1):
             return a, b, c
 
 
+def get_input():
+    a = input()
+    if is_array(a):
+        a = ast.literal_eval(a)
+
+    recent_inputs.append(a)
+    return a
+
+
 def run_program(commands,
                 debug,
                 safe_mode,
@@ -165,17 +175,29 @@ def run_program(commands,
                 current_command += commands[pointer_position]
 
             if current_command == "h":
-                a = pop_stack(1)
+                try:
+                    if is_float_value(stack[-1]) or type(stack[-1]) is list:
+                        a = pop_stack(1)
+                    else:
+                        a = get_input()
+                except:
+                    a = get_input()
+
                 if type(a) is list:
                     temp_list = []
                     for Q in a:
-                        temp_list.append(convert_to_base(int(Q), 16))
+                        temp_list.append(convert_to_base(abs(int(Q)), 16))
                     stack.append(temp_list)
                 else:
-                    stack.append(convert_to_base(int(a), 16))
+                    stack.append(convert_to_base(abs(int(a)), 16))
 
             elif current_command == "b":
-                a = pop_stack(1)
+                try:
+                    if is_float_value(stack[-1]) or type(stack[-1]) is list:
+                        a = pop_stack(1)
+                except:
+                    a = get_input()
+
                 if type(a) is list:
                     temp_list = []
                     for Q in a:
@@ -399,44 +421,70 @@ def run_program(commands,
                             begin_sentence = False
                     else:
                         temp_string += Q
-                    if Q == ".":
+                    if Q == "." or Q == "?" or Q == "!":
                         begin_sentence = True
                 stack.append(temp_string)
 
             elif current_command == "!":
-                a = pop_stack(1)
+                try:
+                    if is_float_value(stack[-1]) or type(stack[-1]) is list:
+                        a = pop_stack(1)
+                    else:
+                        a = get_input()
+                except:
+                    a = get_input()
 
                 if type(a) is list:
                     temp_list = []
                     for Q in a:
-                        temp_list.append(math.factorial(int(Q)))
+                        if "." not in str(Q):
+                            temp_list.append(math.factorial(int(Q)))
+                        else:
+                            temp_list.append(trim_float(math.gamma(float(Q) + 1)))
                     stack.append(temp_list)
                 else:
-                    stack.append(math.factorial(int(a)))
+                    if "." not in str(a):
+                        stack.append(math.factorial(int(a)))
+                    else:
+                        stack.append(trim_float(math.gamma(float(a) + 1)))
 
             elif current_command == "+":
-                a, b = pop_stack(2)
+                if stack:
+                    b = pop_stack(1)
+                    a = pop_stack(1)
+                else:
+                    a = pop_stack(1)
+                    b = pop_stack(1)
+
                 if type(a) is list and type(b) is list:
                     temp_list = []
-                    temp_list_2 = []
-                    for Q in a:
-                        temp_list_2 = []
-                        for R in b:
-                            temp_list_2.append(int(Q) + int(R))
-                        temp_list.append(temp_list_2)
+                    for Q in range(len(a)):
+                        if "." in str(a[Q]) or "." in str(b[Q]):
+                            temp_list.append(float(a[Q]) + float(b[Q]))
+                        else:
+                            temp_list.append(int(a[Q]) + int(b[Q]))
                     stack.append(temp_list)
                 elif type(a) is list:
                     temp_list = []
                     for Q in a:
-                        temp_list.append(int(Q) + int(b))
+                        if "." in str(Q) or "." in str(b):
+                            temp_list.append(float(Q) + float(b))
+                        else:
+                            temp_list.append(int(Q) + int(b))
                     stack.append(temp_list)
                 elif type(b) is list:
                     temp_list = []
                     for Q in b:
-                        temp_list.append(int(a) + int(Q))
+                        if "." in str(Q) or "." in str(a):
+                            temp_list.append(float(a) + float(Q))
+                        else:
+                            temp_list.append(int(a) + int(Q))
                     stack.append(temp_list)
                 else:
-                    stack.append(int(a) + int(b))
+                    if "." in str(a) or "." in str(b):
+                        stack.append(float(a) + float(b))
+                    else:
+                        stack.append(int(a) + int(b))
 
             elif current_command == "-":
                 a, b = pop_stack(2)
@@ -1265,10 +1313,10 @@ def run_program(commands,
                 if type(a) is list:
                     temp_list = []
                     for Q in a:
-                        temp_list.append(int(Q) // 2)
+                        temp_list.append(int(Q) / 2)
                     stack.append(temp_list)
                 else:
-                    stack.append(int(a) // 2)
+                    stack.append(int(a) / 2)
 
             elif current_command == "w":
                 time.sleep(1)
@@ -1918,46 +1966,10 @@ def run_program(commands,
                 if type(a) is list:
                     temp_list = []
                     for R in a:
-                        Q = str(R)
-                        is_neg = False
-                        if Q[0] == "-":
-                            is_neg = True
-                            Q = Q[1:]
-                        if not str(Q).__contains__("."):
-                            Q += "."
-                        while Q[0] == "0":
-                            Q = Q[1:]
-                        while Q[-1] == "0":
-                            Q = Q[0:-1]
-                        if Q[0] == ".":
-                            Q = "0" + Q
-                        if Q[-1] == ".":
-                            Q += "0"
-
-                        if is_neg:
-                            Q = "-" + Q
-                        temp_list.append(Q)
+                        temp_list.append(floatify(str(R)))
                     stack.append(temp_list)
                 else:
-                    a = str(a)
-                    is_neg = False
-                    if a[0] == "-":
-                        is_neg = True
-                        a = a[1:]
-                    if not str(a).__contains__("."):
-                        a += "."
-                    while a[0] == "0":
-                        a = a[1:]
-                    while a[-1] == "0":
-                        a = a[0:-1]
-                    if a[0] == ".":
-                        a = "0" + a
-                    if a[-1] == ".":
-                        a += "0"
-
-                    if is_neg:
-                        a = "-" + a
-                    stack.append(a)
+                    stack.append(floatify(str(a)))
 
             elif current_command == "\u00d1":
                 a = pop_stack(1)
