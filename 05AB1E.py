@@ -30,8 +30,8 @@ loop_commands = ["F", "i", "v", "G", "\u0192"]
 
 # Global data
 
-VERSION = "version 7.7a"
-DATE = "10:11 - March 19, 2016"
+VERSION = "version 7.7b"
+DATE = "20:20 - March 20, 2016"
 
 
 def is_array(array):
