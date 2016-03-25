@@ -30,8 +30,8 @@ loop_commands = ["F", "i", "v", "G", "\u0192"]
 
 # Global data
 
-VERSION = "version 7.7b"
-DATE = "20:20 - March 20, 2016"
+VERSION = "version 7.7c"
+DATE = "12:49 - March 25, 2016"
 
 
 def is_array(array):
@@ -2214,7 +2214,9 @@ def run_program(commands,
 
                 a = []
                 if stack and type(stack[-1]) is list:
-                    a = pop_stack(1)
+                    c = pop_stack(1)
+                    for Q in c:
+                        a.append(str(Q))
                 else:
                     for Q in stack:
                         a.append(Q)
