@@ -100,8 +100,8 @@ Extended ASCII characters (CP-1252)
 € 0     =
 ‚ 1	=
 ƒ 2	= pop a      push for N in range(0, a + 1)
-„ 3	=
-… 4	=
+„ 3	= 2 char string / can also be used for 2 compressed strings
+… 4	= 3 char string / can also be used for 3 compressed strings
 † 5	= pop a,b    push a with b filtered to the front
 ‡ 6	= pop a,b,c  push a.transliterate(b -> c)
 ˆ 7	=
@@ -248,4 +248,5 @@ Extended functions:
 .J      = pop a      1-indexed max_spaces.join(stack) grid
 .l      = pop a      push is_lower(a)
 .u      = pop a      push is_upper(a)
-.L	= pop a,b    push log_a(b)
+.L	= pop a,b    push log_b(a)
+.²	= pop a      push log_2(a)

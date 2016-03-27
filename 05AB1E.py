@@ -1175,8 +1175,80 @@ def run_program(commands,
 
             elif current_command == "'":
                 temp_string = ""
+                temp_index = ""
                 pointer_position += 1
-                temp_string = commands[pointer_position]
+                temp_position = pointer_position
+                current_command = commands[pointer_position]
+                if dictionary.unicode_index.__contains__(current_command):
+                    temp_index += str(dictionary.unicode_index.index(current_command)).rjust(2, "0")
+                    temp_position += 1
+                    pointer_position += 1
+                    current_command = commands[temp_position]
+                    temp_index += str(dictionary.unicode_index.index(current_command)).rjust(2, "0")
+                    if temp_string == "":
+                        temp_string += dictionary.dictionary[int(temp_index)]
+                    else:
+                        temp_string += " " + dictionary.dictionary[int(temp_index)]
+                    temp_index = ""
+                    stack.append(temp_string)
+                else:
+                    temp_string = commands[pointer_position]
+                    stack.append(temp_string)
+
+            elif current_command == "\u201e":
+                temp_string = ""
+                temp_index = ""
+
+                word_count = 0
+
+                while word_count != 2:
+                    pointer_position += 1
+                    temp_position = pointer_position
+                    current_command = commands[pointer_position]
+                    if dictionary.unicode_index.__contains__(current_command):
+                        temp_index += str(dictionary.unicode_index.index(current_command)).rjust(2, "0")
+                        temp_position += 1
+                        pointer_position += 1
+                        current_command = commands[temp_position]
+                        temp_index += str(dictionary.unicode_index.index(current_command)).rjust(2, "0")
+                        if temp_string == "":
+                            temp_string += dictionary.dictionary[int(temp_index)]
+                        else:
+                            temp_string += " " + dictionary.dictionary[int(temp_index)]
+                        temp_index = ""
+                        word_count += 1
+                    else:
+                        temp_string += commands[pointer_position]
+                        word_count += 1
+
+                stack.append(temp_string)
+
+            elif current_command == "\u2026":
+                temp_string = ""
+                temp_index = ""
+
+                word_count = 0
+
+                while word_count != 3:
+                    pointer_position += 1
+                    temp_position = pointer_position
+                    current_command = commands[pointer_position]
+                    if dictionary.unicode_index.__contains__(current_command):
+                        temp_index += str(dictionary.unicode_index.index(current_command)).rjust(2, "0")
+                        temp_position += 1
+                        pointer_position += 1
+                        current_command = commands[temp_position]
+                        temp_index += str(dictionary.unicode_index.index(current_command)).rjust(2, "0")
+                        if temp_string == "":
+                            temp_string += dictionary.dictionary[int(temp_index)]
+                        else:
+                            temp_string += " " + dictionary.dictionary[int(temp_index)]
+                        temp_index = ""
+                        word_count += 1
+                    else:
+                        temp_string += commands[pointer_position]
+                        word_count += 1
+
                 stack.append(temp_string)
 
             elif current_command == "[":
