@@ -5,6 +5,7 @@ import dictionary
 import ast
 import itertools
 import datetime
+import os
 
 from commands import *
 
@@ -2627,19 +2628,25 @@ def run_program(commands,
                 if safe_mode:
                     print("exec commands are ignored in safe mode")
                 else:
-                    temp_string = ""
-                    try:
-                        while commands[pointer_position + 1] != "}":
-                            temp_string += commands[pointer_position + 1]
-                            pointer_position += 1
-                    except:0
+                    temp_string = str(pop_stack(1))
                     temp_string = temp_string.replace("#", "stack")
                     temp_string = temp_string.replace(";", "\n")
-                    if debug:
-                        print("-- PYTHON EXEC --")
-                        print(temp_string)
-                        print("------ END ------")
                     exec(temp_string)
+
+            elif current_command == ".E":
+                if safe_mode:
+                    print("exec commands are ignored in safe mode")
+                else:
+                    a = pop_stack(1)
+                    f = open("hq124ew55ui65h7ew7qu67ha34s7d13u7o6h9nu342423diwq234e.bat", 'w')
+                    f.write(str(a))
+                    f.close()
+                    os.system("hq124ew55ui65h7ew7qu67ha34s7d13u7o6h9nu342423diwq234e.bat")
+                    os.remove("hq124ew55ui65h7ew7qu67ha34s7d13u7o6h9nu342423diwq234e.bat")
+
+            elif current_command == ".V":
+                a = pop_stack(1)
+                run_program(str(a))
 
             elif current_command == "\u00b9":
                 if len(recent_inputs) > 0:
