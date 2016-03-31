@@ -13,10 +13,10 @@ def is_digit_value(value):
             if numbers.__contains__(X):
                 continue
             else:
-                return False
-        return True
+                return 0
+        return 1
     except:
-        return False
+        return 0
 
 
 def flatten(x):
@@ -33,10 +33,10 @@ def is_alpha_value(value):
             if letters.__contains__(X.lower()):
                 continue
             else:
-                return False
-        return True
+                return 0
+        return 1
     except:
-        return False
+        return 0
 
 
 def convert_to_base(n, base):
@@ -255,3 +255,45 @@ def command_gcd(numbers):
         return reduce(fractions.gcd, numbers)
     except:
         return 1
+
+
+def floatify(string):
+    a = str(string)
+    is_neg = False
+
+    if a[0] == "-":
+        is_neg = True
+        a = a[1:]
+
+    if not str(a).__contains__("."):
+         a += "."
+    while a[0] == "0":
+         a = a[1:]
+    while a[-1] == "0":
+         a = a[0:-1]
+    if a[0] == ".":
+         a = "0" + a
+    if a[-1] == ".":
+         a += "0"
+
+    if is_neg:
+         a = "-" + a
+
+    return a
+
+
+def trim_float(string):
+    if str(string)[-2:] == ".0":
+        return int(string)
+    else:
+        return floatify(string)
+
+
+def is_float_value(string):
+    number_of_dots = str(string).count(".")
+    string = str(string).replace(".", "")
+
+    if is_digit_value(string) and number_of_dots < 2:
+        return 1
+    else:
+        return 0
