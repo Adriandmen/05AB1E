@@ -2639,7 +2639,7 @@ def run_program(commands,
 
             elif current_command == ".V":
                 a = pop_stack(1)
-                run_program(str(a))
+                run_program(str(a), debug, safe_mode, True)
 
             elif current_command == "\u00b9":
                 if len(recent_inputs) > 0:
