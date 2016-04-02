@@ -176,14 +176,7 @@ def run_program(commands,
                 current_command += commands[pointer_position]
 
             if current_command == "h":
-                try:
-                    if is_float_value(stack[-1]) or type(stack[-1]) is list:
-                        a = pop_stack(1)
-                    else:
-                        a = get_input()
-                except:
-                    a = get_input()
-
+                a = pop_stack(1)
                 if type(a) is list:
                     temp_list = []
                     for Q in a:
@@ -1747,7 +1740,7 @@ def run_program(commands,
                 for string_variable in a:
                     range_variable += 1
                     if debug:print("N = " + str(range_variable))
-                    run_program(STATEMENT, debug, True, safe_mode, range_variable, string_variable)
+                    run_program(STATEMENT, debug, safe_mode, True, range_variable, string_variable)
                 pointer_position = temp_position
 
             elif current_command == "y":
