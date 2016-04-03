@@ -97,8 +97,8 @@ z	= pop a      push 1 / a
 
 Extended ASCII characters (CP-1252)
 
-€ 0     =
-‚ 1	=
+€ 0     = for each command
+‚ 1	= pop a,b    push [a, b]
 ƒ 2	= pop a      push for N in range(0, a + 1)
 „ 3	= 2 char string / can also be used for 2 compressed strings
 … 4	= 3 char string / can also be used for 3 compressed strings
@@ -139,6 +139,10 @@ Extended ASCII characters (CP-1252)
         žn           push [A-Za-z]
         žo           push [Z-Az-a]
         žp           push [Z-A]
+	žq	     push pi
+	žr	     push e
+	žs	     pop a, push pi to a digits (max. 100000)
+	žt	     pop a, push e to a digits (max. 10000)
 
 
 Ÿ 24	= pop a,b    push [a, ..., b]
@@ -174,7 +178,7 @@ Extended ASCII characters (CP-1252)
 ¿ 54	= pop a      push gcd(a)
 À 55	= pop a      push a rotated 1 left
 Á 56	= pop a      push a rotated 1 right
-Â 57	=
+Â 57	= pop a      push bifurcated a
 Ã 58	=
 Ä 59	= pop a      push abs(a)
 Å 60	=
@@ -193,7 +197,7 @@ Extended ASCII characters (CP-1252)
 Ò 73	= pop a      push list of prime factors (with duplicates)
 Ó 74	= pop a      push list of exponents of prime factors (2^a, 3^b, 5^c, 7^d, etc.)
 Ô 75	=
-Õ 76	=
+Õ 76	= pop a      push euler_totient(a)
 Ö 77	= pop a,b    push a % b == 0
 × 78	= pop a,b    push a × b (strings)
 Ø 79	= pop a      push ath prime (zero-indexed)
@@ -228,7 +232,7 @@ Extended ASCII characters (CP-1252)
 õ	=
 ö	=
 ÷	= pop a,b    push a split in pieces of b
-ø	=
+ø	= pop a      push zipped a
 ù	=
 ú	= 
 û	=

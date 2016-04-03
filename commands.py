@@ -297,3 +297,16 @@ def is_float_value(string):
         return 1
     else:
         return 0
+
+
+def euler_totient(n):
+    amount = 0
+
+    if is_prime(n):
+        return n - 1
+
+    for k in range(1, n + 1):
+        if fractions.gcd(n, k) == 1:
+            amount += 1
+
+    return amount

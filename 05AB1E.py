@@ -7,6 +7,7 @@ import itertools
 import datetime
 import os
 
+from constants import *
 from commands import *
 
 stack = []
@@ -2720,6 +2721,37 @@ def run_program(commands,
                 a = pop_stack(1)
                 stack.append(convert_from_base(a, 190))
 
+            elif current_command == "\u20AC":
+                a = pop_stack(1)
+                temp_stack = []
+                temp_list = []
+                for Q in stack:
+                    temp_stack.append(Q)
+                stack.clear()
+                pointer_position += 1
+                for_each_command = commands[pointer_position]
+                for Q in a:
+                    stack.append(Q)
+                    run_program(for_each_command, DEBUG, SAFE_MODE, True, range_variable, string_variable)
+                for Q in stack:
+                    temp_list.append(Q)
+                for Q in temp_stack:
+                    stack.append(Q)
+                stack.clear()
+                stack.append(temp_list)
+
+            elif current_command == "\u00c2":
+                a = pop_stack(1)
+                if type(a) is int:
+                    a = str(a)
+                stack.append(a)
+                stack.append(a[::-1])
+
+            elif current_command == "\u201A":
+                b = pop_stack(1)
+                a = pop_stack(1)
+                stack.append([a, b])
+
             elif current_command == ".\u20AC":
                 a = pop_stack(1)
                 for Q in a:
@@ -2729,6 +2761,16 @@ def run_program(commands,
                         print(str(Q).encode("cp1252"), end="")
                 print()
                 has_printed.append(1)
+
+            elif current_command == "\u00d5":
+                a = pop_stack(1)
+                if type(a) is list:
+                    temp_list = []
+                    for Q in a:
+                        temp_list.append(euler_totient(int(Q)))
+                    stack.append(temp_list)
+                else:
+                    stack.append(euler_totient(int(Q)))
 
             elif current_command == ".\u00e4":
                 a = pop_stack(1)
@@ -2820,6 +2862,22 @@ def run_program(commands,
 
             elif current_command == "\u017ep":
                 stack.append("ZYXWVUTSRQPONMLKJIHGFEDCBA")
+
+            elif current_command == "\u017eq":
+                stack.append(math.pi)
+
+            elif current_command == "\u017er":
+                stack.append(math.e)
+
+            elif current_command == "\u017es":
+                a = stack.pop()
+                a = int(a)
+                stack.append(constant_pi[0:a + 2])
+
+            elif current_command == "\u017et":
+                a = stack.pop()
+                a = int(a)
+                stack.append(constant_e[0:a + 2])
 
         except Exception as ex:
             if debug:
