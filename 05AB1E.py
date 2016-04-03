@@ -1887,9 +1887,9 @@ def run_program(commands,
                 a = pop_stack(1)
                 a = a[::-1]
                 result = int(a.pop())
-                for Q in range(0, len(a)):
-                    result -= int(a[Q])
-                stack.append(Q)
+                for Q in a:
+                    result -= int(Q)
+                stack.append(result)
 
             elif current_command == "\u00d9":
                 a = pop_stack(1)
