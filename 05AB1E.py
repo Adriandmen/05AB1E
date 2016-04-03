@@ -1902,6 +1902,10 @@ def run_program(commands,
                 else:
                     stack.append(''.join(temp_list))
 
+            elif current_command == "\u00f8":
+                a = pop_stack(1)
+                stack.append([list(x) for x in zip(*a)])
+
             elif current_command == "\u00da":
                 a = pop_stack(1)
                 a = a[::-1]
