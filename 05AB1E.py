@@ -1271,8 +1271,10 @@ def run_program(commands,
             elif current_command == "=":
                 if stack:
                     a = str(stack[-1])
-                    print(a)
-                    has_printed.append(True)
+                else:
+                    a = str(pop_stack(1))
+                print(a)
+                has_printed.append(True)
 
             elif current_command == "Q":
                 a, b = pop_stack(2)
