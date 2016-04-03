@@ -186,11 +186,7 @@ def run_program(commands,
                     stack.append(convert_to_base(abs(int(a)), 16))
 
             elif current_command == "b":
-                try:
-                    if is_float_value(stack[-1]) or type(stack[-1]) is list:
-                        a = pop_stack(1)
-                except:
-                    a = get_input()
+                a = pop_stack(1)
 
                 if type(a) is list:
                     temp_list = []
@@ -420,13 +416,7 @@ def run_program(commands,
                 stack.append(temp_string)
 
             elif current_command == "!":
-                try:
-                    if is_float_value(stack[-1]) or type(stack[-1]) is list:
-                        a = pop_stack(1)
-                    else:
-                        a = get_input()
-                except:
-                    a = get_input()
+                a = pop_stack(1)
 
                 if type(a) is list:
                     temp_list = []
@@ -1275,7 +1265,7 @@ def run_program(commands,
 
             elif current_command == "#":
                 a = pop_stack(1)
-                if a == 1:
+                if a == 1 or a == '1':
                     return True
 
             elif current_command == "=":
