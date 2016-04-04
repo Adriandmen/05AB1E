@@ -247,6 +247,7 @@ Extended functions:
 
 .€	= debug printer
 .ä	= debug printer
+.A      = pop a      push acronymified a
 .e      = pop a      run with experimental python evaluation (does not work in safe mode)
 .E      = pop a      run with experimental batch evaluation (does not work in safe mode)
 .V      = pop a      run as 05AB1E code

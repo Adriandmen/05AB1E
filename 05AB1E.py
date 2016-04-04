@@ -2770,7 +2770,7 @@ def run_program(commands,
                         temp_list.append(euler_totient(int(Q)))
                     stack.append(temp_list)
                 else:
-                    stack.append(euler_totient(int(Q)))
+                    stack.append(euler_totient(int(a)))
 
             elif current_command == ".\u00e4":
                 a = pop_stack(1)
@@ -2870,14 +2870,22 @@ def run_program(commands,
                 stack.append(math.e)
 
             elif current_command == "\u017es":
-                a = stack.pop()
+                a = pop_stack(1)
                 a = int(a)
                 stack.append(constant_pi[0:a + 2])
 
             elif current_command == "\u017et":
-                a = stack.pop()
+                a = pop_stack(1)
                 a = int(a)
                 stack.append(constant_e[0:a + 2])
+
+            elif current_command == ".A":
+                a = pop_stack(1)
+                a = a.split(" ")
+                temp_list = []
+                for Q in a:
+                    temp_list.append(str(Q)[0])
+                stack.append(temp_list)
 
         except Exception as ex:
             if debug:
