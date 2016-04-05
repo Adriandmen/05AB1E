@@ -104,7 +104,7 @@ Extended ASCII characters (CP-1252)
 … 4	= 3 char string / can also be used for 3 compressed strings
 † 5	= pop a,b    push a with b filtered to the front
 ‡ 6	= pop a,b,c  push a.transliterate(b -> c)
-ˆ 7	=
+ˆ 7	= 
 ‰ 8	= pop a,b    push a divmod b
 Š 9	= pop a,b,c  push c,a,b
 ‹ 10	= pop a,b    push a < b
@@ -117,7 +117,7 @@ Extended ASCII characters (CP-1252)
 • 15	= start/end a 1-9 char compressed string
 – 16	= pop a      if 1, print N (used in loops)
 — 17	= pop a      if 1, print y (used in loops)
-˜   	=
+˜   	= 
 ™ 19	= pop a      push title_cased(a)
 š 20	= pop a      push switch_cased(a)
 › 21	= pop a,b    push a > b
@@ -196,7 +196,7 @@ Extended ASCII characters (CP-1252)
 Ñ 72	= pop a      push divisors(a)
 Ò 73	= pop a      push list of prime factors (with duplicates)
 Ó 74	= pop a      push list of exponents of prime factors (2^a, 3^b, 5^c, 7^d, etc.)
-Ô 75	=
+Ô 75	= pop a      push connected uniquified a
 Õ 76	= pop a      push euler_totient(a)
 Ö 77	= pop a,b    push a % b == 0
 × 78	= pop a,b    push a × b (strings)
@@ -256,4 +256,5 @@ Extended functions:
 .l      = pop a      push is_lower(a)
 .u      = pop a      push is_upper(a)
 .L	= pop a,b    push log_b(a)
+.:	= pop a,b,c  push a.replace(b, c)
 .²	= pop a      push log_2(a)

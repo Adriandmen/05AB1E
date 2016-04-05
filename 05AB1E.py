@@ -2755,6 +2755,16 @@ def run_program(commands,
                 stack.append(a)
                 stack.append(a[::-1])
 
+            elif current_command == "\u00d4":
+                a = pop_stack(1)
+                temp_string = ""
+                temp_string_2 = ""
+                for Q in str(a):
+                    if Q != temp_string_2:
+                        temp_string_2 = Q
+                        temp_string += Q
+                stack.append(temp_string)
+
             elif current_command == "\u201A":
                 b = pop_stack(1)
                 a = pop_stack(1)
