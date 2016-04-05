@@ -2755,11 +2755,17 @@ def run_program(commands,
                 stack.append(a)
                 stack.append(a[::-1])
 
+            elif current_command == "\u00f5":
+                stack.append("")
+
             elif current_command == "\u00d4":
                 a = pop_stack(1)
                 temp_string = ""
                 temp_string_2 = ""
-                for Q in str(a):
+                if type(a) is int:
+                    a = str(a)
+
+                for Q in a:
                     if Q != temp_string_2:
                         temp_string_2 = Q
                         temp_string += Q
