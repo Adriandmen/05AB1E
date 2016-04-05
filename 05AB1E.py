@@ -2088,10 +2088,16 @@ def run_program(commands,
             elif current_command == "K":
                 b, a = pop_stack(2)
                 temp_list = []
-                for Q in a:
-                    if str(Q) != str(b):
-                        temp_list.append(Q)
-                stack.append(temp_list)
+                if type(a) is list:
+                    for Q in a:
+                        if str(Q) != str(b):
+                            temp_list.append(Q)
+                    stack.append(temp_list)
+                else:
+                    a = str(a)
+                    while str(a).replace(b, "") != str(a):
+                        a = str(a).replace(b, "")
+                    stack.append(a)
 
             elif current_command == "\u00df":
                 a = stack[-1]
@@ -2880,6 +2886,9 @@ def run_program(commands,
                 a = pop_stack(1)
                 a = int(a)
                 stack.append(constant_e[0:a + 2])
+
+            elif current_command == "\u017eu":
+                stack.append("()<>[]{}")
 
             elif current_command == ".A":
                 a = pop_stack(1)
