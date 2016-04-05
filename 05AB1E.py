@@ -1874,15 +1874,17 @@ def run_program(commands,
                     recent_inputs.append(b)
                 temp_string = ""
                 R = 0
+                temp_list = []
                 for Q in a:
                     temp_string += Q
                     R += 1
                     if R == b:
-                        stack.append(temp_string)
+                        temp_list.append(temp_string)
                         temp_string = ""
                         R = 0
                 if temp_string != "":
-                    stack.append(temp_string)
+                    temp_list.append(temp_string)
+                stack.append(temp_list)
 
             elif current_command == "\u00c6":
                 a = pop_stack(1)
