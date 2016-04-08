@@ -32,8 +32,8 @@ loop_commands = ["F", "i", "v", "G", "\u0192"]
 
 # Global data
 
-VERSION = "version 7.8"
-DATE = "22:47 - April 3, 2016"
+VERSION = "version 7.8b"
+DATE = "16:05 - April 8, 2016"
 
 
 def is_array(array):
@@ -2800,6 +2800,20 @@ def run_program(commands,
                 a = pop_stack(1)
                 print(str(a).encode("cp1252"))
                 has_printed.append(1)
+
+            elif current_command == "\u00c3":
+                b = pop_stack(1)
+                a = pop_stack(1)
+
+                if type(a) is int:
+                    a = str(a)
+
+                temp_string = ""
+                for Q in a:
+                    if str(Q) in str(b):
+                        temp_string += str(Q)
+
+                stack.append(temp_string)
 
             elif current_command == "\u2030":
                 b = pop_stack(1)

@@ -179,7 +179,7 @@ Extended ASCII characters (CP-1252)
 À 55	= pop a      push a rotated 1 left
 Á 56	= pop a      push a rotated 1 right
 Â 57	= pop a      push bifurcated a
-Ã 58	=
+Ã 58	= pop a,b    push a.keep(b)
 Ä 59	= pop a      push abs(a)
 Å 60	=
 Æ 61	= pop a      push reduced substraction a
