@@ -589,10 +589,9 @@ def run_program(commands,
                 recent_inputs.append(a)
 
             elif current_command == "$":
-                a = str(input())
+                a = get_input()
                 stack.append(1)
                 stack.append(a)
-                recent_inputs.append(a)
 
             elif current_command == "H":
                 a = pop_stack(1)
@@ -1236,6 +1235,18 @@ def run_program(commands,
 
                 stack.append(temp_string)
 
+            elif current_command == "\u00f6":
+                b = pop_stack(1)
+                a = pop_stack(1)
+
+                if type(a) is list:
+                    temp_list = []
+                    for Q in a:
+                        temp_list.append(convert_from_base(str(Q), int(b)))
+                    stack.append(temp_list)
+                else:
+                    stack.append(convert_from_base(str(a), int(b)))
+
             elif current_command == "[":
                 STATEMENT = ""
                 temp_position = pointer_position
@@ -1326,14 +1337,8 @@ def run_program(commands,
                     stack.append(str(a).title())
 
             elif current_command == "E":
-                a = input()
-                try:
-                    b = ast.literal_eval(a)
-                    stack.append(b)
-                    recent_inputs.append(b)
-                except:
-                    stack.append(a)
-                    recent_inputs.append(a)
+                a = get_input()
+                stack.append(a)
 
             elif current_command == ")":
                 temp_list = []
@@ -1429,10 +1434,12 @@ def run_program(commands,
                 register_y.append(a)
 
             elif current_command == "W":  # z variable
-                a = input()
+                if len(register_z) == 0:
+                    a = get_input()
+                    stack.append(a)
+                else:
+                    a = pop_stack(1)
                 register_z.append(a)
-                stack.append(a)
-                recent_inputs.append(a)
 
             elif current_command == "q":
                 exit_program.append(1)
@@ -1898,8 +1905,8 @@ def run_program(commands,
                 a = pop_stack(1)
                 temp_list = []
                 for Q in a:
-                    if Q not in temp_list:
-                        temp_list.append(Q)
+                    if str(Q) not in temp_list:
+                        temp_list.append(str(Q))
                 if type(a) is list:
                     stack.append(temp_list)
                 else:
@@ -1914,8 +1921,8 @@ def run_program(commands,
                 a = a[::-1]
                 temp_list = []
                 for Q in a:
-                    if Q not in temp_list:
-                        temp_list.append(Q)
+                    if str(Q) not in temp_list:
+                        temp_list.append(str(Q))
                 if type(a) is list:
                     stack.append(temp_list[::-1])
                 else:
@@ -2095,8 +2102,8 @@ def run_program(commands,
                     stack.append(temp_list)
                 else:
                     a = str(a)
-                    while str(a).replace(b, "") != str(a):
-                        a = str(a).replace(b, "")
+                    while str(a).replace(str(b), "") != str(a):
+                        a = str(a).replace(str(b), "")
                     stack.append(a)
 
             elif current_command == "\u00df":

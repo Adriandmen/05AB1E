@@ -67,7 +67,7 @@ def convert_to_base(n, base):
     while 1:
         r = n % base
         s = digits[int(r)] + s
-        n = n / base
+        n = n // base
         if n == 0:
             break
 
@@ -310,3 +310,7 @@ def euler_totient(n):
             amount += 1
 
     return amount
+
+
+def string_partitions(string):
+    length = len(string)
