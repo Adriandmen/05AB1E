@@ -230,7 +230,7 @@ Extended ASCII characters (CP-1252)
 ó	= pop a      push inclusive round down a
 ô	=
 õ	=  	     push empty string
-ö	=
+ö	= pop a,b    push int(a, b)
 ÷	= pop a,b    push a split in pieces of b
 ø	= pop a      push zipped a
 ù	=
