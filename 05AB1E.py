@@ -682,9 +682,13 @@ def run_program(commands,
             elif current_command == "|":
                 a = input()
                 temp_list = []
-                while a:
-                    temp_list.append(a)
-                    a = input()
+                try:
+                    while True:
+                        temp_list.append(a)
+                        a = input()
+                        if a == "":
+                            break
+                except:0
                 stack.append(temp_list)
 
             elif current_command == "L":
