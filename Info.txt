@@ -91,7 +91,7 @@ x	= pop a      push a, a * 2
 y	=            push string variable (used in mapping loops)
 z	= pop a      push 1 / a
 {	= pop a      push sorted a
-|	= print full stack
+|	=            push the rest of input as an array with strings
 }	=            used for if statements
 ~	= pop a,b    push a OR b
 

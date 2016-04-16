@@ -680,8 +680,12 @@ def run_program(commands,
                 stack.append(b)
 
             elif current_command == "|":
-                print(stack)
-                has_printed.append(True)
+                a = input()
+                temp_list = []
+                while a:
+                    temp_list.append(a)
+                    a = input()
+                stack.append(temp_list)
 
             elif current_command == "L":
                 temp_list = []
