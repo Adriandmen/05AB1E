@@ -6,6 +6,7 @@ import ast
 import itertools
 import datetime
 import os
+import tempfile
 
 from constants import *
 from commands import *
@@ -2651,11 +2652,10 @@ def run_program(commands,
                     print("exec commands are ignored in safe mode")
                 else:
                     a = pop_stack(1)
-                    f = open("hq124ew55ui65h7ew7qu67ha34s7d13u7o6h9nu342423diwq234e.bat", 'w')
+                    f = tempfile.NamedTemporaryFile()
                     f.write(str(a))
+                    os.system(f.name)
                     f.close()
-                    os.system("hq124ew55ui65h7ew7qu67ha34s7d13u7o6h9nu342423diwq234e.bat")
-                    os.remove("hq124ew55ui65h7ew7qu67ha34s7d13u7o6h9nu342423diwq234e.bat")
 
             elif current_command == ".V":
                 a = pop_stack(1)
