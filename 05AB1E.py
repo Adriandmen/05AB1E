@@ -33,8 +33,8 @@ loop_commands = ["F", "i", "v", "G", "\u0192"]
 
 # Global data
 
-VERSION = "version 7.8b"
-DATE = "16:05 - April 8, 2016"
+VERSION = "version 7.9"
+DATE = "01:36 - April 27, 2016"
 
 
 def is_array(array):
@@ -52,8 +52,9 @@ def pop_stack(amount=1):
         else:
             a = input()
             if is_array(a):
+                a = ast.literal_eval(a)
                 recent_inputs.append(a)
-                return ast.literal_eval(a)
+                return a
             else:
                 recent_inputs.append(a)
                 return a
@@ -174,6 +175,10 @@ def run_program(commands,
                 current_command += commands[pointer_position]
 
             if current_command == "\u017e":
+                pointer_position += 1
+                current_command += commands[pointer_position]
+
+            if current_command == "\u00c5":
                 pointer_position += 1
                 current_command += commands[pointer_position]
 
@@ -1290,10 +1295,8 @@ def run_program(commands,
                     return True
 
             elif current_command == "=":
-                if stack:
-                    a = str(stack[-1])
-                else:
-                    a = str(pop_stack(1))
+                a = pop_stack(1)
+                stack.append(a)
                 print(a)
                 has_printed.append(True)
 
@@ -2571,6 +2574,53 @@ def run_program(commands,
                 print(a, end="")
                 has_printed.append(True)
 
+            elif current_command == ".o":
+                b = pop_stack(1)
+                a = pop_stack(1)
+                a = " " + str(a)
+                b = str(b)
+                temp_string = ""
+                stop = False
+                for Q in b:
+                    if stop:
+                        temp_string += Q
+                    else:
+                        if a[0] == Q:
+                            temp_string += Q
+                            a = a[1:]
+                        else:
+                            while a[0] != Q:
+                                a = a[1:]
+                                if a == "":
+                                    stop = True
+                                    temp_string += Q
+                                    break
+                                if a[0] == Q:
+                                    temp_string += Q
+                                    break
+                                else:
+                                    temp_string += " "
+
+                stack.append(temp_string)
+
+            elif current_command == ".O":
+                b = str(pop_stack(1))
+                a = str(pop_stack(1)) + b
+
+                temp_string = b
+                while True:
+                    is_substring = True
+                    for Q in range(0, len(b)):
+                        if a[Q] != b[Q]:
+                            is_substring = False
+                            break
+                    if is_substring:
+                        break
+                    else:
+                        temp_string = " " + temp_string
+                        a = a[1:]
+                stack.append(temp_string)
+
             elif current_command == "\u2021":
                 c = pop_stack(1)
                 b = pop_stack(1)
@@ -2653,7 +2703,7 @@ def run_program(commands,
                 else:
                     a = pop_stack(1)
                     f = tempfile.NamedTemporaryFile()
-                    f.write(str(a))
+                    f.write(bytes(str(a), "cp1252"))
                     os.system(f.name)
                     f.close()
 
@@ -2743,6 +2793,40 @@ def run_program(commands,
             elif current_command == "\u2022":
                 a = pop_stack(1)
                 stack.append(convert_from_base(a, 190))
+
+            elif current_command == "\u00e2":
+                b = pop_stack(1)
+                a = pop_stack(1)
+
+                c = list(itertools.product(a, b))
+                d = [list(Q) for Q in c]
+                if type(a) is not list and type(b) is not list:
+                    temp_list = []
+                    for Q in d:
+                        temp_string = ""
+                        for R in Q:
+                            temp_string += str(R)
+                        temp_list.append(temp_string)
+                    stack.append(temp_list)
+                else:
+                    stack.append(d)
+
+            elif current_command == "\u00e3":
+                b = pop_stack(1)
+                a = pop_stack(1)
+
+                c = list(itertools.product(a, repeat=int(b)))
+                d = [list(Q) for Q in c]
+                if type(a) is not list:
+                    temp_list = []
+                    for Q in d:
+                        temp_string = ""
+                        for R in Q:
+                            temp_string += str(R)
+                        temp_list.append(temp_string)
+                    stack.append(temp_list)
+                else:
+                    stack.append(d)
 
             elif current_command == "\u20AC":
                 a = pop_stack(1)
@@ -2934,6 +3018,36 @@ def run_program(commands,
 
             elif current_command == "\u017eu":
                 stack.append("()<>[]{}")
+
+            elif current_command == ".:":
+                c, b, a = pop_stack(3)
+                if type(a) is list:
+                    if type(b) is list:
+                        temp_list = []
+                        for Q in a:
+                            temp_string = str(Q)
+                            for R in b:
+                                temp_string = temp_string.replace(R, c)
+                            temp_list.append(temp_string)
+                        stack.append(temp_list)
+                    else:
+                        b = str(b)
+                        for Q in a:
+                            temp_string = str(Q)
+                            temp_string = temp_string.replace(b, c)
+                            temp_list.append(temp_string)
+                        stack.append(temp_list)
+                else:
+                    if type(b) is list:
+                        temp_string = str(a)
+                        for R in b:
+                            temp_string = temp_string.replace(R, c)
+                        stack.append(temp_string)
+                    else:
+                        b = str(b)
+                        temp_string = str(a)
+                        temp_string = temp_string.replace(b, c)
+                        stack.append(temp_string)
 
             elif current_command == ".A":
                 a = pop_stack(1)
