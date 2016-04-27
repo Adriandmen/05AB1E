@@ -212,7 +212,7 @@ Extended ASCII characters (CP-1252)
 á 88	= pop a      push only letters of a
 â 89	= pop a,(b)  push cartesian product
 ã 90	= pop a,b    push a choose b (cartesian product repeat)
-ä 91	=
+ä 91	= pop a,b    push a sliced into b pieces
 å 92	= pop a,b    push a in b
 æ 93	= pop a      push powerset(a)
 ç 94	= pop a      push char a

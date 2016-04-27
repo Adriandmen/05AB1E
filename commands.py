@@ -128,13 +128,13 @@ def is_prime(n):
 def combinations(n, r):
     n = int(n)
     r = int(r)
-    return int(math.factorial(n) / (math.factorial(r) * math.factorial(n - r)))
+    return int(math.factorial(n) // (math.factorial(r) * math.factorial(n - r)))
 
 
 def permutations(n, r):
     n = int(n)
     r = int(r)
-    return int(math.factorial(n) / math.factorial(n - r))
+    return int(math.factorial(n) // math.factorial(n - r))
 
 
 def prime_factorization(n):
@@ -245,7 +245,7 @@ def get_nth_prime(n):
 
 def get_all_substrings(input_string):
   length = len(input_string)
-  return [input_string[i:j+1] for i in range(length) for j in range(i,length)]
+  return [input_string[i:j+1] for i in range(length) for j in range(i, length)]
 
 
 def command_gcd(numbers):
@@ -310,6 +310,24 @@ def euler_totient(n):
             amount += 1
 
     return amount
+
+
+def chunk_divide(seq, num):
+
+    if type(seq) is int:
+        seq = str(seq)
+
+    seq = seq[::-1]
+
+    avg = len(seq) / float(num)
+    out = []
+    last = 0.0
+
+    while last < len(seq):
+        out.append(seq[int(last):int(last + avg)][::-1])
+        last += avg
+
+    return out[::-1]
 
 
 def string_partitions(string):

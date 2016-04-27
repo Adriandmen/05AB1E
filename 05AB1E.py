@@ -2595,7 +2595,7 @@ def run_program(commands,
                                     stop = True
                                     temp_string += Q
                                     break
-                                if a[0] == Q:
+                                if a[0] == Q or Q == "\u00f0":
                                     temp_string += Q
                                     break
                                 else:
@@ -2611,7 +2611,7 @@ def run_program(commands,
                 while True:
                     is_substring = True
                     for Q in range(0, len(b)):
-                        if a[Q] != b[Q]:
+                        if a[Q] != b[Q] and a[Q] != "\u00f0":
                             is_substring = False
                             break
                     if is_substring:
@@ -2943,6 +2943,137 @@ def run_program(commands,
                     b = pop_stack(1)
 
                 stack.append(math.log(int(a), int(b)))
+
+            elif current_command == "\u00e4":
+                b = pop_stack(1)
+                a = pop_stack(1)
+
+                stack.append(chunk_divide(a, int(b)))
+
+            #
+            # LIST COMMANDS
+            #
+
+            elif current_command == "\u00c5!":
+                a = int(pop_stack(1))
+                temp_list = []
+                Q = 0
+                while math.factorial(Q) <= a:
+                    temp_list.append(math.factorial(Q))
+                    Q += 1
+                stack.append(temp_list)
+
+            elif current_command == "\u00c50":
+                a = int(pop_stack(1))
+                temp_list = []
+                Q = 0
+                while Q < a:
+                    temp_list.append(0)
+                    Q += 1
+                stack.append(temp_list)
+
+            elif current_command == "\u00c51":
+                a = int(pop_stack(1))
+                temp_list = []
+                Q = 0
+                while Q < a:
+                    temp_list.append(1)
+                    Q += 1
+                stack.append(temp_list)
+
+            elif current_command == "\u00c52":
+                a = int(pop_stack(1))
+                temp_list = []
+                Q = 0
+                while Q < a:
+                    temp_list.append(2)
+                    Q += 1
+                stack.append(temp_list)
+
+            elif current_command == "\u00c53":
+                a = int(pop_stack(1))
+                temp_list = []
+                Q = 0
+                while Q < a:
+                    temp_list.append(3)
+                    Q += 1
+                stack.append(temp_list)
+
+            elif current_command == "\u00c54":
+                a = int(pop_stack(1))
+                temp_list = []
+                Q = 0
+                while Q < a:
+                    temp_list.append(4)
+                    Q += 1
+                stack.append(temp_list)
+
+            elif current_command == "\u00c55":
+                a = int(pop_stack(1))
+                temp_list = []
+                Q = 0
+                while Q < a:
+                    temp_list.append(5)
+                    Q += 1
+                stack.append(temp_list)
+
+            elif current_command == "\u00c56":
+                a = int(pop_stack(1))
+                temp_list = []
+                Q = 0
+                while Q < a:
+                    temp_list.append(6)
+                    Q += 1
+                stack.append(temp_list)
+
+            elif current_command == "\u00c57":
+                a = int(pop_stack(1))
+                temp_list = []
+                Q = 0
+                while Q < a:
+                    temp_list.append(7)
+                    Q += 1
+                stack.append(temp_list)
+
+            elif current_command == "\u00c58":
+                a = int(pop_stack(1))
+                temp_list = []
+                Q = 0
+                while Q < a:
+                    temp_list.append(8)
+                    Q += 1
+                stack.append(temp_list)
+
+            elif current_command == "\u00c59":
+                a = int(pop_stack(1))
+                temp_list = []
+                Q = 0
+                while Q < a:
+                    temp_list.append(9)
+                    Q += 1
+                stack.append(temp_list)
+
+            elif current_command == "\u00c5\u00c8":
+                a = int(pop_stack(1))
+                temp_list = []
+                Q = 0
+                while Q * 2 <= a:
+                    temp_list.append(Q * 2)
+                    Q += 1
+                stack.append(temp_list)
+
+            elif current_command == "\u00c5\u00c9":
+                a = int(pop_stack(1))
+                temp_list = []
+                Q = 0
+                while Q * 2 + 1 <= a:
+                    temp_list.append(Q * 2 + 1)
+                    Q += 1
+                stack.append(temp_list)
+
+            #
+            # CONSTANTS
+            #
 
             elif current_command == ".\u00b2":
                 a = pop_stack(1)
