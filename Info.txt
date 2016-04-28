@@ -104,7 +104,7 @@ Extended ASCII characters (CP-1252)
 … 4	= 3 char string / can also be used for 3 compressed strings
 † 5	= pop a,b    push a with b filtered to the front
 ‡ 6	= pop a,b,c  push a.transliterate(b -> c)
-ˆ 7	= 
+ˆ 7	= pop a      add to global array
 ‰ 8	= pop a,b    push a divmod b
 Š 9	= pop a,b,c  push c,a,b
 ‹ 10	= pop a,b    push a < b
@@ -159,12 +159,12 @@ Extended ASCII characters (CP-1252)
 « 35	= pop a,b    push concatenated(a, b)
 ¬ 36	= get a      push head(a)
 ® 37	=            push the last item from register_c
-¯ 38	=
+¯ 38	=            push global array
 ° 39	= pop a      push 10 ** a
 ± 40	=
 ² 41	=            push the second item from the input history
 ³ 42	=            push the third item from the input history
-´ 43	=
+´ 43	=            clear global array
 µ 44	= pop a      while counter_variable != a, do...
 ¶ 45	=            push newline character
 · 46	= pop a      push 2 * a

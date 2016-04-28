@@ -27,6 +27,7 @@ suspend_restore_register = []
 
 # Global values
 counter_variable = [0]
+global_array = []
 
 # Looping commands:
 loop_commands = ["F", "i", "v", "G", "\u0192"]
@@ -2913,6 +2914,16 @@ def run_program(commands,
                         temp_string += str(Q)
 
                 stack.append(temp_string)
+
+            elif current_command == "\u02c6":
+                a = pop_stack(1)
+                global_array.append(a)
+
+            elif current_command == "\u00af":
+                stack.append(global_array)
+
+            elif current_command == "\u00b4":
+                global_array.clear()
 
             elif current_command == "\u2030":
                 b = pop_stack(1)
