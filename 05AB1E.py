@@ -3082,10 +3082,6 @@ def run_program(commands,
                     Q += 1
                 stack.append(temp_list)
 
-            #
-            # CONSTANTS
-            #
-
             elif current_command == ".\u00b2":
                 a = pop_stack(1)
                 stack.append(math.log(int(a), 2))
@@ -3093,6 +3089,10 @@ def run_program(commands,
             elif current_command == "\u00ee":
                 a = pop_stack(1)
                 stack.append(math.ceil(float(a)))
+
+            #
+            # CONSTANTS
+            #
 
             elif current_command == "\u017ea":
                 stack.append(int(datetime.datetime.now().hour))
@@ -3160,6 +3160,51 @@ def run_program(commands,
 
             elif current_command == "\u017eu":
                 stack.append("()<>[]{}")
+
+            elif current_command == "\u017ev":
+                stack.append(16)
+
+            elif current_command == "\u017ew":
+                stack.append(32)
+
+            elif current_command == "\u017ex":
+                stack.append(64)
+
+            elif current_command == "\u017ey":
+                stack.append(128)
+
+            elif current_command == "\u017ez":
+                stack.append(256)
+
+            elif current_command == "\u017eA":
+                stack.append(512)
+
+            elif current_command == "\u017eB":
+                stack.append(1024)
+
+            elif current_command == "\u017eC":
+                stack.append(2048)
+
+            elif current_command == "\u017eD":
+                stack.append(4096)
+
+            elif current_command == "\u017eE":
+                stack.append(8192)
+
+            elif current_command == "\u017eF":
+                stack.append(16384)
+
+            elif current_command == "\u017eG":
+                stack.append(32768)
+
+            elif current_command == "\u017eH":
+                stack.append(65536)
+
+            elif current_command == "\u017eI":
+                stack.append(2147483648)
+
+            elif current_command == "\u017eJ":
+                stack.append(4294967296)
 
             elif current_command == ".:":
                 c, b, a = pop_stack(3)

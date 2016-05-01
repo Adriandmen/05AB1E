@@ -143,6 +143,22 @@ Extended ASCII characters (CP-1252)
 	r	     push e
 	s	     pop a, push pi to a digits (max. 100000)
 	t	     pop a, push e to a digits (max. 10000)
+	u	     push ()<>[]{}
+	v	     push 16
+	w	     push 32
+	x	     push 64
+	y	     push 128
+	z	     push 256
+	A	     push 512
+	B	     push 1024
+	C	     push 2048
+	D	     push 4096
+	E	     push 8192
+	F	     push 16384
+	G	     push 32768
+	H	     push 65536
+	I	     push 2147483648
+	J	     push 4294967296
 
 
 Ÿ 24	= pop a,b    push [a, ..., b]
