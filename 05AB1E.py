@@ -2522,7 +2522,8 @@ def run_program(commands,
 
             elif current_command == "\u00bd":
                 a = counter_variable[-1]
-                a -= 1
+                if ast.literal_eval(str(pop_stack(1))):
+                    a += 1
                 counter_variable.pop()
                 counter_variable.append(a)
 
@@ -3231,6 +3232,8 @@ def run_program(commands,
 
     if not has_printed and not suppress_print:
         if stack: print(stack[len(stack) - 1])
+        elif "\u00b5" in code: print(range_variable)
+        elif "\u02c6" in code: print(global_array)
     if debug:
         print("stack > " + str(stack))
 
