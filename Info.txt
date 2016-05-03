@@ -189,7 +189,7 @@ Extended ASCII characters (CP-1252)
 º 49	=            push len(stack) > 0
 » 50	= (pop a)    suspend / restore function
 ¼ 51	= counter_variable += 1
-½ 52	= counter_variable -= 1
+½ 52	= pop a,     if 1, then counter_variable -= 1
 ¾ 53	=            push counter_variable
 ¿ 54	= pop a      push gcd(a)
 À 55	= pop a      push a rotated 1 left
