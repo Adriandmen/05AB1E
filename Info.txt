@@ -202,7 +202,7 @@ Extended ASCII characters (CP-1252)
 Ç 62	= pop a      push ASCII value of a
 È 63	= pop a      push a % 2 == 0 (is even)
 É 64	= pop a      push a % 2 == 1 (is uneven)
-Ê 65	=
+Ê 65	= pop a,b    push a != b
 Ë 66	=
 Ì 67	= pop a      push a + 2
 Í 68	= pop a      push a - 2
