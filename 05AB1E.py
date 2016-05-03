@@ -451,32 +451,20 @@ def run_program(commands,
                 if type(a) is list and type(b) is list:
                     temp_list = []
                     for Q in range(len(a)):
-                        if "." in str(a[Q]) or "." in str(b[Q]):
-                            temp_list.append(float(a[Q]) + float(b[Q]))
-                        else:
-                            temp_list.append(int(a[Q]) + int(b[Q]))
+                        temp_list.append(ast.literal_eval(str(a[Q])) + ast.literal_eval(str(b[Q])))
                     stack.append(temp_list)
                 elif type(a) is list:
                     temp_list = []
                     for Q in a:
-                        if "." in str(Q) or "." in str(b):
-                            temp_list.append(float(Q) + float(b))
-                        else:
-                            temp_list.append(int(Q) + int(b))
+                        temp_list.append(ast.literal_eval(str(Q)) + ast.literal_eval(str(b)))
                     stack.append(temp_list)
                 elif type(b) is list:
                     temp_list = []
                     for Q in b:
-                        if "." in str(Q) or "." in str(a):
-                            temp_list.append(float(a) + float(Q))
-                        else:
-                            temp_list.append(int(a) + int(Q))
+                        temp_list.append(ast.literal_eval(str(a)) + ast.literal_eval(str(Q)))
                     stack.append(temp_list)
                 else:
-                    if "." in str(a) or "." in str(b):
-                        stack.append(float(a) + float(b))
-                    else:
-                        stack.append(int(a) + int(b))
+                    stack.append(ast.literal_eval(str(a)) + ast.literal_eval(str(b)))
 
             elif current_command == "-":
                 a, b = pop_stack(2)
