@@ -1304,6 +1304,31 @@ def run_program(commands,
                     b = ast.literal_eval("\"" + str(b) + "\"")
                     stack.append(int(str(a) == str(b)))
 
+            elif current_command == "\u00ca":
+                a, b = pop_stack(2)
+                if type(a) is list and type(b) is list:
+                    a = ast.literal_eval(str(a))
+                    b = ast.literal_eval(str(b))
+                    stack.append(int(str(a) != str(b)))
+                elif type(a) is list:
+                    temp_list = []
+                    b = ast.literal_eval("\"" + str(b) + "\"")
+                    for Q in a:
+                        if is_digit_value(str(Q)): Q = ast.literal_eval(str(Q))
+                        temp_list.append(int(str(Q) != str(b)))
+                    stack.append(temp_list)
+                elif type(b) is list:
+                    temp_list = []
+                    a = ast.literal_eval("\"" + str(a) + "\"")
+                    for Q in b:
+                        if is_digit_value(str(Q)): Q = ast.literal_eval(str(Q))
+                        temp_list.append(int(str(Q) != str(a)))
+                    stack.append(temp_list)
+                else:
+                    a = ast.literal_eval("\"" + str(a) + "\"")
+                    b = ast.literal_eval("\"" + str(b) + "\"")
+                    stack.append(int(str(a) != str(b)))
+
             elif current_command == "(":
                 a = pop_stack(1)
                 if type(a) is list:
