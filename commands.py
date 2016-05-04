@@ -103,16 +103,12 @@ def convert_from_base(n, base):
 
 
 def is_prime(n):
-    if n < 2:
-        return 0
     if n == 2 or n == 3:
         return 1
-    if n < 2 or n % 2 == 0:
+    if n < 2 or n % 2 == 0 or n % 3 == 0:
         return 0
     if n < 9:
         return 1
-    if n % 3 == 0:
-        return 0
     r = int(n ** 0.5)
     f = 5
     while f <= r:
