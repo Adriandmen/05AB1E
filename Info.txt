@@ -272,6 +272,8 @@ Extended functions:
 .l      = pop a      push is_lower(a)
 .o      = pop a,b    push overlap(b)
 .O  	= pop a,b    push connected_overlap(b)
+.R      = pop a      push random_pick(a)
+.r      = pop a      push random_shuffle(a)
 .u      = pop a      push is_upper(a)
 .L	= pop a,b    push log_b(a)
 .:	= pop a,b,c  push a.replace(b, c)

@@ -7,6 +7,7 @@ import itertools
 import datetime
 import os
 import tempfile
+import random
 
 from constants import *
 from commands import *
@@ -2706,6 +2707,25 @@ def run_program(commands,
             elif current_command == ".V":
                 a = pop_stack(1)
                 run_program(str(a), debug, safe_mode, True)
+
+            elif current_command == ".R":
+                a = pop_stack(1)
+                if type(a) is int:
+                    a = str(a)
+                stack.append(random.choice(a))
+
+            elif current_command == ".r":
+                a = pop_stack(1)
+                if type(a) is int:
+                    a = str(a)
+                if type(a) is list:
+                    random.shuffle(a)
+                    b = a
+                else:
+                    a = list(a)
+                    random.shuffle(a)
+                    b = ''.join(a)
+                stack.append(b)
 
             elif current_command == "\u00b9":
                 if len(recent_inputs) > 0:
