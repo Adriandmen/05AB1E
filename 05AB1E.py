@@ -3251,6 +3251,12 @@ def run_program(commands,
             elif current_command == "\u017eJ":
                 stack.append(4294967296)
 
+            elif current_command == "\u017eK":
+                stack.append("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+
+            elif current_command == "\u017eL":
+                stack.append("zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA9876543210")
+
             elif current_command == ".:":
                 c, b, a = pop_stack(3)
                 if type(a) is list:

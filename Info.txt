@@ -159,6 +159,8 @@ Extended ASCII characters (CP-1252)
 	H	     push 65536
 	I	     push 2147483648
 	J	     push 4294967296
+        K           push [a-zA-Z0-9]
+        L           push [z-aZ-A9-0]
 
 
 Ÿ 24	= pop a,b    push [a, ..., b]
