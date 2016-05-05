@@ -2844,7 +2844,7 @@ def run_program(commands,
                 else:
                     stack.append(d)
 
-            elif current_command == "\u00c8":
+            elif current_command == "\u00e8":
                 b = pop_stack(1)
                 a = pop_stack(1)
                 temp_string = ""
@@ -2855,6 +2855,15 @@ def run_program(commands,
                 else:
                     b = int(b)
                     stack.append(str(a)[b])
+
+            elif current_command == ".p":
+                a = pop_stack(1)
+                if type(a) is int:
+                    a = str(a)
+                temp_list = []
+                for Q in range(1, len(a) + 1):
+                    temp_list.append(a[0:Q])
+                stack.append(temp_list)
 
             elif current_command == "\u20AC":
                 a = pop_stack(1)
