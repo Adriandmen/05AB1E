@@ -277,6 +277,7 @@ Extended functions:
 .p  	= pop a      push prefixes(a)
 .R      = pop a      push random_pick(a)
 .r      = pop a      push random_shuffle(a)
+.s	= pop a	     push suffixes(a)
 .u      = pop a      push is_upper(a)
 .L	= pop a,b    push log_b(a)
 .:	= pop a,b,c  push a.replace(b, c)
