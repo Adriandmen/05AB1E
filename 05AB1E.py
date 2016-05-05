@@ -2865,6 +2865,15 @@ def run_program(commands,
                     temp_list.append(a[0:Q])
                 stack.append(temp_list)
 
+            elif current_command == ".s":
+                a = pop_stack(1)
+                if type(a) is int:
+                    a = str(a)
+                temp_list = []
+                for Q in range(1, len(a) + 1):
+                    temp_list.append(a[-Q:])
+                stack.append(temp_list)
+
             elif current_command == "\u20AC":
                 a = pop_stack(1)
                 temp_stack = []
