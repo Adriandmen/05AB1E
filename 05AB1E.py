@@ -2844,6 +2844,18 @@ def run_program(commands,
                 else:
                     stack.append(d)
 
+            elif current_command == "\u00c8":
+                b = pop_stack(1)
+                a = pop_stack(1)
+                temp_string = ""
+                if type(b) is list:
+                    for Q in b:
+                        temp_string += str(a)[int(Q)]
+                    stack.append(temp_string)
+                else:
+                    b = int(b)
+                    stack.append(str(a)[b])
+
             elif current_command == "\u20AC":
                 a = pop_stack(1)
                 temp_stack = []

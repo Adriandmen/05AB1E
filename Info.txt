@@ -232,7 +232,7 @@ Extended ASCII characters (CP-1252)
 å 92	= pop a,b    push a in b
 æ 93	= pop a      push powerset(a)
 ç 94	= pop a      push char a
-è 95	=
+è 95	= pop a,b    push a[b]
 é 96	=
 ê 97    =
 ë 98	= else statement
