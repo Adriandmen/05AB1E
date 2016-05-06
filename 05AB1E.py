@@ -1359,17 +1359,22 @@ def run_program(commands,
 
             elif current_command == "P":
                 temp_number = 1
-                a = pop_stack(1)
-                for Q in a:
-                    temp_number *= ast.literal_eval(str(Q))
+                if type(stack[-1]) is list:
+                    a = pop_stack(1)
+                    for Q in a:
+                        temp_number *= ast.literal_eval(str(Q))
+                else:
+                    for Q in stack:
+                        temp_number *= ast.literal_eval(str(Q))
+                    stack.clear()
                 stack.append(temp_number)
 
             elif current_command == "O":
                 temp_number = 0
                 temp_list_2 = []
-                a = pop_stack(1)
 
-                if type(a) is list:
+                if type(stack[-1]) is list:
+                    a = pop_stack(1)
                     for Q in a:
                         temp_number += ast.literal_eval(str(Q))
                 else:
