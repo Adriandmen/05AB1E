@@ -272,6 +272,8 @@ Extended functions:
 .j	= pop a      0-indexed max_spaces.join(stack) grid
 .J      = pop a      1-indexed max_spaces.join(stack) grid
 .l      = pop a      push is_lower(a)
+.M	= pop a      push most frequent in a
+.M	= pop a      push least frequent in a
 .o      = pop a,b    push overlap(b)
 .O  	= pop a,b    push connected_overlap(b)
 .p  	= pop a      push prefixes(a)

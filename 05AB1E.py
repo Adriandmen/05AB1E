@@ -2492,6 +2492,34 @@ def run_program(commands,
             elif current_command == "\u00f0":
                 stack.append(" ")
 
+            elif current_command == ".M":
+                a = pop_stack(1)
+                if type(a) is not list:
+                    a = list(str(a))
+
+                temp_list = []
+                for Q in set(a):
+                    temp_list.append(a.count(Q))
+                temp_list_2 = []
+                for Q in range(0, len(temp_list)):
+                    if temp_list[Q] == max(temp_list):
+                        temp_list_2.append(list(set(a))[Q])
+                stack.append(temp_list_2)
+
+            elif current_command == ".m":
+                a = pop_stack(1)
+                if type(a) is not list:
+                    a = list(str(a))
+
+                temp_list = []
+                for Q in set(a):
+                    temp_list.append(a.count(Q))
+                temp_list_2 = []
+                for Q in range(0, len(temp_list)):
+                    if temp_list[Q] == min(temp_list):
+                        temp_list_2.append(list(set(a))[Q])
+                stack.append(temp_list_2)
+
             elif current_command == "\u00cc":
                 a = pop_stack(1)
                 if type(a) is list:
