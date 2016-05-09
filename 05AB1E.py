@@ -3336,6 +3336,7 @@ def run_program(commands,
         if stack: print(stack[len(stack) - 1])
         elif "\u00b5" in code: print(range_variable)
         elif "\u02c6" in code: print(global_array)
+        elif "\u00bc" in code: print(counter_variable[-1])
     if debug:
         print("stack > " + str(stack))
 
