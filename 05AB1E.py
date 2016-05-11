@@ -1918,8 +1918,10 @@ def run_program(commands,
                 a = pop_stack(1)
                 temp_list = []
                 for Q in a:
-                    if str(Q) not in temp_list:
-                        temp_list.append(str(Q))
+                    if type(Q) is int:
+                        Q = str(Q)
+                    if Q not in temp_list:
+                        temp_list.append(Q)
                 if type(a) is list:
                     stack.append(temp_list)
                 else:
@@ -1934,8 +1936,10 @@ def run_program(commands,
                 a = a[::-1]
                 temp_list = []
                 for Q in a:
-                    if str(Q) not in temp_list:
-                        temp_list.append(str(Q))
+                    if type(Q) is int:
+                        Q = str(Q)
+                    if Q not in temp_list:
+                        temp_list.append(Q)
                 if type(a) is list:
                     stack.append(temp_list[::-1])
                 else:
