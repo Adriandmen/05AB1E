@@ -193,6 +193,7 @@ def prime_factorization_powers(n):
                         value += 1
                         n = int(int(n) / int(Q))
                     list_of_factors.append(value)
+                if n == 1: break
 
     try:
         while list_of_factors[len(list_of_factors) - 1] == 0:

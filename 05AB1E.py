@@ -2887,7 +2887,10 @@ def run_program(commands,
                     stack.append(temp_string)
                 else:
                     b = int(b)
-                    stack.append(str(a)[b])
+                    if type(a) is list:
+                        stack.append(a[b])
+                    else:
+                        stack.append(str(a)[b])
 
             elif current_command == ".p":
                 a = pop_stack(1)
