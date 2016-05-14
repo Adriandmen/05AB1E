@@ -37,7 +37,7 @@ Functions:
 ÅC	=
 ÅD	=
 ÅE	=
-ÅF	=
+ÅF	= List of Fibonacci numbers
 ÅG	=
 ÅH	=
 ÅI	=

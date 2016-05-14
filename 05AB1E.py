@@ -3167,6 +3167,20 @@ def run_program(commands,
                     Q += 1
                 stack.append(temp_list)
 
+            elif current_command == "\u00c5F":
+                a = int(pop_stack(1))
+                temp_list = []
+                F_1 = 0
+                F_2 = 1
+                F_3 = 1
+                while F_3 <= a:
+                    temp_list.append(F_3)
+                    F_3 = F_1 + F_2
+                    F_1 = F_2
+                    F_2 = F_3
+
+                stack.append(temp_list)
+
             elif current_command == ".\u00b2":
                 a = pop_stack(1)
                 stack.append(math.log(int(a), 2))
