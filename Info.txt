@@ -169,9 +169,9 @@ Extended ASCII characters (CP-1252)
 £ 27	= pop a,b    push a[0:b]
 ¤ 28	= get a      push tail(a)
 ¥ 29	= pop a      push delta's a
-¦ 30	= pop a      push a[1:]
+¦ 30	= pop a      push a, a[1:]
 § 31	= pop a      push str(a)
-¨ 32	= pop a      push a[0:-1]
+¨ 32	= pop a      push a, a[0:-1]
 © 33	= store a in register_c without popping
 ª 34	= pop a      push sentence_cased(a)
 « 35	= pop a,b    push concatenated(a, b)
@@ -179,7 +179,7 @@ Extended ASCII characters (CP-1252)
 ® 37	=            push the last item from register_c
 ¯ 38	=            push global array
 ° 39	= pop a      push 10 ** a
-± 40	=
+± 40	= 
 ² 41	=            push the second item from the input history
 ³ 42	=            push the third item from the input history
 ´ 43	=            clear global array
