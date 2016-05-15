@@ -26,6 +26,14 @@ def flatten(x):
         return [x]
 
 
+def deep_flatten(S):
+    if S == []:
+        return S
+    if isinstance(S[0], list):
+        return deep_flatten(S[0]) + deep_flatten(S[1:])
+    return S[:1] + deep_flatten(S[1:])
+
+
 def is_alpha_value(value):
     value = str(value)
     try:

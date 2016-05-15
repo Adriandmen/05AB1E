@@ -1844,6 +1844,10 @@ def run_program(commands,
                 else:
                     stack.append(chr(int(a)))
 
+            elif current_command == "\u02dc":
+                a = pop_stack(1)
+                stack.append(deep_flatten(a))
+
             elif current_command == "\u00f4":
                 if stack:
                     b, a = pop_stack(2)

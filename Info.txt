@@ -117,7 +117,7 @@ Extended ASCII characters (CP-1252)
 • 15	= start/end a 1-9 char compressed string
 – 16	= pop a      if 1, print N (used in loops)
 — 17	= pop a      if 1, print y (used in loops)
-˜   	= 
+˜   	= pop a      push deep flattened a
 ™ 19	= pop a      push title_cased(a)
 š 20	= pop a      push switch_cased(a)
 › 21	= pop a,b    push a > b
