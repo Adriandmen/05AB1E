@@ -977,12 +977,8 @@ def run_program(commands,
                 a, b = pop_stack(2)
                 if type(a) is list and type(b) is list:
                     temp_list = []
-                    temp_list_2 = []
-                    for Q in a:
-                        temp_list_2 = []
-                        for R in b:
-                            temp_list_2.append(int(R) ^ int(Q))
-                        temp_list.append(temp_list_2)
+                    for Q in range(len(a)):
+                        temp_list.append(int(a[Q]) ^ int(b[Q]))
                     stack.append(temp_list)
                 elif type(a) is list:
                     temp_list = []
@@ -1001,14 +997,9 @@ def run_program(commands,
                 a, b = pop_stack(2)
                 if type(a) is list and type(b) is list:
                     temp_list = []
-                    temp_list_2 = []
-                    for Q in a:
-                        temp_list_2 = []
-                        for R in b:
-                            temp_list_2.append(int(R) | int(Q))
-                        temp_list.append(temp_list_2)
-                    for S in temp_list:
-                        stack.append(S)
+                    for Q in range(len(a)):
+                        temp_list.append(int(a[Q]) | int(b[Q]))
+                    stack.append(temp_list)
                 elif type(a) is list:
                     temp_list = []
                     for Q in a:
@@ -1028,14 +1019,9 @@ def run_program(commands,
                 a, b = pop_stack(2)
                 if type(a) is list and type(b) is list:
                     temp_list = []
-                    temp_list_2 = []
-                    for Q in a:
-                        temp_list_2 = []
-                        for R in b:
-                            temp_list_2.append(int(R) & int(Q))
-                        temp_list.append(temp_list_2)
-                    for S in temp_list:
-                        stack.append(S)
+                    for Q in range(len(a)):
+                        temp_list.append(int(a[Q]) & int(b[Q]))
+                    stack.append(temp_list)
                 elif type(a) is list:
                     temp_list = []
                     for Q in a:
@@ -1055,12 +1041,8 @@ def run_program(commands,
                 a, b = pop_stack(2)
                 if type(a) is list and type(b) is list:
                     temp_list = []
-                    temp_list_2 = []
-                    for Q in a:
-                        temp_list_2 = []
-                        for R in b:
-                            temp_list_2.append(combinations(int(Q), int(R)))
-                        temp_list.append(temp_list_2)
+                    for Q in range(len(a)):
+                        temp_list.append(combinations(int(a[Q]), int(b[Q])))
                     stack.append(temp_list)
                 elif type(a) is list:
                     temp_list = []
@@ -1079,12 +1061,8 @@ def run_program(commands,
                 a, b = pop_stack(2)
                 if type(a) is list and type(b) is list:
                     temp_list = []
-                    temp_list_2 = []
-                    for Q in a:
-                        temp_list_2 = []
-                        for R in b:
-                            temp_list_2.append(permutations(int(Q), int(R)))
-                        temp_list.append(temp_list_2)
+                    for Q in range(len(a)):
+                        temp_list.append(permutations(int(a[Q]), int(b[Q])))
                     stack.append(temp_list)
                 elif type(a) is list:
                     temp_list = []
@@ -1866,7 +1844,7 @@ def run_program(commands,
                 else:
                     stack.append(chr(int(a)))
 
-            elif current_command == "\u00f7":
+            elif current_command == "\u00f4":
                 if stack:
                     b, a = pop_stack(2)
                     b = int(b)
@@ -1889,6 +1867,12 @@ def run_program(commands,
                 if temp_string != "":
                     temp_list.append(temp_string)
                 stack.append(temp_list)
+
+            elif current_command == "\u00f7":
+                b = pop_stack(1)
+                a = pop_stack(1)
+
+                stack.append(ast.literal_eval(a) // ast.literal_eval(b))
 
             elif current_command == "\u00c6":
                 a = pop_stack(1)

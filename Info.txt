@@ -246,10 +246,10 @@ Extended ASCII characters (CP-1252)
 ñ	= pop a,b,c  push a + b merged with c as merge character
 ò	= pop a      push inclusive round up a
 ó	= pop a      push inclusive round down a
-ô	=
+ô	= pop a,b    push a split in pieces of b
 õ	=  	     push empty string
 ö	= pop a,b    push int(a, b)
-÷	= pop a,b    push a split in pieces of b
+÷	= pop a,b    push a // b (integer division)
 ø	= pop a      push zipped a
 ù	=
 ú	= 
