@@ -1878,6 +1878,17 @@ def run_program(commands,
 
                 stack.append(ast.literal_eval(a) // ast.literal_eval(b))
 
+            elif current_command == "\u00b1":
+                a = pop_stack(1)
+
+                if type(a) is list:
+                    temp_list = []
+                    for Q in a:
+                        temp_list.append(~ast.literal_eval(str(Q)))
+                    stack.append(temp_list)
+                else:
+                    stack.append(~ast.literal_eval(str(a)))
+
             elif current_command == "\u00c6":
                 a = pop_stack(1)
                 a = a[::-1]

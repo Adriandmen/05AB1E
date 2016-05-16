@@ -179,7 +179,7 @@ Extended ASCII characters (CP-1252)
 ® 37	=            push the last item from register_c
 ¯ 38	=            push global array
 ° 39	= pop a      push 10 ** a
-± 40	= 
+± 40	= pop a      push bitwise not a
 ² 41	=            push the second item from the input history
 ³ 42	=            push the third item from the input history
 ´ 43	=            clear global array
