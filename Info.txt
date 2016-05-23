@@ -205,7 +205,7 @@ Extended ASCII characters (CP-1252)
 È 63	= pop a      push a % 2 == 0 (is even)
 É 64	= pop a      push a % 2 == 1 (is uneven)
 Ê 65	= pop a,b    push a != b
-Ë 66	=
+Ë 66	=            run program until the last value is truthy (consumes a value each loop)
 Ì 67	= pop a      push a + 2
 Í 68	= pop a      push a - 2
 Î 69	= push 0 and input

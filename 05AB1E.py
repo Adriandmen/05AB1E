@@ -915,6 +915,62 @@ def run_program(commands,
                     run_program(STATEMENT, debug, safe_mode, True, range_variable, string_variable)
                 pointer_position = temp_position
 
+            elif current_command == "\u00cb":
+                STATEMENT = ""
+                ELSE_STATEMENT = ""
+                temp_position = pointer_position
+                temp_position += 1
+                current_command = commands[temp_position]
+                amount_brackets = 1
+                amount_else = 1
+                temp_string_mode = False
+                while amount_brackets != 0:
+                    if current_command == "\"":
+                        temp_string_mode = not temp_string_mode
+                    if temp_string_mode == False:
+                        if current_command == "}" or current_command == "\u00eb":
+                            if current_command == "}":
+                                amount_brackets -= 1
+                            if current_command == "\u00eb":
+                                amount_else -= 1
+                            if amount_brackets == 0:
+                                break
+                        elif current_command in loop_commands:
+                            amount_brackets += 1
+                            if current_command == "i":
+                                amount_else += 1
+                    if amount_else > 0:
+                        STATEMENT += current_command
+                    else:
+                        ELSE_STATEMENT += current_command
+                    try:
+                        temp_position += 1
+                        current_command = commands[temp_position]
+                    except:
+                        break
+                if debug:
+                    print("if: ", end="")
+                    for Q in STATEMENT:
+                        try:
+                            print(Q, end="")
+                        except:
+                            print("?", end="")
+                    print()
+                    if amount_else < 1:
+                        print("else: ", end="")
+                        for Q in ELSE_STATEMENT:
+                            try:
+                                print(Q, end="")
+                            except:
+                                print("?", end="")
+                        print()
+                a = pop_stack(1)
+                range_variable = 0
+                while pop_stack(1) is not True:
+                    range_variable += 1
+                    run_program(STATEMENT, debug, safe_mode, True, range_variable, string_variable)
+                pointer_position = temp_position
+
             elif current_command == "\u0192":
                 STATEMENT = ""
                 temp_position = pointer_position
@@ -1210,7 +1266,7 @@ def run_program(commands,
                         break
                 if debug:
                     print(STATEMENT)
-                range_variable = 0
+                range_variable = -1
                 while True:
                     range_variable += 1
                     if run_program(STATEMENT, debug, safe_mode, True, range_variable, string_variable):
@@ -2055,7 +2111,7 @@ def run_program(commands,
 
             elif current_command == "\u00ce":
                 stack.append(0)
-                a = input()
+                a = get_input()
                 stack.append(a)
                 recent_inputs.append(a)
 
