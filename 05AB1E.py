@@ -2981,9 +2981,9 @@ def run_program(commands,
                     run_program(for_each_command, DEBUG, SAFE_MODE, True, range_variable, string_variable)
                 for Q in stack:
                     temp_list.append(Q)
+                stack.clear()
                 for Q in temp_stack:
                     stack.append(Q)
-                stack.clear()
                 stack.append(temp_list)
 
             elif current_command == "\u00c2":
