@@ -1483,6 +1483,8 @@ def run_program(commands,
             elif current_command == "J":
                 temp_list = []
                 temp_string = ""
+                if not stack:
+                    stack.append(get_input())
                 for Q in stack:
                     temp_list.append(Q)
                 a = temp_list.pop()
