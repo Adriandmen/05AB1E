@@ -186,7 +186,7 @@ Extended ASCII characters (CP-1252)
 µ 44	= pop a      while counter_variable != a, do...
 ¶ 45	=            push newline character
 · 46	= pop a      push 2 * a
-¸ 47	=
+¸ 47	= pop a      push [a]
 ¹ 48	=            push the first item from the input history
 º 49	=            push len(stack) > 0
 » 50	= (pop a)    suspend / restore function

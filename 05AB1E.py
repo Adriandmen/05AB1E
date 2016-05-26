@@ -1245,6 +1245,10 @@ def run_program(commands,
                 else:
                     stack.append(convert_from_base(str(a), int(b)))
 
+            elif current_command == "\u00b8":
+                a = pop_stack(1)
+                stack.append([a])
+
             elif current_command == "[":
                 STATEMENT = ""
                 temp_position = pointer_position
