@@ -704,6 +704,7 @@ def run_program(commands,
             elif current_command == "i":
                 STATEMENT = ""
                 ELSE_STATEMENT = ""
+                elseify = False
                 temp_position = pointer_position
                 temp_position += 1
                 current_command = commands[temp_position]
@@ -725,6 +726,7 @@ def run_program(commands,
                                 amount_brackets -= 1
                             if current_command == "\u00eb":
                                 amount_else -= 1
+                                elseify = True
                             if amount_brackets == 0:
                                 break
                         elif current_command in loop_commands:
@@ -734,7 +736,7 @@ def run_program(commands,
 
                     temp_char_mode = True
 
-                    if amount_else > 0:
+                    if elseify:
                         STATEMENT += current_command
                     else:
                         ELSE_STATEMENT += current_command
@@ -1249,6 +1251,49 @@ def run_program(commands,
                 a = pop_stack(1)
                 stack.append([a])
 
+            elif current_command == ".S":
+                b = pop_stack(1)
+                a = pop_stack(1)
+                if type(a) is list:
+                    if type(b) is list:
+                        temp_list = []
+                        for Q in range(0, len(a)):
+                            if ast.literal_eval(str(a[Q])) > ast.literal_eval(str(b[Q])):
+                                temp_list.append(1)
+                            if ast.literal_eval(str(a[Q])) < ast.literal_eval(str(b[Q])):
+                                temp_list.append(-1)
+                            if ast.literal_eval(str(a[Q])) == ast.literal_eval(str(b[Q])):
+                                temp_list.append(0)
+                        stack.append(temp_list)
+                    else:
+                        temp_list = []
+                        for Q in a:
+                            if ast.literal_eval(str(Q)) > ast.literal_eval(str(b)):
+                                temp_list.append(1)
+                            if ast.literal_eval(str(Q)) < ast.literal_eval(str(b)):
+                                temp_list.append(-1)
+                            if ast.literal_eval(str(Q)) == ast.literal_eval(str(b)):
+                                temp_list.append(0)
+                        stack.append(temp_list)
+                else:
+                    if type(b) is list:
+                        temp_list = []
+                        for Q in b:
+                            if ast.literal_eval(str(a)) > ast.literal_eval(str(Q)):
+                                temp_list.append(1)
+                            if ast.literal_eval(str(a)) < ast.literal_eval(str(Q)):
+                                temp_list.append(-1)
+                            if ast.literal_eval(str(a)) == ast.literal_eval(str(Q)):
+                                temp_list.append(0)
+                        stack.append(temp_list)
+                    else:
+                        if ast.literal_eval(str(a)) > ast.literal_eval(str(b)):
+                            stack.append(1)
+                        if ast.literal_eval(str(a)) < ast.literal_eval(str(b)):
+                            stack.append(-1)
+                        if ast.literal_eval(str(a)) == ast.literal_eval(str(b)):
+                            stack.append(0)
+
             elif current_command == "[":
                 STATEMENT = ""
                 temp_position = pointer_position
@@ -1283,6 +1328,16 @@ def run_program(commands,
                     if ast.literal_eval(str(a)) == 1:
                         return True
                 except: 0
+
+            elif current_command == "\u00e9":
+                a = pop_stack(1)
+                temp_list = []
+                for Q in a:
+                    if type(Q) is int:
+                        temp_list.append(str(Q))
+                    else:
+                        temp_list.append(Q)
+                stack.append(sorted(temp_list, key=len))
 
             elif current_command == "=":
                 a = pop_stack(1)

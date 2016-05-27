@@ -235,7 +235,7 @@ Extended ASCII characters (CP-1252)
 æ 93	= pop a      push powerset(a)
 ç 94	= pop a      push char a
 è 95	= pop a,b    push a[b]
-é 96	=
+é 96	= pop a      push sorted a (key=length)
 ê 97    =
 ë 98	= else statement
 ì 99	=
@@ -280,6 +280,7 @@ Extended functions:
 .R      = pop a      push random_pick(a)
 .r      = pop a      push random_shuffle(a)
 .s	= pop a	     push suffixes(a)
+.S      = pop a,b    push 1 if a > b, -1 if a < b, 0 if a == b 
 .u      = pop a      push is_upper(a)
 .L	= pop a,b    push log_b(a)
 .:	= pop a,b,c  push a.replace(b, c)
