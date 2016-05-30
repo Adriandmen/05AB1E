@@ -736,7 +736,7 @@ def run_program(commands,
 
                     temp_char_mode = True
 
-                    if elseify:
+                    if not elseify:
                         STATEMENT += current_command
                     else:
                         ELSE_STATEMENT += current_command
