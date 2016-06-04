@@ -239,7 +239,7 @@ Extended ASCII characters (CP-1252)
 ê 97    =
 ë 98	= else statement
 ì 99	=
-í 13	=
+í 13	= pop a      push [reversed Q for Q in a]
 î 14	= pop a      push round_up(a)
 ï 18	= pop a      push int(a)
 ð	=            push a space character

@@ -1939,26 +1939,52 @@ def run_program(commands,
 
             elif current_command == "\u00f4":
                 if stack:
-                    b, a = pop_stack(2)
+                    b = pop_stack(1)
+                    a = pop_stack(1)
                     b = int(b)
-                    a = str(a)
+                    if type(a) is int:
+                        a = str(a)
                 else:
-                    a = str(input())
-                    recent_inputs.append(a)
-                    b = int(input())
-                    recent_inputs.append(b)
-                temp_string = ""
-                R = 0
-                temp_list = []
-                for Q in a:
-                    temp_string += Q
-                    R += 1
-                    if R == b:
+                    a = get_input()
+                    b = get_input()
+
+                if type(a) is not list:
+                    temp_string = ""
+                    R = 0
+                    temp_list = []
+                    for Q in a:
+                        temp_string += Q
+                        R += 1
+                        if R == b:
+                            temp_list.append(temp_string)
+                            temp_string = ""
+                            R = 0
+                    if temp_string != "":
                         temp_list.append(temp_string)
-                        temp_string = ""
-                        R = 0
-                if temp_string != "":
-                    temp_list.append(temp_string)
+                    stack.append(temp_list)
+                else:
+                    temp_list = []
+                    R = 0
+                    temp_list_2 = []
+                    for Q in a:
+                        temp_list.append(Q)
+                        R += 1
+                        if R == b:
+                            temp_list_2.append(temp_list)
+                            temp_list = []
+                            R = 0
+                    if temp_list != []:
+                        temp_list_2.append(temp_list)
+                    stack.append(temp_list_2)
+
+            elif current_command == "\u00ed":
+                a = pop_stack(1)
+                temp_list = []
+
+                for Q in a:
+                    if type(Q) is int:
+                        Q = str(Q)
+                    temp_list.append(Q[::-1])
                 stack.append(temp_list)
 
             elif current_command == "\u00f7":
