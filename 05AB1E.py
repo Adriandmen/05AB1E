@@ -1424,12 +1424,22 @@ def run_program(commands,
 
                 if type(stack[-1]) is list:
                     a = pop_stack(1)
-                    for Q in a:
-                        temp_number += ast.literal_eval(str(Q))
+                    if type(a[-1]) is list:
+                        for Q in a:
+                            temp_number = 0
+                            for R in Q:
+                                temp_number += ast.literal_eval(str(R))
+                            temp_list_2.append(temp_number)
+                        stack.append(temp_list_2)
+                    else:
+                        for Q in a:
+                            temp_number += ast.literal_eval(str(Q))
+                        stack.append(temp_number)
                 else:
                     for Q in stack:
                         temp_number += ast.literal_eval(str(Q))
-                stack.append(temp_number)
+                    stack.clear()
+                    stack.append(temp_number)
 
             elif current_command == ";":
                 a = pop_stack(1)
@@ -1482,7 +1492,13 @@ def run_program(commands,
 
             elif current_command == "z":
                 a = pop_stack(1)
-                stack.append(1 / float(a))
+                if type(a) is list:
+                    temp_list = []
+                    for Q in a:
+                        temp_list.append(1 / float(ast.literal_eval(str(Q))))
+                    stack.append(temp_list)
+                else:
+                    stack.append(1 / float(ast.literal_eval(str(a))))
 
             elif current_command == "U":  # x variable
                 a = pop_stack(1)
@@ -2027,7 +2043,12 @@ def run_program(commands,
 
             elif current_command == "\u00f8":
                 a = pop_stack(1)
-                stack.append([list(x) for x in zip(*a)])
+                try:
+                    stack.append([list(x) for x in zip(*a)])
+                except:
+                    b = pop_stack(1)
+                    c = [b, a]
+                    stack.append([list(x) for x in zip(*c)])
 
             elif current_command == "\u00da":
                 a = pop_stack(1)
@@ -2390,13 +2411,30 @@ def run_program(commands,
                     stack.append(abs(ast.literal_eval(str(a))))
 
             elif current_command == "\u00dd":
-                if len(stack) > 1:
-                    a, b = pop_stack(2)
-                else:
-                    b, a = pop_stack(2)
                 temp_list = []
-                for Q in range(int(b), int(a)):
-                    temp_list.append(Q)
+                a = pop_stack(1)
+                if type(a) is list:
+                    for Q in a:
+                        Q = int(Q)
+                        if Q > 0:
+                            for X in range(0, Q + 1):
+                                temp_list.append(X)
+                        elif Q < 0:
+                            for X in range(0, (Q * -1) + 1):
+                                temp_list.append(X * -1)
+                        else:
+                            temp_list.append(0)
+                else:
+                    a = int(a)
+                    if a > 0:
+                        for X in range(0, a + 1):
+                            temp_list.append(X)
+                    elif a < 0:
+                        for X in range(0, (a * -1) + 1):
+                            temp_list.append(X * -1)
+                    else:
+                        temp_list.append(0)
+
                 stack.append(temp_list)
 
             elif current_command == "\u00b6":

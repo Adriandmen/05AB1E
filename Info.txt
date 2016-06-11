@@ -285,3 +285,4 @@ Extended functions:
 .L	= pop a,b    push log_b(a)
 .:	= pop a,b,c  push a.replace(b, c)
 .²	= pop a      push log_2(a)
+.¿	= pop a,(b)  push lcm(a, (b))
