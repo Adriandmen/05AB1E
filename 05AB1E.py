@@ -2827,8 +2827,8 @@ def run_program(commands,
 
             elif current_command == "\u00f1":
                 c = str(pop_stack(1))
-                b = str(pop_stack(1))
-                a = str(pop_stack(1))
+                b = str(pop_stack(1))[::-1]
+                a = str(pop_stack(1))[::-1]
 
                 if len(b) > len(a):
                     a = str(a).ljust(len(b), c)
@@ -2844,7 +2844,7 @@ def run_program(commands,
                     else:
                         temp_string += a[Q]
 
-                stack.append(temp_string)
+                stack.append(temp_string[::-1])
 
             elif current_command == "\u2013":
                 a = pop_stack(1)
