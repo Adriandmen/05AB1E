@@ -2846,6 +2846,11 @@ def run_program(commands,
 
                 stack.append(temp_string[::-1])
 
+            elif current_command == ".\u00ef":
+                a = pop_stack(1)
+                a = ast.literal_eval(str(a))
+                stack.append(int(a) % 1 == 0)
+
             elif current_command == ".\u00bf":
                 b = pop_stack(1)
                 if type(b) is list:
