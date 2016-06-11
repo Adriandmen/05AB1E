@@ -2846,6 +2846,17 @@ def run_program(commands,
 
                 stack.append(temp_string[::-1])
 
+            elif current_command == ".\u00bf":
+                b = pop_stack(1)
+                if type(b) is list:
+                    temp_list = []
+                    for Q in b:
+                        temp_list.append(ast.literal_eval(str(Q)))
+                    stack.append(command_lcm(temp_list))
+                else:
+                    a = pop_stack(1)
+                    stack.append(lcm(ast.literal_eval(str(a)), ast.literal_eval(str(b))))
+
             elif current_command == "\u2013":
                 a = pop_stack(1)
                 if a == "1" or a == 1:

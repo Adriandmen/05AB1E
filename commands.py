@@ -242,6 +242,20 @@ def command_gcd(numbers):
         return 1
 
 
+def command_lcm(numbers):
+    if 0 in numbers:
+        return 0
+    try:
+        return reduce(lcm, numbers)
+    except:
+        return 1
+
+def lcm(a, b):
+    if a == 0 or b == 0:
+        return 0
+    return abs(a) * abs(b) // command_gcd([a, b])
+
+
 def floatify(string):
     a = str(string)
     is_neg = False
