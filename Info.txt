@@ -223,7 +223,7 @@ Extended ASCII characters (CP-1252)
 Ú 81	= pop a      push reverse uniquified a
 Û 82	= pop a,b    push a with leading b's trimmed off
 Ü 83	= pop a,b    push a with trailing b's trimmed off
-Ý 84	= pop a,b    push [a, ..., b - 1]
+Ý 84	= pop a      push [0 .. a]
 Þ 85	= pop a      push float(a)
 ß 86	= pop smallest element of list
 à 87	= pop greatest element of list
@@ -272,6 +272,7 @@ Extended functions:
 .j	= pop a      0-indexed max_spaces.join(stack) grid
 .J      = pop a      1-indexed max_spaces.join(stack) grid
 .l      = pop a      push is_lower(a)
+.L      = pop a,b    push levenshtein(a, b)
 .M	= pop a      push most frequent in a
 .m	= pop a      push least frequent in a
 .o      = pop a,b    push overlap(b)

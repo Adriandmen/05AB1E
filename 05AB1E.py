@@ -1297,7 +1297,7 @@ def run_program(commands,
             elif current_command == "#":
                 a = pop_stack(1)
                 try:
-                    if ast.literal_eval(str(a)) == 1:
+                    if str(a) == "1" or str(a) == "1.0":
                         return True
                 except: 0
 
@@ -2996,6 +2996,11 @@ def run_program(commands,
                         pointer_position += 1
                 pointer_position += 1
                 stack.append(convert_from_base(temp_string, 214))
+
+            elif current_command == ".L":
+                b = pop_stack(1)
+                a = pop_stack(1)
+                stack.append(minimum_edit_distance(a, b))
 
             elif current_command == "\u00e2":
                 b = pop_stack(1)
