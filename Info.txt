@@ -284,7 +284,7 @@ Extended functions:
 .s	= pop a	     push suffixes(a)
 .S      = pop a,b    push 1 if a > b, -1 if a < b, 0 if a == b 
 .u      = pop a      push is_upper(a) 
-.w	= pop a      push a.readall() (internet access, doesn't work in safe mode)
+.w	= pop a      push a.readall() (internet access, doesn't work in safe mode) (returns 0 on error)
 .:	= pop a,b,c  push a.replace(b, c)
 .²	= pop a      push log_2(a)
 .ï	= pop a      push is int(a)
