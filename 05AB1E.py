@@ -2849,7 +2849,10 @@ def run_program(commands,
             elif current_command == ".\u00ef":
                 a = pop_stack(1)
                 a = ast.literal_eval(str(a))
-                stack.append(int(a) % 1 == 0)
+                try:
+                    stack.append(int(int(a) % 1 == 0))
+                except:
+                    stack.append(0)
 
             elif current_command == ".\u00bf":
                 b = pop_stack(1)
@@ -3201,7 +3204,7 @@ def run_program(commands,
                 else:
                     stack.append(2 * ast.literal_eval(str(a)))
 
-            elif current_command == ".L":
+            elif current_command == ".n":
                 if len(stack) > 0:
                     b = pop_stack(1)
                     a = pop_stack(1)
@@ -3210,6 +3213,19 @@ def run_program(commands,
                     b = pop_stack(1)
 
                 stack.append(math.log(ast.literal_eval(str(a)), ast.literal_eval(str(b))))
+
+            elif current_command == ".w":
+                if safe_mode:
+                    print("internet access is prohibited in safe mode")
+                else:
+                    try:
+                        a = pop_stack(1)
+                        a = str(a)
+                        import urllib.request as req
+                        f = req.urlopen(a)
+                        stack.append(f.read())
+                    except:
+                        stack.append(0)
 
             elif current_command == "\u00e4":
                 b = pop_stack(1)

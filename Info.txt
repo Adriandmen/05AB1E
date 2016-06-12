@@ -275,6 +275,7 @@ Extended functions:
 .L      = pop a,b    push levenshtein(a, b)
 .M	= pop a      push most frequent in a
 .m	= pop a      push least frequent in a
+.n	= pop a,b    push log_b(a)
 .o      = pop a,b    push overlap(b)
 .O  	= pop a,b    push connected_overlap(b)
 .p  	= pop a      push prefixes(a)
@@ -282,8 +283,9 @@ Extended functions:
 .r      = pop a      push random_shuffle(a)
 .s	= pop a	     push suffixes(a)
 .S      = pop a,b    push 1 if a > b, -1 if a < b, 0 if a == b 
-.u      = pop a      push is_upper(a)
-.L	= pop a,b    push log_b(a)
+.u      = pop a      push is_upper(a) 
+.w	= pop a      push a.readall() (internet access, doesn't work in safe mode)
 .:	= pop a,b,c  push a.replace(b, c)
 .²	= pop a      push log_2(a)
+.ï	= pop a      push is int(a)
 .¿	= pop a,(b)  push lcm(a, (b))
