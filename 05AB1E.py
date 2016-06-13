@@ -2004,10 +2004,24 @@ def run_program(commands,
                 stack.append(temp_list)
 
             elif current_command == "\u00f7":
-                b = pop_stack(1)
-                a = pop_stack(1)
-
-                stack.append(ast.literal_eval(a) // ast.literal_eval(b))
+                a, b = pop_stack(2)
+                if type(a) is list and type(b) is list:
+                    temp_list = []
+                    for Q in range(len(a)):
+                        temp_list.append(ast.literal_eval(str(a[Q])) // ast.literal_eval(str(b[Q])))
+                    stack.append(temp_list)
+                elif type(a) is list:
+                    temp_list = []
+                    for Q in a:
+                        temp_list.append(ast.literal_eval(str(b)) // ast.literal_eval(str(Q)))
+                    stack.append(temp_list)
+                elif type(b) is list:
+                    temp_list = []
+                    for Q in b:
+                        temp_list.append(ast.literal_eval(str(Q)) // ast.literal_eval(str(a)))
+                    stack.append(temp_list)
+                else:
+                    stack.append(ast.literal_eval(str(b)) // ast.literal_eval(str(a)))
 
             elif current_command == "\u00b1":
                 a = pop_stack(1)
