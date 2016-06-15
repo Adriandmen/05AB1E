@@ -1457,7 +1457,7 @@ def run_program(commands,
                     b, a = pop_stack(2)
                 if type(a) is list and type(b) is list:
                     temp_list = []
-                    for Q in len(a):
+                    for Q in range(len(a)):
                         temp_list.append(ast.literal_eval(str(a[Q])) ** ast.literal_eval(str(b[Q])))
                     stack.append(temp_list)
                 elif type(a) is list:
@@ -1917,6 +1917,22 @@ def run_program(commands,
                         stack.append(1)
                     else:
                         stack.append(0)
+
+            elif current_command == "\u00ea":
+                a = pop_stack(1)
+                if type(a) is int:
+                    a = str(a)
+                temp_string = ""
+                temp_string = sorted(a)
+                for Q in temp_string:
+                    if type(Q) is int:
+                        Q = str(Q)
+                    if Q not in temp_list:
+                        temp_list.append(Q)
+                if type(a) is list:
+                    stack.append(temp_list)
+                else:
+                    stack.append(''.join(temp_list))
 
             elif current_command == "\u00c7":
                 a = pop_stack(1)
