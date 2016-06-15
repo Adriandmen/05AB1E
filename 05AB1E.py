@@ -209,12 +209,8 @@ def run_program(commands,
                 b, a = pop_stack(2)
                 if type(a) is list and type(b) is list:
                     temp_list = []
-                    temp_list_2 = []
-                    for Q in a:
-                        temp_list_2 = []
-                        for R in b:
-                            temp_list_2.append(convert_to_base(abs(int(Q)), int(R)))
-                        temp_list.append(temp_list_2)
+                    for Q in len(a):
+                        temp_list.append(convert_to_base(abs(ast.literal_eval(str(a[Q]))), ast.literal_eval(str(b[Q]))))
                     stack.append(temp_list)
                 elif type(a) is list:
                     temp_list = []
@@ -1461,7 +1457,6 @@ def run_program(commands,
                     b, a = pop_stack(2)
                 if type(a) is list and type(b) is list:
                     temp_list = []
-                    temp_list_2 = []
                     for Q in len(a):
                         temp_list.append(ast.literal_eval(str(a[Q])) ** ast.literal_eval(str(b[Q])))
                     stack.append(temp_list)
