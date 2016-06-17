@@ -161,6 +161,10 @@ Extended ASCII characters (CP-1252)
 	žJ	     push 4294967296
         žK           push [a-zA-Z0-9]
         žL           push [z-aZ-A9-0]
+        žM           push aeiou
+        žN           push bcdfghjklmnpqrstvwxyz
+        žO           push aeiouy
+        žP           push bcdfghjklmnpqrstvwxz
 
 
 Ÿ 24	= pop a,b    push [a, ..., b]
@@ -236,7 +240,7 @@ Extended ASCII characters (CP-1252)
 ç 94	= pop a      push char a
 è 95	= pop a,b    push a[b]
 é 96	= pop a      push sorted a (key=length)
-ê 97    =
+ê 97    = pop a      push sorted_uniquified(a)
 ë 98	= else statement
 ì 99	=
 í 13	= pop a      push [reversed Q for Q in a]
@@ -289,3 +293,5 @@ Extended functions:
 .²	= pop a      push log_2(a)
 .ï	= pop a      push is int(a)
 .¿	= pop a,(b)  push lcm(a, (b))
+.ˆ	= pop a      insert a into global array and after quit, print array[input_1]
+.^	= pop a	     insert a into global array with immediate sorting and after quit, print array[input_1]

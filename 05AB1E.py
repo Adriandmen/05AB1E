@@ -3200,6 +3200,17 @@ def run_program(commands,
                 a = pop_stack(1)
                 global_array.append(a)
 
+            elif current_command == ".\u02c6":
+                a = pop_stack(1)
+                global_array.append(a)
+
+            elif current_command == ".^":
+                a = pop_stack(1)
+                global_array.append(a)
+                temp_list = []
+                for Q in global_array: temp_list.append(Q)
+                temp_list = sorted(temp_list)
+
             elif current_command == "\u00af":
                 stack.append(global_array)
 
@@ -3520,6 +3531,18 @@ def run_program(commands,
             elif current_command == "\u017eL":
                 stack.append("zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA9876543210")
 
+            elif current_command == "\u017eM":
+                stack.append("aeiou")
+
+            elif current_command == "\u017eN":
+                stack.append("bcdfghjklmnpqrstvwxyz")
+
+            elif current_command == "\u017eO":
+                stack.append("aeiouy")
+
+            elif current_command == "\u017eP":
+                stack.append("bcdfghjklmnpqrstvwxz")
+
             elif current_command == ".:":
                 c, b, a = pop_stack(3)
                 if type(a) is list:
@@ -3564,6 +3587,7 @@ def run_program(commands,
 
     if not has_printed and not suppress_print:
         if stack: print(stack[len(stack) - 1])
+        elif ".\u02c6" in code: print(global_array[recent_inputs[0]])
         elif "\u00b5" in code: print(range_variable)
         elif "\u02c6" in code: print(global_array)
         elif "\u00bc" in code: print(counter_variable[-1])
