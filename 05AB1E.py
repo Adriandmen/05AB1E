@@ -775,9 +775,16 @@ def run_program(commands,
                     stack.append(x)
 
             elif current_command == "x":
-                a = ast.literal_eval(str(pop_stack(1)))
+                a = pop_stack(1)
                 stack.append(a)
-                stack.append(a * 2)
+
+                if type(a) is list:
+                    temp_list = []
+                    for Q in a:
+                        temp_list.append(ast.literal_eval(str(Q)) * 2)
+                    stack.append(temp_list)
+                else:
+                    stack.append(ast.literal_eval(str(a)) * 2)
 
             elif current_command == "F":
                 STATEMENT = ""
