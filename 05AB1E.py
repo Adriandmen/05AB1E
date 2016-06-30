@@ -1762,13 +1762,12 @@ def run_program(commands,
                 b = pop_stack(1)
                 a = pop_stack(1)
 
-                if type(a) is list:
-                    temp_list = []
-                    for Q in b:
-                        temp_list.append(str(b) in str(Q))
-                    stack.append(temp_list)
-                else:
-                    stack.append(str(b) in str(a))
+                if type(a) is int:
+                    a = str(a)
+                if type(b) is int:
+                    b = str(b)
+                    
+                stack.append(int(str(b) in str(a)))
 
             elif current_command == "\u00bb":
                 if len(suspend_restore_register) == 0:
@@ -2349,7 +2348,7 @@ def run_program(commands,
             elif current_command == "\u00c0":
                 a = pop_stack(1)
                 if type(a) is list:
-                    a.append(a[0])
+                    a += [a[0]]
                     a = a[1:]
                     stack.append(a)
                 else:
