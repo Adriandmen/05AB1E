@@ -1425,6 +1425,9 @@ def run_program(commands,
                 temp_number = 0
                 temp_list_2 = []
 
+                if not stack:
+                    stack.append(get_input())
+
                 if type(stack[-1]) is list:
                     a = pop_stack(1)
                     if type(a[-1]) is list:
@@ -1766,7 +1769,7 @@ def run_program(commands,
                     a = str(a)
                 if type(b) is int:
                     b = str(b)
-                    
+
                 stack.append(int(str(b) in str(a)))
 
             elif current_command == "\u00bb":
