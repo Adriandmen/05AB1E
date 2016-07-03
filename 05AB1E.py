@@ -2187,7 +2187,11 @@ def run_program(commands,
 
             elif current_command == "\u00a1":
                 b, a = pop_stack(2)
-                temp_list = str(a).split(str(b))
+                if type(a) is int:
+                    a = str(a)
+                if type(b) is int:
+                    b = str(b)
+                temp_list = a.split(b)
                 stack.append(temp_list)
 
             elif current_command == "\u00ef":
