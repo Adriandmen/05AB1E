@@ -242,8 +242,8 @@ Extended ASCII characters (CP-1252)
 é 96	= pop a      push sorted a (key=length)
 ê 97    = pop a      push sorted_uniquified(a)
 ë 98	= else statement
-ì 99	=
-í 13	= pop a      push [reversed Q for Q in a]
+ì 99	= pop a,b    push a.prepend(b)
+í 13	= pop a      push [reversed Q for Q in a] (short for €R)
 î 14	= pop a      push round_up(a)
 ï 18	= pop a      push int(a)
 ð	=            push a space character
