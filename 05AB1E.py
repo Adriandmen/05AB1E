@@ -2636,6 +2636,32 @@ def run_program(commands,
                 else:
                     stack.append(str(a) + str(b))
 
+            elif current_command == "\u00ec":
+                if len(stack) > 1:
+                    b, a = pop_stack(2)
+                else:
+                    a, b = pop_stack(2)
+
+                if type(a) is list and type(b) is list:
+                    temp_list = []
+                    for Q in b:
+                        temp_list.append(Q)
+                    for Q in a:
+                        temp_list.append(Q)
+                    stack.append(temp_list)
+                elif type(a) is list:
+                    temp_list = []
+                    for Q in a:
+                        temp_list.append(str(b) + str(Q))
+                    stack.append(temp_list)
+                elif type(b) is list:
+                    temp_list = []
+                    for Q in b:
+                        temp_list.append(str(Q) + str(a))
+                    stack.append(temp_list)
+                else:
+                    stack.append(str(b) + str(a))
+
             elif current_command == "\u00d7":
                 if len(stack) > 1:
                     b, a = pop_stack(2)
