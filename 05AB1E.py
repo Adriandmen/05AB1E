@@ -3237,13 +3237,24 @@ def run_program(commands,
 
                 if type(a) is int:
                     a = str(a)
+                if type(b) is int:
+                    b = str(b)
 
-                temp_string = ""
-                for Q in a:
-                    if str(Q) in str(b):
-                        temp_string += str(Q)
-
-                stack.append(temp_string)
+                if type(a) is list:
+                    temp_list = []
+                    temp_list_2 = []
+                    for Q in a:
+                        temp_list_2.append(str(Q))
+                    for Q in b:
+                        if str(Q) in temp_list_2:
+                            temp_list.append(Q)
+                    stack.append(temp_list)
+                else:
+                    temp_string = ""
+                    for Q in a:
+                        if str(Q) in str(b):
+                            temp_string += str(Q)
+                    stack.append(temp_string)
 
             elif current_command == "\u02c6":
                 a = pop_stack(1)
