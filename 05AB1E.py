@@ -54,7 +54,7 @@ def pop_stack(amount=1):
         else:
             a = input()
             if is_array(a):
-                a = ast.literal_eval(a)
+                a = ast_int_eval(a)
                 recent_inputs.append(a)
                 return a
             else:
@@ -71,7 +71,7 @@ def pop_stack(amount=1):
             a = stack.pop()
             b = input()
             if is_array(b):
-                b = ast.literal_eval(b)
+                b = ast_int_eval(b)
             recent_inputs.append(b)
             return a, b
 
@@ -79,9 +79,9 @@ def pop_stack(amount=1):
             a = input()
             b = input()
             if is_array(a):
-                a = ast.literal_eval(a)
+                a = ast_int_eval(a)
             if is_array(b):
-                b = ast.literal_eval(b)
+                b = ast_int_eval(b)
 
             recent_inputs.append(a)
             recent_inputs.append(b)
@@ -99,7 +99,7 @@ def pop_stack(amount=1):
             b = stack.pop()
             c = input()
             if is_array(c):
-                c = ast.literal_eval(c)
+                c = ast_int_eval(c)
 
             recent_inputs.append(c)
             return a, b, c
@@ -109,9 +109,9 @@ def pop_stack(amount=1):
             b = input()
             c = input()
             if is_array(b):
-                b = ast.literal_eval(b)
+                b = ast_int_eval(b)
             if is_array(c):
-                c = ast.literal_eval(c)
+                c = ast_int_eval(c)
 
             recent_inputs.append(b)
             recent_inputs.append(c)
@@ -122,11 +122,11 @@ def pop_stack(amount=1):
             b = input()
             c = input()
             if is_array(a):
-                a = ast.literal_eval(a)
+                a = ast_int_eval(a)
             if is_array(b):
-                b = ast.literal_eval(b)
+                b = ast_int_eval(b)
             if is_array(c):
-                c = ast.literal_eval(c)
+                c = ast_int_eval(c)
 
             recent_inputs.append(a)
             recent_inputs.append(b)
@@ -140,6 +140,16 @@ def get_input():
         a = ast.literal_eval(a)
 
     recent_inputs.append(a)
+    return a
+
+
+def ast_int_eval(number):
+    a = str(number)
+    try:
+        a = ast.literal_eval(a)
+    except:
+        a = int(a)
+
     return a
 
 
@@ -210,7 +220,7 @@ def run_program(commands,
                 if type(a) is list and type(b) is list:
                     temp_list = []
                     for Q in len(a):
-                        temp_list.append(convert_to_base(abs(ast.literal_eval(str(a[Q]))), ast.literal_eval(str(b[Q]))))
+                        temp_list.append(convert_to_base(abs(ast_int_eval(str(a[Q]))), ast_int_eval(str(b[Q]))))
                     stack.append(temp_list)
                 elif type(a) is list:
                     temp_list = []
@@ -448,104 +458,104 @@ def run_program(commands,
                 if type(a) is list and type(b) is list:
                     temp_list = []
                     for Q in range(len(a)):
-                        temp_list.append(ast.literal_eval(str(a[Q])) + ast.literal_eval(str(b[Q])))
+                        temp_list.append(ast_int_eval(str(a[Q])) + ast_int_eval(str(b[Q])))
                     stack.append(temp_list)
                 elif type(a) is list:
                     temp_list = []
                     for Q in a:
-                        temp_list.append(ast.literal_eval(str(Q)) + ast.literal_eval(str(b)))
+                        temp_list.append(ast_int_eval(str(Q)) + ast_int_eval(str(b)))
                     stack.append(temp_list)
                 elif type(b) is list:
                     temp_list = []
                     for Q in b:
-                        temp_list.append(ast.literal_eval(str(a)) + ast.literal_eval(str(Q)))
+                        temp_list.append(ast_int_eval(str(a)) + ast_int_eval(str(Q)))
                     stack.append(temp_list)
                 else:
-                    stack.append(ast.literal_eval(str(a)) + ast.literal_eval(str(b)))
+                    stack.append(ast_int_eval(str(a)) + ast_int_eval(str(b)))
 
             elif current_command == "-":
                 a, b = pop_stack(2)
                 if type(a) is list and type(b) is list:
                     temp_list = []
                     for Q in range(len(a)):
-                        temp_list.append(ast.literal_eval(str(a[Q])) - ast.literal_eval(str(b[Q])))
+                        temp_list.append(ast_int_eval(str(a[Q])) - ast_int_eval(str(b[Q])))
                     stack.append(temp_list)
                 elif type(a) is list:
                     temp_list = []
                     for Q in a:
-                        temp_list.append(ast.literal_eval(str(b)) - ast.literal_eval(str(Q)))
+                        temp_list.append(ast_int_eval(str(b)) - ast_int_eval(str(Q)))
                     stack.append(temp_list)
                 elif type(b) is list:
                     temp_list = []
                     for Q in b:
-                        temp_list.append(ast.literal_eval(str(Q)) - ast.literal_eval(str(a)))
+                        temp_list.append(ast_int_eval(str(Q)) - ast_int_eval(str(a)))
                     stack.append(temp_list)
                 elif (type(b) is str and not is_float_value(b)) or (type(a) is str and not is_float_value(a)):
                     for Q in str(a):
                         b = b.replace(Q, "")
                     stack.append(str(b))
                 else:
-                    stack.append(ast.literal_eval(str(b)) - ast.literal_eval(str(a)))
+                    stack.append(ast_int_eval(str(b)) - ast_int_eval(str(a)))
 
             elif current_command == "*":
                 a, b = pop_stack(2)
                 if type(a) is list and type(b) is list:
                     temp_list = []
                     for Q in range(len(a)):
-                        temp_list.append(ast.literal_eval(str(a[Q])) * ast.literal_eval(str(b[Q])))
+                        temp_list.append(ast_int_eval(str(a[Q])) * ast_int_eval(str(b[Q])))
                     stack.append(temp_list)
                 elif type(a) is list:
                     temp_list = []
                     for Q in a:
-                        temp_list.append(ast.literal_eval(str(Q)) * ast.literal_eval(str(b)))
+                        temp_list.append(ast_int_eval(str(Q)) * ast_int_eval(str(b)))
                     stack.append(temp_list)
                 elif type(b) is list:
                     temp_list = []
                     for Q in b:
-                        temp_list.append(ast.literal_eval(str(a)) * ast.literal_eval(str(Q)))
+                        temp_list.append(ast_int_eval(str(a)) * ast_int_eval(str(Q)))
                     stack.append(temp_list)
                 else:
-                    stack.append(ast.literal_eval(str(a)) * ast.literal_eval(str(b)))
+                    stack.append(ast_int_eval(str(a)) * ast_int_eval(str(b)))
 
             elif current_command == "/":
                 a, b = pop_stack(2)
                 if type(a) is list and type(b) is list:
                     temp_list = []
                     for Q in range(len(a)):
-                        temp_list.append(ast.literal_eval(str(a[Q])) / ast.literal_eval(str(b[Q])))
+                        temp_list.append(ast_int_eval(str(a[Q])) / ast_int_eval(str(b[Q])))
                     stack.append(temp_list)
                 elif type(a) is list:
                     temp_list = []
                     for Q in a:
-                        temp_list.append(ast.literal_eval(str(b)) / ast.literal_eval(str(Q)))
+                        temp_list.append(ast_int_eval(str(b)) / ast_int_eval(str(Q)))
                     stack.append(temp_list)
                 elif type(b) is list:
                     temp_list = []
                     for Q in b:
-                        temp_list.append(ast.literal_eval(str(Q)) / ast.literal_eval(str(a)))
+                        temp_list.append(ast_int_eval(str(Q)) / ast_int_eval(str(a)))
                     stack.append(temp_list)
                 else:
-                    stack.append(ast.literal_eval(str(b)) / ast.literal_eval(str(a)))
+                    stack.append(ast_int_eval(str(b)) / ast_int_eval(str(a)))
 
             elif current_command == "%":
                 a, b = pop_stack(2)
                 if type(a) is list and type(b) is list:
                     temp_list = []
                     for Q in range(len(a)):
-                        temp_list.append(ast.literal_eval(str(a[Q])) % ast.literal_eval(str(b[Q])))
+                        temp_list.append(ast_int_eval(str(a[Q])) % ast_int_eval(str(b[Q])))
                     stack.append(temp_list)
                 elif type(a) is list:
                     temp_list = []
                     for Q in a:
-                        temp_list.append(ast.literal_eval(str(b)) % ast.literal_eval(str(Q)))
+                        temp_list.append(ast_int_eval(str(b)) % ast_int_eval(str(Q)))
                     stack.append(temp_list)
                 elif type(b) is list:
                     temp_list = []
                     for Q in b:
-                        temp_list.append(ast.literal_eval(str(Q)) % ast.literal_eval(str(a)))
+                        temp_list.append(ast_int_eval(str(Q)) % ast_int_eval(str(a)))
                     stack.append(temp_list)
                 else:
-                    stack.append(ast.literal_eval(str(b)) % ast.literal_eval(str(a)))
+                    stack.append(ast_int_eval(str(b)) % ast_int_eval(str(a)))
 
             elif current_command == "D":
                 a = pop_stack(1)
@@ -781,10 +791,10 @@ def run_program(commands,
                 if type(a) is list:
                     temp_list = []
                     for Q in a:
-                        temp_list.append(ast.literal_eval(str(Q)) * 2)
+                        temp_list.append(ast_int_eval(str(Q)) * 2)
                     stack.append(temp_list)
                 else:
-                    stack.append(ast.literal_eval(str(a)) * 2)
+                    stack.append(ast_int_eval(str(a)) * 2)
 
             elif current_command == "F":
                 STATEMENT = ""
@@ -1115,22 +1125,22 @@ def run_program(commands,
                 if type(a) is list:
                     temp_list = []
                     for Q in a:
-                        temp_list.append(ast.literal_eval(str(Q)) + 1)
+                        temp_list.append(ast_int_eval(str(Q)) + 1)
 
                     stack.append(temp_list)
                 else:
-                    stack.append(ast.literal_eval(str(a)) + 1)
+                    stack.append(ast_int_eval(str(a)) + 1)
 
             elif current_command == "<":
                 a = pop_stack(1)
                 if type(a) is list:
                     temp_list = []
                     for Q in a:
-                        temp_list.append(ast.literal_eval(str(Q)) - 1)
+                        temp_list.append(ast_int_eval(str(Q)) - 1)
 
                     stack.append(temp_list)
                 else:
-                    stack.append(ast.literal_eval(str(a)) - 1)
+                    stack.append(ast_int_eval(str(a)) - 1)
 
             elif current_command == "'":
                 temp_string = ""
@@ -1233,40 +1243,40 @@ def run_program(commands,
                     if type(b) is list:
                         temp_list = []
                         for Q in range(0, len(a)):
-                            if ast.literal_eval(str(a[Q])) > ast.literal_eval(str(b[Q])):
+                            if ast_int_eval(str(a[Q])) > ast_int_eval(str(b[Q])):
                                 temp_list.append(1)
-                            if ast.literal_eval(str(a[Q])) < ast.literal_eval(str(b[Q])):
+                            if ast_int_eval(str(a[Q])) < ast_int_eval(str(b[Q])):
                                 temp_list.append(-1)
-                            if ast.literal_eval(str(a[Q])) == ast.literal_eval(str(b[Q])):
+                            if ast_int_eval(str(a[Q])) == ast_int_eval(str(b[Q])):
                                 temp_list.append(0)
                         stack.append(temp_list)
                     else:
                         temp_list = []
                         for Q in a:
-                            if ast.literal_eval(str(Q)) > ast.literal_eval(str(b)):
+                            if ast_int_eval(str(Q)) > ast_int_eval(str(b)):
                                 temp_list.append(1)
-                            if ast.literal_eval(str(Q)) < ast.literal_eval(str(b)):
+                            if ast_int_eval(str(Q)) < ast_int_eval(str(b)):
                                 temp_list.append(-1)
-                            if ast.literal_eval(str(Q)) == ast.literal_eval(str(b)):
+                            if ast_int_eval(str(Q)) == ast_int_eval(str(b)):
                                 temp_list.append(0)
                         stack.append(temp_list)
                 else:
                     if type(b) is list:
                         temp_list = []
                         for Q in b:
-                            if ast.literal_eval(str(a)) > ast.literal_eval(str(Q)):
+                            if ast_int_eval(str(a)) > ast_int_eval(str(Q)):
                                 temp_list.append(1)
-                            if ast.literal_eval(str(a)) < ast.literal_eval(str(Q)):
+                            if ast_int_eval(str(a)) < ast_int_eval(str(Q)):
                                 temp_list.append(-1)
-                            if ast.literal_eval(str(a)) == ast.literal_eval(str(Q)):
+                            if ast_int_eval(str(a)) == ast_int_eval(str(Q)):
                                 temp_list.append(0)
                         stack.append(temp_list)
                     else:
-                        if ast.literal_eval(str(a)) > ast.literal_eval(str(b)):
+                        if ast_int_eval(str(a)) > ast_int_eval(str(b)):
                             stack.append(1)
-                        if ast.literal_eval(str(a)) < ast.literal_eval(str(b)):
+                        if ast_int_eval(str(a)) < ast_int_eval(str(b)):
                             stack.append(-1)
-                        if ast.literal_eval(str(a)) == ast.literal_eval(str(b)):
+                        if ast_int_eval(str(a)) == ast_int_eval(str(b)):
                             stack.append(0)
 
             elif current_command == "[":
@@ -1323,51 +1333,51 @@ def run_program(commands,
             elif current_command == "Q":
                 a, b = pop_stack(2)
                 if type(a) is list and type(b) is list:
-                    a = ast.literal_eval(str(a))
-                    b = ast.literal_eval(str(b))
+                    a = ast_int_eval(str(a))
+                    b = ast_int_eval(str(b))
                     stack.append(int(str(a) == str(b)))
                 elif type(a) is list:
                     temp_list = []
-                    b = ast.literal_eval("\"" + str(b) + "\"")
+                    b = ast_int_eval("\"" + str(b) + "\"")
                     for Q in a:
-                        if is_digit_value(str(Q)): Q = ast.literal_eval(str(Q))
+                        if is_digit_value(str(Q)): Q = ast_int_eval(str(Q))
                         temp_list.append(int(str(Q) == str(b)))
                     stack.append(temp_list)
                 elif type(b) is list:
                     temp_list = []
-                    a = ast.literal_eval("\"" + str(a) + "\"")
+                    a = ast_int_eval("\"" + str(a) + "\"")
                     for Q in b:
-                        if is_digit_value(str(Q)): Q = ast.literal_eval(str(Q))
+                        if is_digit_value(str(Q)): Q = ast_int_eval(str(Q))
                         temp_list.append(int(str(Q) == str(a)))
                     stack.append(temp_list)
                 else:
-                    a = ast.literal_eval("\"" + str(a) + "\"")
-                    b = ast.literal_eval("\"" + str(b) + "\"")
+                    a = ast_int_eval("\"" + str(a) + "\"")
+                    b = ast_int_eval("\"" + str(b) + "\"")
                     stack.append(int(str(a) == str(b)))
 
             elif current_command == "\u00ca":
                 a, b = pop_stack(2)
                 if type(a) is list and type(b) is list:
-                    a = ast.literal_eval(str(a))
-                    b = ast.literal_eval(str(b))
+                    a = ast_int_eval(str(a))
+                    b = ast_int_eval(str(b))
                     stack.append(int(str(a) != str(b)))
                 elif type(a) is list:
                     temp_list = []
-                    b = ast.literal_eval("\"" + str(b) + "\"")
+                    b = ast_int_eval("\"" + str(b) + "\"")
                     for Q in a:
-                        if is_digit_value(str(Q)): Q = ast.literal_eval(str(Q))
+                        if is_digit_value(str(Q)): Q = ast_int_eval(str(Q))
                         temp_list.append(int(str(Q) != str(b)))
                     stack.append(temp_list)
                 elif type(b) is list:
                     temp_list = []
-                    a = ast.literal_eval("\"" + str(a) + "\"")
+                    a = ast_int_eval("\"" + str(a) + "\"")
                     for Q in b:
-                        if is_digit_value(str(Q)): Q = ast.literal_eval(str(Q))
+                        if is_digit_value(str(Q)): Q = ast_int_eval(str(Q))
                         temp_list.append(int(str(Q) != str(a)))
                     stack.append(temp_list)
                 else:
-                    a = ast.literal_eval("\"" + str(a) + "\"")
-                    b = ast.literal_eval("\"" + str(b) + "\"")
+                    a = ast_int_eval("\"" + str(a) + "\"")
+                    b = ast_int_eval("\"" + str(b) + "\"")
                     stack.append(int(str(a) != str(b)))
 
             elif current_command == "(":
@@ -1375,10 +1385,10 @@ def run_program(commands,
                 if type(a) is list:
                     temp_list = []
                     for Q in a:
-                        temp_list.append(ast.literal_eval(str(Q)) * -1)
+                        temp_list.append(ast_int_eval(str(Q)) * -1)
                     stack.append(temp_list)
                 else:
-                    stack.append(ast.literal_eval(str(a)) * -1)
+                    stack.append(ast_int_eval(str(a)) * -1)
 
             elif current_command == "A":
                 stack.append('abcdefghijklmnopqrstuvwxyz')
@@ -1414,10 +1424,10 @@ def run_program(commands,
                 if type(stack[-1]) is list:
                     a = pop_stack(1)
                     for Q in a:
-                        temp_number *= ast.literal_eval(str(Q))
+                        temp_number *= ast_int_eval(str(Q))
                 else:
                     for Q in stack:
-                        temp_number *= ast.literal_eval(str(Q))
+                        temp_number *= ast_int_eval(str(Q))
                     stack.clear()
                 stack.append(temp_number)
 
@@ -1434,16 +1444,16 @@ def run_program(commands,
                         for Q in a:
                             temp_number = 0
                             for R in Q:
-                                temp_number += ast.literal_eval(str(R))
+                                temp_number += ast_int_eval(str(R))
                             temp_list_2.append(temp_number)
                         stack.append(temp_list_2)
                     else:
                         for Q in a:
-                            temp_number += ast.literal_eval(str(Q))
+                            temp_number += ast_int_eval(str(Q))
                         stack.append(temp_number)
                 else:
                     for Q in stack:
-                        temp_number += ast.literal_eval(str(Q))
+                        temp_number += ast_int_eval(str(Q))
                     stack.clear()
                     stack.append(temp_number)
 
@@ -1452,10 +1462,10 @@ def run_program(commands,
                 if type(a) is list:
                     temp_list = []
                     for Q in a:
-                        temp_list.append(ast.literal_eval(str(Q)) / 2)
+                        temp_list.append(ast_int_eval(str(Q)) / 2)
                     stack.append(temp_list)
                 else:
-                    stack.append(ast.literal_eval(str(a)) / 2)
+                    stack.append(ast_int_eval(str(a)) / 2)
 
             elif current_command == "w":
                 time.sleep(1)
@@ -1468,20 +1478,20 @@ def run_program(commands,
                 if type(a) is list and type(b) is list:
                     temp_list = []
                     for Q in range(len(a)):
-                        temp_list.append(ast.literal_eval(str(a[Q])) ** ast.literal_eval(str(b[Q])))
+                        temp_list.append(ast_int_eval(str(a[Q])) ** ast_int_eval(str(b[Q])))
                     stack.append(temp_list)
                 elif type(a) is list:
                     temp_list = []
                     for Q in a:
-                        temp_list.append(ast.literal_eval(str(b)) ** ast.literal_eval(str(Q)))
+                        temp_list.append(ast_int_eval(str(b)) ** ast_int_eval(str(Q)))
                     stack.append(temp_list)
                 elif type(b) is list:
                     temp_list = []
                     for Q in b:
-                        temp_list.append(ast.literal_eval(str(Q)) ** ast.literal_eval(str(a)))
+                        temp_list.append(ast_int_eval(str(Q)) ** ast_int_eval(str(a)))
                     stack.append(temp_list)
                 else:
-                    stack.append(ast.literal_eval(str(b)) ** ast.literal_eval(str(a)))
+                    stack.append(ast_int_eval(str(b)) ** ast_int_eval(str(a)))
 
             elif current_command == "X":
                 stack.append(register_x[-1])
@@ -1497,10 +1507,10 @@ def run_program(commands,
                 if type(a) is list:
                     temp_list = []
                     for Q in a:
-                        temp_list.append(1 / float(ast.literal_eval(str(Q))))
+                        temp_list.append(1 / float(ast_int_eval(str(Q))))
                     stack.append(temp_list)
                 else:
-                    stack.append(1 / float(ast.literal_eval(str(a))))
+                    stack.append(1 / float(ast_int_eval(str(a))))
 
             elif current_command == "U":  # x variable
                 a = pop_stack(1)
@@ -1707,20 +1717,20 @@ def run_program(commands,
                 temp_list = []
                 if type(a) is list:
                     for Q in a:
-                        temp_list.append(ast.literal_eval(str(Q)) ** 2)
+                        temp_list.append(ast_int_eval(str(Q)) ** 2)
                     stack.append(temp_list)
                 else:
-                    stack.append(ast.literal_eval(str(a)) ** 2)
+                    stack.append(ast_int_eval(str(a)) ** 2)
 
             elif current_command == "o":
                 a = pop_stack(1)
                 temp_list = []
                 if type(a) is list:
                     for Q in a:
-                        temp_list.append(2 ** ast.literal_eval(str(Q)))
+                        temp_list.append(2 ** ast_int_eval(str(Q)))
                     stack.append(temp_list)
                 else:
-                    stack.append(2 ** ast.literal_eval(str(a)))
+                    stack.append(2 ** ast_int_eval(str(a)))
 
             elif current_command == "k":
                 if stack:
@@ -1750,10 +1760,10 @@ def run_program(commands,
                 if type(a) is list:
                     temp_list = []
                     for Q in a:
-                        temp_list.append(int(10 ** ast.literal_eval(str(Q))))
+                        temp_list.append(int(10 ** ast_int_eval(str(Q))))
                     stack.append(temp_list)
                 else:
-                    stack.append(int(10 ** ast.literal_eval(str(a))))
+                    stack.append(int(10 ** ast_int_eval(str(a))))
 
             elif current_command == "\u00ba":
                 if len(stack) > 0:
@@ -2025,20 +2035,20 @@ def run_program(commands,
                 if type(a) is list and type(b) is list:
                     temp_list = []
                     for Q in range(len(a)):
-                        temp_list.append(ast.literal_eval(str(a[Q])) // ast.literal_eval(str(b[Q])))
+                        temp_list.append(ast_int_eval(str(a[Q])) // ast_int_eval(str(b[Q])))
                     stack.append(temp_list)
                 elif type(a) is list:
                     temp_list = []
                     for Q in a:
-                        temp_list.append(ast.literal_eval(str(b)) // ast.literal_eval(str(Q)))
+                        temp_list.append(ast_int_eval(str(b)) // ast_int_eval(str(Q)))
                     stack.append(temp_list)
                 elif type(b) is list:
                     temp_list = []
                     for Q in b:
-                        temp_list.append(ast.literal_eval(str(Q)) // ast.literal_eval(str(a)))
+                        temp_list.append(ast_int_eval(str(Q)) // ast_int_eval(str(a)))
                     stack.append(temp_list)
                 else:
-                    stack.append(ast.literal_eval(str(b)) // ast.literal_eval(str(a)))
+                    stack.append(ast_int_eval(str(b)) // ast_int_eval(str(a)))
 
             elif current_command == "\u00b1":
                 a = pop_stack(1)
@@ -2046,17 +2056,17 @@ def run_program(commands,
                 if type(a) is list:
                     temp_list = []
                     for Q in a:
-                        temp_list.append(~ast.literal_eval(str(Q)))
+                        temp_list.append(~ast_int_eval(str(Q)))
                     stack.append(temp_list)
                 else:
-                    stack.append(~ast.literal_eval(str(a)))
+                    stack.append(~ast_int_eval(str(a)))
 
             elif current_command == "\u00c6":
                 a = pop_stack(1)
                 a = a[::-1]
-                result = ast.literal_eval(str(a.pop()))
+                result = ast_int_eval(str(a.pop()))
                 for Q in a:
-                    result -= ast.literal_eval(str(Q))
+                    result -= ast_int_eval(str(Q))
                 stack.append(result)
 
             elif current_command == "\u00d9":
@@ -2120,7 +2130,7 @@ def run_program(commands,
                 temp_list = []
                 length_of_list = len(a)
                 for Q in range(0, length_of_list - 1):
-                    temp_list.append(ast.literal_eval(str(a[Q + 1])) - ast.literal_eval(str(a[Q])))
+                    temp_list.append(ast_int_eval(str(a[Q + 1])) - ast_int_eval(str(a[Q])))
                 stack.append(temp_list)
 
             elif current_command == "\u00a9":
@@ -2159,10 +2169,10 @@ def run_program(commands,
                 if type(a) is list:
                     temp_list = []
                     for Q in a:
-                        temp_list.append(int(ast.literal_eval(str(Q)) % 2 == 0))
+                        temp_list.append(int(ast_int_eval(str(Q)) % 2 == 0))
                     stack.append(temp_list)
                 else:
-                    stack.append(int(ast.literal_eval(str(a)) % 2 == 0))
+                    stack.append(int(ast_int_eval(str(a)) % 2 == 0))
 
             elif current_command == "\u00bf":
                 a = pop_stack(1)
@@ -2180,10 +2190,10 @@ def run_program(commands,
                 if type(a) is list:
                     temp_list = []
                     for Q in a:
-                        temp_list.append(int(ast.literal_eval(str(Q)) % 2 == 1))
+                        temp_list.append(int(ast_int_eval(str(Q)) % 2 == 1))
                     stack.append(temp_list)
                 else:
-                    stack.append(ast.literal_eval(str(a)) % 2 == 1)
+                    stack.append(ast_int_eval(str(a)) % 2 == 1)
 
             elif current_command == "\u00a1":
                 b, a = pop_stack(2)
@@ -2440,10 +2450,10 @@ def run_program(commands,
                 if type(a) is list:
                     temp_list = []
                     for Q in a:
-                        temp_list.append(abs(ast.literal_eval(str(Q))))
+                        temp_list.append(abs(ast_int_eval(str(Q))))
                     stack.append(temp_list)
                 else:
-                    stack.append(abs(ast.literal_eval(str(a))))
+                    stack.append(abs(ast_int_eval(str(a))))
 
             elif current_command == "\u00dd":
                 temp_list = []
@@ -2579,21 +2589,21 @@ def run_program(commands,
                     for Q in a:
                         temp_list_2 = []
                         for R in b:
-                            temp_list_2.append(ast.literal_eval(str(R)) % ast.literal_eval(str(Q)) == 0)
+                            temp_list_2.append(ast_int_eval(str(R)) % ast_int_eval(str(Q)) == 0)
                         temp_list.append(temp_list_2)
                     stack.append(temp_list)
                 elif type(a) is list:
                     temp_list = []
                     for Q in a:
-                        temp_list.append(ast.literal_eval(str(b)) % ast.literal_eval(str(Q)) == 0)
+                        temp_list.append(ast_int_eval(str(b)) % ast_int_eval(str(Q)) == 0)
                     stack.append(temp_list)
                 elif type(b) is list:
                     temp_list = []
                     for Q in b:
-                        temp_list.append(ast.literal_eval(str(Q)) % ast.literal_eval(str(a)) == 0)
+                        temp_list.append(ast_int_eval(str(Q)) % ast_int_eval(str(a)) == 0)
                     stack.append(temp_list)
                 else:
-                    stack.append(ast.literal_eval(str(b)) % ast.literal_eval(str(a)) == 0)
+                    stack.append(ast_int_eval(str(b)) % ast_int_eval(str(a)) == 0)
 
             elif current_command == "\u00ac":
                 if stack:
@@ -2726,20 +2736,20 @@ def run_program(commands,
                 if type(a) is list:
                     temp_list = []
                     for Q in a:
-                        temp_list.append(ast.literal_eval(str(Q)) + 2)
+                        temp_list.append(ast_int_eval(str(Q)) + 2)
                     stack.append(temp_list)
                 else:
-                    stack.append(ast.literal_eval(str(a)) + 2)
+                    stack.append(ast_int_eval(str(a)) + 2)
 
             elif current_command == "\u00cd":
                 a = pop_stack(1)
                 if type(a) is list:
                     temp_list = []
                     for Q in a:
-                        temp_list.append(ast.literal_eval(str(Q)) - 2)
+                        temp_list.append(ast_int_eval(str(Q)) - 2)
                     stack.append(temp_list)
                 else:
-                    stack.append(ast.literal_eval(str(a)) - 2)
+                    stack.append(ast_int_eval(str(a)) - 2)
 
             elif current_command == "\u2020":
                 if len(stack) > 0:
@@ -2770,7 +2780,7 @@ def run_program(commands,
 
             elif current_command == "\u00bd":
                 a = counter_variable[-1]
-                if ast.literal_eval(str(pop_stack(1))):
+                if ast_int_eval(str(pop_stack(1))):
                     a += 1
                 counter_variable.pop()
                 counter_variable.append(a)
@@ -2909,7 +2919,7 @@ def run_program(commands,
 
             elif current_command == ".\u00ef":
                 a = pop_stack(1)
-                a = ast.literal_eval(str(a))
+                a = ast_int_eval(str(a))
                 try:
                     stack.append(int(int(a) % 1 == 0))
                 except:
@@ -2920,11 +2930,11 @@ def run_program(commands,
                 if type(b) is list:
                     temp_list = []
                     for Q in b:
-                        temp_list.append(ast.literal_eval(str(Q)))
+                        temp_list.append(ast_int_eval(str(Q)))
                     stack.append(command_lcm(temp_list))
                 else:
                     a = pop_stack(1)
-                    stack.append(lcm(ast.literal_eval(str(a)), ast.literal_eval(str(b))))
+                    stack.append(lcm(ast_int_eval(str(a)), ast_int_eval(str(b))))
 
             elif current_command == "\u2013":
                 a = pop_stack(1)
@@ -2986,7 +2996,7 @@ def run_program(commands,
                 else:
                     a = input()
                     if is_array(a):
-                        recent_inputs.append(ast.literal_eval(a))
+                        recent_inputs.append(ast_int_eval(a))
                     else:
                         recent_inputs.append(a)
                     stack.append(recent_inputs[0])
@@ -2997,20 +3007,20 @@ def run_program(commands,
                 elif len(recent_inputs) == 1:
                     a = input()
                     if is_array(a):
-                        recent_inputs.append(ast.literal_eval(a))
+                        recent_inputs.append(ast_int_eval(a))
                     else:
                         recent_inputs.append(a)
                     stack.append(recent_inputs[1])
                 else:
                     a = input()
                     if is_array(a):
-                        recent_inputs.append(ast.literal_eval(a))
+                        recent_inputs.append(ast_int_eval(a))
                     else:
                         recent_inputs.append(a)
 
                     b = input()
                     if is_array(b):
-                        recent_inputs.append(ast.literal_eval(b))
+                        recent_inputs.append(ast_int_eval(b))
                     else:
                         recent_inputs.append(b)
                     stack.append(recent_inputs[1])
@@ -3021,39 +3031,39 @@ def run_program(commands,
                 elif len(recent_inputs) == 2:
                     a = input()
                     if is_array(a):
-                        recent_inputs.append(ast.literal_eval(a))
+                        recent_inputs.append(ast_int_eval(a))
                     else:
                         recent_inputs.append(a)
                     stack.append(recent_inputs[2])
                 elif len(recent_inputs) == 1:
                     a = input()
                     if is_array(a):
-                        recent_inputs.append(ast.literal_eval(a))
+                        recent_inputs.append(ast_int_eval(a))
                     else:
                         recent_inputs.append(a)
 
                     b = input()
                     if is_array(b):
-                        recent_inputs.append(ast.literal_eval(b))
+                        recent_inputs.append(ast_int_eval(b))
                     else:
                         recent_inputs.append(b)
                     stack.append(recent_inputs[2])
                 elif len(recent_inputs) == 0:
                     a = input()
                     if is_array(a):
-                        recent_inputs.append(ast.literal_eval(a))
+                        recent_inputs.append(ast_int_eval(a))
                     else:
                         recent_inputs.append(a)
 
                     b = input()
                     if is_array(b):
-                        recent_inputs.append(ast.literal_eval(b))
+                        recent_inputs.append(ast_int_eval(b))
                     else:
                         recent_inputs.append(b)
 
                     c = input()
                     if is_array(c):
-                        recent_inputs.append(ast.literal_eval(c))
+                        recent_inputs.append(ast_int_eval(c))
                     else:
                         recent_inputs.append(c)
 
@@ -3271,10 +3281,10 @@ def run_program(commands,
                 if type(a) is list:
                     temp_list = []
                     for Q in a:
-                        temp_list.append(2 * ast.literal_eval(str(Q)))
+                        temp_list.append(2 * ast_int_eval(str(Q)))
                     stack.append(temp_list)
                 else:
-                    stack.append(2 * ast.literal_eval(str(a)))
+                    stack.append(2 * ast_int_eval(str(a)))
 
             elif current_command == ".n":
                 if len(stack) > 0:
@@ -3284,7 +3294,7 @@ def run_program(commands,
                     a = pop_stack(1)
                     b = pop_stack(1)
 
-                stack.append(math.log(ast.literal_eval(str(a)), ast.literal_eval(str(b))))
+                stack.append(math.log(ast_int_eval(str(a)), ast_int_eval(str(b))))
 
             elif current_command == ".w":
                 if safe_mode:
