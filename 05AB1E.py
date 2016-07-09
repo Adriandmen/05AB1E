@@ -652,12 +652,15 @@ def run_program(commands,
             elif current_command == "_":
                 a = pop_stack(1)
                 if type(a) is list:
-                    temp_list = []
-                    for Q in a:
-                        temp_list.append(int(not int(Q)))
-                    stack.append(temp_list)
+                    if len(a) != 0:
+                        temp_list = []
+                        for Q in a:
+                            temp_list.append(int(not ast_int_eval(str(Q))))
+                        stack.append(temp_list)
+                    else:
+                        stack.append(1)
                 else:
-                    stack.append(int(not int(a)))
+                    stack.append(int(not ast_int_eval(str(a))))
 
             elif current_command == "s":
                 a = pop_stack(1)
