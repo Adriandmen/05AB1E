@@ -1426,7 +1426,7 @@ def run_program(commands,
                 temp_number = 1
                 if not stack:
                     stack.append(get_input())
-                    
+
                 if type(stack[-1]) is list:
                     a = pop_stack(1)
                     for Q in a:

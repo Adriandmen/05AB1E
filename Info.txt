@@ -255,7 +255,7 @@ Extended ASCII characters (CP-1252)
 ö	= pop a,b    push int(a, b)
 ÷	= pop a,b    push a // b (integer division)
 ø	= pop a      push zipped a
-ù	=
+ù	= 
 ú	= 
 û	=
 ü	=
