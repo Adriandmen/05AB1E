@@ -2942,6 +2942,21 @@ def run_program(commands,
                     a = pop_stack(1)
                     stack.append(lcm(ast_int_eval(str(a)), ast_int_eval(str(b))))
 
+            elif current_command == ".\u00f8":
+                if stack:
+                    b = pop_stack(1)
+                    a = pop_stack(1)
+                else:
+                    a = pop_stack(1)
+                    b = pop_stack(1)
+                if type(a) is int:
+                    a = str(a)
+                if type(a) is str:
+                    stack.append(str(b) + a + str(b))
+                elif type(a) is list:
+                    stack.append([b] + a + [b])
+
+
             elif current_command == "\u2013":
                 a = pop_stack(1)
                 if a == "1" or a == 1:
