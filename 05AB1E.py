@@ -1743,15 +1743,16 @@ def run_program(commands,
                     b, a = pop_stack(2)
                 else:
                     a, b = pop_stack(2)
-                index_value = 0
-                found = False
-                for Q in a:
-                    index_value += 1
-                    if str(Q) == str(b):
-                        stack.append(index_value)
-                        found = True
-                        break
-                if not found:
+
+                try:
+                    if type(a) is list:
+                        temp_list = []
+                        for Q in a:
+                            temp_list.append(str(Q))
+                        stack.append(temp_list.index(str(b)))
+                    else:
+                        stack.append(str(a).index(str(b)))
+                except:
                     stack.append(-1)
 
             elif current_command == "{":
@@ -3623,6 +3624,9 @@ def run_program(commands,
 
             elif current_command == "\u017eP":
                 stack.append("bcdfghjklmnpqrstvwxz")
+
+            elif current_command == "\u017eQ":
+                stack.append(" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
 
             elif current_command == ".:":
                 c, b, a = pop_stack(3)

@@ -165,6 +165,7 @@ Extended ASCII characters (CP-1252)
         žN           push bcdfghjklmnpqrstvwxyz
         žO           push aeiouy
         žP           push bcdfghjklmnpqrstvwxz
+        žQ           push printable ASCII character set (32-128)
 
 
 Ÿ 24	= pop a,b    push [a, ..., b]
@@ -295,4 +296,4 @@ Extended functions:
 .¿	= pop a,(b)  push lcm(a, (b))
 .ˆ	= pop a      insert a into global array and after quit, print array[input_1]
 .^	= pop a	     insert a into global array with immediate sorting and after quit, print array[input_1]
-.ø  = pop a, b   surrounds a with b. If a is a number, it gets converted to a string. Works with strings and arrays.
+.ø	= pop a,b    surrounds a with b. If a is a number, it gets converted to a string. Works with strings and arrays.
