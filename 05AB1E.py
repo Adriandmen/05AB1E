@@ -2628,30 +2628,19 @@ def run_program(commands,
                     return True
 
             elif current_command == "\u00ab":
-                if len(stack) > 1:
-                    b, a = pop_stack(2)
-                else:
-                    a, b = pop_stack(2)
+                b = "\n"
 
-                if type(a) is list and type(b) is list:
-                    temp_list = []
-                    for Q in a:
-                        temp_list.append(Q)
-                    for Q in b:
-                        temp_list.append(Q)
-                    stack.append(temp_list)
-                elif type(a) is list:
-                    temp_list = []
-                    for Q in a:
-                        temp_list.append(str(Q) + str(b))
-                    stack.append(temp_list)
-                elif type(b) is list:
-                    temp_list = []
-                    for Q in b:
-                        temp_list.append(str(a) + str(Q))
-                    stack.append(temp_list)
+                a = []
+                if stack and type(stack[-1]) is list:
+                    c = pop_stack(1)
+                    for Q in c:
+                        a.append(str(Q))
                 else:
-                    stack.append(str(a) + str(b))
+                    for Q in stack:
+                        a.append(Q)
+                    stack.clear()
+
+                stack.append(str(b).join(a))
 
             elif current_command == "\u00ec":
                 if len(stack) > 1:
