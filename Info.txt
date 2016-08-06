@@ -194,7 +194,7 @@ Extended ASCII characters (CP-1252)
 ¸ 47	= pop a      push [a]
 ¹ 48	=            push the first item from the input history
 º 49	=            push len(stack) > 0
-» 50	= (pop a)    suspend / restore function
+» 50	= pop (a)    if list, join list by newlines, else join stack by newlines
 ¼ 51	= counter_variable += 1
 ½ 52	= pop a,     if 1, then counter_variable -= 1
 ¾ 53	=            push counter_variable

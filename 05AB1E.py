@@ -2627,7 +2627,7 @@ def run_program(commands,
                 if not stack:
                     return True
 
-            elif current_command == "\u00ab":
+            elif current_command == "\u00bb":
                 b = "\n"
 
                 a = []
@@ -2641,6 +2641,32 @@ def run_program(commands,
                     stack.clear()
 
                 stack.append(str(b).join(a))
+
+            elif current_command == "\u00ab":
+                if len(stack) > 1:
+                    b, a = pop_stack(2)
+                else:
+                    a, b = pop_stack(2)
+
+                if type(a) is list and type(b) is list:
+                    temp_list = []
+                    for Q in a:
+                        temp_list.append(Q)
+                    for Q in b:
+                        temp_list.append(Q)
+                    stack.append(temp_list)
+                elif type(a) is list:
+                    temp_list = []
+                    for Q in a:
+                        temp_list.append(str(Q) + str(b))
+                    stack.append(temp_list)
+                elif type(b) is list:
+                    temp_list = []
+                    for Q in b:
+                        temp_list.append(str(a) + str(Q))
+                    stack.append(temp_list)
+                else:
+                    stack.append(str(a) + str(b))
 
             elif current_command == "\u00ec":
                 if len(stack) > 1:
