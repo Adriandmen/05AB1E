@@ -136,12 +136,16 @@ def is_prime(n):
 def combinations(n, r):
     n = int(n)
     r = int(r)
+    if r > n:
+        return 0
     return int(math.factorial(n) // (math.factorial(r) * math.factorial(n - r)))
 
 
 def permutations(n, r):
     n = int(n)
     r = int(r)
+    if r > n:
+        return 0
     return int(math.factorial(n) // math.factorial(n - r))
 
 
