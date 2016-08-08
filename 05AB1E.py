@@ -2802,7 +2802,7 @@ def run_program(commands,
 
             elif current_command == "\u00bd":
                 a = counter_variable[-1]
-                if ast_int_eval(str(pop_stack(1))):
+                if str(ast_int_eval(str(pop_stack(1)))) == "1":
                     a += 1
                 counter_variable.pop()
                 counter_variable.append(a)
