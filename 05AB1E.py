@@ -1789,18 +1789,6 @@ def run_program(commands,
 
                 stack.append(int(str(b) in str(a)))
 
-            elif current_command == "\u00bb":
-                if len(suspend_restore_register) == 0:
-                    a = pop_stack(1)
-                    a = int(a)
-                    b = stack.pop(a)
-                    suspend_restore_register.append(b)
-                    suspend_restore_register.append(a)
-                else:
-                    stack.insert(int(suspend_restore_register[-1]), suspend_restore_register[-2])
-                    suspend_restore_register.pop()
-                    suspend_restore_register.pop()
-
             elif current_command == "v":
                 STATEMENT = ""
                 temp_position = pointer_position
