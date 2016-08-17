@@ -3687,6 +3687,7 @@ if __name__ == "__main__":
     parser.add_argument('-d', '--debug', help="Debug mode", action="store_true")
     parser.add_argument('-s', '--safe', help="Safe mode", action="store_true")
     parser.add_argument('-c', '--cp1252', help="Encode from CP-1252", action="store_true")
+    parser.add_argument('-t', '--time', help="Time the program", action="store_true")
     parser.add_argument("program_path", help="Program path", type=str)
 
     args = parser.parse_args()
@@ -3694,6 +3695,7 @@ if __name__ == "__main__":
     DEBUG = args.debug
     SAFE_MODE = args.safe
     ENCODE_CP1252 = args.cp1252
+    TIME_IT = args.time
 
     if ENCODE_CP1252:
         code = open(filename, "r", encoding="cp1252").read()
@@ -3706,4 +3708,12 @@ if __name__ == "__main__":
         print(VERSION)
         print(DATE)
     else:
-        run_program(code, DEBUG, SAFE_MODE, False, 0)
+        if TIME_IT:
+            import time
+            start_time = time.time()
+            run_program(code, DEBUG, SAFE_MODE, False, 0)
+            end_time = time.time()
+            print()
+            print("Elapsed: " + str(end_time - start_time) + " seconds")
+        else:
+            run_program(code, DEBUG, SAFE_MODE, False, 0)
