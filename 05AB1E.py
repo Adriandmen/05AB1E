@@ -3340,7 +3340,7 @@ def run_program(commands,
                         a = pop_stack(1)
                         a = str(a)
                         import urllib.request as req
-                        f = req.urlopen(a)
+                        f = req.urlopen("http://" + a)
                         stack.append(f.read())
                     except:
                         stack.append(0)
