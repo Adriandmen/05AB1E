@@ -1505,9 +1505,6 @@ def run_program(commands,
             elif current_command == "Y":
                 stack.append(register_y[-1])
 
-            elif current_command == "Z":
-                stack.append(register_z[-1])
-
             elif current_command == "z":
                 a = pop_stack(1)
                 if type(a) is list:
@@ -1526,13 +1523,43 @@ def run_program(commands,
                 a = pop_stack(1)
                 register_y.append(a)
 
-            elif current_command == "W":  # z variable
-                if len(register_z) == 0:
-                    a = get_input()
-                    stack.append(a)
+            elif current_command == "W":
+                a = pop_stack(1)
+                stack.append(a)
+
+                min_val = a[0]
+                if type(min_val) is list:
+                    Q = 0
+                    for x in min_val:
+                        Q += ast_int_eval(x)
+                    min_val = Q
                 else:
-                    a = pop_stack(1)
-                register_z.append(a)
+                    min_val = ast_int_eval(min_val)
+
+                for X in a:
+                    if ast_int_eval(X) < min_val:
+                        min_val = ast_int_eval(X)
+
+                stack.append(min_val)
+
+            elif current_command == "Z":
+                a = pop_stack(1)
+                stack.append(a)
+
+                max_val = a[0]
+                if type(max_val) is list:
+                    Q = 0
+                    for x in max_val:
+                        Q += ast_int_eval(x)
+                    max_val = Q
+                else:
+                    max_val = ast_int_eval(max_val)
+
+                for X in a:
+                    if ast_int_eval(X) > max_val:
+                        max_val = ast_int_eval(X)
+
+                stack.append(max_val)
 
             elif current_command == "q":
                 exit_program.append(1)
