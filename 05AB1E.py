@@ -1323,10 +1323,13 @@ def run_program(commands,
 
             elif current_command == "#":
                 a = pop_stack(1)
-                try:
-                    if str(a) == "1" or str(a) == "1.0":
-                        return True
-                except: 0
+                if " " in str(a):
+                    stack.append(str(a).split(" "))
+                else:
+                    try:
+                        if ast_int_eval(a) == 1:
+                            return True
+                    except: 0
 
             elif current_command == "\u00e9":
                 a = pop_stack(1)
