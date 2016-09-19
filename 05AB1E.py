@@ -160,10 +160,6 @@ def run_program(commands,
                 range_variable=0,
                 string_variable=""):
 
-    # Replace short expressions
-    commands = commands.replace(".j", "Mg>.j")
-    commands = commands.replace(".J", "Mg>.J")
-
     if debug:
         try:print("Full program: " + str(commands))
         except:0
