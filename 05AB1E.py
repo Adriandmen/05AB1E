@@ -2965,12 +2965,18 @@ def run_program(commands,
                 b = pop_stack(1)
                 a = pop_stack(1)
 
-                temp_list = []
-                for Q in range(0, len(a)):
-                    try:
-                        if b[Q] == 1:
+                try:
+                    temp_list = []
+                    for Q in range(0, len(a)):
+                        if ast_int_eval(b[Q]) == 1:
                             temp_list.append(a[Q])
-                    except:0
+                except:
+                    a, b = b, a
+                    temp_list = []
+                    for Q in range(0, len(a)):
+                        if ast_int_eval(b[Q]) == 1:
+                            temp_list.append(a[Q])
+
                 stack.append(temp_list)
 
             elif current_command == "\u00f1":
