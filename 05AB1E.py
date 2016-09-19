@@ -3241,14 +3241,14 @@ def run_program(commands,
                 temp_string = ""
                 if type(b) is list:
                     for Q in b:
-                        temp_string += str(a)[int(Q)]
+                        temp_string += str(a)[int(Q) % len(a)]
                     stack.append(temp_string)
                 else:
                     b = int(b)
                     if type(a) is list:
-                        stack.append(a[b])
+                        stack.append(a[b % len(a)])
                     else:
-                        stack.append(str(a)[b])
+                        stack.append(str(a)[b % len(a)])
 
             elif current_command == ".p":
                 a = pop_stack(1)
