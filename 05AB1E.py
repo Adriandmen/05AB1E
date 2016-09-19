@@ -1836,7 +1836,20 @@ def run_program(commands,
                 if type(b) is int:
                     b = str(b)
 
-                stack.append(int(str(b) in str(a)))
+                if type(b) is list:
+                    temp_list = []
+                    for Q in b:
+                        temp_list.append(int(str(Q) in a))
+                    stack.append(temp_list)
+
+                elif type(a) is list:
+                    temp_list = []
+                    for Q in a:
+                        temp_list.append(int(a in str(Q)))
+                    stack.append(temp_list)
+
+                else:
+                    stack.append(int(b in a))
 
             elif current_command == "v":
                 STATEMENT = ""
