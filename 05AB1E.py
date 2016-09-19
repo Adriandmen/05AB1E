@@ -1581,11 +1581,18 @@ def run_program(commands,
                     temp_list.append(Q)
                 a = temp_list.pop()
                 if type(a) is list:
-                    for Q in a:
-                        if type(Q) is bool:
-                            temp_string += str(int(Q))
-                        else:
-                            temp_string += str(Q)
+                    if type(a[0]) is list:
+
+                        temp_list = []
+                        for Q in a:
+                            temp_list.append(''.join([str(x) for x in Q]))
+                        temp_string = temp_list
+                    else:
+                        for Q in a:
+                            if type(Q) is bool:
+                                temp_string += str(int(Q))
+                            else:
+                                temp_string += str(Q)
                     pop_stack(1)
                 else:
                     R = len(stack)
@@ -2106,12 +2113,17 @@ def run_program(commands,
 
             elif current_command == "\u00f8":
                 a = pop_stack(1)
-                try:
-                    stack.append([list(x) for x in zip(*a)])
-                except:
+                if type(a) is list:
+                    zipped = [list(x) for x in zip(*a)]
+                    if type(a[0]) is not list:
+                        zipped = [''.join(x) for x in zipped]
+                    stack.append(zipped)
+                else:
                     b = pop_stack(1)
                     c = [b, a]
-                    stack.append([list(x) for x in zip(*c)])
+                    zipped = [list(x) for x in zip(*c)]
+                    zipped = [''.join(x) for x in zipped]
+                    stack.append(zipped)
 
             elif current_command == "\u00da":
                 a = pop_stack(1)
