@@ -2332,8 +2332,19 @@ def run_program(commands,
 
             elif current_command == "\u00a3":
                 b, a = pop_stack(2)
-                b = int(b)
-                stack.append(a[0:b])
+                if type(a) is not list:
+                    a = str(a)
+
+                if type(b) is list:
+                    temp_list = []
+                    temp_element = a
+                    for Q in b:
+                        temp_list.append(temp_element[0:int(Q)])
+                        temp_element = temp_element[int(Q):]
+                    stack.append(temp_list)
+                else:
+                    b = int(b)
+                    stack.append(a[0:b])
 
             elif current_command == "K":
                 b, a = pop_stack(2)
