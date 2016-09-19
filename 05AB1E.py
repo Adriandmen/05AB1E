@@ -430,6 +430,21 @@ def run_program(commands,
                         begin_sentence = True
                 stack.append(temp_string)
 
+            elif current_command == "\u00f9":
+                if len(stack) > 1:
+                    b = pop_stack(1)
+                    a = pop_stack(1)
+                else:
+                    a = pop_stack(1)
+                    b = pop_stack(1)
+
+                temp_list = []
+                for Q in a:
+                    if len(Q if type(Q) is list else str(Q)) == ast_int_eval(b):
+                        temp_list.append(Q)
+
+                stack.append(temp_list)
+
             elif current_command == "!":
                 a = pop_stack(1)
 
