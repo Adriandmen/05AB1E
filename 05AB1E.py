@@ -38,6 +38,18 @@ loop_commands = ["F", "i", "v", "G", "\u0192"]
 VERSION = "version 8.0"
 DATE = "14:37 - May 9, 2016"
 
+def opt_input():
+    a = input()
+    if a[:3] == "\"\"\"":
+        a = a[3:]
+        a += "\n" + input()
+        while a[-3:] != "\"\"\"":
+            a += "\n" + input()
+
+        a = a[:-3]
+
+    return a
+
 
 def is_array(array):
     array = str(array)
@@ -52,7 +64,7 @@ def pop_stack(amount=1):
         if stack:
             return stack.pop()
         else:
-            a = input()
+            a = opt_input()
             if is_array(a):
                 a = ast_int_eval(a)
                 recent_inputs.append(a)
@@ -69,15 +81,15 @@ def pop_stack(amount=1):
 
         elif len(stack) > 0:
             a = stack.pop()
-            b = input()
+            b = opt_input()
             if is_array(b):
                 b = ast_int_eval(b)
             recent_inputs.append(b)
             return a, b
 
         else:
-            a = input()
-            b = input()
+            a = opt_input()
+            b = opt_input()
             if is_array(a):
                 a = ast_int_eval(a)
             if is_array(b):
@@ -97,7 +109,7 @@ def pop_stack(amount=1):
         elif len(stack) > 1:
             a = stack.pop()
             b = stack.pop()
-            c = input()
+            c = opt_input()
             if is_array(c):
                 c = ast_int_eval(c)
 
@@ -106,8 +118,8 @@ def pop_stack(amount=1):
 
         elif len(stack) > 0:
             a = stack.pop()
-            b = input()
-            c = input()
+            b = opt_input()
+            c = opt_input()
             if is_array(b):
                 b = ast_int_eval(b)
             if is_array(c):
@@ -118,9 +130,9 @@ def pop_stack(amount=1):
             return a, b, c
 
         else:
-            a = input()
-            b = input()
-            c = input()
+            a = opt_input()
+            b = opt_input()
+            c = opt_input()
             if is_array(a):
                 a = ast_int_eval(a)
             if is_array(b):
@@ -581,7 +593,7 @@ def run_program(commands,
                     stack.append(str(a)[::-1])
 
             elif current_command == "I":
-                a = str(input())
+                a = opt_input()
                 stack.append(a)
                 recent_inputs.append(a)
 
