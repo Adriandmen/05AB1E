@@ -2272,6 +2272,30 @@ def run_program(commands,
                 else:
                     stack.append(int(ast_int_eval(str(a)) % 2 == 1))
 
+            elif current_command == "\u00fc":
+                a = pop_stack(1)
+                temp_stack = []
+                temp_list = []
+                for Q in stack:
+                    temp_stack.append(Q)
+                stack.clear()
+                pointer_position += 1
+                for_each_command = commands[pointer_position]
+                if type(a[0]) is not list:
+                    zipper = zip(*[a, a[1:]])
+                else:
+                    zipper = a
+                for Q in zipper:
+                    stack.append(Q[0])
+                    stack.append(Q[1])
+                    run_program(for_each_command, DEBUG, SAFE_MODE, True, range_variable, string_variable)
+                for Q in stack:
+                    temp_list.append(Q)
+                stack.clear()
+                for Q in temp_stack:
+                    stack.append(Q)
+                stack.append(temp_list)
+
             elif current_command == "\u00a1":
                 b, a = pop_stack(2)
                 if type(a) is int:
