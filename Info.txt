@@ -2,7 +2,8 @@ Functions:
 
 !	= pop a,     push factorial(a)
 "	= start/end string literal
-#	= pop a      if true: break/end (used in infinite loops)
+# 1	= pop a      if true: break/end (used in infinite loops)
+# 2	= pop a      if contains spaces, split on spaces
 $	=            push 1 and input (used for sequences)
 %	= pop a,b    push (a % b)
 &	= pop a,b    push a AND b

@@ -2270,7 +2270,7 @@ def run_program(commands,
                         temp_list.append(int(ast_int_eval(str(Q)) % 2 == 1))
                     stack.append(temp_list)
                 else:
-                    stack.append(ast_int_eval(str(a)) % 2 == 1)
+                    stack.append(int(ast_int_eval(str(a)) % 2 == 1))
 
             elif current_command == "\u00a1":
                 b, a = pop_stack(2)
