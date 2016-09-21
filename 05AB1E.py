@@ -1746,7 +1746,7 @@ def run_program(commands,
                 temp_list = []
                 temp_list.append(stack)
 
-                deep_flatten(temp_list)
+                temp_list = deep_flatten(temp_list)
                 max_int = -float("inf")
                 for Q in temp_list:
                     try:
