@@ -3283,11 +3283,16 @@ def run_program(commands,
             elif current_command == "\u00e8":
                 b = pop_stack(1)
                 a = pop_stack(1)
+
+                if type(a) is not list:
+                    a = str(a)
+
                 temp_string = ""
                 if type(b) is list:
+                    temp_list = []
                     for Q in b:
-                        temp_string += str(a)[int(Q) % len(a)]
-                    stack.append(temp_string)
+                        temp_list.append(a[int(Q) % len(a)])
+                    stack.append(temp_list)
                 else:
                     b = int(b)
                     if type(a) is list:
