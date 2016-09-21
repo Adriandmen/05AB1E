@@ -1744,28 +1744,16 @@ def run_program(commands,
 
             elif current_command == "M":
                 temp_list = []
-                temp_list_2 = []
-                for Q in stack:
-                    temp_list_2.append(Q)
-                while True:
-                    for Q in temp_list_2:
-                        if type(Q) is list:
-                            for R in Q:
-                                temp_list.append(R)
-                        else:
-                            temp_list.append(Q)
-                    if temp_list == temp_list_2:
-                        break
-                    else:
-                        temp_list_2 = []
-                        for Q in temp_list:
-                            temp_list_2.append(Q)
-                        temp_list = []
+                temp_list.append(stack)
+
+                deep_flatten(temp_list)
                 max_int = -float("inf")
                 for Q in temp_list:
-                    if str(Q).isnumeric():
-                        if int(Q) > max_int:
-                            max_int = int(Q)
+                    try:
+                        if ast_int_eval(Q) > max_int:
+                            max_int = ast_int_eval(Q)
+                    except:
+                        0
                 stack.append(max_int)
 
             elif current_command == "t":
