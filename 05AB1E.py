@@ -3244,6 +3244,11 @@ def run_program(commands,
                 b = pop_stack(1)
                 a = pop_stack(1)
 
+                if type(a) is not list:
+                    a = str(a)
+                if type(b) is not list:
+                    b = str(b)
+
                 c = list(itertools.product(a, b))
                 d = [list(Q) for Q in c]
                 if type(a) is not list and type(b) is not list:
@@ -3260,6 +3265,9 @@ def run_program(commands,
             elif current_command == "\u00e3":
                 b = pop_stack(1)
                 a = pop_stack(1)
+
+                if type(a) is not list:
+                    a = str(a)
 
                 c = list(itertools.product(a, repeat=int(b)))
                 d = [list(Q) for Q in c]
