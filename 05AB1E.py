@@ -1455,13 +1455,23 @@ def run_program(commands,
 
                 if type(stack[-1]) is list:
                     a = pop_stack(1)
-                    for Q in a:
-                        temp_number *= ast_int_eval(str(Q))
+                    if type(a[0]) is list:
+                        temp_list = []
+                        for Q in a:
+                            temp_number_2 = 1
+                            for X in Q:
+                                temp_number_2 *= ast_int_eval(X)
+                            temp_list.append(temp_number_2)
+                        stack.append(temp_list)
+                    else:
+                        for Q in a:
+                            temp_number *= ast_int_eval(str(Q))
+                        stack.append(temp_number)
                 else:
                     for Q in stack:
                         temp_number *= ast_int_eval(str(Q))
                     stack.clear()
-                stack.append(temp_number)
+                    stack.append(temp_number)
 
             elif current_command == "O":
                 temp_number = 0
