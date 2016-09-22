@@ -1583,19 +1583,31 @@ def run_program(commands,
                 stack.append(a)
 
                 max_val = a[0]
+                temp_max = 0
                 if type(max_val) is list:
                     Q = 0
                     for x in max_val:
                         Q += ast_int_eval(x)
+                    temp_max = max_val
                     max_val = Q
                 else:
+                    temp_max = ast_int_eval(max_val)
                     max_val = ast_int_eval(max_val)
 
                 for X in a:
-                    if ast_int_eval(X) > max_val:
-                        max_val = ast_int_eval(X)
+                    Q = 0
+                    if type(X) is list:
+                        for y in X:
+                            Q += ast_int_eval(y)
+                        if Q > max_val:
+                            max_val = Q
+                            temp_max = X
+                    else:
+                        if ast_int_eval(X) > max_val:
+                            max_val = ast_int_eval(X)
+                            temp_max = max_val
 
-                stack.append(max_val)
+                stack.append(temp_max)
 
             elif current_command == "q":
                 exit_program.append(1)
