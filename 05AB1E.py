@@ -42,7 +42,6 @@ def opt_input():
     a = input()
     if a[:3] == "\"\"\"":
         a = a[3:]
-        a += "\n" + input()
         while a[-3:] != "\"\"\"":
             a += "\n" + input()
 
