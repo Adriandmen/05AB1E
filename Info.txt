@@ -32,7 +32,7 @@ $	=            push 1 and input (used for sequences)
 =	=            print last item
 >	= pop a      push a + 1
 ?	= pop a      print a no newline
-@	= pop a      push stack(a)
+@	= pop a      pop and push the element at index a in the stack (leftmost element = index 0)
 A	=            push 'abcdefghijklmnopqrstuvwxyz'
 B	= pop a,b    push base(a, b)
 C	= pop a      push int(a, 2)
