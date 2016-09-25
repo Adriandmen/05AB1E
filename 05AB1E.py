@@ -3298,18 +3298,33 @@ def run_program(commands,
                 if type(a) is not list:
                     a = str(a)
 
-                temp_string = ""
-                if type(b) is list:
-                    temp_list = []
-                    for Q in b:
-                        temp_list.append(a[int(Q) % len(a)])
-                    stack.append(temp_list)
-                else:
-                    b = int(b)
-                    if type(a) is list:
-                        stack.append(a[b % len(a)])
+                try:
+                    temp_string = ""
+                    if type(b) is list:
+                        temp_list = []
+                        for Q in b:
+                            temp_list.append(a[int(Q) % len(a)])
+                        stack.append(temp_list)
                     else:
-                        stack.append(str(a)[b % len(a)])
+                        b = int(b)
+                        if type(a) is list:
+                            stack.append(a[b % len(a)])
+                        else:
+                            stack.append(str(a)[b % len(a)])
+                except:
+                    a, b = b, a
+                    temp_string = ""
+                    if type(b) is list:
+                        temp_list = []
+                        for Q in b:
+                            temp_list.append(a[int(Q) % len(a)])
+                        stack.append(temp_list)
+                    else:
+                        b = int(b)
+                        if type(a) is list:
+                            stack.append(a[b % len(a)])
+                        else:
+                            stack.append(str(a)[b % len(a)])
 
             elif current_command == ".p":
                 a = pop_stack(1)
