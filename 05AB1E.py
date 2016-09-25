@@ -617,7 +617,7 @@ def run_program(commands,
                     temp_list = []
                     for Q in a:
                         temp_list.append(int(str(Q), 2))
-                        stack.append(temp_list)
+                    stack.append(temp_list)
                 else:
                     stack.append(int(a, 2))
 
@@ -3301,10 +3301,9 @@ def run_program(commands,
                 try:
                     temp_string = ""
                     if type(b) is list:
-                        temp_list = []
                         for Q in b:
-                            temp_list.append(a[int(Q) % len(a)])
-                        stack.append(temp_list)
+                            temp_string += (a[int(Q) % len(a)])
+                        stack.append(temp_string)
                     else:
                         b = int(b)
                         if type(a) is list:
@@ -3315,10 +3314,9 @@ def run_program(commands,
                     a, b = b, a
                     temp_string = ""
                     if type(b) is list:
-                        temp_list = []
                         for Q in b:
-                            temp_list.append(a[int(Q) % len(a)])
-                        stack.append(temp_list)
+                            temp_string += (a[int(Q) % len(a)])
+                        stack.append(temp_string)
                     else:
                         b = int(b)
                         if type(a) is list:
