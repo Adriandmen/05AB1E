@@ -3067,9 +3067,9 @@ def run_program(commands,
 
             elif current_command == ".\u00ef":
                 a = pop_stack(1)
-                a = ast_int_eval(str(a))
+                b = ast_int_eval(str(a))
                 try:
-                    stack.append(int(int(a) % 1 == 0))
+                    stack.append(int(int(a) == b))
                 except:
                     stack.append(0)
 
