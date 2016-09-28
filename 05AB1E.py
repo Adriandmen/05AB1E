@@ -2018,7 +2018,7 @@ def run_program(commands,
                 a = pop_stack(1)
                 if type(a) is int:
                     a = str(a)
-                temp_string = ""
+                temp_list = []
                 temp_string = sorted(a)
                 for Q in temp_string:
                     if type(Q) is int:
