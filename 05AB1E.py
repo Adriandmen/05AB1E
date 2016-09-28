@@ -2748,10 +2748,16 @@ def run_program(commands,
                 if stack and type(stack[-1]) is list:
                     c = pop_stack(1)
                     for Q in c:
-                        a.append(str(Q))
+                        if type(Q) is list:
+                            a.append(' '.join([str(x) for x in Q]))
+                        else:
+                            a.append(str(Q))
                 else:
                     for Q in stack:
-                        a.append(Q)
+                        if type(Q) is list:
+                            a.append(' '.join([str(x) for x in Q]))
+                        else:
+                            a.append(Q)
                     stack.clear()
 
                 stack.append(str(b).join(a))
