@@ -3656,7 +3656,13 @@ def run_program(commands,
 
             elif current_command == "\u00ee":
                 a = pop_stack(1)
-                stack.append(math.ceil(float(a)))
+                if type(a) is list:
+                    temp_list = []
+                    for Q in a:
+                        temp_list.append(math.ceil(ast_int_eval(Q)))
+                    stack.append(temp_list)
+                else:
+                    stack.append(math.ceil(ast_int_eval(a)))
 
             #
             # CONSTANTS
