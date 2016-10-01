@@ -2401,18 +2401,27 @@ def run_program(commands,
                     stack.append(a[0:b])
 
             elif current_command == "K":
-                b, a = pop_stack(2)
-                temp_list = []
-                if type(a) is list:
-                    for Q in a:
-                        if str(Q) != str(b):
-                            temp_list.append(Q)
-                    stack.append(temp_list)
+                b = pop_stack(1)
+                a = pop_stack(1)
+
+                if type(a) is not list and type(b) is not list:
+                    temp_list = str(a).replace(str(b), "")
                 else:
-                    a = str(a)
-                    while str(a).replace(str(b), "") != str(a):
-                        a = str(a).replace(str(b), "")
-                    stack.append(a)
+                    temp_list = []
+                    if type(b) is list:
+                        b = [str(x) for x in b]
+                    else:
+                        b = [str(b)]
+
+                    for Q in a:
+                        if str(Q) not in b:
+                            temp_list.append(str(Q))
+
+                    if type(a) is not list:
+                        temp_list = ''.join(temp_list)
+
+                stack.append(temp_list)
+
 
             elif current_command == "\u00df":
                 a = stack[-1]
