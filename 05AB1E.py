@@ -1211,6 +1211,9 @@ def run_program(commands,
                             temp_string += " " + dictionary.dictionary[int(temp_index)]
                         temp_index = ""
                         word_count += 1
+                    elif current_command == "\u00ff":
+                        temp_string += str(pop_stack(1))
+                        word_count += 1
                     else:
                         temp_string += commands[pointer_position]
                         word_count += 1
