@@ -2075,8 +2075,8 @@ def run_program(commands,
                     if type(a) is int:
                         a = str(a)
                 else:
-                    a = get_input()
-                    b = get_input()
+                    a = pop_stack(1)
+                    b = pop_stack(1)
 
                 if type(a) is not list:
                     temp_string = ""
