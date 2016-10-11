@@ -3147,7 +3147,7 @@ def run_program(commands,
 
             elif current_command == ".V":
                 a = pop_stack(1)
-                run_program(str(a), debug, safe_mode, True)
+                run_program(str(a), debug, safe_mode, True, range_variable, string_variable)
 
             elif current_command == ".R":
                 a = pop_stack(1)
