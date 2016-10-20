@@ -2501,8 +2501,9 @@ def run_program(commands,
             elif current_command == "\u00c0":
                 a = pop_stack(1)
                 if type(a) is list:
-                    a += [a[0]]
+                    b = a[0]
                     a = a[1:]
+                    a.append(b)
                     stack.append(a)
                 else:
                     a = str(a)
