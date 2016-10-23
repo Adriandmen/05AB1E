@@ -1871,8 +1871,8 @@ def run_program(commands,
                 elif type(a) is list:
                     temp_list = []
                     for Q in a:
-                        temp_list.append(int(a in str(Q)))
-                    stack.append(temp_list)
+                        temp_list.append(str(Q))
+                    stack.append(int(b in temp_list))
 
                 else:
                     stack.append(int(b in a))
