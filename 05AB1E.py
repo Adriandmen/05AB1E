@@ -2620,6 +2620,14 @@ def run_program(commands,
 
                 stack.append(temp_list)
 
+            elif current_command == "\u00fb":
+                a = pop_stack(1)
+
+                if type(a) is int:
+                    a = str(a)
+
+                stack.append(a + a[::-1][1:])
+
             elif current_command == "\u00b6":
                 stack.append("\n")
 
