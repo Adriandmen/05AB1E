@@ -2538,14 +2538,15 @@ def run_program(commands,
                     stack.append(get_nth_prime(int(a)))
 
             elif current_command == "\u00a2":
-                a, b = pop_stack(2)
-                if type(b) is list:
-                    temp_list = []
-                    for Q in b:
-                        temp_list.append(str(Q).count(str(a)))
-                    stack.append(temp_list)
+                b = pop_stack(1)
+                a = pop_stack(1)
+
+                if type(a) is list:
+                    a = [str(x) for x in a]
                 else:
-                    stack.append(str(b).count(str(a)))
+                    a = str(a)
+
+                stack.append(a.count(str(b)))
 
             elif current_command == "\u00a8":
                 a = pop_stack(1)
