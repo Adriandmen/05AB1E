@@ -1712,10 +1712,9 @@ def run_program(commands,
                     if type(Q) is list:
                         for R in Q:
                             temp_string += str(R).rjust(int(a))
-                        print(temp_string)
+                        stack.append(temp_string)
                     else:
-                        print(str(Q).rjust(int(a)), end="")
-                has_printed.append(True)
+                        stack.append(str(Q).rjust(int(a)))
 
             elif current_command == ".j":
                 a = pop_stack(1)
@@ -1951,6 +1950,12 @@ def run_program(commands,
                     stack.append(temp_list)
                 else:
                     stack.append(prime_factorization_powers(int(a)))
+
+            elif current_command == "\u00fa":
+                b = pop_stack(1)
+                a = pop_stack(1)
+
+                stack.append(ast_int_eval(b) * " " + str(a))
 
             elif current_command == "\u00fe":
                 a = pop_stack(1)
