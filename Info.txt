@@ -258,7 +258,7 @@ Extended ASCII characters (CP-1252)
 ÷	= pop a,b    push a // b (integer division)
 ø	= pop a      push zipped a
 ù	= pop a,b    push a with elements of length b
-ú	= 
+ú	= pop a,b    push a padded with b spaces in the front
 û	= pop a      push palindromized(a), 12345 becomes 123454321 (a + a[::-1][1:])
 ü	= pairwise command (vectorizes if the first element is a list)
 ý	= pop (a),b  push b.join(a) if a is list, else b.join(stack)
