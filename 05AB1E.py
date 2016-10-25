@@ -3390,6 +3390,24 @@ def run_program(commands,
                 for Q in range(1, len(a) + 1):
                     temp_list.append(a[-Q:])
                 stack.append(temp_list)
+                
+            elif current_command == ".\u00C0":
+                temp_stack = []
+                for Q in stack:
+                    temp_stack.append(Q)
+                stack.clear()
+                for Q in temp_stack[1:]:
+                    stack.append(Q)
+                stack.append(temp_stack[0])
+            
+            elif current_command == ".\u00C1":
+                temp_stack = []
+                for Q in stack:
+                    temp_stack.append(Q)
+                stack.clear()
+                stack.append(temp_stack[-1])
+                for Q in temp_stack[:-1]:
+                    stack.append(Q)
 
             elif current_command == "\u20AC":
                 a = pop_stack(1)
@@ -3409,6 +3427,30 @@ def run_program(commands,
                 for Q in temp_stack:
                     stack.append(Q)
                 stack.append(temp_list)
+
+            elif current_command == ".\u00AB" or current_command == ".\u00BB":
+                pointer_position +=1
+                fold_command = commands[pointer_position]
+                if type(stack[-1]) is list and len(stack[-1]) > 1:
+                    a = pop_stack(1)
+                    temp_stack = []
+                    for Q in stack:
+                        temp_stack.append(Q)
+                    stack.clear()
+                    for Q in a:
+                        stack.append(Q)
+                    for Q in a[:-1]:
+                        if current_command == ".\u00AB":
+                            x = pop_stack(1)
+                            y = pop_stack(1)
+                            stack.append(x)
+                            stack.append(y)
+                        run_program(fold_command, DEBUG, SAFE_MODE, True, range_variable, string_variable)
+                    b = pop_stack(1)
+                    stack.clear()
+                    for Q in temp_stack:
+                        stack.append(Q)
+                    stack.append(b)
 
             elif current_command == "\u00c2":
                 a = pop_stack(1)

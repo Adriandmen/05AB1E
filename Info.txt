@@ -298,3 +298,7 @@ Extended functions:
 .ˆ	= pop a      insert a into global array and after quit, print array[input_1]
 .^	= pop a	     insert a into global array with immediate sorting and after quit, print array[input_1]
 .ø	= pop a,b    surrounds a with b. If a is a number, it gets converted to a string. Works with strings and arrays.
+.«	= foldr		 folds a dyadic command between each element in a list from right to left
+.»	= foldl		 folds a dyadic command between each element in a list from right to left with oposite right/left operands
+.À	= rotate stack 1 left
+.Á	= rotate stack 1 right
