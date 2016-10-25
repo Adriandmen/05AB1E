@@ -300,3 +300,5 @@ Extended functions:
 .ø	= pop a,b    surrounds a with b. If a is a number, it gets converted to a string. Works with strings and arrays.
 .«	= foldr		 folds a dyadic command between each element in a list from right to left
 .»	= foldl		 folds a dyadic command between each element in a list from right to left with oposite right/left operands
+.À	= rotate stack 1 left
+.Á	= rotate stack 1 right
