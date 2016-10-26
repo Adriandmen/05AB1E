@@ -1848,9 +1848,9 @@ def run_program(commands,
 
             elif current_command == "\u00ba":
                 if len(stack) > 0:
-                    stack.append(False)
+                    stack.append(1)
                 else:
-                    stack.append(True)
+                    stack.append(0)
 
             elif current_command == "\u00e5":
                 b = pop_stack(1)
