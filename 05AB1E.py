@@ -3392,18 +3392,14 @@ def run_program(commands,
                 stack.append(temp_list)
                 
             elif current_command == ".\u00C0":
-                temp_stack = []
-                for Q in stack:
-                    temp_stack.append(Q)
+                temp_stack = stack[:]
                 stack.clear()
                 for Q in temp_stack[1:]:
                     stack.append(Q)
                 stack.append(temp_stack[0])
             
             elif current_command == ".\u00C1":
-                temp_stack = []
-                for Q in stack:
-                    temp_stack.append(Q)
+                temp_stack = stack[:]
                 stack.clear()
                 stack.append(temp_stack[-1])
                 for Q in temp_stack[:-1]:
@@ -3504,6 +3500,55 @@ def run_program(commands,
                 a = pop_stack(1)
                 print(str(a).encode("cp1252"))
                 has_printed.append(1)
+
+            elif current_command == ".c":
+                a = pop_stack(1)
+                if type(a) is int:
+                    a = str(a)
+
+                if type(a) is str:
+                    a = str(a).split("\n")
+
+                max_length = 0
+                for Q in a:
+                    if len(str(Q)) > max_length:
+                        max_length = len(str(Q))
+
+                temp_list = []
+
+                for Q in a:
+                    space_length = (max_length - len(str(Q))) // 2
+                    if space_length > 0:
+                        temp_list.append(space_length * " " + str(Q))
+                    else:
+                        temp_list.append(str(Q))
+
+                stack.append('\n'.join(temp_list))
+
+            elif current_command == ".C":
+                a = pop_stack(1)
+                if type(a) is int:
+                    a = str(a)
+
+                if type(a) is str:
+                    a = str(a).split("\n")
+
+                max_length = 0
+                for Q in a:
+                    if len(str(Q)) > max_length:
+                        max_length = len(str(Q))
+
+                temp_list = []
+
+                for Q in a:
+                    space_length = (max_length - len(str(Q)) + 1) // 2
+                    if space_length > 0:
+                        temp_list.append(space_length * " " + str(Q))
+                    else:
+                        temp_list.append(str(Q))
+
+                stack.append('\n'.join(temp_list))
+
 
             elif current_command == "\u00c3":
                 b = pop_stack(1)
