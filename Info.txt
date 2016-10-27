@@ -272,12 +272,13 @@ Extended functions:
 .€	= debug printer
 .ä	= debug printer
 .A      = pop a      push acronymified a
+.b	= pop a      push letterified(a)
+.B	= pop a      push squarified(a)
 .c	= pop a      push centralized(a) focused to the left
 .C	= pop a      push centralized(a) focused to the right
 .e      = pop a      run with experimental python evaluation (does not work in safe mode)
 .E      = pop a      run with experimental batch evaluation (does not work in safe mode)
-.V      = pop a      run as 05AB1E code
-.g	= push length of stack
+.g	=            push length of stack
 .j	= pop a      0-indexed max_spaces.join(stack) grid
 .J      = pop a      1-indexed max_spaces.join(stack) grid
 .l      = pop a      push is_lower(a)
@@ -293,6 +294,7 @@ Extended functions:
 .s	= pop a	     push suffixes(a)
 .S      = pop a,b    push 1 if a > b, -1 if a < b, 0 if a == b 
 .u      = pop a      push is_upper(a) 
+.V      = pop a      run as 05AB1E code
 .w	= pop a      push a.readall() (internet access, doesn't work in safe mode) (returns 0 on error)
 .:	= pop a,b,c  push a.replace(b, c)
 .²	= pop a      push log_2(a)

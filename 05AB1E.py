@@ -3424,8 +3424,27 @@ def run_program(commands,
                     stack.append(Q)
                 stack.append(temp_list)
 
+            elif current_command == ".B":
+                a = pop_stack(1)
+
+                if type(a) is int:
+                    a = str(a)
+                if type(a) is str:
+                    a = str(a).split("\n")
+
+                max_length = 0
+                for Q in a:
+                    if len(str(Q)) > max_length:
+                        max_length = len(str(Q))
+
+                temp_list = []
+                for Q in a:
+                    temp_list.append(str(Q) + ((max_length - len(str(Q))) * " "))
+
+                stack.append(temp_list)
+
             elif current_command == ".\u00AB" or current_command == ".\u00BB":
-                pointer_position +=1
+                pointer_position += 1
                 fold_command = commands[pointer_position]
                 if type(stack[-1]) is list and len(stack[-1]) > 1:
                     a = pop_stack(1)
