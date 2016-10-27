@@ -3644,6 +3644,9 @@ def run_program(commands,
                 a = pop_stack(1)
 
                 stack.append(chunk_divide(a, int(b)))
+                
+            elif current_command == ".g":
+                stack.append(len(stack))
 
             #
             # LIST COMMANDS

@@ -277,6 +277,7 @@ Extended functions:
 .e      = pop a      run with experimental python evaluation (does not work in safe mode)
 .E      = pop a      run with experimental batch evaluation (does not work in safe mode)
 .V      = pop a      run as 05AB1E code
+.g	= push length of stack
 .j	= pop a      0-indexed max_spaces.join(stack) grid
 .J      = pop a      1-indexed max_spaces.join(stack) grid
 .l      = pop a      push is_lower(a)
