@@ -2053,10 +2053,7 @@ def run_program(commands,
                     for Q in a:
                         temp_list.append(ord(str(Q)))
 
-                    if len(temp_list) == 1:
-                        stack.append(temp_list[0])
-                    else:
-                        stack.append(temp_list)
+                    stack.append(temp_list)
 
             elif current_command == "\u00e7":
                 a = pop_stack(1)
