@@ -1876,6 +1876,31 @@ def run_program(commands,
                 else:
                     stack.append(int(b in a))
 
+            elif current_command == ".\u00e5":
+                b = pop_stack(1)
+                a = pop_stack(1)
+
+                if type(a) is int:
+                    a = str(a)
+                if type(b) is int:
+                    b = str(b)
+
+                if type(b) is list:
+                    temp_list = []
+                    for Q in b:
+                        temp_list.append(int(str(Q) in a))
+                    stack.append(temp_list)
+
+                elif type(a) is list:
+                    temp_list = []
+                    for Q in a:
+                        temp_list.append(int(str(b) in str(Q)))
+                    stack.append(temp_list)
+
+                else:
+                    stack.append(int(b in a))
+
+
             elif current_command == "v":
                 STATEMENT = ""
                 temp_position = pointer_position

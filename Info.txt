@@ -271,6 +271,7 @@ Extended functions:
 
 .€	= debug printer
 .ä	= debug printer
+.å	= pop a,b    push a in b (vectorized)
 .A      = pop a      push acronymified a
 .b	= pop a      push letterified(a)
 .B	= pop a      push squarified(a)
@@ -304,6 +305,6 @@ Extended functions:
 .^	= pop a	     insert a into global array with immediate sorting and after quit, print array[input_1]
 .ø	= pop a,b    surround a with b
 .«	= foldr	     folds a dyadic command between each element in a list from right to left
-.»	= foldl      folds a dyadic command between each element in a list from right to left with oposite right/left operands
+.»	= foldl      folds a dyadic command between each element in a list from right to left with opposite right/left operands
 .À	=            rotate stack 1 left
 .Á	=            rotate stack 1 right
