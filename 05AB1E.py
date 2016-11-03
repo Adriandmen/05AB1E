@@ -1900,7 +1900,6 @@ def run_program(commands,
                 else:
                     stack.append(int(b in a))
 
-
             elif current_command == "v":
                 STATEMENT = ""
                 temp_position = pointer_position
@@ -3075,6 +3074,11 @@ def run_program(commands,
                 a = pop_stack(1)
 
                 a = str(a)
+                if type(b) is int:
+                    b = str(b)
+                if type(c) is int:
+                    c = str(c)
+                    
                 temp_string = ""
                 has_transliterated = False
 
