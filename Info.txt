@@ -93,7 +93,7 @@ y	=            push string variable (used in mapping loops)
 z	= pop a      push 1 / a
 {	= pop a      push sorted a
 |	=            push the rest of input as an array with strings
-}	=            used for if statements
+}	=            used to close if statements, loops, etc.
 ~	= pop a,b    push a OR b
 
 Extended ASCII characters (CP-1252)
