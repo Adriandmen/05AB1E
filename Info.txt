@@ -277,6 +277,7 @@ Extended functions:
 .B	= pop a      push squarified(a)
 .c	= pop a      push centralized(a) focused to the left
 .C	= pop a      push centralized(a) focused to the right
+.D      = pop a,b    push b copies of a
 .e      = pop a      run with experimental python evaluation (does not work in safe mode)
 .E      = pop a      run with experimental batch evaluation (does not work in safe mode)
 .g	=            push length of stack

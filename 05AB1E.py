@@ -3492,6 +3492,17 @@ def run_program(commands,
                     for Q in temp_stack:
                         stack.append(Q)
                     stack.append(b)
+                    
+            elif current_command == ".D":
+                a = pop_stack(1)
+                b = pop_stack(1)
+                L = []
+                try:
+                    L = range(ast_int_eval(a))
+                except:
+                    L = range(len(a))
+                for Q in L:
+                    stack.append(b)
 
             elif current_command == "\u00c2":
                 a = pop_stack(1)
