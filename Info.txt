@@ -281,6 +281,8 @@ Extended functions:
 .e      = pop a      run with experimental python evaluation (does not work in safe mode)
 .E      = pop a      run with experimental batch evaluation (does not work in safe mode)
 .g	=            push length of stack
+.h      = pop a,b    bijectively convert a from base 10 to base b
+.H      = pop a,b    bijectively convert a from base b to base 10
 .j	= pop a      0-indexed max_spaces.join(stack) grid
 .J      = pop a      1-indexed max_spaces.join(stack) grid
 .l      = pop a      push is_lower(a)

@@ -3492,7 +3492,33 @@ def run_program(commands,
                     for Q in temp_stack:
                         stack.append(Q)
                     stack.append(b)
-                    
+            
+            elif current_command == ".h":
+                a = pop_stack(1)
+                b = pop_stack(1)
+                b = ast_int_eval(b)
+                a = ast_int_eval(a)
+                number = ""
+                while b:
+                    b -= 1
+                    r = b % a
+                    b = b // a
+                    r += 1
+                    if r < 0:
+                        b += 1
+                        r -= a
+                    number += str(r)
+                stack.append(number[::-1])
+            
+            elif current_command == ".H":
+                a = pop_stack(1)
+                b = pop_stack(1)
+                a = ast_int_eval(a)
+                number = 0
+                for Q in b:
+                    number = number * a + ast_int_eval(Q)
+                stack.append(number)
+                        
             elif current_command == ".D":
                 a = pop_stack(1)
                 b = pop_stack(1)
