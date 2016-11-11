@@ -2896,6 +2896,18 @@ def run_program(commands,
                             temp_string += str(a)
                     stack.append(temp_string)
 
+            elif current_command == ".\u00d7":
+                a = pop_stack(1)
+                b = pop_stack(1)
+                temp_list = []
+                if type(a) is list and is_digit_value(b):
+                    a, b = b, a
+                if type(b) is list and is_digit_value(a):
+                    for Q in range(ast_int_eval(a)):
+                        for R in b:
+                            temp_list.append(R)
+                stack.append(temp_list)
+                    
             elif current_command == "\u00f2":
                 a = pop_stack(1)
                 if type(a) is list:

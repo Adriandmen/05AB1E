@@ -311,3 +311,4 @@ Extended functions:
 .»	= foldl      folds a dyadic command between each element in a list from right to left with opposite right/left operands
 .À	=            rotate stack 1 left
 .Á	=            rotate stack 1 right
+.×      = pop a,b    push the list a repeated b times
