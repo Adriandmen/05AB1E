@@ -2896,6 +2896,18 @@ def run_program(commands,
                             temp_string += str(a)
                     stack.append(temp_string)
 
+            elif current_command == ".\u00d7":
+                a = pop_stack(1)
+                b = pop_stack(1)
+                temp_list = []
+                if type(a) is list and is_digit_value(b):
+                    a, b = b, a
+                if type(b) is list and is_digit_value(a):
+                    for Q in range(ast_int_eval(a)):
+                        for R in b:
+                            temp_list.append(R)
+                stack.append(temp_list)
+                    
             elif current_command == "\u00f2":
                 a = pop_stack(1)
                 if type(a) is list:
@@ -3491,6 +3503,43 @@ def run_program(commands,
                     stack.clear()
                     for Q in temp_stack:
                         stack.append(Q)
+                    stack.append(b)
+            
+            elif current_command == ".h":
+                a = pop_stack(1)
+                b = pop_stack(1)
+                b = ast_int_eval(b)
+                a = ast_int_eval(a)
+                number = ""
+                while b:
+                    b -= 1
+                    r = b % a
+                    b = b // a
+                    r += 1
+                    if r < 0:
+                        b += 1
+                        r -= a
+                    number += str(r)
+                stack.append(number[::-1])
+            
+            elif current_command == ".H":
+                a = pop_stack(1)
+                b = pop_stack(1)
+                a = ast_int_eval(a)
+                number = 0
+                for Q in b:
+                    number = number * a + ast_int_eval(Q)
+                stack.append(number)
+                        
+            elif current_command == ".D":
+                a = pop_stack(1)
+                b = pop_stack(1)
+                L = []
+                try:
+                    L = range(ast_int_eval(a))
+                except:
+                    L = range(len(a))
+                for Q in L:
                     stack.append(b)
 
             elif current_command == "\u00c2":
