@@ -2346,6 +2346,30 @@ def run_program(commands,
                 temp_list = a.split(b)
                 stack.append(temp_list)
 
+            elif current_command == ".\u00a1":
+                a = pop_stack(1)
+                if type(a) is int:
+                    a = str(a)
+                is_list = type(a) is list
+                temp_list = []
+                inner_str = ""
+                inner_list = []
+                i = 0
+                while i < len(a):
+                    if is_list:
+                        inner_list.append(a[i])
+                    else:
+                        inner_str += a[i]
+                    if i == len(a)-1 or a[i] != a[i+1]:
+                        if is_list:
+                            temp_list.append(inner_list)
+                        else:
+                            temp_list.append(inner_str)
+                        inner_list = []
+                        inner_str = ""
+                    i += 1
+                stack.append(temp_list)
+                
             elif current_command == "\u00ef":
                 a = pop_stack(1)
                 if type(a) is list:
