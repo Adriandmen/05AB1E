@@ -1367,8 +1367,12 @@ def run_program(commands,
             elif current_command == "Q":
                 a, b = pop_stack(2)
                 if type(a) is list and type(b) is list:
+                    a = [str(x) for x in a]
+                    b = [str(x) for x in b]
+
                     a = ast_int_eval(str(a))
                     b = ast_int_eval(str(b))
+
                     stack.append(int(str(a) == str(b)))
                 elif type(a) is list:
                     temp_list = []
