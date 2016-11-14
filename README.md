@@ -56,11 +56,9 @@ We now have a basic understanding of the stack model, we can continue to what ex
 
     1 2 3 4 5
 
-only the number **5** gets printed. If something else gets printed before the program terminates, the top of the stack is not printed automatically anymore. 
+only the number **5** gets printed. If something else gets printed before the program terminates, the top of the stack is not printed automatically anymore.
 
-#### Integers and strings
-
-One of the things that makes 05AB1E special is that a string and an integer are the same type. That means that you can both perform string operations on ints, as well as int operations on strings (if possible). That said, let's see how you _can_ perform integer operations.
+Now you have a basic understanding of how 05AB1E works! Tutorials will be added soon...
 
 
 
