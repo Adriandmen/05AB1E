@@ -2326,6 +2326,9 @@ def run_program(commands,
                 stack.clear()
                 pointer_position += 1
                 for_each_command = commands[pointer_position]
+                if for_each_command == ".":
+                    pointer_position += 1
+                    for_each_command += commands[pointer_position]
                 if type(a[0]) is not list:
                     zipper = zip(*[a, a[1:]])
                 else:
@@ -3582,16 +3585,20 @@ def run_program(commands,
 
             elif current_command == "\u00d4":
                 a = pop_stack(1)
-                temp_string = ""
-                temp_string_2 = ""
                 if type(a) is int:
                     a = str(a)
-
-                for Q in a:
-                    if Q != temp_string_2:
-                        temp_string_2 = Q
-                        temp_string += Q
-                stack.append(temp_string)
+                if type(a) is list:
+                    temp_list = []
+                    for Q in a:
+                        if len(temp_list) == 0 or Q != temp_list[-1]:
+                            temp_list.append(Q)
+                    stack.append(temp_list)
+                if type(a) is str:
+                    temp_string = ""
+                    for Q in a:
+                        if len(temp_string) == 0 or Q != temp_string[-1]:
+                            temp_string += Q
+                    stack.append(temp_string)
 
             elif current_command == "\u201A":
                 b = pop_stack(1)
