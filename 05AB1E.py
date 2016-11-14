@@ -2326,6 +2326,9 @@ def run_program(commands,
                 stack.clear()
                 pointer_position += 1
                 for_each_command = commands[pointer_position]
+                if for_each_command == ".":
+                    pointer_position += 1
+                    for_each_command += commands[pointer_position]
                 if type(a[0]) is not list:
                     zipper = zip(*[a, a[1:]])
                 else:
