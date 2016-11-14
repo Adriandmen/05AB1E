@@ -44,7 +44,19 @@ To push an integer, just place any arbitrary integer in the progam. For example,
 
     4 15
 
-This pushes the numbers **4** and **15**.
+This pushes the numbers **4** and **15**. To multiply both numbers, just add the multiply command (or any other command from [Info.txt](https://github.com/Adriandmen/05AB1E/blob/master/Info.txt)):
+
+    4 15*
+
+You can try that [here](http://05ab1e.tryitonline.net/#code=NCAxNSo&input=). You can see that it outputs `60`.
+
+#### Stack memory - part 2
+
+We now have a basic understanding of the stack model, we can continue to what exactly gets printed. Normally, when **nothing** is printed, the top of the stack gets printed. In the following example:
+
+    1 2 3 4 5
+
+only the number **5** gets printed. If something else gets printed before the program terminates, the top of the stack is not printed automatically anymore. 
 
 #### Integers and strings
 
