@@ -1,5 +1,6 @@
 [![05AB1E][1]][1]
 
+## A short introduction
 
 A new (experimental) golfing language. If the name **05AB1E** was interpreted as a hexadecimal number and converted to base64, it would result into "Base". I wanted to make a language which has an advantage in base conversion, but now it is more of an overall language.
 
@@ -8,13 +9,13 @@ You can try this language out yourself at: [Try it online!](http://05ab1e.tryito
 All existing commands can be found at [_Info.txt_](https://github.com/Adriandmen/05AB1E/blob/master/Info.txt)
 
 
-### So, what exactly is a golfing language?
+## So, what exactly is a golfing language?
 
 A golfing language is a language that specializes in [code golf](https://en.wikipedia.org/wiki/Code_golf). That is a kind of programming competition where you strive to achieve the shortest byte count from all the participating languages.
 
-### What does a program look like?
+## What does a program look like?
 
-#### The basics
+### The basics
 
 A program in 05AB1E is just like any other program, it is stored in a file and then run with **05AB1E.py**. The python file will interpret the given file as 05AB1E code. A very easy to understand program is:
 
@@ -26,7 +27,7 @@ Which can be tried [here](http://05ab1e.tryitonline.net/#code=IkhlbGxvLCBXb3JsZC
 
 is also a valid `Hello, World!` program.
 
-#### Stack memory
+### Stack memory
 
 05AB1E uses a stack memory model. That means that everything will be operated using the stack. For example, if we want to multiply 2 different numbers, let's say **4** and **5**, we can do the following in pseudo-stack language:
 
@@ -50,7 +51,7 @@ This pushes the numbers **4** and **15**. To multiply both numbers, just add the
 
 You can try that [here](http://05ab1e.tryitonline.net/#code=NCAxNSo&input=). You can see that it outputs `60`.
 
-#### Stack memory - part 2
+### Stack memory - part 2
 
 We now have a basic understanding of the stack model, we can continue to what exactly gets printed. Normally, when **nothing** is printed, the top of the stack gets printed. In the following example:
 
