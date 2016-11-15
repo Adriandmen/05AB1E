@@ -66,3 +66,26 @@ only the number **5** gets printed. If something else gets printed before the pr
 
 Now you have a basic understanding of how 05AB1E works! Tutorials will be added soon...
 
+
+<br>
+
+## How do I use it?
+
+05AB1E is originally written in **Python 3**. That means that you need to have Python 3 in order to use this. 05AB1E doesn't make use of any external libraries outside the normal Python package, so Python 3 is the _only_ thing you need.
+
+Create a new file where you want to store your program in (like `test.abe`). Normally, an 05AB1E file ends with `.abe`, but any other file extension can also be used. To run it, do the following:
+
+    [path to Python 3] [path to 05AB1E.py] [path to 05AB1E program]
+    
+For example:
+
+     > python34.exe 05AB1E.py test.abe
+
+In addition, you can append the following arguments before running the 05AB1E file:
+
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Argument&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Information
+ -------- | -----------
+ `-d` or `--debug` | Activates the **debug** flag. After each command is run, an update will be shown to _STDIN_ with the current stack, current command and additionally subprograms for loops, etc.
+ `-s` or `--safe` | Activates the **safe** mode. Web access, file access and commmands that can potentially harm a system will be restricted and skipped while executing the file.
+ `-c` or `--cp1252` | Reads the file as a file with a **CP-1252** encoding. If this flag is not activated, the file will be read as a normal **UTF-8** file.
+ `-t` or `--time` | Times the duration of executing the program. Given in seconds.
