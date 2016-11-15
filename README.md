@@ -1,4 +1,6 @@
-[![05AB1E][1]][1]
+<p align="center"><a href="https://github.com/Adriandmen/05AB1E"><img src="https://i.stack.imgur.com/kUDMr.png"/></a></p>
+<br>
+<br>
 
 ## A short introduction
 
@@ -61,6 +63,3 @@ only the number **5** gets printed. If something else gets printed before the pr
 
 Now you have a basic understanding of how 05AB1E works! Tutorials will be added soon...
 
-
-
-  [1]: https://i.stack.imgur.com/kUDMr.png
