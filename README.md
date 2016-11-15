@@ -10,10 +10,13 @@ You can try this language out yourself at: [Try it online!](http://05ab1e.tryito
 
 All existing commands can be found at [_Info.txt_](https://github.com/Adriandmen/05AB1E/blob/master/Info.txt)
 
+<br>
 
 ## So, what exactly is a golfing language?
 
 A golfing language is a language that specializes in [code golf](https://en.wikipedia.org/wiki/Code_golf). That is a kind of programming competition where you strive to achieve the shortest byte count from all the participating languages.
+
+<br>
 
 ## What does a program look like?
 
