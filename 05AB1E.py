@@ -1491,7 +1491,10 @@ def run_program(commands,
 
                 if type(stack[-1]) is list:
                     a = pop_stack(1)
-                    if type(a[-1]) is list:
+                    if len(a) == 0:
+                        stack.append(0)
+
+                    elif type(a[-1]) is list:
                         for Q in a:
                             temp_number = 0
                             for R in Q:
