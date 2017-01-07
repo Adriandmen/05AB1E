@@ -3777,7 +3777,7 @@ def run_program(commands,
                         stack.append(0)
 
             elif current_command == ".W":
-                a = pop_stack(1)
+                a = ast_int_eval(pop_stack(1))
                 time.sleep(a / 1000)
 
             elif current_command == "\u00e4":
