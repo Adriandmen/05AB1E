@@ -272,7 +272,10 @@ def run_program(commands,
                     if current_command == "\"":
                         break
                     elif current_command == "\u00ff":
-                        temp_string += str(pop_stack(1))
+                        try:
+                            temp_string += str(pop_stack(1))
+                        except:
+                            pass
                         pointer_position += 1
                     else:
                         temp_string += current_command
@@ -745,7 +748,7 @@ def run_program(commands,
                 temp_char_mode = False
 
                 while amount_brackets != 0:
-                    if current_command == "\"":
+                    if current_command in "\"\u2018\u2019\u201C\u201D":
                         temp_string_mode = not temp_string_mode
 
                     elif current_command == "'" and temp_char_mode == False:
@@ -829,7 +832,7 @@ def run_program(commands,
                 amount_brackets = 1
                 temp_string_mode = False
                 while amount_brackets != 0:
-                    if current_command == "\"":
+                    if current_command == "\"\u2018\u2019\u201C\u201D":
                         temp_string_mode = not temp_string_mode
                     if temp_string_mode == False:
                         if current_command == "}":
@@ -869,7 +872,7 @@ def run_program(commands,
                 amount_brackets = 1
                 temp_string_mode = False
                 while amount_brackets != 0:
-                    if current_command == "\"":
+                    if current_command == "\"\u2018\u2019\u201C\u201D":
                         temp_string_mode = not temp_string_mode
                     if temp_string_mode == False:
                         if current_command == "}":
@@ -909,7 +912,7 @@ def run_program(commands,
                 amount_else = 1
                 temp_string_mode = False
                 while amount_brackets != 0:
-                    if current_command == "\"":
+                    if current_command == "\"\u2018\u2019\u201C\u201D":
                         temp_string_mode = not temp_string_mode
                     if temp_string_mode == False:
                         if current_command == "}" or current_command == "\u00eb":
@@ -991,7 +994,7 @@ def run_program(commands,
                 amount_brackets = 1
                 temp_string_mode = False
                 while amount_brackets != 0:
-                    if current_command == "\"":
+                    if current_command == "\"\u2018\u2019\u201C\u201D":
                         temp_string_mode = not temp_string_mode
                     if temp_string_mode == False:
                         if current_command == "}":
@@ -1915,7 +1918,7 @@ def run_program(commands,
                 amount_brackets = 1
                 temp_string_mode = False
                 while amount_brackets != 0:
-                    if current_command == "\"":
+                    if current_command == "\"\u2018\u2019\u201C\u201D":
                         temp_string_mode = not temp_string_mode
                     if temp_string_mode == False:
                         if current_command == "}":
@@ -3722,6 +3725,8 @@ def run_program(commands,
                 for Q in global_array: temp_list.append(Q)
                 temp_list = sorted(temp_list)
 
+                global_array = temp_list[:]
+
             elif current_command == "\u00af":
                 stack.append(global_array)
 
@@ -3770,6 +3775,10 @@ def run_program(commands,
                         stack.append(f.read())
                     except:
                         stack.append(0)
+
+            elif current_command == ".W":
+                a = pop_stack(1)
+                time.sleep(a / 1000)
 
             elif current_command == "\u00e4":
                 b = pop_stack(1)
