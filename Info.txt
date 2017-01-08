@@ -300,6 +300,7 @@ Extended functions:
 .u      = pop a      push is_upper(a) 
 .V      = pop a      run as 05AB1E code
 .w	= pop a      push a.readall() (internet access, doesn't work in safe mode) (returns 0 on error)
+.W	= pop a      wait a milliseconds
 .:	= pop a,b,c  push a.replace(b, c)
 .²	= pop a      push log_2(a)
 .ï	= pop a      push is int(a)
