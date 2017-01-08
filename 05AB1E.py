@@ -832,7 +832,7 @@ def run_program(commands,
                 amount_brackets = 1
                 temp_string_mode = False
                 while amount_brackets != 0:
-                    if current_command == "\"\u2018\u2019\u201C\u201D":
+                    if current_command in "\"\u2018\u2019\u201C\u201D":
                         temp_string_mode = not temp_string_mode
                     if temp_string_mode == False:
                         if current_command == "}":
@@ -872,7 +872,7 @@ def run_program(commands,
                 amount_brackets = 1
                 temp_string_mode = False
                 while amount_brackets != 0:
-                    if current_command == "\"\u2018\u2019\u201C\u201D":
+                    if current_command in "\"\u2018\u2019\u201C\u201D":
                         temp_string_mode = not temp_string_mode
                     if temp_string_mode == False:
                         if current_command == "}":
@@ -912,7 +912,7 @@ def run_program(commands,
                 amount_else = 1
                 temp_string_mode = False
                 while amount_brackets != 0:
-                    if current_command == "\"\u2018\u2019\u201C\u201D":
+                    if current_command in "\"\u2018\u2019\u201C\u201D":
                         temp_string_mode = not temp_string_mode
                     if temp_string_mode == False:
                         if current_command == "}" or current_command == "\u00eb":
@@ -994,7 +994,7 @@ def run_program(commands,
                 amount_brackets = 1
                 temp_string_mode = False
                 while amount_brackets != 0:
-                    if current_command == "\"\u2018\u2019\u201C\u201D":
+                    if current_command in "\"\u2018\u2019\u201C\u201D":
                         temp_string_mode = not temp_string_mode
                     if temp_string_mode == False:
                         if current_command == "}":
@@ -1918,7 +1918,7 @@ def run_program(commands,
                 amount_brackets = 1
                 temp_string_mode = False
                 while amount_brackets != 0:
-                    if current_command == "\"\u2018\u2019\u201C\u201D":
+                    if current_command in "\"\u2018\u2019\u201C\u201D":
                         temp_string_mode = not temp_string_mode
                     if temp_string_mode == False:
                         if current_command == "}":
