@@ -1717,14 +1717,17 @@ def run_program(commands,
 
             elif current_command == "j":
                 a = pop_stack(1)
-                for Q in stack:
+
+                if type(stack[-1]) is list:
+                    b = pop_stack(1)
                     temp_string = ""
-                    if type(Q) is list:
-                        for R in Q:
-                            temp_string += str(R).rjust(int(a))
-                        stack.append(temp_string)
-                    else:
-                        stack.append(str(Q).rjust(int(a)))
+                    for Q in b:
+                        temp_string += str(Q).rjust(int(a))
+                else:
+                    temp_string = ""
+                    for Q in stack:
+                        temp_string += str(Q).rjust(int(a))
+                stack.append(temp_string)
 
             elif current_command == ".j":
                 a = pop_stack(1)
@@ -1996,11 +1999,8 @@ def run_program(commands,
                 if type(a) is list:
                     temp_list_2 = []
                     for Q in a:
-                        temp_list = []
-                        for R in Q:
-                            if is_digit_value(Q):
-                                temp_list.append(str(Q))
-                            temp_list_2.append(temp_list)
+                        if is_digit_value(Q):
+                            temp_list_2.append(str(Q))
                     stack.append(temp_list_2)
                 else:
                     temp_list = []
@@ -2014,11 +2014,8 @@ def run_program(commands,
                 if type(a) is list:
                     temp_list_2 = []
                     for Q in a:
-                        temp_list = []
-                        for R in Q:
-                            if is_alpha_value(Q):
-                                temp_list.append(str(Q))
-                            temp_list_2.append(temp_list)
+                        if is_alpha_value(Q):
+                            temp_list_2.append(Q)
                     stack.append(temp_list_2)
                 else:
                     temp_list = []
@@ -2262,7 +2259,11 @@ def run_program(commands,
                 stack.append(temp_list)
 
             elif current_command == "\u00a9":
-                a = stack[-1]
+                if stack:
+                    a = stack[-1]
+                else:
+                    a = get_input()
+                    stack.append(a)
                 register_c.append(a)
 
             elif current_command == "\u00ae":
@@ -2485,10 +2486,12 @@ def run_program(commands,
 
                 stack.append(temp_list)
 
-
             elif current_command == "\u00df":
-                a = stack[-1]
-                b = pop_stack(1)
+                if stack:
+                    a = stack[-1]
+                else:
+                    a = get_input()
+                b = a[:]
                 a = sorted(a)[::-1].pop()
                 temp_list = []
                 has_done = False
@@ -2502,8 +2505,11 @@ def run_program(commands,
                 stack.append(a)
 
             elif current_command == "\u00e0":
-                a = stack[-1]
-                b = pop_stack(1)
+                if stack:
+                    a = stack[-1]
+                else:
+                    a = get_input()
+                b = a[:]
                 a = sorted(a).pop()
                 temp_list = []
                 has_done = False
@@ -2798,21 +2804,21 @@ def run_program(commands,
                     for Q in a:
                         temp_list_2 = []
                         for R in b:
-                            temp_list_2.append(ast_int_eval(str(R)) % ast_int_eval(str(Q)) == 0)
+                            temp_list_2.append(int(ast_int_eval(str(R)) % ast_int_eval(str(Q)) == 0))
                         temp_list.append(temp_list_2)
                     stack.append(temp_list)
                 elif type(a) is list:
                     temp_list = []
                     for Q in a:
-                        temp_list.append(ast_int_eval(str(b)) % ast_int_eval(str(Q)) == 0)
+                        temp_list.append(int(ast_int_eval(str(b)) % ast_int_eval(str(Q)) == 0))
                     stack.append(temp_list)
                 elif type(b) is list:
                     temp_list = []
                     for Q in b:
-                        temp_list.append(ast_int_eval(str(Q)) % ast_int_eval(str(a)) == 0)
+                        temp_list.append(int(ast_int_eval(str(Q)) % ast_int_eval(str(a)) == 0))
                     stack.append(temp_list)
                 else:
-                    stack.append(ast_int_eval(str(b)) % ast_int_eval(str(a)) == 0)
+                    stack.append(int(ast_int_eval(str(b)) % ast_int_eval(str(a)) == 0))
 
             elif current_command == "\u00ac":
                 if stack:
@@ -2908,30 +2914,34 @@ def run_program(commands,
                 else:
                     a, b = pop_stack(2)
 
-                if is_digit_value(b):
-                    b = int(b)
-                elif is_digit_value(a):
-                    a, b = b, a
-                    b = int(b)
-
                 if type(a) is list:
-                    temp_list = []
-                    for Q in a:
-                        temp_list.append(ast_int_eval(Q) * str(b))
-                    stack.append(temp_list)
+                    try:
+                        temp_list = []
+                        for Q in a:
+                            temp_list.append(ast_int_eval(Q) * str(b))
+                        stack.append(temp_list)
+                    except:
+                        temp_list = []
+                        for Q in a:
+                            temp_list.append(ast_int_eval(b) * str(Q))
+                        stack.append(temp_list)
 
                 elif type(b) is list:
-                    temp_list = []
-                    for Q in b:
-                        temp_list.append(ast_int_eval(Q) * str(a))
-                    stack.append(temp_list)
-
+                    try:
+                        temp_list = []
+                        for Q in b:
+                            temp_list.append(ast_int_eval(a) * str(Q))
+                        stack.append(temp_list)
+                    except:
+                        temp_list = []
+                        for Q in b:
+                            temp_list.append(ast_int_eval(Q) * str(a))
+                        stack.append(temp_list)
                 else:
-                    temp_string = ""
-                    if b != 0:
-                        for Q in range(0, b):
-                            temp_string += str(a)
-                    stack.append(temp_string)
+                    try:
+                        stack.append(str(a) * ast_int_eval(b))
+                    except:
+                        stack.append(str(b) * ast_int_eval(a))
 
             elif current_command == ".\u00d7":
                 a = pop_stack(1)
@@ -3725,7 +3735,10 @@ def run_program(commands,
                 for Q in global_array: temp_list.append(Q)
                 temp_list = sorted(temp_list)
 
-                global_array = temp_list[:]
+                global_array.clear()
+
+                for x in temp_list:
+                    global_array.append(x)
 
             elif current_command == "\u00af":
                 stack.append(global_array)
@@ -4119,7 +4132,14 @@ def run_program(commands,
 
     if not has_printed and not suppress_print:
         if stack: print(stack[len(stack) - 1])
-        elif ".\u02c6" in code: print(global_array[recent_inputs[0]])
+        elif ".\u02c6" in code:
+            if len(recent_inputs) == 0:
+                get_input()
+            print(global_array[int(recent_inputs[0])])
+        elif ".^" in code:
+            if len(recent_inputs) == 0:
+                get_input()
+            print(global_array[int(recent_inputs[0])])
         elif "\u00b5" in code: print(range_variable)
         elif "\u02c6" in code: print(global_array)
         elif "\u00bc" in code: print(counter_variable[-1])

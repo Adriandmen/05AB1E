@@ -10,7 +10,7 @@ def is_digit_value(value):
     value = str(value)
     try:
         for X in value:
-            if numbers.__contains__(X):
+            if X in numbers:
                 continue
             else:
                 return 0
@@ -38,7 +38,7 @@ def is_alpha_value(value):
     value = str(value)
     try:
         for X in value:
-            if letters.__contains__(X.lower()):
+            if str(X) in letters:
                 continue
             else:
                 return 0
