@@ -171,6 +171,11 @@ def run_program(commands,
                 range_variable=0,
                 string_variable=""):
 
+    TEST_MODE = False
+    if commands[0:5] == "TEST:":
+        TEST_MODE = True
+        commands = commands[5:]
+
     if debug:
         try:print("Full program: " + str(commands))
         except:0
@@ -754,7 +759,7 @@ def run_program(commands,
                     elif current_command == "'" and temp_char_mode == False:
                         temp_char_mode = True
 
-                    if temp_string_mode == False or temp_char_mode == False:
+                    if temp_string_mode is False or temp_char_mode is False:
                         if current_command == "}" or current_command == "\u00eb":
                             if current_command == "}":
                                 amount_brackets -= 1
@@ -881,12 +886,14 @@ def run_program(commands,
                                 break
                         elif current_command in loop_commands:
                             amount_brackets += 1
-                        STATEMENT += current_command
-                        try:
-                            temp_position += 1
-                            current_command = commands[temp_position]
-                        except:
-                            break
+
+                    STATEMENT += current_command
+
+                    try:
+                        temp_position += 1
+                        current_command = commands[temp_position]
+                    except:
+                        break
                 if debug:
                     try:print(STATEMENT)
                     except:0
@@ -1003,12 +1010,14 @@ def run_program(commands,
                                 break
                         elif current_command in loop_commands:
                             amount_brackets += 1
-                        STATEMENT += current_command
-                        try:
-                            temp_position += 1
-                            current_command = commands[temp_position]
-                        except:
-                            break
+
+                    STATEMENT += current_command
+
+                    try:
+                        temp_position += 1
+                        current_command = commands[temp_position]
+                    except:
+                        break
                 if debug:
                     try:print(STATEMENT)
                     except:0
@@ -1923,19 +1932,23 @@ def run_program(commands,
                 while amount_brackets != 0:
                     if current_command in "\"\u2018\u2019\u201C\u201D":
                         temp_string_mode = not temp_string_mode
+
                     if temp_string_mode == False:
                         if current_command == "}":
                             amount_brackets -= 1
-                            if amount_brackets == 0:
-                                break
+                        if amount_brackets == 0:
+                            break
                         elif current_command in loop_commands:
                             amount_brackets += 1
-                        STATEMENT += current_command
-                        try:
-                            temp_position += 1
-                            current_command = commands[temp_position]
-                        except:
-                            break
+
+                    STATEMENT += current_command
+
+                    try:
+                        temp_position += 1
+                        current_command = commands[temp_position]
+                    except:
+                        break
+
                 if debug:
                     try:print(STATEMENT)
                     except:0
@@ -4129,6 +4142,9 @@ def run_program(commands,
         except Exception as ex:
             if debug:
                 print(str(ex))
+
+    if TEST_MODE:
+        return stack[-1]
 
     if not has_printed and not suppress_print:
         if stack: print(stack[len(stack) - 1])

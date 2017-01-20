@@ -1,0 +1,11 @@
+// Factorial
+5!					EXPECT `120`
+456S!				EXPECT `[24, 120, 720]`
+
+// Modulo
+
+
+// Addition
+3 4+   				EXPECT `7`
+4L 5+				EXPECT `[6, 7, 8, 9]`
+1234S 4324S+		EXPECT `[5, 5, 5, 8]`
