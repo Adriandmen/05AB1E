@@ -39,7 +39,11 @@ for test_file in tests:
                 elif string_mode:
                     temp += Q
 
-            result = osabie.run_program(CODE, False, False, True)
+            result = ""
+            try:
+                result = osabie.run_program(CODE, False, False, True)
+            except Exception:
+                print("An error has occured at line", LINE_NO)
             succeeded = "success" if result in expected_results else "fail"
             print("Test", TOTAL, "-", succeeded)
 

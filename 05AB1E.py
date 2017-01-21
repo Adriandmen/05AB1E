@@ -4144,7 +4144,9 @@ def run_program(commands,
                 print(str(ex))
 
     if TEST_MODE:
-        return stack[-1]
+        END_RESULT = stack[-1]
+        stack.clear()
+        return END_RESULT
 
     if not has_printed and not suppress_print:
         if stack: print(stack[len(stack) - 1])
