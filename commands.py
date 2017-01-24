@@ -38,7 +38,7 @@ def is_alpha_value(value):
     value = str(value)
     try:
         for X in value:
-            if str(X) in letters:
+            if str(X).lower() in letters:
                 continue
             else:
                 return 0
