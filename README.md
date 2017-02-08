@@ -1,6 +1,4 @@
 <p align="center"><a href="https://github.com/Adriandmen/05AB1E"><img src="https://i.stack.imgur.com/kUDMr.png"/></a></p>
-<br>
-<br>
 
 ## A short introduction
 
@@ -10,13 +8,9 @@ You can try this language out yourself at: [Try it online!](http://05ab1e.tryito
 
 All existing commands can be found at [_Info.txt_](https://github.com/Adriandmen/05AB1E/blob/master/Info.txt)
 
-<br>
-
 ## So, what exactly is a golfing language?
 
 A golfing language is a language that specializes in [code golf](https://en.wikipedia.org/wiki/Code_golf). That is a kind of programming competition where you strive to achieve the shortest byte count from all the participating languages.
-
-<br>
 
 ## What does a program look like?
 
@@ -66,9 +60,6 @@ only the number **5** gets printed. If something else gets printed before the pr
 
 Now you have a basic understanding of how 05AB1E works! Tutorials will be added soon...
 
-
-<br>
-
 ## How do I use it?
 
 05AB1E is originally written in **Python 3**. That means that you need to have Python 3 in order to use this. 05AB1E doesn't make use of any external libraries outside the normal Python package, so Python 3 is the _only_ thing you need.
@@ -79,13 +70,14 @@ Create a new file where you want to store your program in (like `test.abe`). Nor
     
 For example:
 
-     > python34.exe 05AB1E.py test.abe
+    > python34.exe 05AB1E.py test.abe
 
 In addition, you can append the following arguments before running the 05AB1E file:
 
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Argument&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Information
- -------- | -----------
- `-d` or `--debug` | Activates the **debug** flag. After each command is run, an update will be shown to _STDIN_ with the current stack, current command and additionally subprograms for loops, etc.
- `-s` or `--safe` | Activates the **safe** mode. Web access, file access and commmands that can potentially harm a system will be restricted and skipped while executing the file.
- `-c` or `--cp1252` | Reads the file as a file with a **CP-1252** encoding. If this flag is not activated, the file will be read as a normal **UTF-8** file.
- `-t` or `--time` | Times the duration of executing the program. Given in seconds.
+|Argument|Information|
+|--------|-----------|
+|`-d` or `--debug`|Activates the **debug** flag. After each command is run, an update will be shown to _STDIN_ with the current stack, current command and additionally subprograms for loops, etc.|
+|`-s` or `--safe`|Activates the **safe** mode. Web access, file access and commmands that can potentially harm a system will be restricted and skipped while executing the file.|
+|`-c` or `--cp1252`|Reads the file as a file with a **CP-1252** encoding. If this flag is not activated, the file will be read as a normal **UTF-8** file.|
+|`-t` or `--time`|Times the duration of executing the program. Given in seconds.|
+|`-e` or `--eval`|Evaluates the given string as 05AB1E code.|
