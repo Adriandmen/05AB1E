@@ -3,6 +3,8 @@ osabie = __import__("05AB1E")
 
 tests = os.listdir("unittests")
 
+EXIT_CODE = 0
+
 for test_file in tests:
     file = open('unittests/' + test_file, 'r')
 
@@ -44,12 +46,15 @@ for test_file in tests:
                 result = osabie.run_program(CODE, False, False, True)
             except Exception:
                 print("An error has occured at line", LINE_NO)
+                EXIT_CODE = 1
+
             succeeded = "success" if result in expected_results else "fail"
             print("Test", TOTAL, "-", succeeded)
 
             if succeeded == "fail":
                 print()
                 print("FAIL at line", LINE_NO, "in", test_file)
+                EXIT_CODE = 1
                 if len(expected_results) == 1:
                     print("Expected was", str(expected_results[0]), "but got", result)
                 else:
@@ -62,3 +67,5 @@ for test_file in tests:
     print(TOTAL, "tests run in", test_file)
     print("  Tests passed:", PASSES)
     print("  Tests failed:", FAILS)
+    
+exit(EXIT_CODE)
