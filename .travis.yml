@@ -1,0 +1,11 @@
+# language
+language: python
+ 
+# version numbers
+python:
+    - "3.4"
+
+sudo: false
+    
+script:
+ - unittests.py
