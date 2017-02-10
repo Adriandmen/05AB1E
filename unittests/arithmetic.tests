@@ -3,7 +3,24 @@
 456S!               EXPECT `[24, 120, 720]`
 
 // Modulo
+555 333%            EXPECT `222`
+555( 333%           EXPECT `111`
+0 55%               EXPECT `0`
+789S 7%             EXPECT `[0, 1, 2]`
+7 789S%             EXPECT `[0, 7, 7]`
 
+// AND operator
+7 3&                EXPECT `3`
+5456 3275&          EXPECT `1088`
+17 34) 24&          EXPECT `[16, 0]`
+17 34) 24s&         EXPECT `[16, 0]`
+
+// Negate
+7897(               EXPECT `-7897`
+"-5"(               EXPECT `5`
+0(                  EXPECT `0`
+46((                EXPECT `46`
+3 4 5)(             EXPECT `[-3, -4, -5]`
 
 // Addition
 3 4+                EXPECT `7`
