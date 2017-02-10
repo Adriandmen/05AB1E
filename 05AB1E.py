@@ -1084,14 +1084,12 @@ def run_program(commands,
                     temp_list = []
                     for Q in a:
                         temp_list.append(int(b) | int(Q))
-                    for S in temp_list:
-                        stack.append(S)
+                    stack.append(temp_list)
                 elif type(b) is list:
                     temp_list = []
                     for Q in b:
                         temp_list.append(int(Q) | int(a))
-                    for S in temp_list:
-                        stack.append(S)
+                    stack.append(temp_list)
                 else:
                     stack.append(int(b) | int(a))
 
@@ -1106,14 +1104,12 @@ def run_program(commands,
                     temp_list = []
                     for Q in a:
                         temp_list.append(int(b) & int(Q))
-                    for S in temp_list:
-                        stack.append(S)
+                    stack.append(temp_list)
                 elif type(b) is list:
                     temp_list = []
                     for Q in b:
                         temp_list.append(int(Q) & int(a))
-                    for S in temp_list:
-                        stack.append(S)
+                    stack.append(temp_list)
                 else:
                     stack.append(int(b) & int(a))
 
