@@ -1,4 +1,5 @@
 <p align="center"><a href="https://github.com/Adriandmen/05AB1E"><img src="https://i.stack.imgur.com/kUDMr.png"/></a></p>
+<p align="center"><a href="https://travis-ci.org/Adriandmen/05AB1E"><img src="https://travis-ci.org/Adriandmen/05AB1E.svg?branch=master"/></a></p>
 <br>
 <br>
 
