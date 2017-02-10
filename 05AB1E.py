@@ -4171,7 +4171,8 @@ if __name__ == "__main__":
     parser.add_argument('-s', '--safe', help="Safe mode", action="store_true")
     parser.add_argument('-c', '--cp1252', help="Encode from CP-1252", action="store_true")
     parser.add_argument('-t', '--time', help="Time the program", action="store_true")
-    parser.add_argument("program_path", help="Program path", type=str)
+    parser.add_argument('-e', '--eval', help="Evaluate as 05AB1E code", action="store", type=str, nargs="?", default=argparse.SUPPRESS)
+    parser.add_argument("program_path", help="Program path", action="store", type=str, nargs="?")
 
     args = parser.parse_args()
     filename = args.program_path
@@ -4180,7 +4181,22 @@ if __name__ == "__main__":
     ENCODE_CP1252 = args.cp1252
     TIME_IT = args.time
 
-    if ENCODE_CP1252:
+    EVAL = None
+
+    if not filename:
+        try:
+            EVAL = args.eval
+        except:
+            parser.error("program_path is required if not using -e flag")
+        else:
+            # If EVAL is still None and there was no error, then it was called without arguments
+            if not EVAL:
+                parser.error("no code passed to -e")
+
+    if EVAL:
+        code = EVAL
+    # Do not load from file if just eval'ing
+    elif ENCODE_CP1252:
         code = open(filename, "r", encoding="cp1252").read()
     else:
         code = open(filename, "r", encoding="utf-8").read()

@@ -66,7 +66,6 @@ only the number **5** gets printed. If something else gets printed before the pr
 
 Now you have a basic understanding of how 05AB1E works! Tutorials will be added soon...
 
-
 <br>
 
 ## How do I use it?
@@ -79,13 +78,14 @@ Create a new file where you want to store your program in (like `test.abe`). Nor
     
 For example:
 
-     > python34.exe 05AB1E.py test.abe
+    > python34.exe 05AB1E.py test.abe
 
 In addition, you can append the following arguments before running the 05AB1E file:
 
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Argument&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Information
- -------- | -----------
- `-d` or `--debug` | Activates the **debug** flag. After each command is run, an update will be shown to _STDIN_ with the current stack, current command and additionally subprograms for loops, etc.
- `-s` or `--safe` | Activates the **safe** mode. Web access, file access and commmands that can potentially harm a system will be restricted and skipped while executing the file.
- `-c` or `--cp1252` | Reads the file as a file with a **CP-1252** encoding. If this flag is not activated, the file will be read as a normal **UTF-8** file.
- `-t` or `--time` | Times the duration of executing the program. Given in seconds.
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Argument&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|Information|
+|--------|-----------|
+|`-d` or `--debug`|Activates the **debug** flag. After each command is run, an update will be shown to _STDIN_ with the current stack, current command and additionally subprograms for loops, etc.|
+|`-s` or `--safe`|Activates the **safe** mode. Web access, file access and commmands that can potentially harm a system will be restricted and skipped while executing the file.|
+|`-c` or `--cp1252`|Reads the file as a file with a **CP-1252** encoding. If this flag is not activated, the file will be read as a normal **UTF-8** file.|
+|`-t` or `--time`|Times the duration of executing the program. Given in seconds.|
+|`-e` or `--eval`|Evaluates the given string as 05AB1E code.|
