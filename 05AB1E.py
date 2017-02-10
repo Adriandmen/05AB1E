@@ -1886,13 +1886,14 @@ def run_program(commands,
                 if type(b) is list:
                     temp_list = []
                     for Q in b:
-                        temp_list.append(int(str(Q) in a))
+                        Q = str(Q) if type(Q) is int else Q
+                        temp_list.append(int(Q in a))
                     stack.append(temp_list)
 
                 elif type(a) is list:
                     temp_list = []
                     for Q in a:
-                        temp_list.append(str(Q))
+                        temp_list.append(str(Q) if type(Q) is int else Q)
                     stack.append(int(b in temp_list))
 
                 else:
