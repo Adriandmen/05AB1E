@@ -960,6 +960,10 @@ def run_program(commands,
                         print()
                 a = pop_stack(1)
                 range_variable = 0
+
+                if '\u00bc' not in STATEMENT and '\u00bd' not in STATEMENT:
+                    STATEMENT = STATEMENT + '\u00bd'
+
                 while counter_variable[-1] != int(a):
                     range_variable += 1
                     run_program(STATEMENT, debug, safe_mode, True, range_variable, string_variable)
