@@ -167,7 +167,7 @@ Extended ASCII characters (CP-1252)
         O           push aeiouy
         P           push bcdfghjklmnpqrstvwxz
         Q           push printable ASCII character set (32-128)
-		R  		 push ABC
+        R           push ABC
 
 
 Ÿ 24	= pop a,b    push [a, ..., b]
