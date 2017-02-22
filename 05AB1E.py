@@ -4102,6 +4102,9 @@ def run_program(commands,
             elif current_command == "\u017eQ":
                 stack.append(" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
 
+            elif current_command == "\u017eR":
+                stack.append("ABC")
+
             elif current_command == ".:":
                 c, b, a = pop_stack(3)
                 if type(a) is list:
