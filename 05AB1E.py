@@ -2397,7 +2397,7 @@ def run_program(commands,
                         inner_str = ""
                     i += 1
                 stack.append(temp_list)
-                
+
             elif current_command == "\u00ef":
                 a = pop_stack(1)
                 if type(a) is list:
@@ -2968,7 +2968,7 @@ def run_program(commands,
                         for R in b:
                             temp_list.append(R)
                 stack.append(temp_list)
-                    
+
             elif current_command == "\u00f2":
                 a = pop_stack(1)
                 if type(a) is list:
@@ -3151,7 +3151,7 @@ def run_program(commands,
                     b = str(b)
                 if type(c) is int:
                     c = str(c)
-                    
+
                 temp_string = ""
                 has_transliterated = False
 
@@ -3489,14 +3489,14 @@ def run_program(commands,
                 for Q in range(1, len(a) + 1):
                     temp_list.append(a[-Q:])
                 stack.append(temp_list)
-                
+
             elif current_command == ".\u00C0":
                 temp_stack = stack[:]
                 stack.clear()
                 for Q in temp_stack[1:]:
                     stack.append(Q)
                 stack.append(temp_stack[0])
-            
+
             elif current_command == ".\u00C1":
                 temp_stack = stack[:]
                 stack.clear()
@@ -3565,7 +3565,7 @@ def run_program(commands,
                     for Q in temp_stack:
                         stack.append(Q)
                     stack.append(b)
-            
+
             elif current_command == ".h":
                 a = pop_stack(1)
                 b = pop_stack(1)
@@ -3582,7 +3582,7 @@ def run_program(commands,
                         r -= a
                     number += str(r)
                 stack.append(number[::-1])
-            
+
             elif current_command == ".H":
                 a = pop_stack(1)
                 b = pop_stack(1)
@@ -3591,7 +3591,7 @@ def run_program(commands,
                 for Q in b:
                     number = number * a + ast_int_eval(Q)
                 stack.append(number)
-                        
+
             elif current_command == ".D":
                 a = pop_stack(1)
                 b = pop_stack(1)
@@ -3812,7 +3812,7 @@ def run_program(commands,
                 a = pop_stack(1)
 
                 stack.append(chunk_divide(a, int(b)))
-                
+
             elif current_command == ".g":
                 stack.append(len(stack))
 
@@ -4104,6 +4104,21 @@ def run_program(commands,
 
             elif current_command == "\u017eR":
                 stack.append("ABC")
+
+            elif current_command == "\u017eS":
+                stack.append("qwertyuiop")
+
+            elif current_command == "\u017eT":
+                stack.append("asdfghjkl")
+
+            elif current_command == "\u017eU":
+                stack.append("zxcvbnm")
+
+            elif current_command == "\u017eV":
+                stack.append(["qwertyuiop", "asdfghjkl", "zxcvbnm"])
+
+            elif current_command == "\u017eW":
+                stack.append("qwertyuiopasdfghjklzxcvbnm")
 
             elif current_command == ".:":
                 c, b, a = pop_stack(3)
