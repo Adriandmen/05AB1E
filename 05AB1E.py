@@ -970,32 +970,22 @@ def run_program(commands,
                 pointer_position = temp_position
 
             elif current_command == "\u00cb":
-                STATEMENT = ""
-                temp_position = pointer_position
-                temp_position += 1
-                current_command = commands[temp_position]
-                amount_brackets = 1
-                while amount_brackets != 0:
-                    if current_command == "]":
-                        amount_brackets -= 1
-                        if amount_brackets == 0:
-                            break
-                    elif current_command == "[":
-                        amount_brackets += 1
-                    STATEMENT += current_command
-                    try:
-                        temp_position += 1
-                        current_command = commands[temp_position]
-                    except:
-                        break
-                if debug:
-                    print(STATEMENT)
                 a = pop_stack(1)
-                range_variable = 0
-                while pop_stack(1) is not True:
-                    range_variable += 1
-                    run_program(STATEMENT, debug, safe_mode, True, range_variable, string_variable)
-                pointer_position = temp_position
+
+                if type(a) is int:
+                    a = str(a)
+
+                if len(a) < 2:
+                    stack.append(1)
+                else:
+                    FIRST_ELEMENT = str(a[0])
+                    all_equal = True
+
+                    for element in a:
+                        if str(element) != FIRST_ELEMENT:
+                            all_equal = False
+
+                    stack.append(1 if all_equal else 0)
 
             elif current_command == "\u0192":
                 STATEMENT = ""
@@ -2929,6 +2919,16 @@ def run_program(commands,
                     a, b = pop_stack(2)
 
                 if type(a) is list:
+                    if type(b) is list:
+                        temp_list = []
+
+                        for index in range(0, len(a)):
+                            try:
+                                temp_list.append(ast_int_eval(a[index]) * str(b[index]))
+                            except:
+                                temp_list.append(ast_int_eval(b[index]) * str(a[index]))
+                        stack.append(temp_list)
+                        continue
                     try:
                         temp_list = []
                         for Q in a:
