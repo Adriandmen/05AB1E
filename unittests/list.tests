@@ -1,0 +1,12 @@
+// All equal
+1 2 3 4) Ë			EXPECT `0`
+1 1 1 1) Ë 			EXPECT `1`
+1) Ë				EXPECT `1`
+) Ë 				EXPECT `1`
+1234 Ë				EXPECT `0`
+1111 Ë				EXPECT `1`
+1    Ë				EXPECT `1`
+õ    Ë				EXPECT `1`
+1234ï Ë				EXPECT `0`
+1111ï Ë				EXPECT `1`
+1   ï Ë				EXPECT `1`
