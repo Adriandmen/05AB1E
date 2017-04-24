@@ -6,7 +6,7 @@ tests = os.listdir("unittests")
 EXIT_CODE = 0
 
 for test_file in tests:
-    file = open('unittests/' + test_file, 'r')
+    file = open('unittests/' + test_file, 'r', encoding="UTF-8")
 
     PASSES = 0
     FAILS = 0
