@@ -38,6 +38,7 @@ loop_commands = ["F", "i", "v", "G", "\u0192"]
 VERSION = "version 8.0"
 DATE = "14:37 - May 9, 2016"
 
+
 def opt_input():
     a = input()
     if a[:3] == "\"\"\"":
@@ -231,7 +232,7 @@ def run_program(commands,
                 b, a = pop_stack(2)
                 if type(a) is list and type(b) is list:
                     temp_list = []
-                    for Q in len(a):
+                    for Q in range(0, len(a)):
                         temp_list.append(convert_to_base(abs(ast_int_eval(str(a[Q]))), ast_int_eval(str(b[Q]))))
                     stack.append(temp_list)
                 elif type(a) is list:
@@ -508,7 +509,7 @@ def run_program(commands,
                 if type(a) is list and type(b) is list:
                     temp_list = []
                     for Q in range(len(a)):
-                        temp_list.append(ast_int_eval(str(a[Q])) - ast_int_eval(str(b[Q])))
+                        temp_list.append(ast_int_eval(str(b[Q])) - ast_int_eval(str(a[Q])))
                     stack.append(temp_list)
                 elif type(a) is list:
                     temp_list = []
@@ -520,12 +521,13 @@ def run_program(commands,
                     for Q in b:
                         temp_list.append(ast_int_eval(str(Q)) - ast_int_eval(str(a)))
                     stack.append(temp_list)
-                elif (type(b) is str and not is_float_value(b)) or (type(a) is str and not is_float_value(a)):
-                    for Q in str(a):
-                        b = b.replace(Q, "")
-                    stack.append(str(b))
                 else:
-                    stack.append(ast_int_eval(str(b)) - ast_int_eval(str(a)))
+                    try:
+                        stack.append(ast_int_eval(str(b)) - ast_int_eval(str(a)))
+                    except:
+                        for Q in str(a):
+                            b = b.replace(Q, "")
+                        stack.append(str(b))
 
             elif current_command == "*":
                 a, b = pop_stack(2)
@@ -1466,6 +1468,10 @@ def run_program(commands,
 
                 if type(stack[-1]) is list:
                     a = pop_stack(1)
+                    if len(a) == 0:
+                        stack.append(1)
+                        continue
+
                     if type(a[0]) is list:
                         temp_list = []
                         for Q in a:
@@ -1668,51 +1674,11 @@ def run_program(commands,
                 stack.append(temp_string)
 
             elif current_command == ":":
-                c, b, a = pop_stack(3)
-                if type(a) is list:
-                    if type(b) is list:
-                        for Q in a:
-                            temp_string = temp_string_2 = str(Q)
-                            while True:
-                                for R in b:
-                                    temp_string = temp_string.replace(R, c)
-                                if temp_string == temp_string_2:
-                                    break
-                                else:
-                                    temp_string_2 = temp_string
-                            stack.append(temp_string)
-                    else:
-                        b = str(b)
-                        for Q in a:
-                            temp_string = temp_string_2 = str(Q)
-                            while True:
-                                temp_string = temp_string.replace(b, c)
-                                if temp_string == temp_string_2:
-                                    break
-                                else:
-                                    temp_string_2 = temp_string
-                            stack.append(temp_string)
-                else:
-                    if type(b) is list:
-                        temp_string = temp_string_2 = str(a)
-                        while True:
-                            for R in b:
-                                temp_string = temp_string.replace(R, c)
-                            if temp_string == temp_string_2:
-                                break
-                            else:
-                                temp_string_2 = temp_string
-                        stack.append(temp_string)
-                    else:
-                        b = str(b)
-                        temp_string = temp_string_2 = str(a)
-                        while True:
-                            temp_string = temp_string.replace(b, c)
-                            if temp_string == temp_string_2:
-                                break
-                            else:
-                                temp_string_2 = temp_string
-                        stack.append(temp_string)
+                c = pop_stack(1)
+                b = pop_stack(1)
+                a = pop_stack(1)
+
+                stack.append(infinite_replace(a, b, c))
 
             elif current_command == "j":
                 a = pop_stack(1)
@@ -4165,6 +4131,17 @@ def run_program(commands,
     if TEST_MODE:
         END_RESULT = stack[-1]
         stack.clear()
+        exit_program.clear()
+
+        register_x.clear()
+        register_x.append(1)
+        register_y.clear()
+        register_y.append(2)
+        register_c.clear()
+        counter_variable.clear()
+        counter_variable.append(0)
+        global_array.clear()
+
         return END_RESULT
 
     if not has_printed and not suppress_print:
