@@ -15,6 +15,12 @@
 17 34) 24&          EXPECT `[16, 0]`
 17 34) 24s&         EXPECT `[16, 0]`
 
+// XOR operator
+7 3^                EXPECT `4`
+4865 5353^          EXPECT `2024`
+17 34) 24^          EXPECT `[9, 58]`
+17 34) 24s^         EXPECT `[9, 58]`
+
 // Negate
 7897(               EXPECT `-7897`
 "-5"(               EXPECT `5`
@@ -22,7 +28,100 @@
 46((                EXPECT `46`
 3 4 5)(             EXPECT `[-3, -4, -5]`
 
+// Boolean negate
+1_                  EXPECT `0`
+0_                  EXPECT `1`
+46_                 EXPECT `0`
+0 0 1 1 2 3 4)_     EXPECT `[1, 1, 0, 0, 0, 0, 0]`
+
 // Addition
 3 4+                EXPECT `7`
 4L 5+               EXPECT `[6, 7, 8, 9]`
+4L 5s+              EXPECT `[6, 7, 8, 9]`
 1234S 4324S+        EXPECT `[5, 5, 5, 8]`
+
+// Multiplication
+3 4*                EXPECT `12`
+4L 5*               EXPECT `[5, 10, 15, 20]`
+4L 5 s*             EXPECT `[5, 10, 15, 20]`
+1234S 4324S*        EXPECT `[4, 6, 6, 16]`
+
+// Subtraction
+4 3-                EXPECT `1`
+3 4-                EXPECT `-1`
+"3" "-4" -          EXPECT `7`
+"-4" 3 -            EXPECT `-7`
+4L 5-               EXPECT `[-4, -3, -2, -1]`
+8642S 1234S-        EXPECT `[7, 4, 1, -2]`
+
+// Division
+6 3/                EXPECT `2.0`
+3 6/                EXPECT `0.5`
+"6" "-3" /          EXPECT `-2.0`
+6543S 2/            EXPECT `[3.0, 2.5, 2.0, 1.5]`
+2 48S/              EXPECT `[0.5, 0.25]`
+
+// Division by two
+6;                  EXPECT `3.0`
+3;                  EXPECT `1.5`
+"-3";               EXPECT `-1.5`
+456S ;              EXPECT `[2.0, 2.5, 3.0]`
+
+// Decrement
+7<                  EXPECT `6`
+3<<<<<<             EXPECT `-3`
+456S <<             EXPECT `[2, 3, 4]`
+
+// Increment
+7>                  EXPECT `8`
+3( >>>>>>           EXPECT `3`
+3( >                EXPECT `-2`
+456S >              EXPECT `[5, 6, 7]`
+
+// Base conversion
+5 2B                EXPECT `101`
+100 2B              EXPECT `1100100`
+100 7B              EXPECT `202`
+5 1B                EXPECT `00000`
+789S 4B             EXPECT `['13', '20', '21']`
+789S 234SB          EXPECT `['111', '22', '21']`
+
+// Convert from binary
+101C                EXPECT `5`
+1001C               EXPECT `9`
+101 1001)C          EXPECT `[5, 9]`
+
+// Convert to binary
+5b                  EXPECT `101`
+9b                  EXPECT `1001`
+5 9)bï              EXPECT `[101, 1001]`
+
+// Convert from hexadecimal
+"2D"H               EXPECT `45`
+0H                  EXPECT `0`
+99H                 EXPECT `153`
+
+// Sum of lists or stack
+2 3 4)O             EXPECT `9`
+"2" "3" 4O          EXPECT `9`
+"-2"O               EXPECT `-2`
+)O                  EXPECT `0`
+123S 234S 345S)O    EXPECT `[6, 9, 12]`
+
+// Product of lists or stack
+2 3 4)P             EXPECT `24`
+"2" "3" 4P          EXPECT `24`
+"-4"P               EXPECT `-4`
+)P                  EXPECT `1`
+123S 234S 345S)P    EXPECT `[6, 24, 60]`
+
+// Minimum of list without popping
+123W                EXPECT `1`
+123W)g              EXPECT `2`
+123S( W             EXPECT `-3`
+
+// Maximum of list without popping
+123Z                EXPECT `3`
+123Z)g              EXPECT `2`
+123S( Z             EXPECT `-1`
+

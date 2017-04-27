@@ -1,12 +1,31 @@
 // All equal
-1 2 3 4) Ë			EXPECT `0`
-1 1 1 1) Ë 			EXPECT `1`
-1) Ë				EXPECT `1`
-) Ë 				EXPECT `1`
-1234 Ë				EXPECT `0`
-1111 Ë				EXPECT `1`
-1    Ë				EXPECT `1`
-õ    Ë				EXPECT `1`
-1234ï Ë				EXPECT `0`
-1111ï Ë				EXPECT `1`
-1   ï Ë				EXPECT `1`
+1 2 3 4) Ë          EXPECT `0`
+1 1 1 1) Ë          EXPECT `1`
+1) Ë                EXPECT `1`
+) Ë                 EXPECT `1`
+1234 Ë              EXPECT `0`
+1111 Ë              EXPECT `1`
+1    Ë              EXPECT `1`
+õ    Ë              EXPECT `1`
+1234ï Ë	            EXPECT `0`
+1111ï Ë	            EXPECT `1`
+1   ï Ë	            EXPECT `1`
+
+// Largest number of stack
+2 3 4M              EXPECT `4`
+4 3 2M              EXPECT `4`
+4(3 2M              EXPECT `3`
+4(3(2( M            EXPECT `-2`
+1 2 3) 0 M          EXPECT `3`
+
+// [1 .. N] Lists
+5L                  EXPECT `[1, 2, 3, 4, 5]`
+1L                  EXPECT `[1]`
+0L                  EXPECT `[0]`
+5(L                 EXPECT `[-1, -2, -3, -4, -5]`
+3LL                 EXPECT `[1, 1, 2, 1, 2, 3]`
+
+// Flattening lists
+1 2 3)) `      ï    EXPECT `[1, 2, 3]`
+123S456S) `    ï    EXPECT `[4, 5, 6]`
+123 `               EXPECT `3`

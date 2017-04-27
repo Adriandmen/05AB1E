@@ -1,0 +1,5 @@
+// F-loop
+4FNO                EXPECT `6`
+
+// Infinite loop
+[NN45Q#]            EXPECT `45`

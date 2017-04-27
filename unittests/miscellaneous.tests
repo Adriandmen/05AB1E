@@ -1,0 +1,90 @@
+// Strings
+"ABC"               EXPECT `ABC`
+3"12ÿ"              EXPECT `123`
+3 2"1ÿÿ"            EXPECT `123`
+
+// Break on spaces
+"12 34"#            EXPECT `['12', '34']`
+"12 34 56"#         EXPECT `['12', '34', '56']`
+
+// One char strings
+'a                  EXPECT `a`
+'ŠŠ                 EXPECT `domain`
+
+// -- Replacement --
+"abc" "c" "d":      EXPECT `abd`
+"abbbc" "bb" "b":   EXPECT `abc`
+1232 23S 4:         EXPECT `1444`
+1232 23S 34S:       EXPECT `1444`
+12 32) 2 3:         EXPECT `['13', '33']`
+12 32) 2 3‚ 4:      EXPECT `['14', '44']`
+12 32) 2 3‚ 4 5‚:   EXPECT `['14', '54']`
+
+// Join
+"a" "b" "c" J       EXPECT `abc`
+"a" "b" "c")J       EXPECT `abc`
+1 5 3 123S  J       EXPECT `123`
+12S23S34S)  J       EXPECT `['12', '23', '34']`
+1 2 3ïJ             EXPECT `123`
+1ï 2ï 3ï)J          EXPECT `123`
+12Sï 34Sï)  J       EXPECT `['12', '34']`
+
+// String removal
+"abc" "c"K          EXPECT `ab`
+"abcde" "cd" K      EXPECT `abe`
+"abba" "ab" K       EXPECT `ba`
+"ab""bc""cd") "bc"K EXPECT `['ab', 'cd']`
+1234S23SK           EXPECT `['1', '4']`
+1234ï 23ïK          EXPECT `14`
+
+// Equal boolean
+1 1Q                EXPECT `1`
+1 2Q                EXPECT `0`
+1ï1Q                EXPECT `1`
+1 2 3)D Q           EXPECT `1`
+1 2 3)D ï Q         EXPECT `1`
+1 2 3)D>Q           EXPECT `0`
+1 2 3)2Q            EXPECT `[0, 1, 0]`
+1 2 3)2s Q          EXPECT `[0, 1, 0]`
+
+// Reverse
+123R                EXPECT `321`
+123ïR               EXPECT `321`
+123SR               EXPECT `['3', '2', '1']`
+123SïR              EXPECT `[3, 2, 1]`
+
+// Seperate strings
+123S                EXPECT `['1', '2', '3']`
+1S                  EXPECT `['1']`
+123)S               EXPECT `['1', '2', '3']`
+
+// Variable assignment
+15UX                EXPECT `15`
+15U 30 X            EXPECT `15`
+"abc"U "def" X      EXPECT `abc`
+15VY                EXPECT `15`
+15V 30 Y            EXPECT `15`
+"abc"V "def" Y      EXPECT `abc`
+X                   EXPECT `1`
+Y                   EXPECT `2`
+
+// Is alphabetic test
+"abc"a              EXPECT `1`
+"abc"S a            EXPECT `[1, 1, 1]`
+123  a              EXPECT `0`
+123S a              EXPECT `[0, 0, 0]`
+"1ab"a              EXPECT `0`
+"1ab"S a            EXPECT `[0, 1, 1]`
+"AB"a               EXPECT `1`
+
+// Delete last item
+1 2 3\              EXPECT `2`
+
+// Stack indexing
+1 2 3 4 0@          EXPECT `1`
+
+// Alphabet
+A                   EXPECT `abcdefghijklmnopqrstuvwxyz`
+
+// Duplicating
+4D)                 EXPECT `['4', '4']`
