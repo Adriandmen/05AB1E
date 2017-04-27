@@ -352,5 +352,92 @@ def minimum_edit_distance(s1,s2):
         distances = newDistances
     return distances[-1]
 
-def string_partitions(string):
-    length = len(string)
+
+def infinite_replace(object1, object2, object3):
+
+    if type(object1) is list:
+        object1 = [str(x) for x in object1]
+
+    if type(object2) is list:
+        object2 = [str(x) for x in object2]
+
+    if type(object3) is list:
+        object3 = [str(x) for x in object3]
+
+    if type(object1) is int:
+        object1 = str(object1)
+
+    if type(object2) is int:
+        object2 = str(object2)
+
+    if type(object3) is int:
+        object3 = str(object3)
+
+    # [String String String]
+    if type(object1) is str and type(object2) is str and type(object3) is str:
+        while object1.replace(object2, object3) != object1:
+            object1 = object1.replace(object2, object3)
+        return object1
+
+    # [String List String]
+    elif type(object1) is str and type(object2) is list and type(object3) is str:
+        for element in object2:
+            while object1.replace(element, object3) != object1:
+                object1 = object1.replace(element, object3)
+        return object1
+
+    # [String List List]
+    elif type(object1) is str and type(object2) is list and type(object3) is list:
+        for index in range(0, len(object2)):
+            while object1.replace(object2[index], object3[index]) != object1:
+                object1 = object1.replace(object2[index], object3[index])
+        return object1
+
+    # [List String String]
+    elif type(object1) is list and type(object2) is str and type(object3) is str:
+        result_list = []
+        for sub_element in object1:
+            while sub_element.replace(object2, object3) != sub_element:
+                sub_element = sub_element.replace(object2, object3)
+
+            result_list.append(sub_element)
+        return result_list
+
+    # [List List String]
+    elif type(object1) is list and type(object2) is list and type(object3) is str:
+        result_list = []
+        for sub_element in object1:
+            for sub_start in object2:
+                while sub_element.replace(sub_start, object3) != sub_element:
+                    sub_element = sub_element.replace(sub_start, object3)
+            result_list.append(sub_element)
+        return result_list
+
+    # [List List List]
+    elif type(object1) is list and type(object2) is list and type(object3) is list:
+        result_list = []
+        for sub_element in object1:
+            for sub_index in range(0, len(object2)):
+                while sub_element.replace(object2[sub_index], object3[sub_index]) != sub_element:
+                    sub_element = sub_element.replace(object2[sub_index], object3[sub_index])
+            result_list.append(sub_element)
+        return result_list
+
+    raise Exception;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
