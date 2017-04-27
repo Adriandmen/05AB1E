@@ -4,6 +4,9 @@ osabie = __import__("05AB1E")
 tests = os.listdir("unittests")
 
 EXIT_CODE = 0
+TOTAL_TESTS = 0
+TOTAL_SUCCESSES = 0
+TOTAL_FAILS = 0
 
 for test_file in tests:
     file = open('unittests/' + test_file, 'r', encoding="UTF-8")
@@ -35,7 +38,12 @@ for test_file in tests:
                 if Q == '`':
                     string_mode = not string_mode
                     if not string_mode:
-                        expected_results.append(eval(temp.replace("\u00B6", "\n")))
+                        try:
+                            expected_results.append(eval(temp.replace("\u00B6", "\n")))
+                        except:
+                            pass
+
+                        expected_results.append(temp.replace("\u00B6", "\n"))
                         temp = ""
 
                 elif string_mode:
@@ -59,13 +67,27 @@ for test_file in tests:
                     print("Expected was", str(expected_results[0]), "but got", result)
                 else:
                     print("Expected was one of the following:", expected_results, "but got", result)
+                print()
 
             PASSES += succeeded == "success"
             FAILS += succeeded != "success"
+
+            TOTAL_TESTS += 1
+
+    TOTAL_SUCCESSES += PASSES
+    TOTAL_FAILS += FAILS
 
     print()
     print(TOTAL, "tests run in", test_file)
     print("  Tests passed:", PASSES)
     print("  Tests failed:", FAILS)
+    print()
+
+print()
+print("---[ RESULT ]------------")
+print()
+print("Total tests run: ", TOTAL_TESTS)
+print("Successes:       ", TOTAL_SUCCESSES)
+print("Fails:           ", TOTAL_FAILS)
     
 exit(EXIT_CODE)
