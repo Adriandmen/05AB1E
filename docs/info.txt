@@ -29,6 +29,8 @@
 ₄	=
 ₅	=
 ₆	=
+
+
 !	= pop a,     push factorial(a)
 "	= start/end string literal
 #  	= pop a      if true: break/end (used in infinite loops)
@@ -124,6 +126,8 @@ z	= pop a      push 1 / a
 |	=            push the rest of input as an array with strings
 }	=            used to close if statements, loops, etc.
 ~	= pop a,b    push a OR b
+
+
 Ƶ	=
 € 0     = for each command
 Λ	=
@@ -155,6 +159,8 @@ z	= pop a      push 1 / a
 › 21	= pop a,b    push a > b
 œ 22	= pop a      push permutations(a)
 ć	=
+
+
 ž 23  > ža           push current hours
         žb           push current minutes
         žc           push current seconds
@@ -199,6 +205,8 @@ z	= pop a      push 1 / a
         žP           push bcdfghjklmnpqrstvwxz
         žQ           push printable ASCII character set (32-128)
         žR           push ABC
+	
+	
 Ÿ 24	= pop a,b    push [a, ..., b]
 ā	=
 ¡ 25	= pop a,b    push a.split(b)  
@@ -296,6 +304,8 @@ z	= pop a      push 1 / a
 ý	= pop (a),b  push b.join(a) if a is list, else b.join(stack)
 þ	= pop a      push only digits of a
 ÿ	= used for string interpolation, pop a and replace ÿ with str(a)
+
+
 .€	= debug printer
 .ä	= debug printer
 .å	= pop a,b    push a in b (vectorized)
