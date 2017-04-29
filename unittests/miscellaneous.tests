@@ -37,8 +37,9 @@
 1234S23SK           EXPECT `['1', '4']`
 1234ï 23ïK          EXPECT `14`
 
-// Replacement bug fix
+// Replacement bug fix (https://codegolf.stackexchange.com/a/77154/34388)
 "'[([]{})<{[()<()>]}()>{}]'" "[](){}<>"2ô"":g2Q     EXPECT `1`
+"'[({})<{[()<()>]}()>{}]'""[](){}<>"2ô"":g2Q        EXPECT `1`
 
 // Equal boolean
 1 1Q                EXPECT `1`
