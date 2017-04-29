@@ -2505,19 +2505,18 @@ def run_program(commands,
                 else:
                     stack.append(a[-1])
 
-
             elif current_command == "\u2039":
                 b, a = pop_stack(2)
                 if type(a) is list:
                     temp_list = []
                     for Q in a:
-                        if int(Q) < int(b):
+                        if ast_int_eval(Q) < ast_int_eval(b):
                             temp_list.append(1)
                         else:
                             temp_list.append(0)
                     stack.append(temp_list)
                 else:
-                    if int(a) < int(b):
+                    if ast_int_eval(a) < ast_int_eval(b):
                         stack.append(1)
                     else:
                         stack.append(0)
@@ -2527,13 +2526,13 @@ def run_program(commands,
                 if type(a) is list:
                     temp_list = []
                     for Q in a:
-                        if int(Q) > int(b):
+                        if ast_int_eval(Q) > ast_int_eval(b):
                             temp_list.append(1)
                         else:
                             temp_list.append(0)
                     stack.append(temp_list)
                 else:
-                    if int(a) > int(b):
+                    if ast_int_eval(a) > ast_int_eval(b):
                         stack.append(1)
                     else:
                         stack.append(0)
