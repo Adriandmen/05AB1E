@@ -1,9 +1,38 @@
-Functions:
-
+«ù	=
+ í	=
+Œ±	=
+Œ≤	=
+Œ≥	=
+Œ¥	=
+Œµ	=
+Œ∂	=
+Œ∑	=
+Œ∏	=
+–≤	=
+–∏	=
+–º	=
+–Ω	=
+—Ç	=
+Œì	=
+Œî	=
+Œò	=
+Œπ	=
+Œ£	=
+Œ©	=
+‚â†	=
+‚àä	=
+‚àç	=
+‚àû	=
+‚ÇÅ	=
+‚ÇÇ	=
+‚ÇÉ	=
+‚ÇÑ	=
+‚ÇÖ	=
+‚ÇÜ	=
 !	= pop a,     push factorial(a)
 "	= start/end string literal
-# 1	= pop a      if true: break/end (used in infinite loops)
-# 2	= pop a      if contains spaces, split on spaces
+#  	= pop a      if true: break/end (used in infinite loops)
+#  	= pop a      if contains spaces, split on spaces
 $	=            push 1 and input (used for sequences)
 %	= pop a,b    push (a % b)
 &	= pop a,b    push a AND b
@@ -95,184 +124,181 @@ z	= pop a      push 1 / a
 |	=            push the rest of input as an array with strings
 }	=            used to close if statements, loops, etc.
 ~	= pop a,b    push a OR b
-
-Extended ASCII characters (CP-1252)
-
-Ä 0     = for each command
-Ç 1	= pop a,b    push [a, b]
-É 2	= pop a      push for N in range(0, a + 1)
-Ñ 3	= 2 char string / can also be used for 2 compressed strings
-Ö 4	= 3 char string / can also be used for 3 compressed strings
-Ü 5	= pop a,b    push a with b filtered to the front
-á 6	= pop a,b,c  push a.transliterate(b -> c)
-à 7	= pop a      add to global array
-â 8	= pop a,b    push a divmod b
-ä 9	= pop a,b,c  push c,a,b
-ã 10	= pop a,b    push a < b
-å 11	= pop a      push substrings(a)
-é 12	= break if stack is empty
-ë -	= for compressed strings (upper)
-í - 	= for compressed strings (no implicit space)
-ì -	= for compressed strings (normal)
-î -	= for compressed strings (title)
-ï 15	= start/end a 1-9 char compressed string
-ñ 16	= pop a      if 1, print N (used in loops)
-ó 17	= pop a      if 1, print y (used in loops)
-ò   	= pop a      push deep flattened a
-ô 19	= pop a      push title_cased(a)
-ö 20	= pop a      push switch_cased(a)
-õ 21	= pop a,b    push a > b
-ú 22	= pop a      push permutations(a)
-
-û 23  > ûa           push current hours
-        ûb           push current minutes
-        ûc           push current seconds
-        ûd           push current microseconds
-        ûe	     push current day
-        ûf           push current month
-        ûg           push current year
-        ûh           push [0-9]
-        ûi           push [a-zA-Z]
-        ûj           push [a-zA-Z0-9_]
-        ûk           push [z-aZ-A]
-        ûl           push [z-aZ-A9-0_]
-        ûm           push [9-0]
-        ûn           push [A-Za-z]
-        ûo           push [Z-Az-a]
-        ûp           push [Z-A]
-	ûq	     push pi
-	ûr	     push e
-	ûs	     pop a, push pi to a digits (max. 100000)
-	ût	     pop a, push e to a digits (max. 10000)
-	ûu	     push ()<>[]{}
-	ûv	     push 16
-	ûw	     push 32
-	ûx	     push 64
-	ûy	     push 128
-	ûz	     push 256
-	ûA	     push 512
-	ûB	     push 1024
-	ûC	     push 2048
-	ûD	     push 4096
-	ûE	     push 8192
-	ûF	     push 16384
-	ûG	     push 32768
-	ûH	     push 65536
-	ûI	     push 2147483648
-	ûJ	     push 4294967296
-        ûK           push [a-zA-Z0-9]
-        ûL           push [z-aZ-A9-0]
-        ûM           push aeiou
-        ûN           push bcdfghjklmnpqrstvwxyz
-        ûO           push aeiouy
-        ûP           push bcdfghjklmnpqrstvwxz
-        ûQ           push printable ASCII character set (32-128)
-        ûR           push ABC
-
-
-ü 24	= pop a,b    push [a, ..., b]
-° 25	= pop a,b    push a.split(b)  
-¢ 26	= pop a,b    push a.count(b)
-£ 27	= pop a,b    push a[0:b]
-§ 28	= get a      push tail(a)
-• 29	= pop a      push delta's a
-¶ 30	= pop a      push a[1:]
-ß 31	= pop a      push str(a)
-® 32	= pop a      push a[0:-1]
-© 33	= store a in register_c without popping
-™ 34	= pop a      push sentence_cased(a)
-´ 35	= pop a,b    push concatenated(a, b)
-¨ 36	= get a      push head(a)
-Æ 37	=            push the last item from register_c
-Ø 38	=            push global array
-∞ 39	= pop a      push 10 ** a
-± 40	= pop a      push bitwise not a
-≤ 41	=            push the second item from the input history
-≥ 42	=            push the third item from the input history
-¥ 43	=            clear global array
-µ 44	= pop a      while counter_variable != a, do...
-∂ 45	=            push newline character
-∑ 46	= pop a      push 2 * a
-∏ 47	= pop a      push [a]
-π 48	=            push the first item from the input history
-∫ 49	=            push len(stack) > 0
-ª 50	= pop (a)    if list, join list by newlines, else join stack by newlines
-º 51	= counter_variable += 1
-Ω 52	= pop a,     if 1, then counter_variable += 1
-æ 53	=            push counter_variable
-ø 54	= pop a      push gcd(a)
-¿ 55	= pop a      push a rotated 1 left
-¡ 56	= pop a      push a rotated 1 right
-¬ 57	= pop a      push bifurcated a
-√ 58	= pop a,b    push a.keep(b)
-ƒ 59	= pop a      push abs(a)
-≈ 60	= list commands
-∆ 61	= pop a      push reduced substraction a
-« 62	= pop a      push ASCII value of a
-» 63	= pop a      push a % 2 == 0 (is even)
-… 64	= pop a      push a % 2 == 1 (is uneven)
-  65	= pop a,b    push a != b
-À 66	= pop a      push 1 if all equal else 0
-Ã 67	= pop a      push a + 2
-Õ 68	= pop a      push a - 2
-Œ 69	= push 0 and input
-œ 70	= pop a,b    push the elements from a at which the same index at b is 1
-– 71	= triplicate top of stack (pop a, push a, push a, push a)
-— 72	= pop a      push divisors(a)
-“ 73	= pop a      push list of prime factors (with duplicates)
-” 74	= pop a      push list of exponents of prime factors (2^a, 3^b, 5^c, 7^d, etc.)
-‘ 75	= pop a      push connected uniquified a
-’ 76	= pop a      push euler_totient(a)
-÷ 77	= pop a,b    push a % b == 0
-◊ 78	= pop a,b    push a ◊ b (strings)
-ÿ 79	= pop a      push ath prime (zero-indexed)
-Ÿ 80	= pop a      push uniquified a
-⁄ 81	= pop a      push reverse uniquified a
-€ 82	= pop a,b    push a with leading b's trimmed off
-‹ 83	= pop a,b    push a with trailing b's trimmed off
-› 84	= pop a      push [0 .. a]
-ﬁ 85	= pop a      push float(a)
-ﬂ 86	= pop smallest element of list
-‡ 87	= pop greatest element of list
-· 88	= pop a      push only letters of a
-‚ 89	= pop a,(b)  push cartesian product
-„ 90	= pop a,b    push a choose b (cartesian product repeat)
-‰ 91	= pop a,b    push a sliced into b pieces
-Â 92	= pop a,b    push a in b
-Ê 93	= pop a      push powerset(a)
-Á 94	= pop a      push char a
-Ë 95	= pop a,b    push a[b]
-È 96	= pop a      push sorted a (key=length)
-Í 97    = pop a      push sorted_uniquified(a)
-Î 98	= else statement
-Ï 99	= pop a,b    push a.prepend(b)
-Ì 13	= pop a      push [reversed Q for Q in a] (short for ÄR)
-Ó 14	= pop a      push round_up(a)
-Ô 18	= pop a      push int(a)
-	=            push a space character
-Ò	= pop a,b,c  push a + b merged with c as merge character
-Ú	= pop a      push inclusive round up a
-Û	= pop a      push inclusive round down a
-Ù	= pop a,b    push a split in pieces of b
-ı	=  	     push empty string
-ˆ	= pop a,b    push int(a, b)
-˜	= pop a,b    push a // b (integer division)
-¯	= pop a      push zipped a
-˘	= pop a,b    push a with elements of length b
-˙	= pop a,b    push a padded with b spaces in the front
-˚	= pop a      push palindromized(a), 12345 becomes 123454321 (a + a[::-1][1:])
-¸	= pairwise command (vectorizes if the first element is a list)
-˝	= pop (a),b  push b.join(a) if a is list, else b.join(stack)
-˛	= pop a      push only digits of a
-ˇ	= used for string interpolation, pop a and replace ˇ with str(a)
-
-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!"#$%&'()*+/:;<=>?@[\]^_`{|}
-
-Extended functions:
-
-.Ä	= debug printer
-.‰	= debug printer
-.Â	= pop a,b    push a in b (vectorized)
+∆µ	=
+‚Ç¨ 0     = for each command
+Œõ	=
+‚Äö 1	= pop a,b    push [a, b]
+∆í 2	= pop a      push for N in range(0, a + 1)
+‚Äû 3	= 2 char string / can also be used for 2 compressed strings
+‚Ä¶ 4	= 3 char string / can also be used for 3 compressed strings
+‚Ä† 5	= pop a,b    push a with b filtered to the front
+‚Ä° 6	= pop a,b,c  push a.transliterate(b -> c)
+ÀÜ 7	= pop a      add to global array
+‚Ä∞ 8	= pop a,b    push a divmod b
+≈† 9	= pop a,b,c  push c,a,b
+‚Äπ 10	= pop a,b    push a < b
+≈í 11	= pop a      push substrings(a)
+ƒÜ	=
+≈Ω 12	= break if stack is empty
+∆∂	=
+ƒÄ	=
+‚Äò -	= for compressed strings (upper)
+‚Äô - 	= for compressed strings (no implicit space)
+‚Äú -	= for compressed strings (normal)
+‚Äù -	= for compressed strings (title)
+‚Ä¢ 15	= start/end a 1-9 char compressed string
+‚Äì 16	= pop a      if 1, print N (used in loops)
+‚Äî 17	= pop a      if 1, print y (used in loops)
+Àú   	= pop a      push deep flattened a
+‚Ñ¢ 19	= pop a      push title_cased(a)
+≈° 20	= pop a      push switch_cased(a)
+‚Ä∫ 21	= pop a,b    push a > b
+≈ì 22	= pop a      push permutations(a)
+ƒá	=
+≈æ 23  > ≈æa           push current hours
+        ≈æb           push current minutes
+        ≈æc           push current seconds
+        ≈æd           push current microseconds
+        ≈æe	     push current day
+        ≈æf           push current month
+        ≈æg           push current year
+        ≈æh           push [0-9]
+        ≈æi           push [a-zA-Z]
+        ≈æj           push [a-zA-Z0-9_]
+        ≈æk           push [z-aZ-A]
+        ≈æl           push [z-aZ-A9-0_]
+        ≈æm           push [9-0]
+        ≈æn           push [A-Za-z]
+        ≈æo           push [Z-Az-a]
+        ≈æp           push [Z-A]
+	≈æq	     push pi
+	≈ær	     push e
+	≈æs	     pop a, push pi to a digits (max. 100000)
+	≈æt	     pop a, push e to a digits (max. 10000)
+	≈æu	     push ()<>[]{}
+	≈æv	     push 16
+	≈æw	     push 32
+	≈æx	     push 64
+	≈æy	     push 128
+	≈æz	     push 256
+	≈æA	     push 512
+	≈æB	     push 1024
+	≈æC	     push 2048
+	≈æD	     push 4096
+	≈æE	     push 8192
+	≈æF	     push 16384
+	≈æG	     push 32768
+	≈æH	     push 65536
+	≈æI	     push 2147483648
+	≈æJ	     push 4294967296
+        ≈æK           push [a-zA-Z0-9]
+        ≈æL           push [z-aZ-A9-0]
+        ≈æM           push aeiou
+        ≈æN           push bcdfghjklmnpqrstvwxyz
+        ≈æO           push aeiouy
+        ≈æP           push bcdfghjklmnpqrstvwxz
+        ≈æQ           push printable ASCII character set (32-128)
+        ≈æR           push ABC
+≈∏ 24	= pop a,b    push [a, ..., b]
+ƒÅ	=
+¬° 25	= pop a,b    push a.split(b)  
+¬¢ 26	= pop a,b    push a.count(b)
+¬£ 27	= pop a,b    push a[0:b]
+¬§ 28	= get a      push tail(a)
+¬• 29	= pop a      push delta's a
+¬¶ 30	= pop a      push a[1:]
+¬ß 31	= pop a      push str(a)
+¬® 32	= pop a      push a[0:-1]
+¬© 33	= store a in register_c without popping
+¬™ 34	= pop a      push sentence_cased(a)
+¬´ 35	= pop a,b    push concatenated(a, b)
+¬¨ 36	= get a      push head(a)
+Œª	=
+¬Æ 37	=            push the last item from register_c
+¬Ø 38	=            push global array
+¬∞ 39	= pop a      push 10 ** a
+¬± 40	= pop a      push bitwise not a
+¬≤ 41	=            push the second item from the input history
+¬≥ 42	=            push the third item from the input history
+¬¥ 43	=            clear global array
+¬µ 44	= pop a      while counter_variable != a, do...
+¬∂ 45	=            push newline character
+¬∑ 46	= pop a      push 2 * a
+¬∏ 47	= pop a      push [a]
+¬π 48	=            push the first item from the input history
+¬∫ 49	=            push len(stack) > 0
+¬ª 50	= pop (a)    if list, join list by newlines, else join stack by newlines
+¬º 51	= counter_variable += 1
+¬Ω 52	= pop a,     if 1, then counter_variable += 1
+¬æ 53	=            push counter_variable
+¬ø 54	= pop a      push gcd(a)
+√Ä 55	= pop a      push a rotated 1 left
+√Å 56	= pop a      push a rotated 1 right
+√Ç 57	= pop a      push bifurcated a
+√É 58	= pop a,b    push a.keep(b)
+√Ñ 59	= pop a      push abs(a)
+√Ö 60	= list commands
+√Ü 61	= pop a      push reduced substraction a
+√á 62	= pop a      push ASCII value of a
+√à 63	= pop a      push a % 2 == 0 (is even)
+√â 64	= pop a      push a % 2 == 1 (is uneven)
+√ä 65	= pop a,b    push a != b
+√ã 66	= pop a      push 1 if all equal else 0
+√å 67	= pop a      push a + 2
+√ç 68	= pop a      push a - 2
+√é 69	= push 0 and input
+√è 70	= pop a,b    push the elements from a at which the same index at b is 1
+√ê 71	= triplicate top of stack (pop a, push a, push a, push a)
+√ë 72	= pop a      push divisors(a)
+√í 73	= pop a      push list of prime factors (with duplicates)
+√ì 74	= pop a      push list of exponents of prime factors (2^a, 3^b, 5^c, 7^d, etc.)
+√î 75	= pop a      push connected uniquified a
+√ï 76	= pop a      push euler_totient(a)
+√ñ 77	= pop a,b    push a % b == 0
+√ó 78	= pop a,b    push a √ó b (strings)
+√ò 79	= pop a      push ath prime (zero-indexed)
+√ô 80	= pop a      push uniquified a
+√ö 81	= pop a      push reverse uniquified a
+√õ 82	= pop a,b    push a with leading b's trimmed off
+√ú 83	= pop a,b    push a with trailing b's trimmed off
+√ù 84	= pop a      push [0 .. a]
+√û 85	= pop a      push float(a)
+√ü 86	= pop smallest element of list
+√† 87	= pop greatest element of list
+√° 88	= pop a      push only letters of a
+√¢ 89	= pop a,(b)  push cartesian product
+√£ 90	= pop a,b    push a choose b (cartesian product repeat)
+√§ 91	= pop a,b    push a sliced into b pieces
+√• 92	= pop a,b    push a in b
+√¶ 93	= pop a      push powerset(a)
+√ß 94	= pop a      push char a
+√® 95	= pop a,b    push a[b]
+√© 96	= pop a      push sorted a (key=length)
+√™ 97    = pop a      push sorted_uniquified(a)
+√´ 98	= else statement
+√¨ 99	= pop a,b    push a.prepend(b)
+√≠ 13	= pop a      push [reversed Q for Q in a] (short for ‚Ç¨R)
+√Æ 14	= pop a      push round_up(a)
+√Ø 18	= pop a      push int(a)
+√∞	=            push a space character
+√±	= pop a,b,c  push a + b merged with c as merge character
+√≤	= pop a      push inclusive round up a
+√≥	= pop a      push inclusive round down a
+√¥	= pop a,b    push a split in pieces of b
+√µ	=  	     push empty string
+√∂	= pop a,b    push int(a, b)
+√∑	= pop a,b    push a // b (integer division)
+√∏	= pop a      push zipped a
+√π	= pop a,b    push a with elements of length b
+√∫	= pop a,b    push a padded with b spaces in the front
+√ª	= pop a      push palindromized(a), 12345 becomes 123454321 (a + a[::-1][1:])
+√º	= pairwise command (vectorizes if the first element is a list)
+√Ω	= pop (a),b  push b.join(a) if a is list, else b.join(stack)
+√æ	= pop a      push only digits of a
+√ø	= used for string interpolation, pop a and replace √ø with str(a)
+.‚Ç¨	= debug printer
+.√§	= debug printer
+.√•	= pop a,b    push a in b (vectorized)
 .A      = pop a      push acronymified a
 .b	= pop a      push letterified(a)
 .B	= pop a      push squarified(a)
@@ -303,15 +329,15 @@ Extended functions:
 .w	= pop a      push a.readall() (internet access, doesn't work in safe mode) (returns 0 on error)
 .W	= pop a      wait a milliseconds
 .:	= pop a,b,c  push a.replace(b, c)
-.≤	= pop a      push log_2(a)
-.Ô	= pop a      push is int(a)
-.ø	= pop a,(b)  push lcm(a, (b))
-.à	= pop a      insert a into global array and after quit, print array[input_1]
+.¬≤	= pop a      push log_2(a)
+.√Ø	= pop a      push is int(a)
+.¬ø	= pop a,(b)  push lcm(a, (b))
+.ÀÜ	= pop a      insert a into global array and after quit, print array[input_1]
 .^	= pop a	     insert a into global array with immediate sorting and after quit, print array[input_1]
-.¯	= pop a,b    surround a with b
-.´	= foldr	     folds a dyadic command between each element in a list from right to left
-.ª	= foldl      folds a dyadic command between each element in a list from right to left with opposite right/left operands
-.¿	=            rotate stack 1 left
-.¡	=            rotate stack 1 right
-.◊      = pop a,b    push the list a repeated b times
-.°      = pop a      push a split into chunks of consecutive equal elements
+.√∏	= pop a,b    surround a with b
+.¬´	= foldr	     folds a dyadic command between each element in a list from right to left
+.¬ª	= foldl      folds a dyadic command between each element in a list from right to left with opposite right/left operands
+.√Ä	=            rotate stack 1 left
+.√Å	=            rotate stack 1 right
+.√ó      = pop a,b    push the list a repeated b times
+.¬°      = pop a      push a split into chunks of consecutive equal elements
