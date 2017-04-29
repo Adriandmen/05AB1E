@@ -37,6 +37,9 @@
 1234S23SK           EXPECT `['1', '4']`
 1234ï 23ïK          EXPECT `14`
 
+// Replacement bug fix
+"'[([]{})<{[()<()>]}()>{}]'" "[](){}<>"2ô"":g2Q     EXPECT `1`
+
 // Equal boolean
 1 1Q                EXPECT `1`
 1 2Q                EXPECT `0`
