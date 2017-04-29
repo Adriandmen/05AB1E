@@ -11,6 +11,7 @@ import random
 
 from constants import *
 from commands import *
+from encoding import *
 
 stack = []
 exit_program = []
@@ -4164,7 +4165,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', '--debug', help="Debug mode", action="store_true")
     parser.add_argument('-s', '--safe', help="Safe mode", action="store_true")
-    parser.add_argument('-c', '--cp1252', help="Encode from CP-1252", action="store_true")
+    parser.add_argument('-c', '--osabie', help="Encode from osabie", action="store_true")
     parser.add_argument('-t', '--time', help="Time the program", action="store_true")
     parser.add_argument('-e', '--eval', help="Evaluate as 05AB1E code", action="store", type=str, nargs="?", default=argparse.SUPPRESS)
     parser.add_argument("program_path", help="Program path", action="store", type=str, nargs="?")
@@ -4173,7 +4174,7 @@ if __name__ == "__main__":
     filename = args.program_path
     DEBUG = args.debug
     SAFE_MODE = args.safe
-    ENCODE_CP1252 = args.cp1252
+    ENCODE_OSABIE = args.osabie
     TIME_IT = args.time
 
     EVAL = None
@@ -4191,8 +4192,9 @@ if __name__ == "__main__":
     if EVAL:
         code = EVAL
     # Do not load from file if just eval'ing
-    elif ENCODE_CP1252:
-        code = open(filename, "r", encoding="cp1252").read()
+    elif ENCODE_OSABIE:
+        code = open(filename, "r", encoding="utf-8").read()
+        code = osabie_to_utf8(code)
     else:
         code = open(filename, "r", encoding="utf-8").read()
 
