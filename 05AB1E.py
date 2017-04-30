@@ -2521,6 +2521,47 @@ def run_program(commands,
                     else:
                         stack.append(0)
 
+            elif current_command == "\u0292":
+                a = pop_stack(1)
+                if type(a) is int:
+                    a = str(a)
+
+                temp_stack = []
+                temp_list = []
+                for Q in stack:
+                    temp_stack.append(Q)
+                stack.clear()
+
+                filter_code = ""
+                string_mode = False
+                while True:
+                    try:
+                        pointer_position += 1
+                        if commands[pointer_position] not in "\"\u2018\u2019\u201C\u201D":
+                            string_mode = not string_mode
+
+                        if commands[pointer_position] == "}" and not string_mode:
+                            break
+
+                        filter_code += commands[pointer_position]
+                    except:
+                        break
+
+                for Q in a:
+                    stack.append(Q)
+                    run_program(filter_code, DEBUG, SAFE_MODE, True, range_variable, string_variable)
+                    if not stack:
+                        continue
+                    if stack[-1] == 1 or stack[-1] == "1":
+                        temp_list.append(Q)
+                    stack.clear()
+
+                stack.clear()
+                for Q in temp_stack:
+                    stack.append(Q)
+                stack.append(temp_list)
+
+
             elif current_command == "\u203A":
                 b, a = pop_stack(2)
                 if type(a) is list:

@@ -1,5 +1,5 @@
 ǝ	=
-ʒ	=
+ʒ	= pop a      filter a when the reuslt of code == 1: usage ʒCODE}
 α	=
 β	=
 γ	=
