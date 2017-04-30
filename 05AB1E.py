@@ -3546,6 +3546,27 @@ def run_program(commands,
                 for Q in temp_stack[:-1]:
                     stack.append(Q)
 
+            elif current_command == "\u0106":
+                a = pop_stack(1)
+                if type(a) is int:
+                    a = str(a)
+
+                if a == "":
+                    stack.append("")
+                else:
+                    stack.append(a + [a[0]] if type(a) is list else a + a[0])
+
+            elif current_command == "\u0107":
+                a = pop_stack(1)
+                if type(a) is int:
+                    a = str(a)
+
+                if a == "":
+                    stack.append("")
+                else:
+                    stack.append(a[0])
+                    stack.append(a[1:])
+
             elif current_command == "\u20AC":
                 a = pop_stack(1)
                 if type(a) is int:
