@@ -142,7 +142,7 @@ z	= pop a      push 1 / a
 Š 9	= pop a,b,c  push c,a,b
 ‹ 10	= pop a,b    push a < b
 Œ 11	= pop a      push substrings(a)
-Ć	=
+Ć	= pop a      push enclosed a: a + a[0]
 Ž 12	= break if stack is empty
 ƶ	=
 Ā	=
@@ -158,7 +158,7 @@ z	= pop a      push 1 / a
 š 20	= pop a      push switch_cased(a)
 › 21	= pop a,b    push a > b
 œ 22	= pop a      push permutations(a)
-ć	=
+ć	= pop a          push head_extracted a: a[0], a[1:]
 
 
 ž 23  > ža           push current hours
