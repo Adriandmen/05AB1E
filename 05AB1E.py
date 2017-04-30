@@ -3548,6 +3548,8 @@ def run_program(commands,
 
             elif current_command == "\u20AC":
                 a = pop_stack(1)
+                if type(a) is int:
+                    a = str(a)
                 temp_stack = []
                 temp_list = []
                 for Q in stack:
@@ -3555,6 +3557,9 @@ def run_program(commands,
                 stack.clear()
                 pointer_position += 1
                 for_each_command = commands[pointer_position]
+                if for_each_command in ".\u00c5\u20AC":
+                    pointer_position += 1
+                    for_each_command += commands[pointer_position]
                 for Q in a:
                     stack.append(Q)
                     run_program(for_each_command, DEBUG, SAFE_MODE, True, range_variable, string_variable)
