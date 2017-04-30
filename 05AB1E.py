@@ -32,7 +32,7 @@ counter_variable = [0]
 global_array = []
 
 # Looping commands:
-loop_commands = ["F", "i", "v", "G", "\u0192"]
+loop_commands = ["F", "i", "v", "G", "\u0192", "\u0292", "\u03A3"]
 
 # Global data
 
@@ -2561,6 +2561,41 @@ def run_program(commands,
                     stack.append(Q)
                 stack.append(temp_list)
 
+            elif current_command == "\u03A3":
+                a = pop_stack(1)
+                if type(a) is int:
+                    a = str(a)
+
+                temp_stack = []
+                temp_list = []
+                for Q in stack:
+                    temp_stack.append(Q)
+                stack.clear()
+
+                sort_code = ""
+                string_mode = False
+                while True:
+                    try:
+                        pointer_position += 1
+                        if commands[pointer_position] not in "\"\u2018\u2019\u201C\u201D":
+                            string_mode = not string_mode
+
+                        if commands[pointer_position] == "}" and not string_mode:
+                            break
+
+                        sort_code += commands[pointer_position]
+                    except:
+                        break
+
+                for Q in a:
+                    stack.append(Q)
+                    run_program(sort_code, DEBUG, SAFE_MODE, True, range_variable, string_variable)
+                    temp_list.append([stack[-1] if stack else float('inf'), Q])
+                    stack.clear()
+
+                stack.clear()
+                temp_list = sorted(temp_list)
+                stack.append([x[1] for x in temp_list] if type(a) is list else ''.join([x[1] for x in temp_list]))
 
             elif current_command == "\u203A":
                 b, a = pop_stack(2)
@@ -4126,6 +4161,9 @@ def run_program(commands,
 
             elif current_command == "\u017eW":
                 stack.append("qwertyuiopasdfghjklzxcvbnm")
+
+            elif current_command == "\u0442":
+                stack.append(100)
 
             elif current_command == ".:":
                 c, b, a = pop_stack(3)

@@ -1,5 +1,5 @@
 ǝ	=
-ʒ	= pop a      filter a when the reuslt of code == 1: usage ʒCODE}
+ʒ	= pop a      filter a when the result of code == 1: usage ʒCODE}
 α	=
 β	=
 γ	=
@@ -12,12 +12,12 @@
 и	=
 м	=
 н	=
-т	=
+т	=            push 100
 Γ	=
 Δ	=
 Θ	=
 ι	=
-Σ	=
+Σ	= pop a      sort a by the result of code: usage ΣCODE}
 Ω	=
 ≠	=
 ∊	=
@@ -30,7 +30,7 @@
 ₅	=
 ₆	=
 
-
+                
 !	= pop a,     push factorial(a)
 "	= start/end string literal
 #  	= pop a      if true: break/end (used in infinite loops)
