@@ -429,10 +429,10 @@ def infinite_replace(object1, object2, object3):
     elif type(object1) is list and type(object2) is list and type(object3) is str:
         result_list = []
         for sub_element in object1:
-            for sub_start in object2:
-                previous_object = ""
-                while previous_object != sub_element:
-                    previous_object = sub_element
+            previous_object = ""
+            while previous_object != sub_element:
+                previous_object = sub_element
+                for sub_start in object2:
                     while sub_element.replace(sub_start, object3) != sub_element:
                         sub_element = sub_element.replace(sub_start, object3)
             result_list.append(sub_element)
@@ -442,10 +442,10 @@ def infinite_replace(object1, object2, object3):
     elif type(object1) is list and type(object2) is list and type(object3) is list:
         result_list = []
         for sub_element in object1:
-            for sub_index in range(0, len(object2)):
-                previous_object = ""
-                while previous_object != sub_element:
-                    previous_object = sub_element
+            previous_object = ""
+            while previous_object != sub_element:
+                previous_object = sub_element
+                for sub_index in range(0, len(object2)):
                     while sub_element.replace(object2[sub_index], object3[sub_index]) != sub_element:
                         sub_element = sub_element.replace(object2[sub_index], object3[sub_index])
             result_list.append(sub_element)
