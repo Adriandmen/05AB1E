@@ -8,7 +8,7 @@
 ζ	=
 η	=
 θ	=
-в	=
+в	= pop a,b    push base(a, b) (arbitrary)
 и	=
 м	=
 н	=
