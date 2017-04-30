@@ -249,6 +249,26 @@ def run_program(commands,
                 else:
                     stack.append(convert_to_base(a, b))
 
+            elif current_command == "\u0432":
+                b, a = pop_stack(2)
+                if type(a) is list and type(b) is list:
+                    temp_list = []
+                    for Q in range(0, len(a)):
+                        temp_list.append(convert_to_base_arbitrary(abs(ast_int_eval(str(a[Q]))), ast_int_eval(str(b[Q]))))
+                    stack.append(temp_list)
+                elif type(a) is list:
+                    temp_list = []
+                    for Q in a:
+                        temp_list.append(convert_to_base_arbitrary(abs(int(Q)), int(b)))
+                    stack.append(temp_list)
+                elif type(b) is list:
+                    temp_list = []
+                    for Q in b:
+                        temp_list.append(convert_to_base_arbitrary(abs(int(a)), int(Q)))
+                    stack.append(temp_list)
+                else:
+                    stack.append(convert_to_base_arbitrary(a, b))
+
             elif is_digit_value(current_command):
                 temp_number = ""
                 temp_number += current_command
