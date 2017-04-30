@@ -351,3 +351,4 @@ z	= pop a      push 1 / a
 .Á	=            rotate stack 1 right
 .×      = pop a,b    push the list a repeated b times
 .¡      = pop a      push a split into chunks of consecutive equal elements
+.•  = decompress a base 255 alphabet based string
