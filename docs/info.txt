@@ -1,14 +1,14 @@
 ǝ	=
 ʒ	= pop a      filter a when the result of code == 1: usage ʒCODE}
 α	=
-β	=
+β	= pop a,b    push a converted from base b (arbitrary)
 γ	=
 δ	=
 ε	=
 ζ	=
 η	=
 θ	=
-в	= pop a,b    push base(a, b) (arbitrary)
+в	= pop a,b    push a converted to base b (arbitrary)
 и	=
 м	=
 н	=

@@ -171,6 +171,19 @@ def convert_from_base(n, base):
     return r
 
 
+def convert_from_base_arbitrary(n, base):
+
+    n = n[::-1]
+    r = 0
+    range_v = 0
+
+    for Q in n:
+        r += int(Q) * base ** range_v
+        range_v += 1
+
+    return r
+
+
 def is_prime(n):
     if n == 2 or n == 3:
         return 1

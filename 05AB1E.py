@@ -3452,7 +3452,33 @@ def run_program(commands,
                         temp_string += current_command
                         pointer_position += 1
                 pointer_position += 1
-                stack.append(convert_from_base(temp_string, 214))
+                stack.append(convert_from_base(temp_string, 255))
+
+            elif current_command == ".\u2022":
+                temp_string = ""
+                temp_string_2 = ""
+                temp_position = pointer_position
+                while temp_position < len(commands) - 1:
+                    temp_position += 1
+                    try:
+                        current_command = commands[temp_position]
+                    except:
+                        break
+                    if current_command == "\u2022":
+                        break
+                    else:
+                        temp_string += current_command
+                        pointer_position += 1
+                pointer_position += 1
+                processed_value = convert_from_base(temp_string, 255)
+                processed_value = convert_to_base_arbitrary(processed_value, 27)
+                stack.append(''.join([chr(x + 96) if x > 0 else " " for x in processed_value]))
+
+            elif current_command == "\u03B2":
+                b = pop_stack(1)
+                a = pop_stack(1)
+
+                stack.append(convert_from_base_arbitrary(a, int(b)))
 
             elif current_command == ".L":
                 b = pop_stack(1)
