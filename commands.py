@@ -99,6 +99,48 @@ def convert_to_base(n, base):
     return s
 
 
+def convert_to_base_arbitrary(n, base):
+
+    if int(n) == 0:
+        return [0]
+
+    try:
+        n = int(n)
+        base = int(base)
+    except:
+        return ""
+
+    if n > 0 and base == 1:
+        return "0" * n
+
+    s = []
+    if base > 0:
+        while 1:
+            r = n % base
+            s = [int(r)] + s
+            n = n // base
+            if n == 0:
+                break
+    else:
+        while True:
+            n, remainder = divmod(n, base)
+
+            if remainder < 0:
+                n, remainder = n + 1, remainder - base
+
+            s = [remainder] + s
+            if n == 0:
+                break
+
+    try:
+        while s[0] == "0":
+            s = s[1:]
+    except:
+        pass
+
+    return s
+
+
 def convert_from_base(n, base):
 
     digits = "\u0030\u0031\u0032\u0033\u0034\u0035\u0036\u0037\u0038\u0039\u0041\u0042\u0043\u0044\u0045\u0046" \
