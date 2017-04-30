@@ -86,6 +86,13 @@
 789S 4B             EXPECT `['13', '20', '21']`
 789S 234SB          EXPECT `['111', '22', '21']`
 
+// Arbitrary base conversion
+5 2в                EXPECT `[1, 0, 1]`
+100 2в              EXPECT `[1, 1, 0, 0, 1, 0, 0]`
+100 7в              EXPECT `[2, 0, 2]`
+7 2(в               EXPECT `[1, 1, 0, 1, 1]`
+167 7(в             EXPECT `[4, 5, 6]`
+
 // Convert from binary
 101C                EXPECT `5`
 1001C               EXPECT `9`
