@@ -9,7 +9,7 @@
 
 You can try this language out yourself at: [Try it online!](http://05ab1e.tryitonline.net/). This interpreter is provided by [DennisMitchell](https://github.com/DennisMitchell).
 
-All existing commands can be found at [_Info.txt_](https://github.com/Adriandmen/05AB1E/blob/master/Info.txt)
+All existing commands can be found at [_Info.txt_](https://github.com/Adriandmen/05AB1E/blob/master/docs/info.txt)
 
 <br>
 
@@ -51,7 +51,7 @@ To push an integer, just place any arbitrary integer in the progam. For example,
 
     4 15
 
-This pushes the numbers **4** and **15**. To multiply both numbers, just add the multiply command (or any other command from [Info.txt](https://github.com/Adriandmen/05AB1E/blob/master/Info.txt)):
+This pushes the numbers **4** and **15**. To multiply both numbers, just add the multiply command (or any other command from [Info.txt](https://github.com/Adriandmen/05AB1E/blob/master/docs/info.txt)):
 
     4 15*
 
