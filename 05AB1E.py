@@ -1,7 +1,7 @@
 import argparse
 import time
 import math
-import dictionary
+import lib.dictionary as dictionary
 import ast
 import itertools
 import datetime
@@ -9,9 +9,9 @@ import os
 import tempfile
 import random
 
-from constants import *
-from commands import *
-from encoding import *
+from lib.constants import *
+from lib.commands import *
+from lib.encoding import *
 
 stack = []
 exit_program = []

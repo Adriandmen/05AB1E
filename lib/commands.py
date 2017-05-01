@@ -2,7 +2,6 @@ import collections
 import math
 import fractions
 from functools import reduce
-from encoding import *
 
 letters = list("abcdefghijklmnopqrstuvwxyz")
 numbers = list("0123456789")
