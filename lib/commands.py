@@ -302,8 +302,8 @@ def get_nth_prime(n):
 
 
 def get_all_substrings(input_string):
-  length = len(input_string)
-  return [input_string[i:j+1] for i in range(length) for j in range(i, length)]
+    length = len(input_string)
+    return [input_string[i:j+1] for i in range(length) for j in range(i, length)]
 
 
 def command_gcd(numbers):
@@ -506,3 +506,13 @@ def infinite_replace(object1, object2, object3):
         return result_list
 
     raise Exception
+
+
+def divisors_of_number(n):
+
+    temp_list = []
+    for N in range(1, int(n) + 1):
+        if int(n) % N == 0:
+            temp_list.append(N)
+
+    return temp_list

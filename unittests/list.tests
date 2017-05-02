@@ -63,6 +63,7 @@
 
 // Zip
 "abc""def"ø         EXPECT `['ad', 'be', 'cf']`
-"abc""def"Sø        EXPECT `['ad', 'be', 'cf']`
+"abc""def"Sø        EXPECT `[['a', 'd'], ['b', 'e'], ['c', 'f']]`
+"abc"S"def"ø        EXPECT `[['a', 'd'], ['b', 'e'], ['c', 'f']]`
 "abc""def")ø        EXPECT `['ad', 'be', 'cf']`
-"abc"S"def"S)ø      EXPECT `['ad', 'be', 'cf']`
+"abc"S"def"S)ø      EXPECT `[['a', 'd'], ['b', 'e'], ['c', 'f']]`

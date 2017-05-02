@@ -195,7 +195,7 @@
 // Inverse
 4z                  EXPECT `0.25`
 8z                  EXPECT `0.125`
-4 8z                EXPECT `[0.25, 0.125]`
+4 8)z               EXPECT `[0.25, 0.125]`
 
 // Bitwise OR
 45 12~              EXPECT `45`
@@ -214,7 +214,7 @@
 )¥                  EXPECT `[]`
 1234¥               EXPECT `[1, 1, 1]`
 4132¥               EXPECT `[-3, 2, -1]`
-1¥                  EXPECT `1`
+1¥                  EXPECT `[]`
 
 // 10**a function
 3°                  EXPECT `1000`
@@ -306,3 +306,8 @@
 11 4÷               EXPECT `2`
 12 4÷               EXPECT `3`
 8 9 10 11 12) 4÷    EXPECT `[2, 2, 2, 2, 3]`
+
+// Sign of numbers
+1 3 .S              EXPECT `-1`
+3 1 .S              EXPECT `1`
+3 3 .S              EXPECT `0`
