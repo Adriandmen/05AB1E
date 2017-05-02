@@ -3,3 +3,9 @@
 
 // Infinite loop
 [NN45Q#]            EXPECT `45`
+
+// Counter variables
+¼¼¼      ¾          EXPECT `3`
+¾                   EXPECT `0`
+1½ 1½ 1½ ¾          EXPECT `3`
+1½ 1½ 0½ ¾          EXPECT `2`
