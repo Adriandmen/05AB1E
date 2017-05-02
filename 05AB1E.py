@@ -12,6 +12,7 @@ import random
 from lib.constants import *
 from lib.commands import *
 from lib.encoding import *
+from lib.vectorizer import *
 
 stack = []
 exit_program = []
@@ -507,108 +508,27 @@ def run_program(commands,
                     a = pop_stack(1)
                     b = pop_stack(1)
 
-                if type(a) is list and type(b) is list:
-                    temp_list = []
-                    for Q in range(len(a)):
-                        temp_list.append(ast_int_eval(str(a[Q])) + ast_int_eval(str(b[Q])))
-                    stack.append(temp_list)
-                elif type(a) is list:
-                    temp_list = []
-                    for Q in a:
-                        temp_list.append(ast_int_eval(str(Q)) + ast_int_eval(str(b)))
-                    stack.append(temp_list)
-                elif type(b) is list:
-                    temp_list = []
-                    for Q in b:
-                        temp_list.append(ast_int_eval(str(a)) + ast_int_eval(str(Q)))
-                    stack.append(temp_list)
-                else:
-                    stack.append(ast_int_eval(str(a)) + ast_int_eval(str(b)))
+                stack.append(vectorized_evaluation(a, b, lambda a, b: a + b, ast_int_eval))
 
             elif current_command == "-":
-                a, b = pop_stack(2)
-                if type(a) is list and type(b) is list:
-                    temp_list = []
-                    for Q in range(len(a)):
-                        temp_list.append(ast_int_eval(str(b[Q])) - ast_int_eval(str(a[Q])))
-                    stack.append(temp_list)
-                elif type(a) is list:
-                    temp_list = []
-                    for Q in a:
-                        temp_list.append(ast_int_eval(str(b)) - ast_int_eval(str(Q)))
-                    stack.append(temp_list)
-                elif type(b) is list:
-                    temp_list = []
-                    for Q in b:
-                        temp_list.append(ast_int_eval(str(Q)) - ast_int_eval(str(a)))
-                    stack.append(temp_list)
-                else:
-                    try:
-                        stack.append(ast_int_eval(str(b)) - ast_int_eval(str(a)))
-                    except:
-                        for Q in str(a):
-                            b = b.replace(Q, "")
-                        stack.append(str(b))
+                b = pop_stack(1)
+                a = pop_stack(1)
+                stack.append(vectorized_evaluation(a, b, lambda a, b: a - b, ast_int_eval))
 
             elif current_command == "*":
-                a, b = pop_stack(2)
-                if type(a) is list and type(b) is list:
-                    temp_list = []
-                    for Q in range(len(a)):
-                        temp_list.append(ast_int_eval(str(a[Q])) * ast_int_eval(str(b[Q])))
-                    stack.append(temp_list)
-                elif type(a) is list:
-                    temp_list = []
-                    for Q in a:
-                        temp_list.append(ast_int_eval(str(Q)) * ast_int_eval(str(b)))
-                    stack.append(temp_list)
-                elif type(b) is list:
-                    temp_list = []
-                    for Q in b:
-                        temp_list.append(ast_int_eval(str(a)) * ast_int_eval(str(Q)))
-                    stack.append(temp_list)
-                else:
-                    stack.append(ast_int_eval(str(a)) * ast_int_eval(str(b)))
+                b = pop_stack(1)
+                a = pop_stack(1)
+                stack.append(vectorized_evaluation(a, b, lambda a, b: a * b, ast_int_eval))
 
             elif current_command == "/":
-                a, b = pop_stack(2)
-                if type(a) is list and type(b) is list:
-                    temp_list = []
-                    for Q in range(len(a)):
-                        temp_list.append(ast_int_eval(str(a[Q])) / ast_int_eval(str(b[Q])))
-                    stack.append(temp_list)
-                elif type(a) is list:
-                    temp_list = []
-                    for Q in a:
-                        temp_list.append(ast_int_eval(str(b)) / ast_int_eval(str(Q)))
-                    stack.append(temp_list)
-                elif type(b) is list:
-                    temp_list = []
-                    for Q in b:
-                        temp_list.append(ast_int_eval(str(Q)) / ast_int_eval(str(a)))
-                    stack.append(temp_list)
-                else:
-                    stack.append(ast_int_eval(str(b)) / ast_int_eval(str(a)))
+                b = pop_stack(1)
+                a = pop_stack(1)
+                stack.append(vectorized_evaluation(a, b, lambda a, b: a / b, ast_int_eval))
 
             elif current_command == "%":
-                a, b = pop_stack(2)
-                if type(a) is list and type(b) is list:
-                    temp_list = []
-                    for Q in range(len(a)):
-                        temp_list.append(ast_int_eval(str(a[Q])) % ast_int_eval(str(b[Q])))
-                    stack.append(temp_list)
-                elif type(a) is list:
-                    temp_list = []
-                    for Q in a:
-                        temp_list.append(ast_int_eval(str(b)) % ast_int_eval(str(Q)))
-                    stack.append(temp_list)
-                elif type(b) is list:
-                    temp_list = []
-                    for Q in b:
-                        temp_list.append(ast_int_eval(str(Q)) % ast_int_eval(str(a)))
-                    stack.append(temp_list)
-                else:
-                    stack.append(ast_int_eval(str(b)) % ast_int_eval(str(a)))
+                b = pop_stack(1)
+                a = pop_stack(1)
+                stack.append(vectorized_evaluation(a, b, lambda a, b: a % b, ast_int_eval))
 
             elif current_command == "D":
                 a = pop_stack(1)
@@ -634,53 +554,23 @@ def run_program(commands,
 
             elif current_command == "H":
                 a = pop_stack(1)
-                if type(a) is list:
-                    temp_list = []
-                    for Q in a:
-                        temp_list.append(int(str(Q), 16))
-                    stack.append(temp_list)
-                else:
-                    stack.append(int(str(a), 16))
+                stack.append(single_vectorized_evaluation(a, lambda a: int(a, 16), str))
 
             elif current_command == "C":
                 a = pop_stack(1)
-                if type(a) is list:
-                    temp_list = []
-                    for Q in a:
-                        temp_list.append(int(str(Q), 2))
-                    stack.append(temp_list)
-                else:
-                    stack.append(int(a, 2))
+                stack.append(single_vectorized_evaluation(a, lambda a: int(a, 2), str))
 
             elif current_command == "a":
                 a = pop_stack(1)
-                if type(a) is list:
-                    temp_list = []
-                    for Q in a:
-                        temp_list.append(is_alpha_value(str(Q)))
-                    stack.append(temp_list)
-                else:
-                    stack.append(is_alpha_value(str(a)))
+                stack.append(single_vectorized_evaluation(a, lambda a: is_alpha_value(a), str))
 
             elif current_command == "d":
                 a = pop_stack(1)
-                if type(a) is list:
-                    temp_list = []
-                    for Q in a:
-                        temp_list.append(is_digit_value(str(Q)))
-                    stack.append(temp_list)
-                else:
-                    stack.append(is_digit_value(str(a)))
+                stack.append(single_vectorized_evaluation(a, lambda a: is_digit_value(a), str))
 
             elif current_command == "p":
                 a = pop_stack(1)
-                if type(a) is list:
-                    temp_list = []
-                    for Q in a:
-                        temp_list.append(is_prime(int(Q)))
-                    stack.append(temp_list)
-                else:
-                    stack.append(is_prime(int(a)))
+                stack.append(single_vectorized_evaluation(a, lambda a: is_prime(a), ast_int_eval))
 
             elif current_command == "u":
                 a = pop_stack(1)
