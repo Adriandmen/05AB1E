@@ -3608,6 +3608,18 @@ def run_program(commands,
                 else:
                     stack.append(math.ceil(ast_int_eval(a)))
 
+            elif current_command == "\u01dd":
+                c = pop_stack(1)
+                b = pop_stack(1)
+                a = pop_stack(1)
+
+                if type(c) is list:
+                    for Q in c:
+                        a = insert(a, b, Q)
+                    stack.append(a)
+                else:
+                    stack.append(insert(a, b, c))
+
             #
             # CONSTANTS
             #

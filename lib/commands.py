@@ -516,3 +516,18 @@ def divisors_of_number(n):
             temp_list.append(N)
 
     return temp_list
+
+
+def insert(object1, character, location):
+    if type(object1) is int:
+        object1 = str(object1)
+
+    location = int(location)
+
+    if location > len(object1):
+        return object1
+    else:
+        if type(object1) is list:
+            return object1[0:location] + [character] + object1[location + 1:]
+        else:
+            return object1[0:location] + character + object1[location + 1:]
