@@ -32,6 +32,8 @@ suspend_restore_register = []
 # Global values
 counter_variable = [0]
 global_array = []
+is_queue = []
+previous_len = []
 
 # Looping commands:
 loop_commands = ["F", "i", "v", "G", "\u0192", "\u0292", "\u03A3"]
@@ -71,90 +73,17 @@ def is_array(array):
 
 
 def pop_stack(amount=1):
-    if amount == 1:
-        if stack:
-            return stack.pop()
-        else:
-            a = opt_input()
-            if is_array(a):
-                a = ast_int_eval(a)
-                recent_inputs.append(a)
-                return a
-            else:
-                recent_inputs.append(a)
-                return a
-
-    elif amount == 2:
-        if len(stack) > 1:
-            a = stack.pop()
-            b = stack.pop()
-            return a, b
-
-        elif len(stack) > 0:
-            a = stack.pop()
-            b = opt_input()
-            if is_array(b):
-                b = ast_int_eval(b)
-            recent_inputs.append(b)
-            return a, b
-
-        else:
-            a = opt_input()
-            b = opt_input()
-            if is_array(a):
-                a = ast_int_eval(a)
-            if is_array(b):
-                b = ast_int_eval(b)
-
+    if stack:
+        return stack.pop()
+    else:
+        a = opt_input()
+        if is_array(a):
+            a = ast_int_eval(a)
             recent_inputs.append(a)
-            recent_inputs.append(b)
-            return a, b
-
-    elif amount == 3:
-        if len(stack) > 2:
-            a = stack.pop()
-            b = stack.pop()
-            c = stack.pop()
-            return a, b, c
-
-        elif len(stack) > 1:
-            a = stack.pop()
-            b = stack.pop()
-            c = opt_input()
-            if is_array(c):
-                c = ast_int_eval(c)
-
-            recent_inputs.append(c)
-            return a, b, c
-
-        elif len(stack) > 0:
-            a = stack.pop()
-            b = opt_input()
-            c = opt_input()
-            if is_array(b):
-                b = ast_int_eval(b)
-            if is_array(c):
-                c = ast_int_eval(c)
-
-            recent_inputs.append(b)
-            recent_inputs.append(c)
-            return a, b, c
-
+            return a
         else:
-            a = opt_input()
-            b = opt_input()
-            c = opt_input()
-            if is_array(a):
-                a = ast_int_eval(a)
-            if is_array(b):
-                b = ast_int_eval(b)
-            if is_array(c):
-                c = ast_int_eval(c)
-
             recent_inputs.append(a)
-            recent_inputs.append(b)
-            recent_inputs.append(c)
-            return a, b, c
+            return a
 
 
 def get_input():
@@ -240,7 +169,8 @@ def run_program(commands,
                     stack.append(convert_to_base(abs(int(a)), 2))
 
             elif current_command == "B":
-                b, a = pop_stack(2)
+                b = pop_stack(1)
+                a = pop_stack(1)
                 if type(a) is list and type(b) is list:
                     temp_list = []
                     for Q in range(0, len(a)):
@@ -260,7 +190,8 @@ def run_program(commands,
                     stack.append(convert_to_base(a, b))
 
             elif current_command == "\u0432":
-                b, a = pop_stack(2)
+                b = pop_stack(1)
+                a = pop_stack(1)
                 if type(a) is list and type(b) is list:
                     temp_list = []
                     for Q in range(0, len(a)):
@@ -945,15 +876,18 @@ def run_program(commands,
                     stack.append(temp_list)
 
             elif current_command == "^":
-                a, b = pop_stack(2)
+                b = pop_stack(1)
+                a = pop_stack(1)
                 stack.append(vectorized_evaluation(a, b, lambda a, b: a ^ b, int))
 
             elif current_command == "~":
-                a, b = pop_stack(2)
+                b = pop_stack(1)
+                a = pop_stack(1)
                 stack.append(vectorized_evaluation(a, b, lambda a, b: a | b, int))
 
             elif current_command == "&":
-                a, b = pop_stack(2)
+                b = pop_stack(1)
+                a = pop_stack(1)
                 stack.append(vectorized_evaluation(a, b, lambda a, b: a & b, int))
 
             elif current_command == "c":
@@ -1166,7 +1100,8 @@ def run_program(commands,
                 has_printed.append(True)
 
             elif current_command == "Q":
-                a, b = pop_stack(2)
+                b = pop_stack(1)
+                a = pop_stack(1)
                 if type(a) is list and type(b) is list:
                     a = [str(x) for x in a]
                     b = [str(x) for x in b]
@@ -1506,9 +1441,11 @@ def run_program(commands,
 
             elif current_command == "k":
                 if stack:
-                    b, a = pop_stack(2)
+                    b = pop_stack(1)
+                    a = pop_stack(1)
                 else:
-                    a, b = pop_stack(2)
+                    a = pop_stack(1)
+                    b = pop_stack(1)
 
                 try:
                     if type(a) is list:
@@ -1629,7 +1566,7 @@ def run_program(commands,
                 pointer_position = temp_position
 
             elif current_command == "y":
-                stack.append(string_variable)
+                stack.append(string_variable if not is_queue else is_queue[-1])
 
             elif current_command == ",":
                 a = pop_stack(1)
@@ -2053,7 +1990,8 @@ def run_program(commands,
                 stack.append(single_vectorized_evaluation(a, lambda a: a.swapcase(), str))
 
             elif current_command == "\u00a3":
-                b, a = pop_stack(2)
+                b = pop_stack(1)
+                a = pop_stack(1)
                 if type(a) is not list:
                     a = str(a)
 
@@ -2157,7 +2095,7 @@ def run_program(commands,
                 while True:
                     try:
                         pointer_position += 1
-                        if commands[pointer_position] not in "\"\u2018\u2019\u201C\u201D":
+                        if commands[pointer_position] in "\"\u2018\u2019\u201C\u201D":
                             string_mode = not string_mode
 
                         if commands[pointer_position] == "}" and not string_mode:
@@ -2197,7 +2135,7 @@ def run_program(commands,
                 while True:
                     try:
                         pointer_position += 1
-                        if commands[pointer_position] not in "\"\u2018\u2019\u201C\u201D":
+                        if commands[pointer_position] in "\"\u2018\u2019\u201C\u201D":
                             string_mode = not string_mode
 
                         if commands[pointer_position] == "}" and not string_mode:
@@ -2208,10 +2146,12 @@ def run_program(commands,
                         break
 
                 for Q in a:
+                    is_queue.append(Q)
                     stack.append(Q)
                     run_program(sort_code, DEBUG, SAFE_MODE, True, range_variable, string_variable)
                     temp_list.append([stack[-1] if stack else float('inf'), Q])
                     stack.clear()
+                    is_queue.pop()
 
                 stack.clear()
                 temp_list = sorted(temp_list)
@@ -2391,9 +2331,11 @@ def run_program(commands,
                             is_inclusive = True
                     else:
                         if len(stack) > 1:
-                            a, b = pop_stack(2)
+                            a = pop_stack(1)
+                            b = pop_stack(1)
                         else:
-                            b, a = pop_stack(2)
+                            b = pop_stack(1)
+                            a = pop_stack(1)
                         temp_list = []
                         if int(b) > int(a):
                             for Q in range(int(a), int(b) + 1):
@@ -2439,7 +2381,9 @@ def run_program(commands,
                 stack.append(temp_list)
 
             elif current_command == "\u0160":
-                c, b, a = pop_stack(3)
+                c = pop_stack(1)
+                b = pop_stack(1)
+                a = pop_stack(1)
 
                 # a b c -> c a b
 
@@ -2490,9 +2434,11 @@ def run_program(commands,
 
             elif current_command == "\u00ab":
                 if len(stack) > 1:
-                    b, a = pop_stack(2)
+                    b = pop_stack(1)
+                    a = pop_stack(1)
                 else:
-                    a, b = pop_stack(2)
+                    a = pop_stack(1)
+                    b = pop_stack(1)
 
                 if type(a) is list and type(b) is list:
                     temp_list = []
@@ -2516,9 +2462,11 @@ def run_program(commands,
 
             elif current_command == "\u00ec":
                 if len(stack) > 1:
-                    b, a = pop_stack(2)
+                    b = pop_stack(1)
+                    a = pop_stack(1)
                 else:
-                    a, b = pop_stack(2)
+                    a = pop_stack(1)
+                    b = pop_stack(1)
 
                 if type(a) is list and type(b) is list:
                     temp_list = []
@@ -2542,9 +2490,11 @@ def run_program(commands,
 
             elif current_command == "\u00d7":
                 if len(stack) > 1:
-                    b, a = pop_stack(2)
+                    b = pop_stack(1)
+                    a = pop_stack(1)
                 else:
-                    a, b = pop_stack(2)
+                    a = pop_stack(1)
+                    b = pop_stack(1)
 
                 if type(a) is not list and type(b) is not list:
                     try:
@@ -2654,9 +2604,11 @@ def run_program(commands,
 
             elif current_command == "\u2020":
                 if len(stack) > 0:
-                    a, b = pop_stack(2)
+                    a = pop_stack(1)
+                    b = pop_stack(1)
                 else:
-                    b, a = pop_stack(2)
+                    b = pop_stack(1)
+                    a = pop_stack(1)
 
                 if type(b) is not list:
                     b = str(b)
@@ -3779,7 +3731,9 @@ def run_program(commands,
                 stack.append(100)
 
             elif current_command == ".:":
-                c, b, a = pop_stack(3)
+                c = pop_stack(1)
+                b = pop_stack(1)
+                a = pop_stack(1)
                 if type(a) is list:
                     if type(b) is list:
                         temp_list = []
