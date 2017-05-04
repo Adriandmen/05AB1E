@@ -158,7 +158,7 @@ z	= pop a      push 1 / a
 š 20	= pop a      push switch_cased(a)
 › 21	= pop a,b    push a > b
 œ 22	= pop a      push permutations(a)
-ć	= pop a          push head_extracted a: a[0], a[1:]
+ć	= pop a          push head_extracted a: a[1:], a[0] 
 
 
 ž 23  > ža           push current hours
