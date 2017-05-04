@@ -2509,13 +2509,13 @@ def run_program(commands,
                             for y in b:
                                 temp_list.append(str(x) + str(y))
                             result.append(temp_list)
-                        return result
-                elif type(a) is not list:
+                        stack.append(result)
+                elif type(a) is not list and type(b) is list:
                     try:
                         stack.append([str(a) * ast_int_eval(x) for x in b])
                     except:
                         stack.append([str(x) * ast_int_eval(a) for x in b])
-                elif type(b) is not list:
+                elif type(b) is not list and type(a) is list:
                     try:
                         stack.append([str(x) * ast_int_eval(b) for x in a])
                     except:
@@ -2527,7 +2527,7 @@ def run_program(commands,
                         for y in b:
                             temp_list.append(str(x) + str(y))
                         result.append(temp_list)
-                    return result
+                    stack.append(result)
 
             elif current_command == ".\u00d7":
                 a = pop_stack(1)
