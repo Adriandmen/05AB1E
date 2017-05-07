@@ -67,3 +67,7 @@
 "abc"S"def"ø        EXPECT `[['a', 'd'], ['b', 'e'], ['c', 'f']]`
 "abc""def")ø        EXPECT `['ad', 'be', 'cf']`
 "abc"S"def"S)ø      EXPECT `[['a', 'd'], ['b', 'e'], ['c', 'f']]`
+
+// External enumerate
+123456ā             EXPECT `[1, 2, 3, 4, 5, 6]`
+"abcdef"Sā          EXPECT `[1, 2, 3, 4, 5, 6]`

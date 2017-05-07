@@ -6,9 +6,9 @@ movement_pattern_characters = [
     "D",        # Down
     "L",        # Left
     "R",        # Right
-    "\u03b1"    # Top-left
-    "\u03b2"    # Top-right
-    "\u03b3"    # Bottom-left
+    "\u03b1",    # Top-left
+    "\u03b2",    # Top-right
+    "\u03b3",    # Bottom-left
     "\u03b4"    # Bottom-right
 ]
 
@@ -59,15 +59,37 @@ def canvas_code_to_string(code):
                     filler += code[index + 1]
                     index += 1
 
+            elif index + 1 < len(code) and code[index + 1] not in movement_pattern_characters:
+                index += 1
+
+                filler += code[index]
+                while index + 1 < len(code) and code[index + 1] not in movement_pattern_characters:
+                    filler += code[index + 1]
+                    index += 1
+
             canvas, cursor = canvasify(pattern, parsed_number, filler, canvas, cursor)
             pattern = ""
 
-    canvas_dict_to_array(canvas)
-    print(canvas)
+    return canvas_dict_to_string(canvas)
 
 
 def canvasify(pattern, number, filler, previous_canvas, cursor_position):
+    """
+    Converts the arguments that are passed through to a dictionary object
+    which in this case will be the canvas. The canvas itself is made up
+    of a key and a value. The key is in the following string format:
 
+        x y
+
+    The value attached to that key is a character. The dict is used for
+    it's easy accessibility and space complexity.
+    :param pattern: The pattern that will be used for the line to draw
+    :param number: The length of each line
+    :param filler: The filler character for the lines (can be empty)
+    :param previous_canvas: The state of the previous canvas
+    :param cursor_position: The current position for the cursor
+    :return: Returns a new canvas and a new cursor position
+    """
     current_canvas = previous_canvas
     current_position = cursor_position
 
@@ -96,10 +118,39 @@ def canvasify(pattern, number, filler, previous_canvas, cursor_position):
                 current_position = [current_position[0] + 1, current_position[1]]
                 current_canvas[' '.join(str(x) for x in current_position)] = filler
 
+        elif character == "\u03b1":
+            for index in range(0, number - 1):
+                current_canvas[' '.join(str(x) for x in current_position)] = filler
+                current_position = [current_position[0] - 1, current_position[1] + 1]
+                current_canvas[' '.join(str(x) for x in current_position)] = filler
+
+        elif character == "\u03b2":
+            for index in range(0, number - 1):
+                current_canvas[' '.join(str(x) for x in current_position)] = filler
+                current_position = [current_position[0] + 1, current_position[1] + 1]
+                current_canvas[' '.join(str(x) for x in current_position)] = filler
+
+        elif character == "\u03b3":
+            for index in range(0, number - 1):
+                current_canvas[' '.join(str(x) for x in current_position)] = filler
+                current_position = [current_position[0] - 1, current_position[1] - 1]
+                current_canvas[' '.join(str(x) for x in current_position)] = filler
+
+        elif character == "\u03b4":
+            for index in range(0, number - 1):
+                current_canvas[' '.join(str(x) for x in current_position)] = filler
+                current_position = [current_position[0] + 1, current_position[1] - 1]
+                current_canvas[' '.join(str(x) for x in current_position)] = filler
+
     return current_canvas, current_position
 
 
-def canvas_dict_to_array(canvas: dict):
+def canvas_dict_to_string(canvas: dict):
+    """
+    Converts a dictionary object to a string
+    :param canvas: A dict object with all keys and values for the canvas
+    :return: A 2D string (joined by newlines) that represents the canvas
+    """
 
     min_x = float('inf')
     min_y = float('inf')
@@ -122,13 +173,16 @@ def canvas_dict_to_array(canvas: dict):
 
     width = (max_x - min_x) + 1
     height = (max_y - min_y) + 1
-    canvas_array = [" " * width] * height
+    canvas_array = [[" " for _ in range(0, width)] for _ in range(0, height)]
 
     for element in canvas.items():
         x_index = int(element[0].split()[0])
         y_index = int(element[0].split()[1])
 
-        canvas_array[x_index]
+        canvas_array[y_index - min_y][x_index - min_x] = element[1]
+
+    return '\n'.join(list(map(''.join, canvas_array))[::-1])
 
 if __name__ == '__main__':
-    canvas_code_to_string("UL4\u201C#\u201DUL4\u201CA\u201D")
+    string = "\u03b2DR4\u201C#\u201D"
+    print(canvas_code_to_string("LU4#RDA"))

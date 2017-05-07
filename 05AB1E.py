@@ -434,9 +434,17 @@ def run_program(commands,
                     stack.append(temp_list_2)
 
             elif current_command == "\u039B":
-                # CODE to canvas
-                # WIP
-                pass
+                canvas_code = ""
+                while pointer_position + 1 < len(code) and code[pointer_position + 1] != "\u039B":
+                    canvas_code += code[pointer_position + 1]
+                    pointer_position += 1
+
+                stack.append(canvas.canvas_code_to_string(canvas_code))
+
+            elif current_command == "\u0101":
+                a = pop_stack(1)
+                stack.append(a)
+                stack.append(list(range(1, len(a) + 1)))
 
             elif current_command == "\u221e":
                 a = pop_stack(1)
