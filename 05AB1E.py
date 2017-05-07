@@ -2,6 +2,7 @@ import argparse
 import time
 import math
 import lib.dictionary as dictionary
+import lib.asciicanvas as canvas
 import ast
 import itertools
 import datetime
@@ -431,6 +432,19 @@ def run_program(commands,
                                 temp_list.append(Q)
                         temp_list_2.append(temp_list)
                     stack.append(temp_list_2)
+
+            elif current_command == "\u039B":
+                # CODE to canvas
+                # WIP
+                pass
+
+            elif current_command == "\u221e":
+                a = pop_stack(1)
+                stack.append(mirror(a))
+
+            elif current_command == ".\u221e":
+                a = pop_stack(1)
+                stack.append(intersected_mirror(a))
 
             elif current_command == "!":
                 a = pop_stack(1)

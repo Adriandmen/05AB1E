@@ -531,3 +531,52 @@ def insert(object1, character, location):
             return object1[0:location] + [character] + object1[location + 1:]
         else:
             return object1[0:location] + character + object1[location + 1:]
+
+
+def mirror(a):
+    if type(a) is int:
+        a = str(a)
+
+    if type(a) is str:
+        a = a.split("\n")
+
+    result = []
+    for element in a:
+        reversed_element = transliterate(element[::-1], "<>{}()[]\\/", "><}{)(][/\\")
+        result.append(element + reversed_element)
+
+    return '\n'.join(result)
+
+
+def intersected_mirror(a):
+    if type(a) is int:
+        a = str(a)
+
+    if type(a) is str:
+        a = a.split("\n")
+
+    result = []
+    for element in a:
+        reversed_element = transliterate(element[::-1], "<>{}()[]\\/", "><}{)(][/\\")
+        result.append(element[:-1] + reversed_element)
+
+    return '\n'.join(result)
+
+
+def transliterate(string: str, prev, next):
+
+    processed = ""
+
+    for character in string:
+
+        has_replaced = False
+        for Q in range(0, len(prev)):
+            if character == prev[Q]:
+                processed += next[Q]
+                has_replaced = True
+                break
+
+        if not has_replaced:
+            processed += character
+
+    return processed

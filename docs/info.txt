@@ -22,7 +22,7 @@
 ≠	=
 ∊	=
 ∍	=
-∞	=
+∞	= pop a      push mirrored a
 ₁	=
 ₂	=
 ₃	=

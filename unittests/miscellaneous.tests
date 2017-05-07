@@ -421,3 +421,13 @@ r)                  EXPECT `[]`
 123456 "a" 3ǝ       EXPECT `123a56`
 123456Sï"a"3ǝ       EXPECT `[1, 2, 3, 'a', 5, 6]`
 123456 "a"34Sǝ      EXPECT `123aa6`
+
+// Mirror
+"(("∞               EXPECT `(())`
+"[ ab"D»∞           EXPECT `[ abba ]¶[ abba ]`
+"[ ab"D)∞           EXPECT `[ abba ]¶[ abba ]`
+
+// Intersected mirror
+"((".∞              EXPECT `())`
+"<< ".∞             EXPECT `<< >>`
+"<< "D).∞           EXPECT `<< >>¶<< >>`
