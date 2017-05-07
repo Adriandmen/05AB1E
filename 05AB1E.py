@@ -1946,7 +1946,7 @@ def run_program(commands,
 
                 stack.append(vectorized_evaluation(a, b, lambda a, b: a.split(b), str))
 
-            elif current_command == ".\u00a1":
+            elif current_command == "\u03b3":
                 a = pop_stack(1)
                 if type(a) is int:
                     a = str(a)

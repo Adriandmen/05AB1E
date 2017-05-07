@@ -60,9 +60,10 @@ def canvas_code_to_string(code):
                     index += 1
 
             canvas, cursor = canvasify(pattern, parsed_number, filler, canvas, cursor)
+            pattern = ""
 
+    canvas_dict_to_array(canvas)
     print(canvas)
-    print(cursor)
 
 
 def canvasify(pattern, number, filler, previous_canvas, cursor_position):
@@ -98,4 +99,36 @@ def canvasify(pattern, number, filler, previous_canvas, cursor_position):
     return current_canvas, current_position
 
 
-canvas_code_to_string("UL4\u201C#\u201DUL4\u201CA\u201D")
+def canvas_dict_to_array(canvas: dict):
+
+    min_x = float('inf')
+    min_y = float('inf')
+    max_x = float('-inf')
+    max_y = float('-inf')
+
+    for key in canvas.keys():
+        current_x = int(key.split()[0])
+        current_y = int(key.split()[1])
+
+        if current_x < min_x:
+            min_x = current_x
+        if current_y < min_y:
+            min_y = current_y
+
+        if current_x > max_x:
+            max_x = current_x
+        if current_y > max_y:
+            max_y = current_y
+
+    width = (max_x - min_x) + 1
+    height = (max_y - min_y) + 1
+    canvas_array = [" " * width] * height
+
+    for element in canvas.items():
+        x_index = int(element[0].split()[0])
+        y_index = int(element[0].split()[1])
+
+        canvas_array[x_index]
+
+if __name__ == '__main__':
+    canvas_code_to_string("UL4\u201C#\u201DUL4\u201CA\u201D")
