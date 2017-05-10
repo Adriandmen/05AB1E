@@ -1,10 +1,22 @@
 import collections
 import math
 import fractions
+import ast
 from functools import reduce
 
 letters = list("abcdefghijklmnopqrstuvwxyz")
 numbers = list("0123456789")
+
+
+def ast_int_eval(number):
+    a = str(number)
+    try:
+        a = ast.literal_eval(a)
+    except:
+        a = int(a)
+
+    return a
+
 
 def is_digit_value(value):
     value = str(value)
@@ -580,3 +592,50 @@ def transliterate(string: str, prev, next):
             processed += character
 
     return processed
+
+
+def string_multiplication(a, b):
+    if type(a) is not list and type(b) is not list:
+        try:
+            try:
+                return ast_int_eval(b) * str(a)
+            except:
+                return ast_int_eval(a) * str(b)
+        except:
+            result = []
+            for x in a:
+                temp_list = []
+                for y in b:
+                    temp_list.append(str(x) + str(y))
+                result.append(temp_list)
+            return result
+    elif type(a) is not list and type(b) is list:
+        try:
+            return [str(a) * ast_int_eval(x) for x in b]
+        except:
+            return [str(x) * ast_int_eval(a) for x in b]
+    elif type(b) is not list and type(a) is list:
+        try:
+            return [str(x) * ast_int_eval(b) for x in a]
+        except:
+            return [str(b) * ast_int_eval(x) for x in a]
+    else:
+        try:
+            result = []
+            for x in range(0, len(a)):
+                result.append(str(a[x]) * ast_int_eval(b[x]))
+            return result
+        except:
+            try:
+                result = []
+                for x in range(0, len(a)):
+                    result.append(str(b[x]) * ast_int_eval(a[x]))
+                return result
+            except:
+                result = []
+                for x in a:
+                    temp_list = []
+                    for y in b:
+                        temp_list.append(str(x) + str(y))
+                    result.append(temp_list)
+                return result

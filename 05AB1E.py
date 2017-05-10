@@ -2517,50 +2517,7 @@ def run_program(commands,
                     a = pop_stack(1)
                     b = pop_stack(1)
 
-                if type(a) is not list and type(b) is not list:
-                    try:
-                        try:
-                            stack.append(ast_int_eval(b) * str(a))
-                        except:
-                            stack.append(ast_int_eval(a) * str(b))
-                    except:
-                        result = []
-                        for x in a:
-                            temp_list = []
-                            for y in b:
-                                temp_list.append(str(x) + str(y))
-                            result.append(temp_list)
-                        stack.append(result)
-                elif type(a) is not list and type(b) is list:
-                    try:
-                        stack.append([str(a) * ast_int_eval(x) for x in b])
-                    except:
-                        stack.append([str(x) * ast_int_eval(a) for x in b])
-                elif type(b) is not list and type(a) is list:
-                    try:
-                        stack.append([str(x) * ast_int_eval(b) for x in a])
-                    except:
-                        stack.append([str(b) * ast_int_eval(x) for x in a])
-                else:
-                    try:
-                        result = []
-                        for x in range(0, len(a)):
-                            result.append(str(a[x]) * ast_int_eval(b[x]))
-                        stack.append(result)
-                    except:
-                        try:
-                            result = []
-                            for x in range(0, len(a)):
-                                result.append(str(b[x]) * ast_int_eval(a[x]))
-                            stack.append(result)
-                        except:
-                            result = []
-                            for x in a:
-                                temp_list = []
-                                for y in b:
-                                    temp_list.append(str(x) + str(y))
-                                result.append(temp_list)
-                            stack.append(result)
+                stack.append(string_multiplication(a, b))
 
             elif current_command == ".\u00d7":
                 a = pop_stack(1)
