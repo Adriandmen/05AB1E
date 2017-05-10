@@ -2544,6 +2544,26 @@ def run_program(commands,
             elif current_command == "\u00f0":
                 stack.append(" ")
 
+            elif current_command == "\u01b6":
+                a = pop_stack(1)
+                if type(a) is int:
+                    a = str(a)
+
+                if type(a) is str:
+                    result = []
+                    for n in range(0, len(a)):
+                        result.append(a[n] * (n + 1))
+                    stack.append(result)
+
+                elif type(a) is list:
+                    result = []
+                    for n in range(0, len(a)):
+                        try:
+                            result.append(vectorized_evaluation(a[n], n + 1, lambda a, b: a * b, ast_int_eval))
+                        except:
+                            result.append(vectorized_evaluation(a[n], n + 1, lambda a, b: a * b))
+                    stack.append(result)
+
             elif current_command == ".M":
                 a = pop_stack(1)
                 if type(a) is not list:

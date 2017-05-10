@@ -71,3 +71,9 @@
 // External enumerate
 123456ā             EXPECT `[1, 2, 3, 4, 5, 6]`
 "abcdef"Sā          EXPECT `[1, 2, 3, 4, 5, 6]`
+
+// Lift
+"abc"ƶ              EXPECT `['a', 'bb', 'ccc']`
+123Sƶ               EXPECT `[1, 4, 9]`
+123S456S)ƶ          EXPECT `[[1, 2, 3], [8, 10, 12]]`
+"a""b""c")ƶ         EXPECT `['a', 'bb', 'ccc']`
