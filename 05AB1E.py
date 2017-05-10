@@ -44,6 +44,9 @@ loop_commands = ["F", "i", "v", "G", "\u0192", "\u0292", "\u03A3"]
 VERSION = "version 8.0"
 DATE = "14:37 - May 9, 2016"
 
+current_canvas = {}
+current_cursor = [0, 0]
+
 
 def opt_input():
 
@@ -111,6 +114,9 @@ def run_program(commands,
                 suppress_print,
                 range_variable=0,
                 string_variable=""):
+
+    global current_canvas
+    global current_cursor
 
     TEST_MODE = False
     if commands[0:5] == "TEST:":
@@ -438,7 +444,7 @@ def run_program(commands,
                     canvas_code += code[pointer_position + 1]
                     pointer_position += 1
 
-                stack.append(canvas.canvas_code_to_string(canvas_code))
+                current_canvas, current_cursor = canvas.canvas_code_to_string(canvas_code, current_canvas, current_cursor)
 
             elif current_command == "\u0101":
                 a = pop_stack(1)
@@ -3813,6 +3819,7 @@ def run_program(commands,
         elif "\u00b5" in code: print(range_variable)
         elif "\u02c6" in code: print(global_array)
         elif "\u00bc" in code: print(counter_variable[-1])
+        elif "\u039b" in code: print(canvas.canvas_dict_to_string(current_canvas))
     if debug:
         print("stack > " + str(stack))
 

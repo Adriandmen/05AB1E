@@ -13,7 +13,7 @@ movement_pattern_characters = [
 ]
 
 
-def canvas_code_to_string(code):
+def canvas_code_to_string(code, prev_canvas, prev_cursor):
     """
     Runs a canvas code and returns the resulting array.
     Canvas code is currently constucted in one of the following ways:
@@ -29,9 +29,8 @@ def canvas_code_to_string(code):
     :return: An array from the canvas code
     """
 
-    canvas = {}
-
-    cursor = [0, 0]
+    canvas = prev_canvas
+    cursor = prev_cursor
     pattern = ""
     index = -1
     while index < len(code) - 1:
@@ -70,7 +69,7 @@ def canvas_code_to_string(code):
             canvas, cursor = canvasify(pattern, parsed_number, filler, canvas, cursor)
             pattern = ""
 
-    return canvas_dict_to_string(canvas)
+    return canvas, cursor
 
 
 def canvasify(pattern, number, filler, previous_canvas, cursor_position):
