@@ -58,8 +58,7 @@ def opt_input():
 
         return a
     except:
-        input_index.append(input_index.pop() + 1)
-        return recent_inputs[(input_index[0] - 1) % len(recent_inputs)]
+        return recent_inputs[-1]
 
 
 def is_array(array):
@@ -2543,13 +2542,25 @@ def run_program(commands,
                     except:
                         stack.append([str(b) * ast_int_eval(x) for x in a])
                 else:
-                    result = []
-                    for x in a:
-                        temp_list = []
-                        for y in b:
-                            temp_list.append(str(x) + str(y))
-                        result.append(temp_list)
-                    stack.append(result)
+                    try:
+                        result = []
+                        for x in range(0, len(a)):
+                            result.append(str(a[x]) * ast_int_eval(b[x]))
+                        stack.append(result)
+                    except:
+                        try:
+                            result = []
+                            for x in range(0, len(a)):
+                                result.append(str(b[x]) * ast_int_eval(a[x]))
+                            stack.append(result)
+                        except:
+                            result = []
+                            for x in a:
+                                temp_list = []
+                                for y in b:
+                                    temp_list.append(str(x) + str(y))
+                                result.append(temp_list)
+                            stack.append(result)
 
             elif current_command == ".\u00d7":
                 a = pop_stack(1)

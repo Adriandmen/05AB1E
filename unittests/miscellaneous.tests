@@ -300,6 +300,8 @@ r)                  EXPECT `[]`
 8 4×                EXPECT `8888`
 "ab"123S×           EXPECT `['ab', 'abab', 'ababab']`
 123S"ab"×           EXPECT `['ab', 'abab', 'ababab']`
+"ab"S12S×           EXPECT `['a', 'bb']`
+"ab"S12Ss×          EXPECT `['a', 'bb']`
 123S 3×             EXPECT `['111', '222', '333']`
 3 123S×             EXPECT `['3', '33', '333']`
 "ab""cd"×           EXPECT `[['ac', 'ad'], ['bc', 'bd']]`
