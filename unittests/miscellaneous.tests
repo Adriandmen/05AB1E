@@ -450,3 +450,8 @@ r)                  EXPECT `[]`
 "((".∞              EXPECT `())`
 "<< ".∞             EXPECT `<< >>`
 "<< "D).∞           EXPECT `<< >>¶<< >>`
+
+// Hashing
+"a".N               EXPECT `773879826`
+"b".N               EXPECT `4110145810`
+"ab"S.N             EXPECT `[773879826, 4110145810]`

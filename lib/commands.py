@@ -771,3 +771,14 @@ def string_multiplication(a, b):
                         temp_list.append(str(x) + str(y))
                     result.append(temp_list)
                 return result
+
+
+def get_hash(string):
+    string = "filler for the string" + str(string)
+
+    hash_num = 0
+    for index in range(0, len(string)):
+        hash_num += ord(string[index]) * (index + 1) ** 8
+        hash_num %= 2**32
+
+    return hash_num

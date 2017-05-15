@@ -327,6 +327,7 @@ z	= pop a      push 1 / a
 .M	= pop a      push most frequent in a
 .m	= pop a      push least frequent in a
 .n	= pop a,b    push log_b(a)
+.N  = pop a      push hashed(a)
 .o      = pop a,b    push overlap(b) (deprecated)
 .O  	= pop a,b    push connected_overlap(b) (deprecated)
 .p  	= pop a      push prefixes(a)

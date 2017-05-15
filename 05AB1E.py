@@ -2731,6 +2731,10 @@ def run_program(commands,
                         a = a[1:]
                 stack.append(temp_string)
 
+            elif current_command == ".N":
+                a = pop_stack(1)
+                stack.append(single_vectorized_evaluation(a, lambda a: get_hash(a)))
+
             elif current_command == "\u2021":
                 c = pop_stack(1)
                 b = pop_stack(1)
