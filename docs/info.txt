@@ -339,6 +339,7 @@ z	= pop a      push 1 / a
 .w	= pop a      push a.readall() (internet access, doesn't work in safe mode) (returns 0 on error)
 .W	= pop a      wait a milliseconds
 .:	= pop a,b,c  push a.replace(b, c)
+.;  = pop a,b,c  push a.replace_first(b, c)
 .²	= pop a      push log_2(a)
 .ï	= pop a      push is int(a)
 .¿	= pop a,(b)  push lcm(a, (b))
