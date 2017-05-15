@@ -520,6 +520,138 @@ def infinite_replace(object1, object2, object3):
     raise Exception
 
 
+def single_replace(object1, object2, object3):
+
+    if type(object1) is list:
+        object1 = [str(x) for x in object1]
+
+    if type(object2) is list:
+        object2 = [str(x) for x in object2]
+
+    if type(object3) is list:
+        object3 = [str(x) for x in object3]
+
+    if type(object1) is int:
+        object1 = str(object1)
+
+    if type(object2) is int:
+        object2 = str(object2)
+
+    if type(object3) is int:
+        object3 = str(object3)
+
+    # [String String String]
+    if type(object1) is str and type(object2) is str and type(object3) is str:
+        object1 = object1.replace(object2, object3)
+        return object1
+
+    # [String List String]
+    elif type(object1) is str and type(object2) is list and type(object3) is str:
+        for element in object2:
+            object1 = object1.replace(str(element), object3)
+        return object1
+
+    # [String List List]
+    elif type(object1) is str and type(object2) is list and type(object3) is list:
+        for index in range(0, len(object2)):
+            object1 = object1.replace(str(object2[index]), str(object3[index]))
+        return object1
+
+    # [List String String]
+    elif type(object1) is list and type(object2) is str and type(object3) is str:
+        result_list = []
+        for sub_element in object1:
+            sub_element = sub_element.replace(object2, object3)
+            result_list.append(sub_element)
+        return result_list
+
+    # [List List String]
+    elif type(object1) is list and type(object2) is list and type(object3) is str:
+        result_list = []
+        for sub_element in object1:
+            for old in object2:
+                sub_element = sub_element.replace(str(old), str(object3))
+            result_list.append(sub_element)
+        return result_list
+
+    # [List List List]
+    elif type(object1) is list and type(object2) is list and type(object3) is list:
+        result_list = []
+        for current in object1:
+            for index in range(0, len(object2)):
+                current = current.replace(object2[index], object3[index])
+            result_list.append(current)
+        return result_list
+
+    raise Exception
+
+
+def first_replace(object1, object2, object3):
+
+    if type(object1) is list:
+        object1 = [str(x) for x in object1]
+
+    if type(object2) is list:
+        object2 = [str(x) for x in object2]
+
+    if type(object3) is list:
+        object3 = [str(x) for x in object3]
+
+    if type(object1) is int:
+        object1 = str(object1)
+
+    if type(object2) is int:
+        object2 = str(object2)
+
+    if type(object3) is int:
+        object3 = str(object3)
+
+    # [String String String]
+    if type(object1) is str and type(object2) is str and type(object3) is str:
+        object1 = object1.replace(object2, object3, 1)
+        return object1
+
+    # [String List String]
+    elif type(object1) is str and type(object2) is list and type(object3) is str:
+        for element in object2:
+            object1 = object1.replace(str(element), object3, 1)
+        return object1
+
+    # [String List List]
+    elif type(object1) is str and type(object2) is list and type(object3) is list:
+        for index in range(0, len(object2)):
+            object1 = object1.replace(str(object2[index]), str(object3[index]), 1)
+        return object1
+
+    # [List String String]
+    elif type(object1) is list and type(object2) is str and type(object3) is str:
+        result_list = []
+        for sub_element in object1:
+            sub_element = sub_element.replace(object2, object3, 1)
+            result_list.append(sub_element)
+        return result_list
+
+    # [List List String]
+    elif type(object1) is list and type(object2) is list and type(object3) is str:
+        result_list = []
+        for sub_element in object1:
+            for old in object2:
+                sub_element = sub_element.replace(str(old), str(object3), 1)
+            result_list.append(sub_element)
+        return result_list
+
+    # [List List List]
+    elif type(object1) is list and type(object2) is list and type(object3) is list:
+        result_list = []
+        for current in object1:
+            for index in range(0, len(object2)):
+                current = current.replace(object2[index], object3[index], 1)
+            result_list.append(current)
+        return result_list
+
+    raise Exception
+
+
 def divisors_of_number(n):
 
     temp_list = []

@@ -11,7 +11,7 @@
 'a                  EXPECT `a`
 'ŠŠ                 EXPECT `domain`
 
-// -- Replacement --
+// Replacement
 "abc" "c" "d":      EXPECT `abd`
 "abbbc" "bb" "b":   EXPECT `abc`
 1232 23S 4:         EXPECT `1444`
@@ -19,6 +19,23 @@
 12 32) 2 3:         EXPECT `['13', '33']`
 12 32) 2 3‚ 4:      EXPECT `['14', '44']`
 12 32) 2 3‚ 4 5‚:   EXPECT `['14', '54']`
+
+// Single replacement
+"abc" "c" "d".:     EXPECT `abd`
+"abbbc" "bb" "b".:  EXPECT `abbc`
+"bbbb"„bb„bc‚"b".:  EXPECT `bb`
+"bbbc"„bb„bc‚„bcS.: EXPECT `bc`
+112 12)12 2.:       EXPECT `['12', '2']`
+112 12)12 1‚2.:     EXPECT `['22', '2']`
+112 12)12 1‚23S.:   EXPECT `['32', '2']`
+
+// First replacement
+"abbc" "b" "d".;    EXPECT `adbc`
+"bbbb"„bb„bc‚"b".;  EXPECT `bbb`
+"bbbb"„bb„bc‚„bcS.; EXPECT `bbb`
+1212 12)12 2.;      EXPECT `['212', '2']`
+1212 12)12 1‚2.;    EXPECT `['222', '2']`
+1212 12)12 1‚23S.;  EXPECT `['232', '2']`
 
 // Join
 "a" "b" "c" J       EXPECT `abc`

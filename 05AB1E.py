@@ -3750,33 +3750,13 @@ def run_program(commands,
                 c = pop_stack(1)
                 b = pop_stack(1)
                 a = pop_stack(1)
-                if type(a) is list:
-                    if type(b) is list:
-                        temp_list = []
-                        for Q in a:
-                            temp_string = str(Q)
-                            for R in b:
-                                temp_string = temp_string.replace(R, c)
-                            temp_list.append(temp_string)
-                        stack.append(temp_list)
-                    else:
-                        b = str(b)
-                        for Q in a:
-                            temp_string = str(Q)
-                            temp_string = temp_string.replace(b, c)
-                            temp_list.append(temp_string)
-                        stack.append(temp_list)
-                else:
-                    if type(b) is list:
-                        temp_string = str(a)
-                        for R in b:
-                            temp_string = temp_string.replace(R, c)
-                        stack.append(temp_string)
-                    else:
-                        b = str(b)
-                        temp_string = str(a)
-                        temp_string = temp_string.replace(b, c)
-                        stack.append(temp_string)
+                stack.append(single_replace(a, b, c))
+
+            elif current_command == ".;":
+                c = pop_stack(1)
+                b = pop_stack(1)
+                a = pop_stack(1)
+                stack.append(first_replace(a, b, c))
 
             elif current_command == ".A":
                 a = pop_stack(1)
