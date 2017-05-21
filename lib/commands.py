@@ -779,7 +779,7 @@ def string_multiplication(a, b):
 def even_divide(a, b):
 
     if type(b) is list:
-        raise Exception;
+        raise Exception
 
     b = int(b)
 

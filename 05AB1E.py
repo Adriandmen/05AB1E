@@ -3400,6 +3400,11 @@ def run_program(commands,
                 except:
                     stack.append(chunk_divide(b, int(a)))
 
+            elif current_command == "\u01B5":
+                pointer_position += 1
+                current_command = commands[pointer_position]
+                stack.append(convert_from_base(current_command, 255) + 101)
+
             elif current_command == ".g":
                 stack.append(len(stack))
 

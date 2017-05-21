@@ -128,7 +128,7 @@ z	= pop a      push 1 / a
 ~	= pop a,b    push a OR b
 
 
-Ƶ	=
+Ƶ	=            convert the next char from base 255 to base 10 and add 11
 € 0     = for each command
 Λ	=            Switch to canvas mode
 ‚ 1	= pop a,b    push [a, b]
