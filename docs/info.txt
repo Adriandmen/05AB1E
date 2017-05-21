@@ -3,7 +3,7 @@
 α	=
 β	= pop a,b    push a converted from base b (arbitrary)
 γ	= pop a      push a split into chunks of consecutive equal elements
-δ	=
+δ	= pop a,b    get the next command, push double vectorized command
 ε	=
 ζ	=
 η	=

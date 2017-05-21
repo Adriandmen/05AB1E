@@ -3405,6 +3405,42 @@ def run_program(commands,
                 current_command = commands[pointer_position]
                 stack.append(convert_from_base(current_command, 255) + 101)
 
+            elif current_command == "\u03B4":
+
+                pointer_position += 1
+                current_program = commands[pointer_position]
+
+                while current_program[-1] in ".\u20AC":
+                    pointer_position += 1
+                    current_program += commands[pointer_position]
+
+                b = pop_stack(1)
+                a = pop_stack(1)
+
+                if type(b) is int:
+                    b = str(b)
+                if type(a) is int:
+                    a = str(a)
+
+                temp_stack = stack[:]
+
+                result = []
+                for outer_element in a:
+                    inner_result = []
+                    for inner_element in b:
+                        stack.clear()
+                        stack.append(outer_element)
+                        stack.append(inner_element)
+                        run_program(current_program, DEBUG, SAFE_MODE, True, range_variable, string_variable)
+                        inner_result.append(stack[-1])
+                    result.append(inner_result)
+
+                stack.clear()
+                while temp_stack:
+                    stack.append(temp_stack.pop())
+
+                stack.append(result)
+
             elif current_command == ".g":
                 stack.append(len(stack))
 
