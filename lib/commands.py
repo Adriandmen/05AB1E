@@ -399,7 +399,6 @@ def euler_totient(n):
 
 def chunk_divide(seq, num):
 
-
     if type(num) is list:
         raise Exception;
 
@@ -782,7 +781,7 @@ def even_divide(a, b):
     if type(b) is list:
         raise Exception;
 
-    b = ast_int_eval(b)
+    b = int(b)
 
     if type(a) is int:
         a = str(a)
