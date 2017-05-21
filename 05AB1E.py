@@ -1728,44 +1728,13 @@ def run_program(commands,
                 stack.append(deep_flatten(a))
 
             elif current_command == "\u00f4":
-                if stack:
-                    b = pop_stack(1)
-                    a = pop_stack(1)
-                    b = int(b)
-                    if type(a) is int:
-                        a = str(a)
-                else:
-                    a = pop_stack(1)
-                    b = pop_stack(1)
+                b = pop_stack(1)
+                a = pop_stack(1)
 
-                if type(a) is not list:
-                    temp_string = ""
-                    R = 0
-                    temp_list = []
-                    for Q in a:
-                        temp_string += Q
-                        R += 1
-                        if R == b:
-                            temp_list.append(temp_string)
-                            temp_string = ""
-                            R = 0
-                    if temp_string != "":
-                        temp_list.append(temp_string)
-                    stack.append(temp_list)
-                else:
-                    temp_list = []
-                    R = 0
-                    temp_list_2 = []
-                    for Q in a:
-                        temp_list.append(Q)
-                        R += 1
-                        if R == b:
-                            temp_list_2.append(temp_list)
-                            temp_list = []
-                            R = 0
-                    if temp_list != []:
-                        temp_list_2.append(temp_list)
-                    stack.append(temp_list_2)
+                try:
+                    stack.append(even_divide(a, b))
+                except:
+                    stack.append(even_divide(b, a))
 
             elif current_command == "\u00ed":
                 a = pop_stack(1)
@@ -3426,7 +3395,10 @@ def run_program(commands,
                 b = pop_stack(1)
                 a = pop_stack(1)
 
-                stack.append(chunk_divide(a, int(b)))
+                try:
+                    stack.append(chunk_divide(a, int(b)))
+                except:
+                    stack.append(chunk_divide(b, int(a)))
 
             elif current_command == ".g":
                 stack.append(len(stack))

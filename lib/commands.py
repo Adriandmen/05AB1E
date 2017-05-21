@@ -399,6 +399,10 @@ def euler_totient(n):
 
 def chunk_divide(seq, num):
 
+
+    if type(num) is list:
+        raise Exception;
+
     if type(seq) is int:
         seq = str(seq)
 
@@ -771,6 +775,35 @@ def string_multiplication(a, b):
                         temp_list.append(str(x) + str(y))
                     result.append(temp_list)
                 return result
+
+
+def even_divide(a, b):
+
+    if type(b) is list:
+        raise Exception;
+
+    b = ast_int_eval(b)
+
+    if type(a) is int:
+        a = str(a)
+
+    result = []
+    temp_list = []
+
+    for index in range(0, len(a)):
+
+        temp_list.append(a[index])
+        if len(temp_list) == b:
+            result.append(temp_list)
+            temp_list = []
+
+    if temp_list:
+        result.append(temp_list)
+
+    if type(a) is str:
+        return list(map(''.join, result))
+    else:
+        return result
 
 
 def get_hash(string):
