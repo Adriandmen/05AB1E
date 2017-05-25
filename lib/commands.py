@@ -821,6 +821,7 @@ def closest_to(a, b):
         b = ast_int_eval(b)
     except:
         b = ord(b)
+        
     if type(a) is int:
         a = str(a)
 
