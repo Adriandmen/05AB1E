@@ -339,6 +339,7 @@ z	= pop a      push 1 / a
 .V      = pop a      run as 05AB1E code
 .w	= pop a      push a.readall() (internet access, doesn't work in safe mode) (returns 0 on error)
 .W	= pop a      wait a milliseconds
+.x      = pop a,b    push the element in a closest to b
 .:	= pop a,b,c  push a.replace(b, c)
 .;  = pop a,b,c  push a.replace_first(b, c)
 .²	= pop a      push log_2(a)
