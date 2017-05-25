@@ -821,7 +821,7 @@ def closest_to(a, b):
         b = ast_int_eval(b)
     except:
         b = ord(b)
-        
+
     if type(a) is int:
         a = str(a)
 
@@ -840,8 +840,14 @@ def closest_to(a, b):
     return closest
 
 
+def undelta(a):
 
+    start = [0]
+    for element in a:
+        element = ast_int_eval(element)
+        start.append(start[-1] + element)
 
+    return start
 
 
 
