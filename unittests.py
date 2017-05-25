@@ -52,8 +52,9 @@ for test_file in tests:
             result = ""
             try:
                 result = osabie.run_program(CODE, False, False, True)
-            except Exception:
+            except Exception as e:
                 print("An error has occured at line", LINE_NO)
+                print(e)
                 EXIT_CODE = 1
 
             succeeded = "success" if result in expected_results else "fail"
