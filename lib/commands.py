@@ -814,3 +814,53 @@ def get_hash(string):
         hash_num %= 2**32
 
     return hash_num
+
+
+def closest_to(a, b):
+    try:
+        b = ast_int_eval(b)
+    except:
+        b = ord(b)
+    if type(a) is int:
+        a = str(a)
+
+    closest = a[0]
+    closest_num = math.inf
+
+    for element in a:
+        if type(a) is str:
+            if abs(ord(element) - b) < closest_num:
+                closest_num = abs(ord(element) - b)
+                closest = element
+        elif abs(ast_int_eval(element) - b) < closest_num:
+            closest_num = abs(ast_int_eval(element) - b)
+            closest = element
+
+    return closest
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

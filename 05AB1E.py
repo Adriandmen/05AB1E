@@ -2623,6 +2623,11 @@ def run_program(commands,
                 counter_variable.pop()
                 counter_variable.append(a)
 
+            elif current_command == ".x":
+                b = pop_stack(1)
+                a = pop_stack(1)
+                stack.append(closest_to(a, b))
+
             elif current_command == "\u00be":
                 stack.append(counter_variable[-1])
 

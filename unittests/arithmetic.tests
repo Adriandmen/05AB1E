@@ -315,3 +315,9 @@
 // 2-char numbers
 Ƶú                  EXPECT `350`
 Ƶ0                  EXPECT `101`
+
+// Closest to
+1234S "1.7".x       EXPECT `2`
+"az""c".x           EXPECT `a`
+1 2 3 4)9.x         EXPECT `4`
+
