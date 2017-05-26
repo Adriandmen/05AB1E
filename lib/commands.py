@@ -826,7 +826,7 @@ def closest_to(a, b):
         a = str(a)
 
     closest = a[0]
-    closest_num = math.inf
+    closest_num = float('inf')
 
     for element in a:
         if type(a) is str:
