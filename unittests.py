@@ -57,6 +57,8 @@ for test_file in tests:
                 print(e)
                 EXIT_CODE = 1
 
+                osabie.run_program(CODE, True, False, True)
+
             succeeded = "success" if result in expected_results else "fail"
             print("Test", TOTAL, "-", succeeded)
 
