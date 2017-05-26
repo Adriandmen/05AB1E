@@ -3130,6 +3130,11 @@ def run_program(commands,
                     stack.append(Q)
                 stack.append(temp_list)
 
+            elif current_command == "\u03b1":
+                b = pop_stack(1)
+                a = pop_stack(1)
+                stack.append(vectorized_evaluation(a, b, lambda a, b: abs(a - b), ast_int_eval))
+
             elif current_command == ".B":
                 a = pop_stack(1)
 
