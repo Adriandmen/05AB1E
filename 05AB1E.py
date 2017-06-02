@@ -451,6 +451,10 @@ def run_program(commands,
                 stack.append(a)
                 stack.append(list(range(1, len(a) + 1)))
 
+            elif current_command == "\u0100":
+                a = pop_stack(1)
+                stack.append(single_vectorized_evaluation(a, lambda a: int(not not ast_int_eval(a))))
+
             elif current_command == "\u221e":
                 a = pop_stack(1)
                 stack.append(mirror(a))

@@ -330,3 +330,12 @@
 1 5α                EXPECT `4`
 5 4 3 2) 4α         EXPECT `[1, 0, 1, 2]`
 5432S2345Sα         EXPECT `[3, 1, 1, 3]`
+
+// Python truthify
+1 Ā                 EXPECT `1`
+0 Ā                 EXPECT `0`
+2 Ā                 EXPECT `1`
+"1.5"Ā              EXPECT `1`
+"0.0"Ā              EXPECT `0`
+"0.1"Ā              EXPECT `1`
+1 0 2 "1.5" "0.0")Ā EXPECT `[1, 0, 1, 1, 0]`
