@@ -1,6 +1,6 @@
 ǝ	= pop a,b,c  insert b into a on location c
 ʒ	= pop a      filter a when the result of code == 1: usage ʒCODE}
-α	=
+α	= pop a,b    push absolute difference of a and b
 β	= pop a,b    push a converted from base b (arbitrary)
 γ	= pop a      push a split into chunks of consecutive equal elements
 δ	= pop a,b    get the next command, push double vectorized command
