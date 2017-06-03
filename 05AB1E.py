@@ -569,6 +569,14 @@ def run_program(commands,
                 except:0
                 stack.append(temp_list)
 
+            elif current_command == "\u2260":
+                a = pop_stack(1)
+                stack.append(single_vectorized_evaluation(a, lambda a: int(ast_int_eval(a) != 1)))
+
+            elif current_command == "\u0398":
+                a = pop_stack(1)
+                stack.append(single_vectorized_evaluation(a, lambda a: int(ast_int_eval(a) == 1)))
+
             elif current_command == "L":
                 temp_list = []
                 a = pop_stack(1)

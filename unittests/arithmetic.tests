@@ -339,3 +339,19 @@
 "0.0"Ā              EXPECT `0`
 "0.1"Ā              EXPECT `1`
 1 0 2 "1.5" "0.0")Ā EXPECT `[1, 0, 1, 1, 0]`
+
+// 05AB1E falsify
+1 ≠                 EXPECT `0`
+0 ≠                 EXPECT `1`
+2 ≠                 EXPECT `1`
+"0.4" ≠             EXPECT `1`
+"1.0" ≠             EXPECT `0`
+1 0 2 "1.0") ≠      EXPECT `[0, 1, 1, 0]`
+
+// 05AB1E truthify
+1 Θ                 EXPECT `1`
+0 Θ                 EXPECT `0`
+2 Θ                 EXPECT `0`
+"1.0" Θ             EXPECT `1`
+"0.4" Θ             EXPECT `0`
+1 0 2 "1.0" "0.4")Θ EXPECT `[1, 0, 0, 1, 0]`
