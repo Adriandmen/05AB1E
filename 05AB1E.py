@@ -3065,7 +3065,7 @@ def run_program(commands,
                         else:
                             stack.append(str(a)[b % len(a)])
 
-            elif current_command == ".p":
+            elif current_command == ".p" or current_command == "\u03B7":
                 a = pop_stack(1)
                 if type(a) is int:
                     a = str(a)
