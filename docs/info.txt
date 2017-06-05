@@ -15,11 +15,11 @@
 т	=            push 100
 Γ	=
 Δ	=
-Θ	=
+Θ	= pop a      push 05AB1E truthified a (a == 1)
 ι	=
 Σ	= pop a      sort a by the result of code: usage ΣCODE}
 Ω	=
-≠	=
+≠	= pop a      push 05AB1E falsified a (a != 1)
 ∊	=
 ∍	=
 ∞	= pop a      push mirrored a
