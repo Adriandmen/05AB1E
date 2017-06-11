@@ -10,6 +10,8 @@ import os
 import tempfile
 import random
 
+from sys import stderr
+
 from lib.constants import *
 from lib.commands import *
 from lib.encoding import *
@@ -3469,6 +3471,10 @@ def run_program(commands,
 
             elif current_command == ".g":
                 stack.append(len(stack))
+
+            elif current_command == ".\u01DD":
+                a = pop_stack(1)
+                print(a, file=stderr)
 
             #
             # LIST COMMANDS
