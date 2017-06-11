@@ -6,7 +6,7 @@
 δ	= pop a,b    get the next command, push double vectorized command
 ε	=
 ζ	=
-η	=
+η	= pop a      push prefixes(a)
 θ	=
 в	= pop a,b    push a converted to base b (arbitrary)
 и	=
