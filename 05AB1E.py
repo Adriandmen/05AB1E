@@ -20,6 +20,7 @@ from lib.vectorizer import *
 stack = []
 exit_program = []
 has_printed = []
+zero_division = []
 
 recent_inputs = []
 input_index = [0]
@@ -133,6 +134,9 @@ def run_program(commands,
     current_command = ""
 
     while pointer_position < len(commands) - 1:
+        if zero_division:
+            0 / 0
+
         try:
             if exit_program:
                 return True
@@ -3475,6 +3479,9 @@ def run_program(commands,
             elif current_command == ".\u01DD":
                 a = pop_stack(1)
                 print(a, file=stderr)
+
+            elif current_command == ".0":
+                zero_division.append(1)
 
             #
             # LIST COMMANDS
