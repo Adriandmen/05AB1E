@@ -1,7 +1,8 @@
 ǝ	= pop a,b,c  insert b into a on location c
 ʒ	= pop a      filter a when the result of code == 1: usage ʒCODE}
 α	= pop a,b    push absolute difference of a and b
-β	= pop a,b    push a converted from base b (arbitrary)
+β	= pop a,b 
+push a converted from base b (arbitrary)
 γ	= pop a      push a split into chunks of consecutive equal elements
 δ	= pop a,b    get the next command, push double vectorized command
 ε	=
@@ -144,7 +145,7 @@ z	= pop a      push 1 / a
 Œ 11	= pop a      push substrings(a)
 Ć	= pop a      push enclosed a: a + a[0]
 Ž 12	= break if stack is empty
-ƶ	= pop a      push lifted a, each element is multiplied by it's index (1-indexed)
+ƶ	= pop a      push lifted a, each element is multiplied by its index (1-indexed)
 Ā	= pop a      push truthified a
 ‘ -	= for compressed strings (upper)
 ’ - 	= for compressed strings (no implicit space)
