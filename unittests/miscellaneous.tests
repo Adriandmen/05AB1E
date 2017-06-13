@@ -457,3 +457,17 @@ r)                  EXPECT `[]`
 "a".N               EXPECT `773879826`
 "b".N               EXPECT `4110145810`
 "ab"S.N             EXPECT `[773879826, 4110145810]`
+
+// Head
+12345н              EXPECT `1`
+12345ïн             EXPECT `1`
+12345Sн             EXPECT `1`
+12345Sïн            EXPECT `1`
+"ab""cd""de")н      EXPECT `ab`
+
+// Tail
+12345θ              EXPECT `5`
+12345ïθ             EXPECT `5`
+12345Sθ             EXPECT `5`
+12345Sïθ            EXPECT `5`
+"ab""cd""de")θ      EXPECT `de`

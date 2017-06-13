@@ -469,6 +469,20 @@ def run_program(commands,
                 a = pop_stack(1)
                 stack.append(intersected_mirror(a))
 
+            elif current_command == "\u043D":
+                a = pop_stack(1)
+                if type(a) is list:
+                    stack.append(a[0])
+                else:
+                    stack.append(str(a)[0])
+
+            elif current_command == "\u03B8":
+                a = pop_stack(1)
+                if type(a) is list:
+                    stack.append(a[-1])
+                else:
+                    stack.append(str(a)[-1])
+
             elif current_command == "!":
                 a = pop_stack(1)
                 stack.append(single_vectorized_evaluation(a, math.factorial, int))
