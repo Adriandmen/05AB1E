@@ -7,11 +7,11 @@
 ε	=
 ζ	=
 η	= pop a      push prefixes(a)
-θ	=
+θ	= pop a      push a[-1]
 в	= pop a,b    push a converted to base b (arbitrary)
 и	=
 м	=
-н	=
+н	= pop a      push a[0]
 т	=            push 100
 Γ	=
 Δ	=
