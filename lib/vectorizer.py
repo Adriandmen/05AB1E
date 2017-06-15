@@ -1,11 +1,13 @@
 def vectorized_evaluation(a, b, function, pre_function=None):
     """
-    Uses the given function in the form of a lambda and produces a vectorized result if
-    at least one of the items is an iterable value. Otherwise, it evaluates it as normal.
+    Uses the given function in the form of a lambda and produces a vectorized
+    result if at least one of the items is an iterable value. Otherwise, it
+    evaluates it as normal.
     :param a: The first value for the function
     :param b: The second value for the function
     :param function: A 2-arity lambda used for the function
-    :param pre_function: A function that is called before vectorization (optional)
+    :param pre_function: A function that is called before vectorization
+                         (optional)
     :return: A value or array of values depending on a and b
     """
 
@@ -23,7 +25,8 @@ def vectorized_evaluation(a, b, function, pre_function=None):
     # When both are lists
     if type(a) is list and type(b) is list:
 
-        # Get the minimum and maximum of both lists in order to prevent index errors
+        # Get the minimum and maximum of both lists in order to prevent index
+        # errors
         vector_range = min(len(a), len(b))
         max_range = max(len(a), len(b))
         vectorized_result = []
