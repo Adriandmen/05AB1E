@@ -69,27 +69,24 @@ def opt_input():
 
 def is_array(array):
     if not array:
-         return False
+        return False
 
     array = str(array)
     if array[0] == "[" and array[-1] == "]":
         return True
-    else:
-        return False
+    return False
 
 
 def pop_stack(amount=1):
     if stack:
         return stack.pop()
-    else:
-        a = opt_input()
-        if is_array(a):
-            a = ast_int_eval(a)
-            recent_inputs.append(a)
-            return a
-        else:
-            recent_inputs.append(a)
-            return a
+
+    a = opt_input()
+    if is_array(a):
+        a = ast_int_eval(a)
+
+    recent_inputs.append(a)
+    return a
 
 
 def get_input():
@@ -131,7 +128,6 @@ def run_program(commands,
         except:0
     pointer_position = -1
     temp_position = 0
-    current_command = ""
 
     while pointer_position < len(commands) - 1:
         if zero_division:
