@@ -21,11 +21,7 @@ def ast_int_eval(number):
 def is_digit_value(value):
     value = str(value)
     try:
-        for X in value:
-            if X in numbers:
-                continue
-            else:
-                return 0
+        int(value)
         return 1
     except:
         return 0
@@ -34,12 +30,11 @@ def is_digit_value(value):
 def flatten(x):
     if isinstance(x, collections.Iterable):
         return [a for i in x for a in flatten(i)]
-    else:
-        return [x]
+    return [x]
 
 
 def deep_flatten(S):
-    if S == []:
+    if not S:
         return S
     if isinstance(S[0], list):
         return deep_flatten(S[0]) + deep_flatten(S[1:])
@@ -50,9 +45,7 @@ def is_alpha_value(value):
     value = str(value)
     try:
         for X in value:
-            if str(X).lower() in letters:
-                continue
-            else:
+            if not str(X).lower() in letters:
                 return 0
         return 1
     except:
@@ -94,7 +87,7 @@ def convert_to_base(n, base):
         return ""
 
     s = ""
-    while 1:
+    while True:
         r = n % base
         s = digits[int(r)] + s
         n = n // base
@@ -105,7 +98,7 @@ def convert_to_base(n, base):
         while s[0] == "0":
             s = s[1:]
     except:
-        0
+        pass
 
     return s
 
@@ -184,7 +177,7 @@ def convert_from_base(n, base):
 
 def convert_from_base_arbitrary(n, base):
 
-    n = n[::-1]
+    n.reverse()
     r = 0
     range_v = 0
 
