@@ -98,16 +98,6 @@ def get_input():
     return a
 
 
-def ast_int_eval(number):
-    a = str(number)
-    try:
-        a = ast.literal_eval(a)
-    except:
-        a = int(a)
-
-    return a
-
-
 def run_program(commands,
                 debug,
                 safe_mode,

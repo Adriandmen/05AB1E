@@ -4,8 +4,8 @@ import fractions
 import ast
 from functools import reduce
 
-letters = list("abcdefghijklmnopqrstuvwxyz")
-numbers = list("0123456789")
+letters = "abcdefghijklmnopqrstuvwxyz"
+numbers = "0123456789"
 
 
 def ast_int_eval(number):
