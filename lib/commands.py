@@ -225,18 +225,17 @@ def permutations(n, r):
 
 def prime_factorization(n):
     n = int(n)
-    list_of_factors = []
 
     if n < 2:
         return []
-    else:
-        if n == 2:
-            return [2]
-        else:
-            for Q in range(2, n + 1):
-                if is_prime(Q):
-                    if n % Q == 0:
-                        list_of_factors.append(Q)
+    if n == 2:
+        return [2]
+
+    list_of_factors = []
+    for Q in range(2, n + 1):
+        if is_prime(Q):
+            if n % Q == 0:
+                list_of_factors.append(Q)
     return list_of_factors
 
 
@@ -244,51 +243,50 @@ def get_letter(n):
     n = int(n)
     if n in range(1, 27):
         return chr(64 + n)
-    return None
 
 
 def prime_factorization_duplicates(n):
     n = int(n)
-    list_of_factors = []
 
     if n < 2:
         return []
-    else:
-        if n == 2:
-            return [2]
-        else:
-            for Q in range(2, n + 1):
-                if is_prime(Q):
-                    while n % Q == 0:
-                        list_of_factors.append(Q)
-                        n = int(int(n) // int(Q))
-                if n == 1: break
+    if n == 2:
+        return [2]
+    list_of_factors = []
+
+    for Q in range(2, n + 1):
+        if is_prime(Q):
+            while n % Q == 0:
+                list_of_factors.append(Q)
+                n = int(int(n) // int(Q))
+        if n == 1: break
 
     return list_of_factors
 
 
 def prime_factorization_powers(n):
     n = int(n)
-    list_of_factors = []
 
     if n < 2:
         return []
-    else:
-        if n == 2:
-            return [1]
-        else:
-            for Q in range(2, n + 1):
-                if is_prime(Q):
-                    value = 0
-                    while n % Q == 0:
-                        value += 1
-                        n = int(int(n) // int(Q))
-                    list_of_factors.append(value)
+    if n == 2:
+        return [1]
+
+    list_of_factors = []
+
+    for Q in range(2, n + 1):
+        if is_prime(Q):
+            value = 0
+            while n % Q == 0:
+                value += 1
+                n = int(int(n) // int(Q))
+            list_of_factors.append(value)
 
     try:
         while list_of_factors[len(list_of_factors) - 1] == 0:
             list_of_factors.pop()
-    except:0
+    except:
+        pass
 
     return list_of_factors
 
@@ -363,8 +361,7 @@ def floatify(string):
 def trim_float(string):
     if str(string)[-2:] == ".0":
         return int(string)
-    else:
-        return floatify(string)
+    return floatify(string)
 
 
 def is_float_value(string):
@@ -373,15 +370,15 @@ def is_float_value(string):
 
     if is_digit_value(string) and number_of_dots < 2:
         return 1
-    else:
-        return 0
+    return 0
 
 
 def euler_totient(n):
-    amount = 0
 
     if is_prime(n):
         return n - 1
+
+    amount = 0
 
     for k in range(1, n + 1):
         if fractions.gcd(n, k) == 1:
@@ -393,7 +390,7 @@ def euler_totient(n):
 def chunk_divide(seq, num):
 
     if type(num) is list:
-        raise Exception;
+        raise Exception
 
     if type(seq) is int:
         seq = str(seq)
@@ -436,19 +433,19 @@ def infinite_replace(object1, object2, object3):
     if type(object1) is list:
         object1 = [str(x) for x in object1]
 
+    elif type(object1) is int:
+        object1 = str(object1)
+
     if type(object2) is list:
         object2 = [str(x) for x in object2]
+
+    elif type(object2) is int:
+        object2 = str(object2)
 
     if type(object3) is list:
         object3 = [str(x) for x in object3]
 
-    if type(object1) is int:
-        object1 = str(object1)
-
-    if type(object2) is int:
-        object2 = str(object2)
-
-    if type(object3) is int:
+    elif type(object3) is int:
         object3 = str(object3)
 
     # [String String String]
@@ -521,19 +518,19 @@ def single_replace(object1, object2, object3):
     if type(object1) is list:
         object1 = [str(x) for x in object1]
 
+    elif type(object1) is int:
+        object1 = str(object1)
+
     if type(object2) is list:
         object2 = [str(x) for x in object2]
+
+    elif type(object2) is int:
+        object2 = str(object2)
 
     if type(object3) is list:
         object3 = [str(x) for x in object3]
 
-    if type(object1) is int:
-        object1 = str(object1)
-
-    if type(object2) is int:
-        object2 = str(object2)
-
-    if type(object3) is int:
+    elif type(object3) is int:
         object3 = str(object3)
 
     # [String String String]
@@ -587,19 +584,19 @@ def first_replace(object1, object2, object3):
     if type(object1) is list:
         object1 = [str(x) for x in object1]
 
+    elif type(object1) is int:
+        object1 = str(object1)
+
     if type(object2) is list:
         object2 = [str(x) for x in object2]
+
+    elif type(object2) is int:
+        object2 = str(object2)
 
     if type(object3) is list:
         object3 = [str(x) for x in object3]
 
-    if type(object1) is int:
-        object1 = str(object1)
-
-    if type(object2) is int:
-        object2 = str(object2)
-
-    if type(object3) is int:
+    elif type(object3) is int:
         object3 = str(object3)
 
     # [String String String]
@@ -666,11 +663,11 @@ def insert(object1, character, location):
 
     if location > len(object1):
         return object1
-    else:
-        if type(object1) is list:
-            return object1[0:location] + [character] + object1[location + 1:]
-        else:
-            return object1[0:location] + character + object1[location + 1:]
+
+    if type(object1) is list:
+        return object1[0:location] + [character] + object1[location + 1:]
+
+    return object1[0:location] + character + object1[location + 1:]
 
 
 def mirror(a):
@@ -794,8 +791,8 @@ def even_divide(a, b):
 
     if type(a) is str:
         return list(map(''.join, result))
-    else:
-        return result
+
+    return result
 
 
 def get_hash(string):
@@ -836,31 +833,9 @@ def closest_to(a, b):
 def undelta(a):
 
     start = [0]
+
     for element in a:
         element = ast_int_eval(element)
         start.append(start[-1] + element)
 
     return start
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
