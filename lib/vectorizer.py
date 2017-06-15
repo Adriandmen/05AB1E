@@ -64,7 +64,7 @@ def vectorized_evaluation(a, b, function, pre_function=None):
 
 def single_vectorized_evaluation(a, function, pre_function=None):
 
-    if pre_function is not None:
+    if pre_function:
         if type(a) is list:
             a = [pre_function(x) for x in a]
         else:
@@ -78,6 +78,4 @@ def single_vectorized_evaluation(a, function, pre_function=None):
 
         return vectorized_result
 
-    else:
-
-        return function(a)
+    return function(a)
