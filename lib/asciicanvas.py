@@ -25,7 +25,8 @@ def canvas_code_to_string(code, prev_canvas, prev_cursor):
            #
            #
 
-    :param code: The code that will be executed which returns an array of strings
+    :param code: The code that will be executed which returns an array of
+                 strings
     :return: An array from the canvas code
     """
 
@@ -58,15 +59,18 @@ def canvas_code_to_string(code, prev_canvas, prev_cursor):
                     filler += code[index + 1]
                     index += 1
 
-            elif index + 1 < len(code) and code[index + 1] not in movement_pattern_characters:
+            elif index + 1 < len(code)\
+                    and code[index + 1] not in movement_pattern_characters:
                 index += 1
 
                 filler += code[index]
-                while index + 1 < len(code) and code[index + 1] not in movement_pattern_characters:
+                while index + 1 < len(code)\
+                        and code[index + 1] not in movement_pattern_characters:
                     filler += code[index + 1]
                     index += 1
 
-            canvas, cursor = canvasify(pattern, parsed_number, filler, canvas, cursor)
+            canvas, cursor = canvasify(pattern, parsed_number, filler, canvas,
+                                       cursor)
             pattern = ""
 
     return canvas, cursor
@@ -89,59 +93,59 @@ def canvasify(pattern, number, filler, previous_canvas, cursor_position):
     :param cursor_position: The current position for the cursor
     :return: Returns a new canvas and a new cursor position
     """
-    current_canvas = previous_canvas
-    current_position = cursor_position
+    curr_canvas = previous_canvas
+    curr_position = cursor_position
 
     for character in pattern:
         if character == "U":
             for index in range(0, number - 1):
-                current_canvas[' '.join(str(x) for x in current_position)] = filler
-                current_position = [current_position[0], current_position[1] + 1]
-                current_canvas[' '.join(str(x) for x in current_position)] = filler
+                curr_canvas[' '.join(str(x) for x in curr_position)] = filler
+                curr_position = [curr_position[0], curr_position[1] + 1]
+                curr_canvas[' '.join(str(x) for x in curr_position)] = filler
 
         elif character == "D":
             for index in range(0, number - 1):
-                current_canvas[' '.join(str(x) for x in current_position)] = filler
-                current_position = [current_position[0], current_position[1] - 1]
-                current_canvas[' '.join(str(x) for x in current_position)] = filler
+                curr_canvas[' '.join(str(x) for x in curr_position)] = filler
+                curr_position = [curr_position[0], curr_position[1] - 1]
+                curr_canvas[' '.join(str(x) for x in curr_position)] = filler
 
         elif character == "L":
             for index in range(0, number - 1):
-                current_canvas[' '.join(str(x) for x in current_position)] = filler
-                current_position = [current_position[0] - 1, current_position[1]]
-                current_canvas[' '.join(str(x) for x in current_position)] = filler
+                curr_canvas[' '.join(str(x) for x in curr_position)] = filler
+                curr_position = [curr_position[0] - 1, curr_position[1]]
+                curr_canvas[' '.join(str(x) for x in curr_position)] = filler
 
         elif character == "R":
             for index in range(0, number - 1):
-                current_canvas[' '.join(str(x) for x in current_position)] = filler
-                current_position = [current_position[0] + 1, current_position[1]]
-                current_canvas[' '.join(str(x) for x in current_position)] = filler
+                curr_canvas[' '.join(str(x) for x in curr_position)] = filler
+                curr_position = [curr_position[0] + 1, curr_position[1]]
+                curr_canvas[' '.join(str(x) for x in curr_position)] = filler
 
         elif character == "\u03b1":
             for index in range(0, number - 1):
-                current_canvas[' '.join(str(x) for x in current_position)] = filler
-                current_position = [current_position[0] - 1, current_position[1] + 1]
-                current_canvas[' '.join(str(x) for x in current_position)] = filler
+                curr_canvas[' '.join(str(x) for x in curr_position)] = filler
+                curr_position = [curr_position[0] - 1, curr_position[1] + 1]
+                curr_canvas[' '.join(str(x) for x in curr_position)] = filler
 
         elif character == "\u03b2":
             for index in range(0, number - 1):
-                current_canvas[' '.join(str(x) for x in current_position)] = filler
-                current_position = [current_position[0] + 1, current_position[1] + 1]
-                current_canvas[' '.join(str(x) for x in current_position)] = filler
+                curr_canvas[' '.join(str(x) for x in curr_position)] = filler
+                curr_position = [curr_position[0] + 1, curr_position[1] + 1]
+                curr_canvas[' '.join(str(x) for x in curr_position)] = filler
 
         elif character == "\u03b3":
             for index in range(0, number - 1):
-                current_canvas[' '.join(str(x) for x in current_position)] = filler
-                current_position = [current_position[0] - 1, current_position[1] - 1]
-                current_canvas[' '.join(str(x) for x in current_position)] = filler
+                curr_canvas[' '.join(str(x) for x in curr_position)] = filler
+                curr_position = [curr_position[0] - 1, curr_position[1] - 1]
+                curr_canvas[' '.join(str(x) for x in curr_position)] = filler
 
         elif character == "\u03b4":
             for index in range(0, number - 1):
-                current_canvas[' '.join(str(x) for x in current_position)] = filler
-                current_position = [current_position[0] + 1, current_position[1] - 1]
-                current_canvas[' '.join(str(x) for x in current_position)] = filler
+                curr_canvas[' '.join(str(x) for x in curr_position)] = filler
+                curr_position = [curr_position[0] + 1, curr_position[1] - 1]
+                curr_canvas[' '.join(str(x) for x in curr_position)] = filler
 
-    return current_canvas, current_position
+    return curr_canvas, curr_position
 
 
 def canvas_dict_to_string(canvas: dict):
