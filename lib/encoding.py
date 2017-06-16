@@ -29,7 +29,7 @@ def osabie_to_utf8(code):
 
     # Replace the char with the corresponding character in the 05AB1E code page
     for char in code:
-        processed_code += osabie_code_page[ord(char)]
+        processed_code += osabie_code_page[char]
 
     return processed_code
 
