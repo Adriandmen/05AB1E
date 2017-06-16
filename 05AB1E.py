@@ -3905,7 +3905,7 @@ if __name__ == "__main__":
         code = EVAL
     # Do not load from file if just eval'ing
     elif ENCODE_OSABIE:
-        code = open(filename, "r", encoding="utf-8").read()
+        code = open(filename, "rb").read()
         code = osabie_to_utf8(code)
     else:
         code = open(filename, "r", encoding="utf-8").read()
