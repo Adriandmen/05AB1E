@@ -45,7 +45,7 @@ def is_alpha_value(value):
     value = str(value)
     try:
         for X in value:
-            if not str(X).lower() in letters:
+            if not X.lower() in letters:
                 return 0
         return 1
     except:
@@ -199,7 +199,7 @@ def convert_from_base(n, base):
 
 def convert_from_base_arbitrary(n, base):
 
-    n.reverse()
+    n = str(n)[::-1]
     r = 0
     range_v = 0
 
