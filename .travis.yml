@@ -8,4 +8,4 @@ python:
 sudo: false
     
 script:
- - python test/unittests.py
+ - python unittests.py
