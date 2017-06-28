@@ -1,5 +1,5 @@
 import os
-osabie = __import__("05AB1E")
+import osabie
 
 tests = os.listdir("unittests")
 
