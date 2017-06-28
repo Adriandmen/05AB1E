@@ -1,7 +1,11 @@
-import os
+import os,sys,inspect
+current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parent_dir = os.path.dirname(current_dir)
+sys.path.insert(0, parent_dir)
+
 import osabie
 
-tests = os.listdir("unittests")
+tests = os.listdir("test/unittests")
 
 EXIT_CODE = 0
 TOTAL_TESTS = 0
@@ -9,7 +13,7 @@ TOTAL_SUCCESSES = 0
 TOTAL_FAILS = 0
 
 for test_file in tests:
-    file = open('unittests/' + test_file, 'r', encoding="UTF-8")
+    file = open('test/unittests/' + test_file, 'r', encoding="UTF-8")
 
     PASSES = 0
     FAILS = 0
