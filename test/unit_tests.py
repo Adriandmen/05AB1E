@@ -1,4 +1,6 @@
-import os,sys,inspect
+import os
+import sys
+import inspect
 current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir)
@@ -24,7 +26,7 @@ for test_file in tests:
 
         LINE_NO += 1
 
-        if line[0:2] == "//" or len(line) < 2:
+        if "//" in line or len(line) < 2:
             continue
         else:
             TOTAL += 1
@@ -55,7 +57,22 @@ for test_file in tests:
 
             result = ""
             try:
-                result = osabie.run_program(CODE, False, False, True)
+                if test_file == "advanced.tests":
+                    temp_file = open("temp_file", "w", encoding="UTF-8")
+                    temp_file.write(CODE[5:])
+                    temp_file.close()
+
+                    if os.name == 'nt':
+                        os.system("py -3 osabie.py temp_file > output_file")
+                    else:
+                        os.system("python3 osabie.py temp_file > output_file")
+
+                    temp_file = open("output_file", "r", encoding="UTF-8")
+                    result = temp_file.read().rstrip("\n")
+                    temp_file.close()
+
+                else:
+                    result = osabie.run_program(CODE, False, False, True)
             except Exception as e:
                 print("An error has occured at line", LINE_NO)
                 print(e)

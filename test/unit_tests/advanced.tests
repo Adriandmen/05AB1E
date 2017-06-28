@@ -1,0 +1,8 @@
+﻿// ADVANCED TESTS
+// Here, tests that recursively calls itself are tested.
+// Examples of commands that recursively calls itself are
+// the for-each command, sort-by, filter-by, et cetera.
+
+// Apply each command
+12345Sε5+                       EXPECT `[6, 7, 8, 9, 10]`
+12345SεD>«}ï                    EXPECT `[12, 23, 34, 45, 56]`
