@@ -23,7 +23,7 @@ A golfing language is a language that specializes in [code golf](https://en.wiki
 
 ### The basics
 
-A program in 05AB1E is just like any other program, it is stored in a file and then run with **05AB1E.py**. The python file will interpret the given file as 05AB1E code. A very easy to understand program is:
+A program in 05AB1E is just like any other program, it is stored in a file and then run with **osabie.py**. The python file will interpret the given file as 05AB1E code. A very easy to understand program is:
 
     "Hello, World!"
 
@@ -75,15 +75,15 @@ Now you have a basic understanding of how 05AB1E works! Tutorials will be added 
 
 Create a new file where you want to store your program in (like `test.abe`). Normally, an 05AB1E file ends with `.abe`, but any other file extension can also be used. To run it, do the following:
 
-    [path to Python 3] [path to 05AB1E.py] [path to 05AB1E program]
+    [path to Python 3] [path to osabie.py] [path to 05AB1E program]
     
 For example:
 
-    > python34.exe 05AB1E.py test.abe
+    > python34.exe osabie.py test.abe
     
 Or a more official way (whereas `inputs` is a file with all inputs):
 
-    > python34.exe 05AB1E.py test.abe < inputs
+    > python34.exe oasbie.py test.abe < inputs
     
 If run without the inputs file, the 05AB1E program reads the input from STDIN.
 
