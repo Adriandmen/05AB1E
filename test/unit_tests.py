@@ -5,7 +5,7 @@ sys.path.insert(0, parent_dir)
 
 import osabie
 
-tests = os.listdir("test/unittests")
+tests = os.listdir("test/unit_tests")
 
 EXIT_CODE = 0
 TOTAL_TESTS = 0
@@ -13,7 +13,7 @@ TOTAL_SUCCESSES = 0
 TOTAL_FAILS = 0
 
 for test_file in tests:
-    file = open('test/unittests/' + test_file, 'r', encoding="UTF-8")
+    file = open('test/unit_tests/' + test_file, 'r', encoding="UTF-8")
 
     PASSES = 0
     FAILS = 0
