@@ -4,7 +4,7 @@
 β	= pop a,b    push a converted from base b (arbitrary)
 γ	= pop a      push a split into chunks of consecutive equal elements
 δ	= pop a,b    get the next command, push double vectorized command
-ε	=
+ε	= pop a      apply each on a: usage εCODE}
 ζ	=
 η	= pop a      push prefixes(a)
 θ	= pop a      push a[-1]
