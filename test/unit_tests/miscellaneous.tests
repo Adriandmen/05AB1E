@@ -476,3 +476,9 @@ r)                  EXPECT `[]`
 123∊                EXPECT `123¶123`
 "/ - \"∊            EXPECT `/ - \¶\ - /`
 "/\""||"»∊          EXPECT `/\¶||¶||¶\/`
+"/\""||")∊          EXPECT `/\¶||¶||¶\/`
+
+// Vertical intersected mirror
+123.∊               EXPECT `123`
+"/-\""|||"».∊       EXPECT `/-\¶|||¶\-/`
+1 2 3).∊            EXPECT `1¶2¶3¶2¶1`

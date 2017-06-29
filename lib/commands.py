@@ -713,6 +713,24 @@ def vertical_mirror(a):
     return result
 
 
+def vertical_intersected_mirror(a):
+    if type(a) is int:
+        a = str(a)
+
+    if type(a) is str:
+        a = a.split("\n")
+
+    result = []
+    for element in a:
+        result.append(element)
+
+    for element in a[::-1][1:]:
+        reversed_element = transliterate(element,  "\\/", "/\\")
+        result.append(reversed_element)
+
+    return result
+
+
 def intersected_mirror(a):
     if type(a) is int:
         a = str(a)
