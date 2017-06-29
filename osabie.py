@@ -452,6 +452,11 @@ def run_program(commands,
 
                 current_canvas, current_cursor = canvas.canvas_code_to_string(canvas_code, current_canvas, current_cursor)
 
+            elif current_command == "\u220A":
+                a = pop_stack(1)
+                result = vertical_mirror(a)
+                stack.append('\n'.join(result))
+
             elif current_command == "\u0101":
                 a = pop_stack(1)
                 stack.append(a)

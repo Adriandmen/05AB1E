@@ -471,3 +471,8 @@ r)                  EXPECT `[]`
 12345Sθ             EXPECT `5`
 12345Sïθ            EXPECT `5`
 "ab""cd""de")θ      EXPECT `de`
+
+// Vertical mirror
+123∊                EXPECT `123¶123`
+"/ - \"∊            EXPECT `/ - \¶\ - /`
+"/\""||"»∊          EXPECT `/\¶||¶||¶\/`

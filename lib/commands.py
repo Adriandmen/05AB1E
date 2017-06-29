@@ -695,6 +695,24 @@ def mirror(a):
     return '\n'.join(result)
 
 
+def vertical_mirror(a):
+    if type(a) is int:
+        a = str(a)
+
+    if type(a) is str:
+        a = a.split("\n")
+
+    result = []
+    for element in a:
+        result.append(element)
+
+    for element in a[::-1]:
+        reversed_element = transliterate(element,  "\\/", "/\\")
+        result.append(reversed_element)
+
+    return result
+
+
 def intersected_mirror(a):
     if type(a) is int:
         a = str(a)
