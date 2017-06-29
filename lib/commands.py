@@ -886,12 +886,42 @@ def undelta(a):
     return start
 
 
+def zip_with(a, b):
 
+    temp = a
 
+    if type(temp) is int:
+        temp = str(temp)
 
+    if type(temp) is str:
+        temp = temp.split("\n")
 
+    maximum_length = max([len(x) for x in temp])
 
+    if type(a[0]) is list:
+        temp_list = []
+        for element in temp:
+            temp_list.append(element + [str(b)] * (maximum_length - len(element)))
+        filled_list = temp_list[:]
+    else:
+        filled_list = [str(x) + (str(b) * (maximum_length - len(x))) for x in temp]
 
+    zipped_list = [list(x) for x in zip(*filled_list)]
+    result = []
+
+    if type(a) is not list:
+        for element in zipped_list:
+            result.append(''.join(element))
+        result = '\n'.join(result)
+
+    elif type(a[0]) is str:
+        for element in zipped_list:
+            result.append(''.join(element))
+
+    else:
+        result = zipped_list[:]
+        
+    return result
 
 
 

@@ -493,6 +493,17 @@ def run_program(commands,
                 else:
                     stack.append(str(a)[-1])
 
+            elif current_command == "\u03B6":
+                b = pop_stack(1)
+
+                if type(b) is list:
+                    a, b = b, " "
+                    stack.append(zip_with(a, b))
+                else:
+                    b = str(b)
+                    a = pop_stack(1)
+                    stack.append(zip_with(a, b))
+
             elif current_command == "\u03B5":
                 a = pop_stack(1)
                 if type(a) is int:

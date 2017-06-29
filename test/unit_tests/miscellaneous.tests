@@ -482,3 +482,10 @@ r)                  EXPECT `[]`
 123.∊               EXPECT `123`
 "/-\""|||"».∊       EXPECT `/-\¶|||¶\-/`
 1 2 3).∊            EXPECT `1¶2¶3¶2¶1`
+
+// Zipwith
+"abc""de")0ζ        EXPECT `['ad', 'be', 'c0']`
+"abc"S"de"S)0ζ      EXPECT `[['a', 'd'], ['b', 'e'], ['c', '0']]`
+"abc""de"»0ζ        EXPECT `ad¶be¶c0`
+"abc""de")ζ         EXPECT `['ad', 'be', 'c ']`
+"abc"S"de"S)ζ       EXPECT `[['a', 'd'], ['b', 'e'], ['c', ' ']]`
