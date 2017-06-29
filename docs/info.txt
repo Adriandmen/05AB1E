@@ -5,7 +5,7 @@
 γ	= pop a      push a split into chunks of consecutive equal elements
 δ	= pop a,b    get the next command, push double vectorized command
 ε	= pop a      apply each on a: usage εCODE}
-ζ	=
+ζ	= pop a,(b)  push zipped a with filler b (standardized to space)
 η	= pop a      push prefixes(a)
 θ	= pop a      push a[-1]
 в	= pop a,b    push a converted to base b (arbitrary)
