@@ -20,7 +20,7 @@
 Σ	= pop a      sort a by the result of code: usage ΣCODE}
 Ω	=
 ≠	= pop a      push 05AB1E falsified a (a != 1)
-∊	=
+∊	= pop a      push vertically mirrored a
 ∍	=
 ∞	= pop a      push mirrored a
 ₁	=
@@ -358,3 +358,4 @@ z	= pop a      push 1 / a
 .∞      = pop a      push intersected mirror a
 .¥	= pop a      push undelta a
 .ǝ	= pop a      print a to STDERR
+.∊  	= pop a      push intersected vertical mirror a
