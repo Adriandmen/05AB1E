@@ -21,7 +21,7 @@
 Ω	=
 ≠	= pop a      push 05AB1E falsified a (a != 1)
 ∊	= pop a      push vertically mirrored a
-∍	=
+∍	= pop a,b    push a extended/shortened to length b
 ∞	= pop a      push mirrored a
 ₁	=
 ₂	=
