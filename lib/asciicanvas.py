@@ -13,7 +13,7 @@ movement_pattern_characters = [
 ]
 
 
-def canvas_code_to_string(code, prev_canvas, prev_cursor):
+def canvas_code_to_string(number, pattern, filler, prev_canvas=None, prev_cursor=None):
     """
     Runs a canvas code and returns the resulting array.
     Canvas code is currently constucted in one of the following ways:
@@ -29,119 +29,46 @@ def canvas_code_to_string(code, prev_canvas, prev_cursor):
     :return: An array from the canvas code
     """
 
-    canvas = prev_canvas
-    cursor = prev_cursor
-    pattern = ""
-    index = -1
-    while index < len(code) - 1:
+    if not prev_canvas:
+        prev_canvas = {}
 
-        index += 1
-        current_command = code[index]
+    if not prev_cursor:
+        prev_cursor = [0, 0]
 
-        if current_command in movement_pattern_characters:
-            pattern += current_command
+    if type(number) is str:
+        number = int(number)
+    if type(number) is list:
+        number = [int(x) for x in number]
 
-        elif current_command in numbers:
+    if type(pattern) is int:
+        pattern = str(pattern)
+    if type(pattern) is list:
+        pattern = [str(x) for x in pattern]
 
-            parsed_number = current_command
-            while index + 1 < len(code) and code[index + 1] in numbers:
-                parsed_number += code[index + 1]
-                index += 1
+    if type(filler) is int:
+        filler = int(filler)
+    if type(filler) is list:
+        filler = [str(x) for x in filler]
 
-            parsed_number = int(parsed_number)
-            filler = ""
+    if type(number) is list and type(pattern) is str:
+        for num in number:
+            prev_canvas, prev_cursor = canvasify(pattern, num, filler, prev_canvas, prev_cursor)
 
-            if index + 1 < len(code) and code[index + 1] == "\u201C":
-                index += 1
+    elif type(number) is list and type(pattern) is list:
+        pattern_index = 0
+        for num in number:
+            prev_canvas, prev_cursor = canvasify(
+                pattern[pattern_index % len(pattern)], num, filler, prev_canvas, prev_cursor
+            )
 
-                while index + 1 < len(code) and code[index + 1] != "\u201D":
-                    filler += code[index + 1]
-                    index += 1
+            pattern_index += 1
 
-            elif index + 1 < len(code) and code[index + 1] not in movement_pattern_characters:
-                index += 1
+    elif type(number) is int:
+        if type(pattern) is list:
+            pattern = ''.join(pattern)
+        prev_canvas, prev_cursor = canvasify(pattern, number, filler, prev_canvas, prev_cursor)
 
-                filler += code[index]
-                while index + 1 < len(code) and code[index + 1] not in movement_pattern_characters:
-                    filler += code[index + 1]
-                    index += 1
-
-            canvas, cursor = canvasify(pattern, parsed_number, filler, canvas, cursor)
-            pattern = ""
-
-    return canvas, cursor
-
-
-def canvasify(pattern, number, filler, previous_canvas, cursor_position):
-    """
-    Converts the arguments that are passed through to a dictionary object
-    which in this case will be the canvas. The canvas itself is made up
-    of a key and a value. The key is in the following string format:
-
-        x y
-
-    The value attached to that key is a character. The dict is used for
-    it's easy accessibility and space complexity.
-    :param pattern: The pattern that will be used for the line to draw
-    :param number: The length of each line
-    :param filler: The filler character for the lines (can be empty)
-    :param previous_canvas: The state of the previous canvas
-    :param cursor_position: The current position for the cursor
-    :return: Returns a new canvas and a new cursor position
-    """
-    current_canvas = previous_canvas
-    current_position = cursor_position
-
-    for character in pattern:
-        if character == "U":
-            for index in range(0, number - 1):
-                current_canvas[' '.join(str(x) for x in current_position)] = filler
-                current_position = [current_position[0], current_position[1] + 1]
-                current_canvas[' '.join(str(x) for x in current_position)] = filler
-
-        elif character == "D":
-            for index in range(0, number - 1):
-                current_canvas[' '.join(str(x) for x in current_position)] = filler
-                current_position = [current_position[0], current_position[1] - 1]
-                current_canvas[' '.join(str(x) for x in current_position)] = filler
-
-        elif character == "L":
-            for index in range(0, number - 1):
-                current_canvas[' '.join(str(x) for x in current_position)] = filler
-                current_position = [current_position[0] - 1, current_position[1]]
-                current_canvas[' '.join(str(x) for x in current_position)] = filler
-
-        elif character == "R":
-            for index in range(0, number - 1):
-                current_canvas[' '.join(str(x) for x in current_position)] = filler
-                current_position = [current_position[0] + 1, current_position[1]]
-                current_canvas[' '.join(str(x) for x in current_position)] = filler
-
-        elif character == "\u03b1":
-            for index in range(0, number - 1):
-                current_canvas[' '.join(str(x) for x in current_position)] = filler
-                current_position = [current_position[0] - 1, current_position[1] + 1]
-                current_canvas[' '.join(str(x) for x in current_position)] = filler
-
-        elif character == "\u03b2":
-            for index in range(0, number - 1):
-                current_canvas[' '.join(str(x) for x in current_position)] = filler
-                current_position = [current_position[0] + 1, current_position[1] + 1]
-                current_canvas[' '.join(str(x) for x in current_position)] = filler
-
-        elif character == "\u03b3":
-            for index in range(0, number - 1):
-                current_canvas[' '.join(str(x) for x in current_position)] = filler
-                current_position = [current_position[0] - 1, current_position[1] - 1]
-                current_canvas[' '.join(str(x) for x in current_position)] = filler
-
-        elif character == "\u03b4":
-            for index in range(0, number - 1):
-                current_canvas[' '.join(str(x) for x in current_position)] = filler
-                current_position = [current_position[0] + 1, current_position[1] - 1]
-                current_canvas[' '.join(str(x) for x in current_position)] = filler
-
-    return current_canvas, current_position
+    return prev_canvas, prev_cursor
 
 
 def canvas_dict_to_string(canvas: dict):
@@ -182,6 +109,54 @@ def canvas_dict_to_string(canvas: dict):
 
     return '\n'.join(list(map(''.join, canvas_array))[::-1])
 
+
+def canvasify(pattern, number, filler, previous_canvas, cursor_position):
+    """
+    Converts the arguments that are passed through to a dictionary object
+    which in this case will be the canvas. The canvas itself is made up
+    of a key and a value. The key is in the following string format:
+
+        x y
+
+    The value attached to that key is a character. The dict is used for
+    its easy accessibility and space complexity.
+    :param pattern: The pattern that will be used for the line to draw
+    :param number: The length of each line
+    :param filler: The filler character for the lines (can be empty)
+    :param previous_canvas: The state of the previous canvas
+    :param cursor_position: The current position for the cursor
+    :return: Returns a new canvas and a new cursor position
+    """
+    current_canvas = previous_canvas
+    current_position = cursor_position
+
+    deltas = {
+        "U":        [0, 1],
+        "D":        [0, -1],
+        "L":        [-1, 0],
+        "R":        [1, 0],
+        "\u03b1":   [-1, 1],
+        "\u03b2":   [1, 1],
+        "\u03b3":   [-1, -1],
+        "\u03b4":   [1, -1]
+    }
+
+    current_canvas[' '.join(str(x) for x in current_position)] = filler[0]
+
+    filler_index = 1
+    for character in pattern:
+
+        delta_x, delta_y = deltas.get(character)
+        for index in range(0, number - 1):
+            current_filler = filler[filler_index % len(filler)]
+            filler_index += 1
+            current_position = [current_position[0] + delta_x, current_position[1] + delta_y]
+            current_canvas[' '.join(str(x) for x in current_position)] = current_filler
+
+    return current_canvas, current_position
+
 if __name__ == '__main__':
+    # number, pattern, filler, prev_canvas, prev_cursor
     string = "\u03b2DR4\u201C#\u201D"
-    print(canvas_code_to_string("LU4#RDA"))
+    canvas, _ = canvas_code_to_string(7, "RURURURUR", "1234")
+    print(canvas_dict_to_string(canvas))
