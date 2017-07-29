@@ -655,6 +655,11 @@ def run_program(commands,
                 a = pop_stack(1)
                 stack.append(single_vectorized_evaluation(a, lambda a: int(ast_int_eval(a) == 1)))
 
+            elif current_command == "\u043C":
+                b = pop_stack(1)
+                a = pop_stack(1)
+                stack.append(remove_all(a, b))
+
             elif current_command == "L":
                 temp_list = []
                 a = pop_stack(1)

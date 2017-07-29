@@ -920,10 +920,28 @@ def zip_with(a, b):
 
     else:
         result = zipped_list[:]
-        
+
     return result
 
 
+def remove_all(a, b):
+    if type(a) is int:
+        a = str(a)
+
+    if type(b) is int:
+        b = str(b)
+
+    if type(a) is list:
+        result = []
+        for element in a:
+            for char in b:
+                element = element.replace(char, "")
+            result.append(element)
+        return result
+    else:
+        for char in b:
+            a = a.replace(char, "")
+        return a
 
 
 

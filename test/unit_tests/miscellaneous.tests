@@ -489,3 +489,9 @@ r)                  EXPECT `[]`
 "abc""de"»0ζ        EXPECT `ad¶be¶c0`
 "abc""de")ζ         EXPECT `['ad', 'be', 'c ']`
 "abc"S"de"S)ζ       EXPECT `[['a', 'd'], ['b', 'e'], ['c', ' ']]`
+
+// String subtraction
+"abcde""ed"м        EXPECT `abc`
+"abba""a"м          EXPECT `bb`
+"ab""b")"b"м        EXPECT `['a', '']`
+"ab""bc")"ba"¸м     EXPECT `['ab', 'bc']`
