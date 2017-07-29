@@ -130,7 +130,7 @@ z	= pop a      push 1 / a
 
 Ƶ	=            convert the next char from base 255 to base 10 and add 101
 € 0     = for each command
-Λ	=            Switch to canvas mode
+Λ	= pop a,b,c  store a canvas with {a: num, b: filler, c: pattern} (todo: docs)
 ‚ 1	= pop a,b    push [a, b]
 ƒ 2	= pop a      push for N in range(0, a + 1)
 „ 3	= 2 char string / can also be used for 2 compressed strings
@@ -359,3 +359,4 @@ z	= pop a      push 1 / a
 .¥	= pop a      push undelta a
 .ǝ	= pop a      print a to STDERR
 .∊  	= pop a      push intersected vertical mirror a
+.Λ	= pop a,b,c  store a canvas with {a: num, b: filler, c: pattern} and push the string to the stack
