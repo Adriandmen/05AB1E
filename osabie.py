@@ -445,13 +445,24 @@ def run_program(commands,
                     stack.append(temp_list_2)
 
             elif current_command == "\u039B":
-                filler = pop_stack(1)
                 pattern = pop_stack(1)
+                filler = pop_stack(1)
                 number_pattern = pop_stack(1)
 
                 current_canvas, current_cursor = canvas.canvas_code_to_string(
                     number_pattern, pattern, filler, current_canvas, current_cursor
                 )
+
+            elif current_command == ".\u039B":
+                pattern = pop_stack(1)
+                filler = pop_stack(1)
+                number_pattern = pop_stack(1)
+
+                current_canvas, current_cursor = canvas.canvas_code_to_string(
+                    number_pattern, pattern, filler, current_canvas, current_cursor
+                )
+
+                stack.append(canvas.canvas_dict_to_string(current_canvas))
 
             elif current_command == "\u220A":
                 a = pop_stack(1)

@@ -137,7 +137,8 @@ def canvasify(pattern, number, filler, previous_canvas, cursor_position):
     current_canvas = previous_canvas
     current_position = cursor_position
 
-    pattern = pattern.replace("8", "226044")
+    pattern = pattern.replace("90", "226044")
+    pattern = pattern.replace("91", "0246")
 
     deltas = {
         "0": [0, 1],
