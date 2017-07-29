@@ -138,14 +138,14 @@ def canvasify(pattern, number, filler, previous_canvas, cursor_position):
     current_position = cursor_position
 
     deltas = {
-        "U":        [0, 1],
-        "D":        [0, -1],
-        "L":        [-1, 0],
-        "R":        [1, 0],
-        "\u03b1":   [-1, 1],
-        "\u03b2":   [1, 1],
-        "\u03b3":   [-1, -1],
-        "\u03b4":   [1, -1]
+        "0": [0, 1],
+        "4": [0, -1],
+        "6": [-1, 0],
+        "2": [1, 0],
+        "7": [-1, 1],
+        "1": [1, 1],
+        "5": [-1, -1],
+        "3": [1, -1]
     }
 
     current_canvas[' '.join(str(x) for x in current_position)] = filler[0]
