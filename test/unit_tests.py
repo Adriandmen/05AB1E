@@ -81,7 +81,7 @@ for test_file in tests:
                 osabie.run_program(CODE, True, False, True)
 
             succeeded = "success" if result in expected_results else "fail"
-            print("Test", TOTAL, "-", succeeded)
+            print("{}:{}".format(test_file, LINE_NO), "- Test", TOTAL, "-", succeeded)
 
             if succeeded == "fail":
                 print()

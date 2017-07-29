@@ -401,7 +401,7 @@ def euler_totient(n):
 def chunk_divide(seq, num):
 
     if type(num) is list:
-        raise Exception;
+        raise Exception
 
     if type(seq) is int:
         seq = str(seq)
