@@ -474,6 +474,11 @@ def run_program(commands,
                 result = vertical_intersected_mirror(a)
                 stack.append('\n'.join(result))
 
+            elif current_command == "\u220D":
+                b = pop_stack(1)
+                a = pop_stack(1)
+                stack.append(shape_like(a, b))
+
             elif current_command == "\u0101":
                 a = pop_stack(1)
                 stack.append(a)

@@ -964,6 +964,28 @@ def multi_split(a, b: list):
     return a.split(delimiter)
 
 
+def shape_like(a, b):
+
+    if type(b) is str:
+        b = int(b)
+
+    if type(a) is list and type(b) is list:
+        result = []
+        for element in b:
+            result.append(shape_like(a, element))
+        return result
+
+    elif type(a) is list and type(b) is int:
+        return (a * b)[:b]
+
+    elif type(a) is not list and type(b) is list:
+        result = []
+        for element in b:
+            result.append(shape_like(a, element))
+        return result
+
+    elif type(a) is not list and type(b) is not list:
+        return (str(a) * b)[:b]
 
 
 

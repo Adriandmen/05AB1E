@@ -512,3 +512,13 @@ r)                  EXPECT `[]`
 "abba""a"м          EXPECT `bb`
 "ab""b")"b"м        EXPECT `['a', '']`
 "ab""bc")"ba"¸м     EXPECT `['ab', 'bc']`
+
+// Extend
+"abc"10∍            EXPECT `abcabcabca`
+"abc"3∍             EXPECT `abc`
+"abc"1∍             EXPECT `a`
+3L   10∍            EXPECT `[1, 2, 3, 1, 2, 3, 1, 2, 3, 1]`
+3L   3∍             EXPECT `[1, 2, 3]`
+3L   1∍             EXPECT `[1]`
+3L   1234S∍         EXPECT `[[1], [1, 2], [1, 2, 3], [1, 2, 3, 1]]`
+"abc"1234S∍         EXPECT `["a", "ab", "abc", "abca"]`
