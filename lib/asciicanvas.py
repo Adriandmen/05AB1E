@@ -63,10 +63,17 @@ def canvas_code_to_string(number, pattern, filler, prev_canvas=None, prev_cursor
 
             pattern_index += 1
 
-    elif type(number) is int:
-        if type(pattern) is list:
-            pattern = ''.join(pattern)
+    elif type(number) is int and type(pattern) is str:
         prev_canvas, prev_cursor = canvasify(pattern, number, filler, prev_canvas, prev_cursor)
+
+    elif type(number) is int and type(pattern) is list:
+        pattern_index = 0
+        for num in [number] * number:
+            prev_canvas, prev_cursor = canvasify(
+                pattern[pattern_index % len(pattern)], num, filler, prev_canvas, prev_cursor
+            )
+
+            pattern_index += 1
 
     return prev_canvas, prev_cursor
 
@@ -157,6 +164,5 @@ def canvasify(pattern, number, filler, previous_canvas, cursor_position):
 
 if __name__ == '__main__':
     # number, pattern, filler, prev_canvas, prev_cursor
-    string = "\u03b2DR4\u201C#\u201D"
-    canvas, _ = canvas_code_to_string(7, "RURURURUR", "1234")
+    canvas, _ = canvas_code_to_string(5, ["\u03b4", "R", "\u03b2", "R"], "O")
     print(canvas_dict_to_string(canvas))
