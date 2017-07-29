@@ -9,76 +9,100 @@ def vectorized_evaluation(a, b, function, pre_function=None):
     :return: A value or array of values depending on a and b
     """
 
-    if pre_function is not None:
-        if type(a) is list:
-            a = [pre_function(x) for x in a]
-        else:
-            a = pre_function(a)
-
-        if type(b) is list:
-            b = [pre_function(x) for x in b]
-        else:
-            b = pre_function(b)
-
-    # When both are lists
-    if type(a) is list and type(b) is list:
-
-        # Get the minimum and maximum of both lists in order to prevent index errors
-        vector_range = min(len(a), len(b))
-        max_range = max(len(a), len(b))
-        vectorized_result = []
-
-        # Compute the function for all in range elements
-        for index in range(0, vector_range):
-            vectorized_result.append(function(a[index], b[index]))
-
-        # Append all out of range elements without being processed
-        for index in range(vector_range, max_range):
-            if len(a) == max_range:
-                vectorized_result.append(a[index])
+    try:
+        if pre_function is not None:
+            if type(a) is list:
+                a = [pre_function(x) for x in a]
             else:
-                vectorized_result.append(b[index])
+                a = pre_function(a)
 
-        return vectorized_result
+            if type(b) is list:
+                b = [pre_function(x) for x in b]
+            else:
+                b = pre_function(b)
 
-    # When only type a is a list
-    elif type(a) is list and type(b) is not list:
+        # When both are lists
+        if type(a) is list and type(b) is list:
 
-        vectorized_result = []
-        for element in a:
-            vectorized_result.append(function(element, b))
+            # Get the minimum and maximum of both lists in order to prevent index errors
+            vector_range = min(len(a), len(b))
+            max_range = max(len(a), len(b))
+            vectorized_result = []
 
-        return vectorized_result
+            # Compute the function for all in range elements
+            for index in range(0, vector_range):
+                vectorized_result.append(function(a[index], b[index]))
 
-    # When only type b is a list
-    elif type(a) is not list and type(b) is list:
+            # Append all out of range elements without being processed
+            for index in range(vector_range, max_range):
+                if len(a) == max_range:
+                    vectorized_result.append(a[index])
+                else:
+                    vectorized_result.append(b[index])
 
-        vectorized_result = []
-        for element in b:
-            vectorized_result.append(function(a, element))
+            return vectorized_result
 
-        return vectorized_result
+        # When only type a is a list
+        elif type(a) is list and type(b) is not list:
 
-    else:
-        return function(a, b)
+            vectorized_result = []
+            for element in a:
+                vectorized_result.append(function(element, b))
+
+            return vectorized_result
+
+        # When only type b is a list
+        elif type(a) is not list and type(b) is list:
+
+            vectorized_result = []
+            for element in b:
+                vectorized_result.append(function(a, element))
+
+            return vectorized_result
+
+        else:
+            return function(a, b)
+
+    except:
+        if type(a) is list and type(b) is not list:
+            vectorized_result = []
+            for element in a:
+                vectorized_result.append(vectorized_evaluation(element, b, function, pre_function))
+            return vectorized_result
+        elif type(a) is not list and type(b) is list:
+            vectorized_result = []
+            for element in b:
+                vectorized_result.append(vectorized_evaluation(a, element, function, pre_function))
+            return vectorized_result
+        else:
+            raise Exception
 
 
 def single_vectorized_evaluation(a, function, pre_function=None):
 
-    if pre_function is not None:
+    try:
+        if pre_function is not None:
+            if type(a) is list:
+                a = [pre_function(x) for x in a]
+            else:
+                a = pre_function(a)
+
         if type(a) is list:
-            a = [pre_function(x) for x in a]
+
+            vectorized_result = []
+            for element in a:
+                vectorized_result.append(function(element))
+
+            return vectorized_result
+
         else:
-            a = pre_function(a)
 
-    if type(a) is list:
-
-        vectorized_result = []
-        for element in a:
-            vectorized_result.append(function(element))
-
-        return vectorized_result
-
-    else:
-
-        return function(a)
+            return function(a)
+    except:
+        if type(a) is list:
+            vectorized_result = []
+            for element in a:
+                vectorized_result.append(single_vectorized_evaluation(element, function, pre_function))
+            return vectorized_result
+        else:
+            raise Exception
