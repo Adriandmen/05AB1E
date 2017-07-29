@@ -2021,7 +2021,10 @@ def run_program(commands,
                 b = pop_stack(1)
                 a = pop_stack(1)
 
-                stack.append(vectorized_evaluation(a, b, lambda a, b: a.split(b), str))
+                if type(b) is list:
+                    stack.append(multi_split(a, b))
+                else:
+                    stack.append(vectorized_evaluation(a, b, lambda a, b: a.split(b), str))
 
             elif current_command == "\u03b3":
                 a = pop_stack(1)
@@ -2812,28 +2815,7 @@ def run_program(commands,
                 c = pop_stack(1)
                 b = pop_stack(1)
                 a = pop_stack(1)
-
-                a = str(a)
-                if type(b) is int:
-                    b = str(b)
-                if type(c) is int:
-                    c = str(c)
-
-                temp_string = ""
-                has_transliterated = False
-
-                for S in a:
-                    for Q in range(0, len(b)):
-                        if S != S.replace(b[Q], c[Q]):
-                            temp_string += S.replace(b[Q], c[Q])
-                            has_transliterated = True
-                            break
-
-                    if not has_transliterated:
-                        temp_string += S
-                    has_transliterated = False
-
-                stack.append(temp_string)
+                stack.append(transliterate(a, b, c))
 
             elif current_command == "\u00cf":
                 b = pop_stack(1)

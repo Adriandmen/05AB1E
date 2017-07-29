@@ -178,6 +178,13 @@ r)                  EXPECT `[]`
 
 // Transliteration
 "abcde" "cd" "dc"‡  EXPECT `abdce`
+"abcde" "cd"S"dc"S‡ EXPECT `abdce`
+"abcde" "cd"S"dc"‡  EXPECT `abdce`
+"abcde" "cd" "dc"S‡ EXPECT `abdce`
+"!" "!!""23"‡       EXPECT `2`
+
+// https://codegolf.stackexchange.com/questions/135802/
+"pull!"94Ýn95%32+çžQ‡  EXPECT `HC33!`
 
 // Stack rotate
 1 2 3 4Š)ï          EXPECT `[1, 4, 2, 3]`
@@ -210,6 +217,13 @@ r)                  EXPECT `[]`
 "12b3" "b"¡         EXPECT `['12', '3']`
 "abcd""12b3")"b"¡   EXPECT `[['a', 'cd'], ['12', '3']]`
 "1234"5¡            EXPECT `['1234']`
+"123456"25S¡        EXPECT `['1', '34', '6']`
+"abcde""be"S¡       EXPECT `['a', 'cd', '']`
+"abcde""be"S¡       EXPECT `['a', 'cd', '']`
+"abcde""be"S¡       EXPECT `['a', 'cd', '']`
+"abcde""be"S¡       EXPECT `['a', 'cd', '']`
+"abcde""be"S¡       EXPECT `['a', 'cd', '']`
+"abcde""be"S¡       EXPECT `['a', 'cd', '']`
 
 // Count occurences
 1234321 3¢          EXPECT `2`

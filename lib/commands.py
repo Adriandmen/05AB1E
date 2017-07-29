@@ -2,6 +2,7 @@ import collections
 import math
 import fractions
 import ast
+import random
 from functools import reduce
 
 letters = list("abcdefghijklmnopqrstuvwxyz")
@@ -935,18 +936,32 @@ def remove_all(a, b):
         result = []
         for element in a:
             for char in b:
-                element = element.replace(char, "")
+                element = element.replace(str(char), "")
             result.append(element)
         return result
     else:
         for char in b:
-            a = a.replace(char, "")
+            a = a.replace(str(char), "")
         return a
 
 
+def multi_split(a, b: list):
+    if type(a) is int:
+        a = str(a)
 
+    delimiter = ''.join(
+        random.choice(" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLM"
+                      "NOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
+        for _ in range(10))
+    while delimiter in a:
+        delimiter = ''.join(
+            random.choice(" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLM"
+                          "NOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
+            for _ in range(10))
 
+    a = transliterate(a, b, [delimiter] * len(b))
 
+    return a.split(delimiter)
 
 
 
