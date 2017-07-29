@@ -1574,9 +1574,16 @@ def run_program(commands,
                         temp_list = []
                         for Q in a:
                             temp_list.append(str(Q))
-                        stack.append(temp_list.index(str(b)))
+
+                        if type(b) is list:
+                            stack.append([temp_list.index(str(c)) for c in b])
+                        else:
+                            stack.append(temp_list.index(str(b)))
                     else:
-                        stack.append(str(a).index(str(b)))
+                        if type(b) is list:
+                            stack.append([str(a).index(str(c)) for c in b])
+                        else:
+                            stack.append(str(a).index(str(b)))
                 except:
                     stack.append(-1)
 

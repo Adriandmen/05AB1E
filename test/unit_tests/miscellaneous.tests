@@ -134,6 +134,8 @@ A                   EXPECT `abcdefghijklmnopqrstuvwxyz`
 012345 3k           EXPECT `3`
 "ab""bc""cd")"bc"k  EXPECT `1`
 12345 6k            EXPECT `-1`
+12345 42Sk          EXPECT `[3, 1]`
+12345S42Sk          EXPECT `[3, 1]`
 
 // Lowercase
 "Abcd"l             EXPECT `abcd`
