@@ -10,7 +10,7 @@
 θ	= pop a      push a[-1]
 в	= pop a,b    push a converted to base b (arbitrary)
 и	=
-м	=
+м	= pop a,b    push a.remove(all elements of b)
 н	= pop a      push a[0]
 т	=            push 100
 Γ	=
@@ -44,7 +44,7 @@ $	=            push 1 and input (used for sequences)
 *	= pop a,b    push (a * b)
 +	= pop a,b    push (a + b)
 ,	= pop a      print(a)
--	= pop a,b    push (a - b) or if a or b is not a decimal, push a.remove(all chars of b)
+-	= pop a,b    push (a - b)
 .	= two char functions
 /	= pop a,b    push (a / b)
 0	= numeric literal
