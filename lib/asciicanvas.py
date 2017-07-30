@@ -143,14 +143,19 @@ def canvasify(pattern, number, filler, previous_canvas, cursor_position):
 
     full_pattern_mode = False
     vertical_mode = False
+    mirror_cycle_mode = False
     if "80" in pattern:
-        pattern = pattern.replace("80",  "")
+        pattern = pattern.replace("80", "")
         full_pattern_mode = True
 
     if "81" in pattern:
         pattern = pattern.replace("81", "")
         full_pattern_mode = True
         vertical_mode = True
+
+    if "82" in pattern:
+        pattern = pattern.replace("82", "")
+        mirror_cycle_mode = True
 
     pattern = pattern.replace("90", "226044")
     pattern = pattern.replace("91", "0246")
@@ -184,7 +189,10 @@ def canvasify(pattern, number, filler, previous_canvas, cursor_position):
 
         delta_x, delta_y = deltas.get(character)
         for index in range(0, number - 1):
-            current_filler = filler[filler_index % len(filler)]
+            if mirror_cycle_mode:
+                current_filler = (filler + filler[::-1][1:])[filler_index % len(filler + filler[::-1][1:][:-1])]
+            else:
+                current_filler = filler[filler_index % len(filler)]
             filler_index += 1
             current_position = [current_position[0] + delta_x, current_position[1] + delta_y]
 
