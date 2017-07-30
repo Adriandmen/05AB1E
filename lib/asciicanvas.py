@@ -15,18 +15,14 @@ movement_pattern_characters = [
 
 def canvas_code_to_string(number, pattern, filler, prev_canvas=None, prev_cursor=None):
     """
-    Runs a canvas code and returns the resulting array.
-    Canvas code is currently constucted in one of the following ways:
-
-        pattern number (filler)     e.g. UL4# would result in:
-
-        ####
-           #
-           #
-           #
-
-    :param code: The code that will be executed which returns an array of strings
-    :return: An array from the canvas code
+    Converts the code parameters from the stack into a canvas and a final
+    cursor position that will be passed along to the main 05AB1E program.
+    :param number: An integer or list that determines the length of the (current) side-length
+    :param pattern: An integer or list of integers that indicates the movement of the cursor
+    :param filler: The string that is used to draw on the canvas
+    :param prev_canvas: The previous canvas that will be used to write on
+    :param prev_cursor: The previous cursor position that will be used as the current cursor
+    :return: A pair of a new canvas and a new cursor position
     """
 
     if not number:
