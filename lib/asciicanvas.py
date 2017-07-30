@@ -29,6 +29,9 @@ def canvas_code_to_string(number, pattern, filler, prev_canvas=None, prev_cursor
     :return: An array from the canvas code
     """
 
+    if not number:
+        number = len(filler)
+
     if not prev_canvas:
         prev_canvas = {}
 
@@ -46,7 +49,7 @@ def canvas_code_to_string(number, pattern, filler, prev_canvas=None, prev_cursor
         pattern = [str(x) for x in pattern]
 
     if type(filler) is int:
-        filler = int(filler)
+        filler = str(filler)
     if type(filler) is list:
         filler = [str(x) for x in filler]
 
@@ -68,6 +71,7 @@ def canvas_code_to_string(number, pattern, filler, prev_canvas=None, prev_cursor
 
     elif type(number) is int and type(pattern) is list:
         pattern_index = 0
+        print("d")
         for num in [number] * number:
             prev_canvas, prev_cursor = canvasify(
                 pattern[pattern_index % len(pattern)], num, filler, prev_canvas, prev_cursor
@@ -137,8 +141,20 @@ def canvasify(pattern, number, filler, previous_canvas, cursor_position):
     current_canvas = previous_canvas
     current_position = cursor_position
 
+    full_pattern_mode = False
+    vertical_mode = False
+    if "80" in pattern:
+        pattern = pattern.replace("80",  "")
+        full_pattern_mode = True
+
+    if "81" in pattern:
+        pattern = pattern.replace("81", "")
+        full_pattern_mode = True
+        vertical_mode = True
+
     pattern = pattern.replace("90", "226044")
     pattern = pattern.replace("91", "0246")
+    pattern = pattern.replace("92", "337155")
 
     deltas = {
         "0": [0, 1],
@@ -151,7 +167,17 @@ def canvasify(pattern, number, filler, previous_canvas, cursor_position):
         "3": [1, -1]
     }
 
-    current_canvas[' '.join(str(x) for x in current_position)] = filler[0]
+    if full_pattern_mode:
+        for i in range(0, len(filler)):
+            if vertical_mode:
+                current_canvas[' '.join([str(current_position[0]), str(current_position[1] + i)])] = filler[i]
+            else:
+                current_canvas[' '.join([str(current_position[0] + i), str(current_position[1])])] = filler[i]
+    else:
+        current_canvas[' '.join(str(x) for x in current_position)] = filler[0]
+
+    if number == 1:
+        return current_canvas, current_position
 
     filler_index = 1
     for character in pattern:
@@ -161,11 +187,19 @@ def canvasify(pattern, number, filler, previous_canvas, cursor_position):
             current_filler = filler[filler_index % len(filler)]
             filler_index += 1
             current_position = [current_position[0] + delta_x, current_position[1] + delta_y]
-            current_canvas[' '.join(str(x) for x in current_position)] = current_filler
+
+            if full_pattern_mode:
+                for i in range(0, len(filler)):
+                    if vertical_mode:
+                        current_canvas[' '.join([str(current_position[0]), str(current_position[1] + i)])] = filler[i]
+                    else:
+                        current_canvas[' '.join([str(current_position[0] + i), str(current_position[1])])] = filler[i]
+            else:
+                current_canvas[' '.join(str(x) for x in current_position)] = current_filler
 
     return current_canvas, current_position
 
 if __name__ == '__main__':
     # number, pattern, filler, prev_canvas, prev_cursor
-    canvas, _ = canvas_code_to_string(5, ["\u03b4", "R", "\u03b2", "R"], "O")
+    canvas, _ = canvas_code_to_string(5, 33715580, "*****")
     print(canvas_dict_to_string(canvas))

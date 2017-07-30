@@ -31,6 +31,8 @@ register_y = [2]
 register_z = [3]
 register_c = []
 
+last_pop = []
+
 suspend_restore_register = []
 
 # Global values
@@ -3937,8 +3939,8 @@ def run_program(commands,
             print(global_array[int(recent_inputs[0])])
         elif "\u00b5" in code: print(range_variable)
         elif "\u02c6" in code: print(global_array)
-        elif "\u00bc" in code: print(counter_variable[-1])
         elif "\u039b" in code: print(canvas.canvas_dict_to_string(current_canvas))
+        elif "\u00bc" in code: print(counter_variable[-1])
     if debug:
         print("stack > " + str(stack))
 
