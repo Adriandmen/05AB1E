@@ -71,7 +71,7 @@ def opt_input():
 
 def is_array(array):
     if not array:
-         return False
+        return False
 
     array = str(array)
     if array[0] == "[" and array[-1] == "]":
@@ -3982,7 +3982,7 @@ if __name__ == "__main__":
         code = open(filename, "r", encoding="utf-8").read()
 
     if code == "":
-        code = "$FDR+{"
+        code = zero_byte_code
     if code == "\\version":
         print(VERSION)
         print(DATE)
