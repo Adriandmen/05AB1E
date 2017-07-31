@@ -442,6 +442,8 @@ r)                  EXPECT `[]`
 // Pad spaces in front
 "abcd"4ú            EXPECT `    abcd`
 "ab""cd")2ú         EXPECT `['  ab', '  cd']`
+"abcd"S 1234Sú      EXPECT `[' a', '  b', '   c', '    d']`
+"abcd"1234Sú        EXPECT `[' abcd', '  abcd', '   abcd', '    abcd']`
 
 // Palindromize
 1234û               EXPECT `1234321`
