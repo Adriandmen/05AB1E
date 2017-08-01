@@ -56,4 +56,4 @@ Another possiblity is to use the `<string of code points>Ç` snippet. For exampl
 
     "abcd"Ç
     
-This gives us the following list: `[97, 98, 99, 100]`. [Try it online!](https://tio.run/##MzBNTDJM/f9fKTEpOUXpcPv//wA "05AB1E – Try It Online")
+This gives us the following list: `[97, 98, 99, 100]`. [Try it online!](https://tio.run/##MzBNTDJM/f9fKTEpOUXpcPv//wA "05AB1E – Try It Online") There definitely are more ways to make these kind of lists, these are just some examples for inspiration.
