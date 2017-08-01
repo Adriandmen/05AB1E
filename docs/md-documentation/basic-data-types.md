@@ -3,9 +3,9 @@
 
 05AB1E knows the following basic data types:
 
- - [Integers](#Integers)
- - [Strings](#Strings)
- - [Lists](#Lists)
+ - [Integers](#integers)
+ - [Strings](#strings)
+ - [Lists](#lists)
 
 More complex data types, like floats or complex numbers, are also supported but to a lesser extent.
 
