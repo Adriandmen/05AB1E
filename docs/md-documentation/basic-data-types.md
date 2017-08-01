@@ -1,15 +1,15 @@
-## Basic data types
+# Basic data types
 <p align="center">Next tutorial: <a href="https://github.com/Adriandmen/05AB1E/blob/master/docs/md-documentation/loops.md">Loops</a></p>
 
 05AB1E knows the following basic data types:
 
- - Integers
- - Strings
- - Lists
+ - [Integers](#Integers)
+ - [Strings](#Strings)
+ - [Lists](#Lists)
 
 More complex data types, like floats or complex numbers, are also supported but to a lesser extent.
 
-### Integers
+## Integers
 
 Integers are one of the most important data types in 05AB1E. They are required to do all kinds of mathematical operations. Integers in 05AB1E are easily represented by the numbers `0123456789`. For example, if you want to push the number `45`, you just add `45` in the program. [Try it online!](https://tio.run/##MzBNTDJM/f/fxPT/fwA "05AB1E – Try It Online")
 
@@ -28,7 +28,7 @@ Now, our stack looks like this `[5, 6]`, for which we can add any mathematical o
 
 <br>
 
-### Strings
+## Strings
 
 A string is a sequence of characters. The most common method to create a string is using the `"`-quote. This way, we can create any string we would like to make. For example, a `Hello, World!` string could be constructed like this:
 
@@ -42,7 +42,7 @@ Note that when you have a string at the end of a program, you can leave out the 
 
 <br>
 
-### Lists
+## Lists
 
 Lists are also very important in 05AB1E. They suppress the use of long for-loops and iterators due to the fact that almost every command _vectorizes_ on lists. There is no possible way to create a list in the middle of the program, simply due to the fact that it is almost always possible to bypass this in a shorter way.
 
