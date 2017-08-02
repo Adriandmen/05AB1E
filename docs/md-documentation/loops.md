@@ -1,8 +1,12 @@
-## Loops and iterators
+# Loops and iterators
+
+<p align="center">Previous tutorial: <a href="https://github.com/Adriandmen/05AB1E/blob/master/docs/md-documentation/basic-data-types.md">Basic data types</a></p>
+
+<br>
 
 Loops are very important to repeat a specific command or a set of commands multiple times. 05AB1E currently has the following loops:
 
-### Current loops and iterators
+## Current loops and iterators
 
  - [`F`-loop](#f-loop), ranges from **0** to **n - 1**.
  - [`G`-loop](#g-loop), ranges from **1** to **n - 1**.
@@ -12,7 +16,7 @@ Loops are very important to repeat a specific command or a set of commands multi
 
 --------------
 
-### `F`-loop
+## `F`-loop
 
 - **Arity**: 1 
 - **Syntax**: `<num> F <code> }`
@@ -38,7 +42,7 @@ What this will do is sum the following (index) numbers: **0** + **1** + **2** + 
 
 ------------------
 
-### `G`-loop
+## `G`-loop
 
 - **Arity**: 1 
 - **Syntax**: `<num> G <code> }`
@@ -52,7 +56,7 @@ A loop very similar to the `F`-loop, but starts at **1** rather than 0. Ranges f
 
 ------------------
 
-### `ƒ`-loop
+## `ƒ`-loop
 
 - **Arity**: 1 
 - **Syntax**: `<num> ƒ <code> }`
@@ -66,7 +70,7 @@ Also a loop very similar to the `F`-loop, but end at **n** rather than n - 1. Ra
 
 ------------------
 
-### `[`-loop
+## `[`-loop
 
 - **Arity**: 0
 - **Syntax**: `[ <code> ]`
@@ -90,7 +94,7 @@ This prints the numbers 0, 1, 2, ..., 9, 10. [Try it online!](https://tio.run/##
 
 -------------------
 
-### `v`-iterator
+## `v`-iterator
 
 - **Arity**: 1
 - **Syntax**: `<object> v <code> }`
