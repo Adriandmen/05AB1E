@@ -47,7 +47,7 @@ def vectorized_evaluation(a, b, function, pre_function=None):
 
             vectorized_result = []
             for element in a:
-                vectorized_result.append(function(element, b))
+                vectorized_result.append(vectorized_evaluation(element, b, function, pre_function))
 
             return vectorized_result
 
@@ -56,7 +56,7 @@ def vectorized_evaluation(a, b, function, pre_function=None):
 
             vectorized_result = []
             for element in b:
-                vectorized_result.append(function(a, element))
+                vectorized_result.append(vectorized_evaluation(a, element, function, pre_function))
 
             return vectorized_result
 
@@ -91,7 +91,7 @@ def single_vectorized_evaluation(a, function, pre_function=None):
 
             vectorized_result = []
             for element in a:
-                vectorized_result.append(function(element))
+                vectorized_result.append(single_vectorized_evaluation(element, function, pre_function))
 
             return vectorized_result
 
