@@ -11,9 +11,9 @@ More complex data types, like floats or complex numbers, are also supported but 
 
 ## Integers
 
-Integers are one of the most important data types in 05AB1E. They are required to do all kinds of mathematical operations. Integers in 05AB1E are easily represented by the numbers `0123456789`. For example, if you want to push the number `45`, you just add `45` in the program. [Try it online!](https://tio.run/##MzBNTDJM/f/fxPT/fwA "05AB1E – Try It Online")
+Integers are one of the most important data types in 05AB1E. They are required to do all kinds of mathematical operations. Integers in 05AB1E are easily represented by the numbers `0123456789`. For example, if you want to push the number `45`, you just place `45` in the program. [Try it online!](https://tio.run/##MzBNTDJM/f/fxPT/fwA "05AB1E – Try It Online")
 
-Note that the integers that are pushed in 05AB1E are actually **strings**. This is because integers and numeric strings are **equal types** in 05AB1E.
+Note that the integers that are pushed in 05AB1E are actually **strings**. This is because integers and numeric strings are **equal types** in 05AB1E. When performing integer operations on the strings, it casts them to integers. When performing string operations on integers, it casts them to strings. Normally, 05AB1E automatically detects when to use strings or integers. When you want to explicitly cast them to strings or ints, you can use `ï` (cast to int) or `§` (cast to string).
 
 For example, the following two programs push _the exact same variable_:
 
