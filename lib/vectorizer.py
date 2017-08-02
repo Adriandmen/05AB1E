@@ -47,7 +47,9 @@ def vectorized_evaluation(a, b, function, pre_function=None):
 
             vectorized_result = []
             for element in a:
-                vectorized_result.append(vectorized_evaluation(element, b, function, pre_function))
+                vectorized_result.append(
+                    vectorized_evaluation(element, b, function, pre_function)
+                )
 
             return vectorized_result
 
@@ -56,26 +58,31 @@ def vectorized_evaluation(a, b, function, pre_function=None):
 
             vectorized_result = []
             for element in b:
-                vectorized_result.append(vectorized_evaluation(a, element, function, pre_function))
+                vectorized_result.append(
+                    vectorized_evaluation(a, element, function, pre_function)
+                )
 
             return vectorized_result
 
-        else:
-            return function(a, b)
+        return function(a, b)
 
     except:
         if type(a) is list and type(b) is not list:
             vectorized_result = []
             for element in a:
-                vectorized_result.append(vectorized_evaluation(element, b, function, pre_function))
+                vectorized_result.append(
+                    vectorized_evaluation(element, b, function, pre_function)
+                )
             return vectorized_result
         elif type(a) is not list and type(b) is list:
             vectorized_result = []
             for element in b:
-                vectorized_result.append(vectorized_evaluation(a, element, function, pre_function))
+                vectorized_result.append(
+                    vectorized_evaluation(a, element, function, pre_function)
+                )
             return vectorized_result
-        else:
-            raise Exception
+
+        raise Exception
 
 
 def single_vectorized_evaluation(a, function, pre_function=None):
@@ -91,18 +98,20 @@ def single_vectorized_evaluation(a, function, pre_function=None):
 
             vectorized_result = []
             for element in a:
-                vectorized_result.append(single_vectorized_evaluation(element, function, pre_function))
+                vectorized_result.append(
+                    single_vectorized_evaluation(element, function, pre_function)
+                )
 
             return vectorized_result
 
-        else:
-
-            return function(a)
+        return function(a)
     except:
         if type(a) is list:
             vectorized_result = []
             for element in a:
-                vectorized_result.append(single_vectorized_evaluation(element, function, pre_function))
+                vectorized_result.append(
+                    single_vectorized_evaluation(element, function, pre_function)
+                )
             return vectorized_result
-        else:
-            raise Exception
+
+        raise Exception
