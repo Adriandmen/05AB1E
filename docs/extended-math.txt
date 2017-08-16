@@ -69,7 +69,7 @@ Functions:
 Åc	=
 Åd	=
 Åe	=
-Åf	=
+Åf	= Compute the nth fibonacci term (0: 1, 1: 1)
 Åg	=
 Åh	=
 Åi	=

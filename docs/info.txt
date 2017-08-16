@@ -23,10 +23,10 @@
 ∊	= pop a      push vertically mirrored a
 ∍	= pop a,b    push a extended/shortened to length b
 ∞	= pop a      push mirrored a
-₁	=
-₂	=
-₃	=
-₄	=
+₁	=            push 256
+₂	=            push 26
+₃	=            push 95
+₄	=            push 1000
 ₅	=
 ₆	=
 

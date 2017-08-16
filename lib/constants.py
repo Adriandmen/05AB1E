@@ -1,3 +1,263 @@
+import datetime
+import math
+
+
+class MethodAttribute:
+    """
+    A method attribute is an attribute with the method and
+    its corresponding arity attached as parameters. It simply acts
+    as a tuple for easy access
+    """
+
+    def __init__(self, method, arity):
+        self.method = method
+        self.arity = arity
+
+
+constants = {
+    "ža": MethodAttribute(
+        lambda: int(datetime.datetime.now().hour),
+        arity=0
+    ),
+    "žb": MethodAttribute(
+        lambda: int(datetime.datetime.now().minute),
+        arity=0
+    ),
+    "žc": MethodAttribute(
+        lambda: int(datetime.datetime.now().second),
+        arity=0
+    ),
+    "žd": MethodAttribute(
+        lambda: int(datetime.datetime.now().microsecond),
+        arity=0
+    ),
+    "že": MethodAttribute(
+        lambda: int(datetime.datetime.now().day),
+        arity=0
+    ),
+    "žf": MethodAttribute(
+        lambda: int(datetime.datetime.now().month),
+        arity=0
+    ),
+    "žg": MethodAttribute(
+        lambda: int(datetime.datetime.now().year),
+        arity=0
+    ),
+    "žh": MethodAttribute(
+        lambda: "0123456789",
+        arity=0
+    ),
+    "ži": MethodAttribute(
+        lambda: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+        arity=0
+    ),
+    "žj": MethodAttribute(
+        lambda: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_",
+        arity=0
+    ),
+    "žk": MethodAttribute(
+        lambda: "zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA",
+        arity=0
+    ),
+    "žl": MethodAttribute(
+        lambda: "zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA9876543210_",
+        arity=0
+    ),
+    "žm": MethodAttribute(
+        lambda: "9876543210",
+        arity=0
+    ),
+    "žn": MethodAttribute(
+        lambda: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+        arity=0
+    ),
+    "žo": MethodAttribute(
+        lambda: "ZYXWVUTSRQPONMLKJIHGFEDCBAzyxwvutsrqponmlkjihgfedcba",
+        arity=0
+    ),
+    "žp": MethodAttribute(
+        lambda: "ZYXWVUTSRQPONMLKJIHGFEDCBA",
+        arity=0
+    ),
+    "žq": MethodAttribute(
+        lambda: math.pi,
+        arity=0
+    ),
+    "žr": MethodAttribute(
+        lambda: math.e,
+        arity=0
+    ),
+    "žs": MethodAttribute(
+        lambda x: constant_pi[0:x + 2],
+        arity=1
+    ),
+    "žt": MethodAttribute(
+        lambda x: constant_e[0:x + 2],
+        arity=1
+    ),
+    "žu": MethodAttribute(
+        lambda: "()<>[]{}",
+        arity=0
+    ),
+    "žv": MethodAttribute(
+        lambda: 16,
+        arity=0
+    ),
+    "žw": MethodAttribute(
+        lambda: 32,
+        arity=0
+    ),
+    "žx": MethodAttribute(
+        lambda: 64,
+        arity=0
+    ),
+    "žy": MethodAttribute(
+        lambda: 128,
+        arity=0
+    ),
+    "žz": MethodAttribute(
+        lambda: 256,
+        arity=0
+    ),
+    "žA": MethodAttribute(
+        lambda: 512,
+        arity=0
+    ),
+    "žB": MethodAttribute(
+        lambda: 1024,
+        arity=0
+    ),
+    "žC": MethodAttribute(
+        lambda: 2048,
+        arity=0
+    ),
+    "žD": MethodAttribute(
+        lambda: 4096,
+        arity=0
+    ),
+    "žE": MethodAttribute(
+        lambda: 8192,
+        arity=0
+    ),
+    "žF": MethodAttribute(
+        lambda: 16384,
+        arity=0
+    ),
+    "žG": MethodAttribute(
+        lambda: 32768,
+        arity=0
+    ),
+    "žH": MethodAttribute(
+        lambda: 65536,
+        arity=0
+    ),
+    "žI": MethodAttribute(
+        lambda: 2147483648,
+        arity=0
+    ),
+    "žJ": MethodAttribute(
+        lambda: 4294967296,
+        arity=0
+    ),
+    "žK": MethodAttribute(
+        lambda: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+        arity=0
+    ),
+    "žL": MethodAttribute(
+        lambda: "zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA9876543210",
+        arity=0
+    ),
+    "žM": MethodAttribute(
+        lambda: "aeiou",
+        arity=0
+    ),
+    "žN": MethodAttribute(
+        lambda: "bcdfghjklmnpqrstvwxyz",
+        arity=0
+    ),
+    "žO": MethodAttribute(
+        lambda: "aeiouy",
+        arity=0
+    ),
+    "žP": MethodAttribute(
+        lambda: "bcdfghjklmnpqrstvwxz",
+        arity=0
+    ),
+    "žQ": MethodAttribute(
+        lambda: " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~",
+        arity=0
+    ),
+    "žR": MethodAttribute(
+        lambda: "ABC",
+        arity=0
+    ),
+    "žS": MethodAttribute(
+        lambda: "qwertyuiop",
+        arity=0
+    ),
+    "žT": MethodAttribute(
+        lambda: "asdfghjkl",
+        arity=0
+    ),
+    "žU": MethodAttribute(
+        lambda: "zxcvbnm",
+        arity=0
+    ),
+    "žV": MethodAttribute(
+        lambda: ["qwertyuiop", "asdfghjkl", "zxcvbnm"],
+        arity=0
+    ),
+    "žW": MethodAttribute(
+        lambda: "qwertyuiopasdfghjklzxcvbnm",
+        arity=0
+    ),
+    "žX": MethodAttribute(
+        lambda: "qwertyuiopasdfghjklzxcvbnm",
+        arity=0
+    ),
+    "т": MethodAttribute(
+        lambda: 100,
+        arity=0
+    ),
+    "₁": MethodAttribute(
+        lambda: 256,
+        arity=0
+    ),
+    "₂": MethodAttribute(
+        lambda: 26,
+        arity=0
+    ),
+    "₃": MethodAttribute(
+        lambda: 95,
+        arity=0
+    ),
+    "₄": MethodAttribute(
+        lambda: 1000,
+        arity=0
+    )
+}
+
+
+class ConstantsInvoker:
+
+    def __init__(self):
+        self.commands_list = constants
+
+    def invoke_command(self, command, *args):
+        """
+        Invokes the command passed through the argument and computes the desired
+        result using the rest of the arguments as args for the method
+        :param command: A string representation of the 05AB1E command
+        :param args: The arguments that will be passed on the method
+        :return: Any variable, determined by the corresponding method
+        """
+
+        current_method = self.commands_list.get(command)
+        result = current_method.method(*args)
+
+        return result
+
+
 constant_pi = "3.141592653589793238462643383279502884197169399375105820974944"\
               "92307816406286208998628034825342117067982148086513282306647093"\
               "44609550582231725359408128481117450284102701938521105559644622"\
@@ -1746,7 +2006,7 @@ constant_e = "2.7182818284590452353602874713526624977572470936999595749669676"\
              "079438005666336488436508914480557103976521469602766258359905198"\
              "04230017946553679"
 
-zero_byte_code = """I)©g0Q	"check if the input is not empty"\\
+zero_byte_code = """I)©g0Q    "check if the input is not empty"\\
 
 
 
@@ -1764,14 +2024,14 @@ i “curr=__file__;curr=curr[:-9]+"docs/info.txt";f=open(curr, "r");print(f.read
 i
 ¹d©
 
-	"1: Create a snake using the canvas
- 	    -------------------------------"\\
-	i
-	"Not sure what to do now with the input, so I'll just make a snake:",¶?¶?
-	6¹×S'#4202.Λ,
-	}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
+    "1: Create a snake using the canvas
+         -------------------------------"\\
+    i
+    "Not sure what to do now with the input, so I'll just make a snake:",¶?¶?
+    6¹×S'#4202.Λ,
+    }}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
 
-	®_i
-	"Not sure what to do now with the input, so I'll just make a snake:",¶?¶?
-	5¹g×S¹2464.Λ,
-	}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}"""
+    ®_i
+    "Not sure what to do now with the input, so I'll just make a snake:",¶?¶?
+    5¹g×S¹2464.Λ,
+    }}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}"""
