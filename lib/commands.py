@@ -200,7 +200,7 @@ def convert_from_base(n, base):
 
 def convert_from_base_arbitrary(n, base):
 
-    n = str(n)[::-1]
+    n = n[::-1]
     r = 0
     range_v = 0
 
