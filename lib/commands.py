@@ -4,6 +4,7 @@ import fractions
 import ast
 import random
 from functools import reduce
+from itertools import count
 
 letters = "abcdefghijklmnopqrstuvwxyz"
 numbers = "0123456789"
@@ -228,6 +229,39 @@ def is_prime(n):
         f += 6
 
     return 1
+
+
+def first_n_primes(n):
+    prime_list = []
+    primes = prime_sieve()
+    for x in range(n):
+        prime_list.append(next(primes))
+    return prime_list
+
+
+def prime_sieve():
+    yield 2
+    yield 3
+    yield 5
+    yield 7
+    sieve = {}
+    ps = prime_sieve()
+    p = next(ps) and next(ps)
+    q = p * p
+    for c in count(9, 2):
+        if c in sieve:
+            s = sieve.pop(c)
+        elif c < q:
+            yield c
+            continue
+        else:
+            s = count(q + 2 * p, 2 * p)
+            p = next(ps)
+            q = p * p
+        for m in s:
+            if m not in sieve:
+                break
+        sieve[m] = s
 
 
 def combinations(n, r):
