@@ -38,3 +38,11 @@
 4 8 8 4)ÅA          EXPECT `6`
 4884ÅA              EXPECT `6`
 4884ïÅA             EXPECT `6`
+"3.5""5.5")ÅA       EXPECT `4.5`
+
+// Prime range
+0Åp                 EXPECT `[]`
+1Åp                 EXPECT `[2]`
+2Åp                 EXPECT `[2, 3]`
+3Åp                 EXPECT `[2, 3, 5]`
+10Åp                EXPECT `[2, 3, 5, 7, 11, 13, 17, 19, 23, 29]`    

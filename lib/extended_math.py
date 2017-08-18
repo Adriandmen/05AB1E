@@ -142,7 +142,7 @@ extended_commands = {
     ),
 
     "ÅA": MethodAttribute(
-        lambda y: (lambda x: sum(a for a in x) / len(x))(str(y) if type(y) is int else y),
+        lambda y: (lambda x: sum(ast_int_eval(a) for a in x) / len(x))(str(y) if type(y) is int else y),
         arity=1
     ),
 
