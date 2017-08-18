@@ -32,7 +32,7 @@ Functions:
 Å>	=
 Å?	=
 Å@	=
-ÅA	=
+ÅA	= Arithmetic mean
 ÅB	=
 ÅC	=
 ÅD	=
@@ -79,7 +79,7 @@ Functions:
 Åm	=
 Ån	=
 Åo	=
-Åp	=
+Åp	= List of primes
 Åq	=
 År	=
 Ås	=

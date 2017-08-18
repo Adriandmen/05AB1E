@@ -1,6 +1,6 @@
 import math
 import sys
-from .commands import ast_int_eval
+from .commands import ast_int_eval, first_n_primes
 sys.setrecursionlimit(5000)
 
 
@@ -133,6 +133,11 @@ extended_commands = {
 
     "Åf": MethodAttribute(
         lambda x: fibonacci(int(x)),
+        arity=1
+    ),
+    
+    "Åp": MethodAttribute(
+        lambda x: first_n_primes(int(x)),
         arity=1
     ),
 
