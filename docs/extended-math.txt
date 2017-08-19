@@ -51,7 +51,7 @@
 ÅQ	=
 ÅR	=
 ÅS	=
-ÅT	=
+ÅT	= List of triangle numbers <= a
 ÅU	=
 ÅV	=
 ÅW	=
