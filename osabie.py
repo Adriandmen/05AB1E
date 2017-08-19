@@ -3821,11 +3821,12 @@ def run_program(commands,
                 zero_division.append(1)
 
             #
-            # LIST COMMANDS
+            # Extended commands
             #
             elif current_command in ExtendedMath.commands_list:
                 arity = ExtendedMath.commands_list.get(current_command).arity
                 arguments = [pop_stack(1) for _ in range(0, arity)]
+
                 stack.append(ExtendedMath.invoke_command(current_command, *arguments))
 
             elif current_command == "\u00ee":

@@ -1,6 +1,7 @@
 import math
 import sys
 from .commands import ast_int_eval, first_n_primes
+from .vectorizer import *
 sys.setrecursionlimit(5000)
 
 
@@ -58,6 +59,29 @@ def fibonacci(number):
 
     pre_fibonacci[number] = fibonacci(number - 1) + fibonacci(number - 2)
     return pre_fibonacci[number]
+
+
+def is_square(number):
+    """
+    Check whether a number is a squared number or not without precision errors
+    :param number: The number that needs to be checked
+    :return: An integer (boolean) whether the number is a square
+    """
+    if number == 0 or number == 1:
+        return 1
+
+    if number % 1 != 0:
+        return 0
+
+    x = number // 2
+    seen = {x}
+    while x * x != number:
+        x = (x + (number // x)) // 2
+        if x in seen:
+            return 0
+        seen.add(x)
+
+    return 1
 
 
 extended_commands = {
@@ -151,6 +175,11 @@ extended_commands = {
         arity=1
     ),
 
+    "Å²": MethodAttribute(
+        lambda x: is_square(ast_int_eval(x)),
+        arity=1
+    ),
+
     ".²": MethodAttribute(
         lambda x: math.log(ast_int_eval(x), 2),
         arity=1
@@ -173,7 +202,12 @@ class ExtendedMathInvoker:
         """
 
         current_method = self.commands_list.get(command)
-        result = current_method.method(*args)
+        try:
+            return current_method.method(*args)
+        except:
+            if len(args) == 1:
+                return single_vectorized_evaluation(*args, current_method.method)
 
-        return result
+            elif len(args) == 2:
+                return vectorized_evaluation(*args, current_method.method)
 
