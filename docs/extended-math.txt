@@ -43,7 +43,7 @@
 ÅI	=
 ÅJ	=
 ÅK	=
-ÅL	=
+ÅL	= Limit by: a if a < b else b
 ÅM	=
 ÅN	=
 ÅO	=

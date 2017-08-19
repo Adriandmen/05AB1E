@@ -180,6 +180,11 @@ extended_commands = {
         arity=1
     ),
 
+    "ÅL": MethodAttribute(
+        lambda x, y: (lambda a, b: a if a < b else b)(ast_int_eval(x), ast_int_eval(y)),
+        arity=2
+    ),
+
     ".²": MethodAttribute(
         lambda x: math.log(ast_int_eval(x), 2),
         arity=1
