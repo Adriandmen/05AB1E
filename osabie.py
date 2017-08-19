@@ -1889,22 +1889,14 @@ def run_program(commands,
                 b = pop_stack(1)
                 a = pop_stack(1)
 
-                if type(a) is list:
-                    if type(b) is list:
-                        result = []
-                        for index in range(0, len(a)):
-                            result.append(int(b[index]) * " " + str(a[index]))
-                        stack.append(result)
-                    else:
-                        stack.append([int(b) * " " + str(x) for x in a])
-                else:
-                    if type(b) is list:
-                        result = []
-                        for index in range(0, len(b)):
-                            result.append(int(b[index]) * " " + str(a))
-                        stack.append(result)
-                    else:
-                        stack.append(int(b) * " " + str(a))
+                try:
+                    stack.append(vectorized_evaluation(
+                        a, b, lambda a, b: " " * int(b) + (a if type(a) is list else str(a))
+                    ))
+                except:
+                    stack.append(vectorized_evaluation(
+                        b, a, lambda a, b: " " * int(b) + (a if type(a) is list else str(a))
+                    ))
 
             elif current_command == "\u00fe":
                 a = pop_stack(1)
