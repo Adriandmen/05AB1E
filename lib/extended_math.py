@@ -146,6 +146,11 @@ extended_commands = {
         arity=1
     ),
 
+    "ÅT": MethodAttribute(
+        lambda x: list_until(lambda a: a * (a + 1) // 2, int(x)),
+        arity=1
+    ),
+
     ".²": MethodAttribute(
         lambda x: math.log(ast_int_eval(x), 2),
         arity=1

@@ -45,4 +45,11 @@
 1Åp                 EXPECT `[2]`
 2Åp                 EXPECT `[2, 3]`
 3Åp                 EXPECT `[2, 3, 5]`
-10Åp                EXPECT `[2, 3, 5, 7, 11, 13, 17, 19, 23, 29]`    
+10Åp                EXPECT `[2, 3, 5, 7, 11, 13, 17, 19, 23, 29]`
+
+// Triangle numbers
+0ÅT                 EXPECT `[0]`
+1ÅT                 EXPECT `[0, 1]`
+9ÅT                 EXPECT `[0, 1, 3, 6]`
+10ÅT                EXPECT `[0, 1, 3, 6, 10]`
+11ÅT                EXPECT `[0, 1, 3, 6, 10]`
