@@ -204,10 +204,11 @@ class ExtendedMathInvoker:
         current_method = self.commands_list.get(command)
         try:
             return current_method.method(*args)
-        except:
+        except Exception as e:
             if len(args) == 1:
                 return single_vectorized_evaluation(*args, current_method.method)
 
             elif len(args) == 2:
                 return vectorized_evaluation(*args, current_method.method)
 
+            raise e
