@@ -137,7 +137,7 @@
 Å¯ 	=
 Å° 	=
 Å± 	=
-Å² 	=
+Å² 	= Check whether a number is square
 Å³ 	=
 Å´ 	=
 Åµ 	=
