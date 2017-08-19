@@ -13,6 +13,11 @@ movement_pattern_characters = [
 ]
 
 
+def rotate(string, number):
+    number = number % len(string)
+    return string[number:] + string[:number]
+
+
 def canvas_code_to_string(number, pattern, filler, prev_canvas=None, prev_cursor=None):
     """
     Converts the code parameters from the stack into a canvas and a final
@@ -50,16 +55,25 @@ def canvas_code_to_string(number, pattern, filler, prev_canvas=None, prev_cursor
         filler = [str(x) for x in filler]
 
     if type(number) is list and type(pattern) is str:
-        for num in number:
-            prev_canvas, prev_cursor = canvasify(pattern, num, filler, prev_canvas, prev_cursor)
+        current_filler = filler
+        for index in range(0, len(number)):
+            prev_canvas, prev_cursor = canvasify(
+                pattern, number[index], current_filler, prev_canvas, prev_cursor
+            )
+            current_filler = rotate(current_filler, number[index] * len(pattern) - 2)
 
     elif type(number) is list and type(pattern) is list:
         pattern_index = 0
-        for num in number:
+        current_filler = filler
+        for index in range(0, len(number)):
             prev_canvas, prev_cursor = canvasify(
-                pattern[pattern_index % len(pattern)], num, filler, prev_canvas, prev_cursor
+                pattern[pattern_index % len(pattern)],
+                number[index],
+                current_filler,
+                prev_canvas,
+                prev_cursor
             )
-
+            current_filler = rotate(current_filler, number[index] - 1)
             pattern_index += 1
 
     elif type(number) is int and type(pattern) is str:

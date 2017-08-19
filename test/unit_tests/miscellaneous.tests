@@ -240,6 +240,7 @@ r)                  EXPECT `[]`
 1 23 456)5£         EXPECT `['1', '23', '456']`
 123456 12S£         EXPECT `['1', '23']`
 123456S12S£         EXPECT `[['1'], ['2', '3']]`
+23SA£               EXPECT `['ab', 'cde']`
 
 // Head method
 1234¬)ï             EXPECT `[1234, 1]`
@@ -444,6 +445,7 @@ r)                  EXPECT `[]`
 "ab""cd")2ú         EXPECT `['  ab', '  cd']`
 "abcd"S 1234Sú      EXPECT `[' a', '  b', '   c', '    d']`
 "abcd"1234Sú        EXPECT `[' abcd', '  abcd', '   abcd', '    abcd']`
+"abcd"1234Ssú       EXPECT `[' abcd', '  abcd', '   abcd', '    abcd']`
 
 // Palindromize
 1234û               EXPECT `1234321`
