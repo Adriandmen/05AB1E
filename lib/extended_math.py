@@ -206,9 +206,9 @@ class ExtendedMathInvoker:
             return current_method.method(*args)
         except Exception as e:
             if len(args) == 1:
-                return single_vectorized_evaluation(*args, current_method.method)
+                return single_vectorized_evaluation(args[0], current_method.method)
 
             elif len(args) == 2:
-                return vectorized_evaluation(*args, current_method.method)
+                return vectorized_evaluation(args[0], args[1], current_method.method)
 
             raise e
