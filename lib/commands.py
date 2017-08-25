@@ -4,7 +4,7 @@ import fractions
 import ast
 import random
 from functools import reduce
-from itertools import count, takewhile
+from itertools import count
 
 letters = "abcdefghijklmnopqrstuvwxyz"
 numbers = "0123456789"
@@ -364,6 +364,7 @@ def get_nth_prime(n):
     return current_prime
 
 def get_index_of_prime(n):
+    from itertools import takewhile
     n = int(n)
     g = prime_sieve()
     return len(list(takewhile(lambda x: x <= n, g)))-1
