@@ -3,3 +3,5 @@ __pycache__/
 inputs
 test.abe
 *.bat
+output_file
+temp_file
