@@ -303,6 +303,15 @@
 2Ø                  EXPECT `5`
 3Ø                  EXPECT `7`
 0 1 2 3)Ø           EXPECT `[2, 3, 5, 7]`
+0 1) 2 3)Ø          EXPECT `[[2, 3], 5, 7]`
+
+// Index of prime
+2.Ø                 EXPECT `0`
+3.Ø                 EXPECT `1`
+5.Ø                 EXPECT `2`
+7.Ø                 EXPECT `3`
+2 3) 5 7).Ø         EXPECT `[[0, 1], 2, 3]`
+2 3 5 7).Ø          EXPECT `[0, 1, 2, 3]`
 
 // Integer division
 8 4÷                EXPECT `2`

@@ -2528,6 +2528,14 @@ def run_program(commands,
                     a, lambda a: get_nth_prime(a), int
                 ))
 
+            elif current_command == ".\u00d8":
+                a = pop_stack(1)
+                stack.append(
+                    single_vectorized_evaluation(
+                        a, lambda a: get_index_of_prime(a), int
+                    )
+                )
+
             elif current_command == "\u00a2":
                 b = pop_stack(1)
                 a = pop_stack(1)
