@@ -363,6 +363,11 @@ def get_nth_prime(n):
             current_prime += 1
     return current_prime
 
+def get_index_of_prime(n):
+    from itertools import takewhile
+    n = int(n)
+    g = prime_sieve()
+    return len(list(takewhile(lambda x: x <= n, g)))-1
 
 def get_all_substrings(input_string):
     length = len(input_string)
