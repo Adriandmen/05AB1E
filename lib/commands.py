@@ -238,6 +238,17 @@ def first_n_primes(n):
         prime_list.append(next(primes))
     return prime_list
 
+    
+def primes_upto_n(n):
+    prime_list = []
+    primes = prime_sieve()
+    while True:
+        current_prime = next(primes)
+        if current_prime > n:
+            break
+        prime_list.append(current_prime)
+    return prime_list
+    
 
 def prime_sieve():
     yield 2
