@@ -1,6 +1,6 @@
 import math
 import sys
-from .commands import ast_int_eval, first_n_primes
+from .commands import ast_int_eval, first_n_primes, primes_upto_n
 from .vectorizer import *
 sys.setrecursionlimit(5000)
 
@@ -170,6 +170,11 @@ extended_commands = {
         arity=1
     ),
 
+    "ÅP": MethodAttribute(
+        lambda x: primes_upto_n(int(x)),
+        arity=1
+    ),
+    
     "ÅT": MethodAttribute(
         lambda x: list_until(lambda a: a * (a + 1) // 2, int(x)),
         arity=1

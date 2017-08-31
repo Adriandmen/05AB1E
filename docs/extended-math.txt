@@ -47,7 +47,7 @@
 ÅM	=
 ÅN	=
 ÅO	=
-ÅP	=
+ÅP	= List of primes <= a
 ÅQ	=
 ÅR	=
 ÅS	=
@@ -79,7 +79,7 @@
 Åm	=
 Ån	=
 Åo	=
-Åp	= List of primes
+Åp	= List of the first a primes
 Åq	=
 År	=
 Ås	=
