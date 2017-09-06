@@ -62,6 +62,7 @@ def opt_input():
 
     try:
         a = input()
+
         if a[:3] == "\"\"\"":
             a = a[3:]
             while a[-3:] != "\"\"\"":
@@ -71,7 +72,10 @@ def opt_input():
 
         return a
     except:
-        return recent_inputs[-1]
+        try:
+            return recent_inputs[-1]
+        except:
+            return ""
 
 
 def is_array(array):
