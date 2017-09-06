@@ -71,7 +71,10 @@ def opt_input():
 
         return a
     except:
-        return recent_inputs[-1]
+        try:
+            return recent_inputs[-1]
+        except:
+            return ""
 
 
 def is_array(array):
