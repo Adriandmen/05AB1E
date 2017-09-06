@@ -62,7 +62,6 @@ def opt_input():
 
     try:
         a = input()
-
         if a[:3] == "\"\"\"":
             a = a[3:]
             while a[-3:] != "\"\"\"":
