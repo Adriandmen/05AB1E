@@ -132,11 +132,12 @@ Let's check it out: [Try it online!](https://tio.run/##MzBNTDJM/f9fKTEpOSU1Tams0
 | **`<code>`** | An 05AB1E code snippet |
 
 Loops until the counter variable reaches the provided `<num>` value.  
-Uses `N` as the _index variable_.
 
 The counter variable starts at 0, and can be modified using the following commands:
 
 - `¼`: increments the counter variable
 - `½`: pop a, and increments the counter variable if a is true (a == 1)
 
-**Tip:** 05AB1E automatically puts a `½` command at the end of the provided `<code>` if it doesn't contain a counter modifying command
+**Tips:** 
+* 05AB1E automatically puts a `½` command at the end of the provided `<code>` if it doesn't contain a counter modifying command
+
