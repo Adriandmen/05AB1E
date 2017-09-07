@@ -138,6 +138,5 @@ The counter variable starts at 0, and can be modified using the following comman
 - `¼`: increments the counter variable
 - `½`: pop a, and increments the counter variable if a is true (a == 1)
 
-**Tips:** 
-* 05AB1E automatically puts a `½` command at the end of the provided `<code>` if it doesn't contain a counter modifying command
+**Tip:** 05AB1E automatically puts a `½` command at the end of the provided `<code>` if it doesn't contain a counter modifying command
 
