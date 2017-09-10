@@ -7,3 +7,11 @@
 12345Sε5+                       EXPECT `[6, 7, 8, 9, 10]`
 12345SεD>«}ï                    EXPECT `[12, 23, 34, 45, 56]`
 123Sï456Sï)εε3+                 EXPECT `[[4, 5, 6], [7, 8, 9]]`
+
+// Nested loops
+3Ý3L)ʒvyÈ}O}        EXPECT `[[1, 2, 3]]`
+4L3Fε>}O)           EXPECT `[16]`
+
+// Nested ifs / nested loops in ifs
+1i0ië1i42ë13        EXPECT `42`
+1i0i13ë2 4LFD·}Oë42 EXPECT `6`

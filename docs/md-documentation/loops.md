@@ -13,6 +13,7 @@ Loops are very important to repeat a specific command or a set of commands multi
  - [`ƒ`-loop](#ƒ-loop), ranges from **0** to **n**.
  - [`[`-loop](#-loop), ranges from **0** to **infinity**. Also known as an infinite loop.
  - [`v`-iterator](#v-iterator), iterates over each element
+ - [`µ`-loop](#µ-loop), loops until the counter value equals **n**
 
 --------------
 
@@ -117,3 +118,25 @@ For example, if we want to enumerate each character in the string `abcdef` and p
                     N,     #   Print the current index number with a newline
 
 Let's check it out: [Try it online!](https://tio.run/##MzBNTDJM/f9fKTEpOSU1Tams0l7JSkHJ3k/n/38A "05AB1E – Try It Online")
+
+-------------------
+
+## `µ`-loop
+
+- **Arity**: 1
+- **Syntax**: `<num> µ <code> }`
+
+| Parameter | Description |
+| --------- | ----------- |
+| **`<num>`** | An integer or a string representation of an integer |
+| **`<code>`** | An 05AB1E code snippet |
+
+Loops until the counter variable reaches the provided `<num>` value.  
+
+The counter variable starts at 0, and can be modified using the following commands:
+
+- `¼`: increments the counter variable
+- `½`: pop a, and increments the counter variable if a is true (a == 1)
+
+**Tip:** 05AB1E automatically puts a `½` command at the end of the provided `<code>` if it doesn't contain a counter modifying command
+

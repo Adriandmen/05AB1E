@@ -46,8 +46,8 @@ global_array = []
 is_queue = []
 previous_len = []
 
-# Looping commands:
-loop_commands = ["F", "i", "v", "G", "\u0192", "\u0292", "\u03A3"]
+# Block commands:
+block_commands = ["F", "i", "v", "G", "\u0192", "\u0292", "\u03A3", "\u03B5", "\u00b5"]
 
 # Global data
 
@@ -107,6 +107,33 @@ def get_input():
     recent_inputs.append(a)
     return a
 
+def get_block_statement(commands, pointer_position):
+    statement = ""
+    temp_position = pointer_position
+    temp_position += 1
+    current_command = commands[temp_position]
+    amount_brackets = 1
+    temp_string_mode = False
+    while amount_brackets != 0:
+        if current_command in "\"\u2018\u2019\u201C\u201D":
+            temp_string_mode = not temp_string_mode
+        if not temp_string_mode:
+            if current_command == "}":
+                amount_brackets -= 1
+                if amount_brackets == 0:
+                    break
+            elif current_command in block_commands:
+                amount_brackets += 1
+            statement += current_command
+        else:
+            statement += current_command
+        try:
+            temp_position += 1
+            current_command = commands[temp_position]
+        except:
+            break
+
+    return statement, temp_position
 
 def run_program(commands,
                 debug,
@@ -583,24 +610,17 @@ def run_program(commands,
                     temp_stack.append(Q)
                 stack.clear()
 
-                filter_code = ""
-                string_mode = False
-                while True:
+                statement, temp_position = get_block_statement(commands, pointer_position)
+
+                if debug:
                     try:
-                        pointer_position += 1
-                        if commands[pointer_position] in "\"\u2018\u2019\u201C\u201D":
-                            string_mode = not string_mode
-
-                        if commands[pointer_position] == "}" and not string_mode:
-                            break
-
-                        filter_code += commands[pointer_position]
+                        print("For each: {}".format(statement))
                     except:
-                        break
+                        pass
 
                 for Q in a:
                     stack.append(Q)
-                    run_program(filter_code, DEBUG, SAFE_MODE, True, range_variable, string_variable)
+                    run_program(statement, debug, safe_mode, True, range_variable, string_variable)
                     temp_list.append(stack[-1])
                     stack.clear()
 
@@ -608,6 +628,8 @@ def run_program(commands,
                 for Q in temp_stack:
                     stack.append(Q)
                 stack.append(temp_list)
+
+                pointer_position = temp_position
 
             elif current_command == "!":
                 a = pop_stack(1)
@@ -792,62 +814,36 @@ def run_program(commands,
                 stack.reverse()
 
             elif current_command == "i":
-                STATEMENT = ""
-                ELSE_STATEMENT = ""
-                elseify = False
-                temp_position = pointer_position
-                temp_position += 1
-                current_command = commands[temp_position]
-                amount_brackets = 1
-                amount_else = 1
-                temp_string_mode = False
-                temp_char_mode = False
+                statement, temp_position = get_block_statement(commands, pointer_position)
+                else_statement = ""
 
-                while amount_brackets != 0:
-                    if current_command in "\"\u2018\u2019\u201C\u201D":
-                        temp_string_mode = not temp_string_mode
+                if '\u00eb' in statement:
+                    expected_else = 1
+                    pos = 0
+                    for c in statement:
+                        if c == '\u00eb':
+                            expected_else -= 1
+                        elif c == 'i':
+                            expected_else += 1
 
-                    elif current_command == "'" and not temp_char_mode:
-                        temp_char_mode = True
+                        if expected_else == 0:
+                            break
 
-                    if temp_string_mode is False or temp_char_mode is False:
-                        if current_command in ["}", "\u00eb"]:
-                            if current_command == "}":
-                                amount_brackets -= 1
-                            elif current_command == "\u00eb":
-                                amount_else -= 1
-                                elseify = True
-                            if amount_brackets == 0:
-                                break
-                        elif current_command in loop_commands:
-                            amount_brackets += 1
-                            if current_command == "i":
-                                amount_else += 1
-
-                    temp_char_mode = True
-
-                    if not elseify:
-                        STATEMENT += current_command
-                    else:
-                        ELSE_STATEMENT += current_command
-
-                    try:
-                        temp_position += 1
-                        current_command = commands[temp_position]
-                    except:
-                        break
+                        pos += 1
+                    else_statement = statement[pos+1:]
+                    statement = statement[0:pos]
 
                 if debug:
                     print("if: ", end="")
-                    for Q in STATEMENT:
+                    for Q in statement:
                         try:
                             print(Q, end="")
                         except:
                             print("?", end="")
                     print()
-                    if amount_else < 1:
+                    if else_statement:
                         print("else: ", end="")
-                        for Q in ELSE_STATEMENT:
+                        for Q in else_statement:
                             try:
                                 print(Q, end="")
                             except:
@@ -855,10 +851,10 @@ def run_program(commands,
                         print()
                 a = pop_stack(1)
                 if a == 1 or a == "1":
-                    run_program(STATEMENT, debug, safe_mode, True,
+                    run_program(statement, debug, safe_mode, True,
                                 range_variable, string_variable)
-                elif amount_else == 0:
-                    run_program(ELSE_STATEMENT[1:], debug, safe_mode, True,
+                elif else_statement:
+                    run_program(else_statement, debug, safe_mode, True,
                                 range_variable, string_variable)
                 pointer_position = temp_position
 
@@ -883,35 +879,14 @@ def run_program(commands,
                     stack.append(ast_int_eval(str(a)) * 2)
 
             elif current_command == "F":
-                STATEMENT = ""
-                temp_position = pointer_position
-                temp_position += 1
-                current_command = commands[temp_position]
-                amount_brackets = 1
-                temp_string_mode = False
-                while amount_brackets != 0:
-                    if current_command in "\"\u2018\u2019\u201C\u201D":
-                        temp_string_mode = not temp_string_mode
-                    if not temp_string_mode:
-                        if current_command == "}":
-                            amount_brackets -= 1
-                            if amount_brackets == 0:
-                                break
-                        elif current_command in loop_commands:
-                            amount_brackets += 1
-                        STATEMENT += current_command
-                    else:
-                        STATEMENT += current_command
-                    try:
-                        temp_position += 1
-                        current_command = commands[temp_position]
-                    except:
-                        break
+                statement, temp_position = get_block_statement(commands, pointer_position)
+
                 if debug:
                     try:
-                        print(STATEMENT)
+                        print("Loop: {}".format(statement))
                     except:
                         pass
+
                 a = 0
                 if stack:
                     a = int(pop_stack(1))
@@ -921,38 +896,16 @@ def run_program(commands,
 
                 if a != 0:
                     for range_variable in range(0, a):
-                        run_program(STATEMENT, debug, safe_mode, True,
+                        run_program(statement, debug, safe_mode, True,
                                     range_variable, string_variable)
                 pointer_position = temp_position
 
             elif current_command == "G":
-                STATEMENT = ""
-                temp_position = pointer_position
-                temp_position += 1
-                current_command = commands[temp_position]
-                amount_brackets = 1
-                temp_string_mode = False
-                while amount_brackets != 0:
-                    if current_command in "\"\u2018\u2019\u201C\u201D":
-                        temp_string_mode = not temp_string_mode
-                    if not temp_string_mode:
-                        if current_command == "}":
-                            amount_brackets -= 1
-                            if amount_brackets == 0:
-                                break
-                        elif current_command in loop_commands:
-                            amount_brackets += 1
+                statement, temp_position = get_block_statement(commands, pointer_position)
 
-                    STATEMENT += current_command
-
-                    try:
-                        temp_position += 1
-                        current_command = commands[temp_position]
-                    except:
-                        break
                 if debug:
                     try:
-                        print(STATEMENT)
+                        print("Loop: {}".format(statement))
                     except:
                         pass
                 a = 0
@@ -964,69 +917,30 @@ def run_program(commands,
 
                 if a > 1:
                     for range_variable in range(1, a):
-                        run_program(STATEMENT, debug, safe_mode, True,
+                        run_program(statement, debug, safe_mode, True,
                                     range_variable, string_variable)
                 pointer_position = temp_position
 
             elif current_command == "\u00b5":
-                STATEMENT = ""
-                ELSE_STATEMENT = ""
-                temp_position = pointer_position
-                temp_position += 1
-                current_command = commands[temp_position]
-                amount_brackets = 1
-                amount_else = 1
-                temp_string_mode = False
-                while amount_brackets != 0:
-                    if current_command in "\"\u2018\u2019\u201C\u201D":
-                        temp_string_mode = not temp_string_mode
-                    if not temp_string_mode:
-                        if current_command in ["}", "\u00eb"]:
-                            if current_command == "}":
-                                amount_brackets -= 1
-                            elif current_command == "\u00eb":
-                                amount_else -= 1
-                            if amount_brackets == 0:
-                                break
-                        elif current_command in loop_commands:
-                            amount_brackets += 1
-                            if current_command == "i":
-                                amount_else += 1
-                    if amount_else > 0:
-                        STATEMENT += current_command
-                    else:
-                        ELSE_STATEMENT += current_command
-                    try:
-                        temp_position += 1
-                        current_command = commands[temp_position]
-                    except:
-                        break
+                statement, temp_position = get_block_statement(commands, pointer_position)
+
                 if debug:
-                    print("if: ", end="")
-                    for Q in STATEMENT:
-                        try:
-                            print(Q, end="")
-                        except:
-                            print("?", end="")
-                    print()
-                    if amount_else < 1:
-                        print("else: ", end="")
-                        for Q in ELSE_STATEMENT:
-                            try:
-                                print(Q, end="")
-                            except:
-                                print("?", end="")
-                        print()
+                    try:
+                        print("Loop: {}".format(statement))
+                    except:
+                        pass
+
                 a = pop_stack(1)
                 range_variable = 0
 
-                if '\u00bc' not in STATEMENT and '\u00bd' not in STATEMENT:
-                    STATEMENT = STATEMENT + '\u00bd'
+                if '\u00bc' not in statement and '\u00bd' not in statement:
+                    statement += '\u00bd'
 
                 while counter_variable[-1] != int(a):
                     range_variable += 1
-                    run_program(STATEMENT, debug, safe_mode, True,
+                    run_program(statement, debug, safe_mode, True,
                                 range_variable, string_variable)
+
                 pointer_position = temp_position
 
             elif current_command == "\u00cb":
@@ -1048,35 +962,14 @@ def run_program(commands,
                     stack.append(1 if all_equal else 0)
 
             elif current_command == "\u0192":
-                STATEMENT = ""
-                temp_position = pointer_position
-                temp_position += 1
-                current_command = commands[temp_position]
-                amount_brackets = 1
-                temp_string_mode = False
-                while amount_brackets != 0:
-                    if current_command in "\"\u2018\u2019\u201C\u201D":
-                        temp_string_mode = not temp_string_mode
-                    if not temp_string_mode:
-                        if current_command == "}":
-                            amount_brackets -= 1
-                            if amount_brackets == 0:
-                                break
-                        elif current_command in loop_commands:
-                            amount_brackets += 1
+                statement, temp_position = get_block_statement(commands, pointer_position)
 
-                    STATEMENT += current_command
-
-                    try:
-                        temp_position += 1
-                        current_command = commands[temp_position]
-                    except:
-                        break
                 if debug:
                     try:
-                        print(STATEMENT)
+                        print("Loop: {}".format(statement))
                     except:
                         pass
+
                 a = 0
                 if stack:
                     a = int(pop_stack(1))
@@ -1086,7 +979,7 @@ def run_program(commands,
 
                 if a > -1:
                     for range_variable in range(0, a + 1):
-                        run_program(STATEMENT, debug, safe_mode, True,
+                        run_program(statement, debug, safe_mode, True,
                                     range_variable, string_variable)
                 pointer_position = temp_position
 
@@ -1817,37 +1710,14 @@ def run_program(commands,
                     stack.append(int(b in a))
 
             elif current_command == "v":
-                STATEMENT = ""
-                temp_position = pointer_position
-                temp_position += 1
-                current_command = commands[temp_position]
-                amount_brackets = 1
-                temp_string_mode = False
-                while amount_brackets != 0:
-                    if current_command in "\"\u2018\u2019\u201C\u201D":
-                        temp_string_mode = not temp_string_mode
-
-                    if not temp_string_mode:
-                        if current_command == "}":
-                            amount_brackets -= 1
-                        if amount_brackets == 0:
-                            break
-                        elif current_command in loop_commands:
-                            amount_brackets += 1
-
-                    STATEMENT += current_command
-
-                    try:
-                        temp_position += 1
-                        current_command = commands[temp_position]
-                    except:
-                        break
+                statement, temp_position = get_block_statement(commands, pointer_position)
 
                 if debug:
                     try:
-                        print(STATEMENT)
+                        print("Loop: {}".format(statement))
                     except:
                         pass
+
                 a = 0
                 a = pop_stack(1)
 
@@ -1858,8 +1728,9 @@ def run_program(commands,
                     range_variable += 1
                     if debug:
                         print("N = " + str(range_variable))
-                    run_program(STATEMENT, debug, safe_mode, True,
+                    run_program(statement, debug, safe_mode, True,
                                 range_variable, string_variable)
+
                 pointer_position = temp_position
 
             elif current_command == "y":
@@ -2207,7 +2078,7 @@ def run_program(commands,
                 for Q in zipper:
                     stack.append(Q[0])
                     stack.append(Q[1])
-                    run_program(for_each_command, DEBUG, SAFE_MODE, True,
+                    run_program(for_each_command, debug, safe_mode, True,
                                 range_variable, string_variable)
                 for Q in stack:
                     temp_list.append(Q)
@@ -2414,26 +2285,17 @@ def run_program(commands,
                     temp_stack.append(Q)
                 stack.clear()
 
-                filter_code = ""
-                string_mode = False
-                while True:
+                statement, temp_position = get_block_statement(commands, pointer_position)
+
+                if debug:
                     try:
-                        pointer_position += 1
-                        if commands[pointer_position]\
-                                in "\"\u2018\u2019\u201C\u201D":
-                            string_mode = not string_mode
-
-                        if commands[pointer_position] == "}"\
-                                and not string_mode:
-                            break
-
-                        filter_code += commands[pointer_position]
+                        print("Filter: {}".format(statement))
                     except:
-                        break
+                        pass
 
                 for Q in a:
                     stack.append(Q)
-                    run_program(filter_code, DEBUG, SAFE_MODE, True,
+                    run_program(statement, debug, safe_mode, True,
                                 range_variable, string_variable)
                     if not stack:
                         continue
@@ -2445,6 +2307,7 @@ def run_program(commands,
                 for Q in temp_stack:
                     stack.append(Q)
                 stack.append(temp_list)
+                pointer_position = temp_position
 
             elif current_command == "\u03A3":
                 a = pop_stack(1)
@@ -2457,27 +2320,18 @@ def run_program(commands,
                     temp_stack.append(Q)
                 stack.clear()
 
-                sort_code = ""
-                string_mode = False
-                while True:
+                statement, temp_position = get_block_statement(commands, pointer_position)
+
+                if debug:
                     try:
-                        pointer_position += 1
-                        if commands[pointer_position]\
-                                in "\"\u2018\u2019\u201C\u201D":
-                            string_mode = not string_mode
-
-                        if commands[pointer_position] == "}"\
-                                and not string_mode:
-                            break
-
-                        sort_code += commands[pointer_position]
+                        print("Sort with: {}".format(statement))
                     except:
-                        break
+                        pass
 
                 for Q in a:
                     is_queue.append(Q)
                     stack.append(Q)
-                    run_program(sort_code, DEBUG, SAFE_MODE, True,
+                    run_program(statement, debug, safe_mode, True,
                                 range_variable, string_variable)
                     temp_list.append([stack[-1] if stack else float('inf'), Q])
                     stack.clear()
@@ -2489,6 +2343,8 @@ def run_program(commands,
                     stack.append([x[1] for x in temp_list])
                 else:
                     stack.append(''.join([x[1] for x in temp_list]))
+
+                pointer_position = temp_position
 
             elif current_command == "\u203A":
                 b = pop_stack(1)
@@ -3483,7 +3339,7 @@ def run_program(commands,
                     for_each_command += commands[pointer_position]
                 for Q in a:
                     stack.append(Q)
-                    run_program(for_each_command, DEBUG, SAFE_MODE, True,
+                    run_program(for_each_command, debug, safe_mode, True,
                                 range_variable, string_variable)
                 for Q in stack:
                     temp_list.append(Q)
@@ -3537,7 +3393,7 @@ def run_program(commands,
                             y = pop_stack(1)
                             stack.append(x)
                             stack.append(y)
-                        run_program(fold_command, DEBUG, SAFE_MODE, True,
+                        run_program(fold_command, debug, safe_mode, True,
                                     range_variable, string_variable)
                     b = pop_stack(1)
                     stack.clear()
@@ -3819,7 +3675,7 @@ def run_program(commands,
                         stack.clear()
                         stack.append(outer_element)
                         stack.append(inner_element)
-                        run_program(current_program, DEBUG, SAFE_MODE, True,
+                        run_program(current_program, debug, safe_mode, True,
                                     range_variable, string_variable)
                         inner_result.append(stack[-1])
                     result.append(inner_result)
