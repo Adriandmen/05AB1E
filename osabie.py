@@ -818,15 +818,15 @@ def run_program(commands,
                 else_statement = ""
 
                 if '\u00eb' in statement:
-                    else_count = 1
+                    expected_else = 1
                     pos = 0
                     for c in statement:
                         if c == '\u00eb':
-                            else_count -= 1
+                            expected_else -= 1
                         elif c == 'i':
-                            else_count += 1
+                            expected_else += 1
 
-                        if else_count == 0:
+                        if expected_else == 0:
                             break
 
                         pos += 1
