@@ -620,7 +620,7 @@ def run_program(commands,
 
                 for Q in a:
                     stack.append(Q)
-                    run_program(statement, DEBUG, SAFE_MODE, True, range_variable, string_variable)
+                    run_program(statement, debug, safe_mode, True, range_variable, string_variable)
                     temp_list.append(stack[-1])
                     stack.clear()
 
@@ -818,10 +818,20 @@ def run_program(commands,
                 else_statement = ""
 
                 if '\u00eb' in statement:
-                    try:
-                        statement, else_statement = statement.split('\u00eb')
-                    except:
-                        pass
+                    else_count = 1
+                    pos = 0
+                    for c in statement:
+                        if c == '\u00eb':
+                            else_count -= 1
+                        elif c == 'i':
+                            else_count += 1
+
+                        if else_count == 0:
+                            break
+
+                        pos += 1
+                    else_statement = statement[pos+1:]
+                    statement = statement[0:pos]
 
                 if debug:
                     print("if: ", end="")
@@ -2068,7 +2078,7 @@ def run_program(commands,
                 for Q in zipper:
                     stack.append(Q[0])
                     stack.append(Q[1])
-                    run_program(for_each_command, DEBUG, SAFE_MODE, True,
+                    run_program(for_each_command, debug, safe_mode, True,
                                 range_variable, string_variable)
                 for Q in stack:
                     temp_list.append(Q)
@@ -2285,7 +2295,7 @@ def run_program(commands,
 
                 for Q in a:
                     stack.append(Q)
-                    run_program(statement, DEBUG, SAFE_MODE, True,
+                    run_program(statement, debug, safe_mode, True,
                                 range_variable, string_variable)
                     if not stack:
                         continue
@@ -2321,7 +2331,7 @@ def run_program(commands,
                 for Q in a:
                     is_queue.append(Q)
                     stack.append(Q)
-                    run_program(statement, DEBUG, SAFE_MODE, True,
+                    run_program(statement, debug, safe_mode, True,
                                 range_variable, string_variable)
                     temp_list.append([stack[-1] if stack else float('inf'), Q])
                     stack.clear()
@@ -3329,7 +3339,7 @@ def run_program(commands,
                     for_each_command += commands[pointer_position]
                 for Q in a:
                     stack.append(Q)
-                    run_program(for_each_command, DEBUG, SAFE_MODE, True,
+                    run_program(for_each_command, debug, safe_mode, True,
                                 range_variable, string_variable)
                 for Q in stack:
                     temp_list.append(Q)
@@ -3383,7 +3393,7 @@ def run_program(commands,
                             y = pop_stack(1)
                             stack.append(x)
                             stack.append(y)
-                        run_program(fold_command, DEBUG, SAFE_MODE, True,
+                        run_program(fold_command, debug, safe_mode, True,
                                     range_variable, string_variable)
                     b = pop_stack(1)
                     stack.clear()
@@ -3665,7 +3675,7 @@ def run_program(commands,
                         stack.clear()
                         stack.append(outer_element)
                         stack.append(inner_element)
-                        run_program(current_program, DEBUG, SAFE_MODE, True,
+                        run_program(current_program, debug, safe_mode, True,
                                     range_variable, string_variable)
                         inner_result.append(stack[-1])
                     result.append(inner_result)
