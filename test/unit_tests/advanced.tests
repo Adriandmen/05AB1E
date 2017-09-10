@@ -12,5 +12,6 @@
 3Ý3L)ʒvyÈ}O}        EXPECT `[[1, 2, 3]]`
 4L3Fε>}O)           EXPECT `[16]`
 
-// Nested ifs
+// Nested ifs / nested loops in ifs
 1i0ië1i42ë13        EXPECT `42`
+1i0i13ë2 4LFD·}Oë42 EXPECT `6`
