@@ -88,11 +88,11 @@ constants = {
         arity=0
     ),
     "žs": MethodAttribute(
-        lambda x: constant_pi[0:x + 2],
+        lambda x: constant_pi[0:int(x) + 2],
         arity=1
     ),
     "žt": MethodAttribute(
-        lambda x: constant_e[0:x + 2],
+        lambda x: constant_e[0:int(x) + 2],
         arity=1
     ),
     "žu": MethodAttribute(
