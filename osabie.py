@@ -3055,7 +3055,7 @@ def run_program(commands,
                 run_program(str(a), debug, safe_mode, True, range_variable,
                             string_variable)
 
-            elif current_command == ".R":
+            elif current_command == ".R" or current_command == "\u03A9":
                 a = pop_stack(1)
                 if type(a) is int:
                     a = str(a)
