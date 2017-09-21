@@ -2338,7 +2338,7 @@ def run_program(commands,
                     is_queue.pop()
 
                 stack.clear()
-                temp_list = sorted(temp_list)
+                temp_list = sorted(temp_list, key=lambda element: element[0])
                 if type(a) is list:
                     stack.append([x[1] for x in temp_list])
                 else:
