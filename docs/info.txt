@@ -18,7 +18,7 @@
 Θ	= pop a      push 05AB1E truthified a (a == 1)
 ι	=
 Σ	= pop a      sort a by the result of code: usage ΣCODE}
-Ω	=
+Ω	= pop a      push random_pick(a)
 ≠	= pop a      push 05AB1E falsified a (a != 1)
 ∊	= pop a      push vertically mirrored a
 ∍	= pop a,b    push a extended/shortened to length b
