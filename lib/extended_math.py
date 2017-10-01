@@ -84,6 +84,22 @@ def is_square(number):
     return 1
 
 
+def arithmetic_mean(number):
+    """
+    Calculates the arithmetic mean of the number (which can also be a list)
+    :param number: A number of list with numeric elements
+    :return: The arithmetic mean
+    """
+
+    if type(number) is list:
+        try:
+            return sum(ast_int_eval(x) for x in number) / len(number)
+        except:
+            return [arithmetic_mean(x) for x in number]
+    else:
+        return sum(ast_int_eval(x) for x in str(number)) / len(str(number))
+
+
 extended_commands = {
     "Å!": MethodAttribute(
         lambda x: list_until(lambda a: math.factorial(a), int(x)),
@@ -166,7 +182,7 @@ extended_commands = {
     ),
 
     "ÅA": MethodAttribute(
-        lambda y: (lambda x: sum(ast_int_eval(a) for a in x) / len(x))(str(y) if type(y) is int else y),
+        lambda x: arithmetic_mean(x),
         arity=1
     ),
 
