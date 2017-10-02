@@ -1210,9 +1210,11 @@ def run_program(commands,
 
                 if debug:
                     try:
-                        print("Loop: {}".format(statement))
+                        print("Infinite Loop: {}".format(statement))
                     except:
                         pass
+
+                range_variable = -1
 
                 while True:
                     range_variable += 1
