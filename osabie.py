@@ -47,7 +47,9 @@ is_queue = []
 previous_len = []
 
 # Block commands:
-block_commands = ["F", "i", "v", "G", "[", "\u0192", "\u0292", "\u03A3", "\u03B5", "\u00b5"]
+block_commands = ["F", "i", "v", "G", "[", "ƒ", "ʒ", "Σ", "ε", "µ"]
+string_delimiters = "\"‘’“”"
+two_char_indicators = [".", "Å", "ž", "'", "λ"]
 
 # Global data
 
@@ -107,6 +109,7 @@ def get_input():
     recent_inputs.append(a)
     return a
 
+
 def get_block_statement(commands, pointer_position):
     statement = ""
     temp_position = pointer_position
@@ -115,8 +118,51 @@ def get_block_statement(commands, pointer_position):
     amount_brackets = 1
     temp_string_mode = False
     while amount_brackets != 0:
-        if current_command in "\"\u2018\u2019\u201C\u201D":
+
+        # Check for code exclusion to exclude 'block-commands' in strings or
+        # multi-character commands.
+        if current_command in string_delimiters:
             temp_string_mode = not temp_string_mode
+
+        elif current_command in two_char_indicators:
+
+            # Add the second character to the current command
+            temp_position += 1
+            current_command += commands[temp_position]
+
+            # If the command is a 1-char dictionary word, take the third character as well
+            if current_command[0] == "'" and current_command[1] in dictionary.unicode_index:
+                temp_position += 1
+                current_command += commands[temp_position]
+
+        elif current_command in '„':
+
+            # Do the following twice
+            for _ in range(0, 2):
+
+                # Add the character to the current command
+                temp_position += 1
+                current_command += commands[temp_position]
+
+                # If the last character is a dictionary word, take the second dict-character as well
+                if current_command[-1] in dictionary.unicode_index:
+                    temp_position += 1
+                    current_command += commands[temp_position]
+
+        elif current_command == "…":
+
+            # Do the following thrice
+            for _ in range(0, 3):
+
+                # Add the character to the current command
+                temp_position += 1
+                current_command += commands[temp_position]
+
+                # If the last character is a dictionary word, take the second dict-character as well
+                if current_command[-1] in dictionary.unicode_index:
+                    temp_position += 1
+                    current_command += commands[temp_position]
+
         if not temp_string_mode:
             if current_command == "}":
                 amount_brackets -= 1
@@ -137,6 +183,7 @@ def get_block_statement(commands, pointer_position):
             break
 
     return statement, temp_position
+
 
 def run_program(commands,
                 debug,
