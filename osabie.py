@@ -47,7 +47,7 @@ is_queue = []
 previous_len = []
 
 # Block commands:
-block_commands = ["F", "i", "v", "G", "\u0192", "\u0292", "\u03A3", "\u03B5", "\u00b5"]
+block_commands = ["F", "i", "v", "G", "[", "\u0192", "\u0292", "\u03A3", "\u03B5", "\u00b5"]
 
 # Global data
 
@@ -122,6 +122,9 @@ def get_block_statement(commands, pointer_position):
                 amount_brackets -= 1
                 if amount_brackets == 0:
                     break
+            elif current_command == "]":
+                amount_brackets = 0
+                break
             elif current_command in block_commands:
                 amount_brackets += 1
             statement += current_command
@@ -1203,32 +1206,22 @@ def run_program(commands,
                             stack.append(0)
 
             elif current_command == "[":
-                STATEMENT = ""
-                temp_position = pointer_position
-                temp_position += 1
-                current_command = commands[temp_position]
-                amount_brackets = 1
-                while amount_brackets != 0:
-                    if current_command == "]":
-                        amount_brackets -= 1
-                        if amount_brackets == 0:
-                            break
-                    elif current_command == "[":
-                        amount_brackets += 1
-                    STATEMENT += current_command
-                    try:
-                        temp_position += 1
-                        current_command = commands[temp_position]
-                    except:
-                        break
+                statement, temp_position = get_block_statement(commands, pointer_position)
+
                 if debug:
-                    print(STATEMENT)
+                    try:
+                        print("Infinite Loop: {}".format(statement))
+                    except:
+                        pass
+
                 range_variable = -1
+
                 while True:
                     range_variable += 1
-                    if run_program(STATEMENT, debug, safe_mode, True,
+                    if run_program(statement, debug, safe_mode, True,
                                    range_variable, string_variable):
                         break
+
                 pointer_position = temp_position
 
             elif current_command == "#":

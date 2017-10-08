@@ -2,7 +2,7 @@
 4FNO                EXPECT `6`
 
 // Infinite loop
-[NN45Q#]            EXPECT `45`
+[NN45Q#             EXPECT `45`
 
 // Counter variables
 ¼¼¼      ¾          EXPECT `3`

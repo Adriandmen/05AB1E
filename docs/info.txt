@@ -92,7 +92,7 @@ Y	=            integer variable
 Z	=            push max(a) without popping
 [	=            infinite loop start
 \	=            delete last item
-]	=            infinite loop end
+]	=            close all loops and if statements
 ^	= pop a,b    push a XOR b
 _	= pop a      push negative bool
 `	= pop a      push all the items of a into the stack
@@ -124,7 +124,7 @@ y	=            push string variable (used in mapping loops)
 z	= pop a      push 1 / a
 {	= pop a      push sorted a
 |	=            push the rest of input as an array with strings
-}	=            used to close if statements, loops, etc.
+}	=            close a single if statement, loop, etc.
 ~	= pop a,b    push a OR b
 
 
