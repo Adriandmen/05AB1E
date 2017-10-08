@@ -9,7 +9,7 @@
 
 You can try this language out yourself at: [Try it online!](http://05ab1e.tryitonline.net/). This interpreter is provided by [DennisMitchell](https://github.com/DennisMitchell).
 
-All existing commands can be found at [_Info.txt_](https://github.com/Adriandmen/05AB1E/blob/master/docs/info.txt)
+All existing commands can be found at [_Info.txt_](https://github.com/Adriandmen/05AB1E/blob/master/docs/info.txt) or at the [_Commands Wiki page_](https://github.com/Adriandmen/05AB1E/wiki/Commands).
 
 <br>
 
