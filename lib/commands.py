@@ -56,7 +56,7 @@ def is_alpha_value(value):
 
 def convert_to_base(n, base):
     """
-    convert positive decimal integer n to equivalent in another base(2-36)
+    convert positive decimal integer n to equivalent in another base(1-255)
     """
 
     digits = "\u0030\u0031\u0032\u0033\u0034\u0035\u0036\u0037\u0038\u0039" \
@@ -86,14 +86,14 @@ def convert_to_base(n, base):
              "\u00F1\u00F2\u00F3\u00F4\u00F5\u00F6\u00F7\u00F8\u00F9\u00FA" \
              "\u00FB\u00FC\u00FD\u00FE\u00FF"
 
-    if int(n) == 0:
-        return "0"
-
     try:
         n = int(n)
         base = int(base)
     except:
         return ""
+
+    if n == 0:
+        return "0"
 
     if n < 0 or base < 2 or base > 255:
         if n > 0 and base == 1:
@@ -118,15 +118,14 @@ def convert_to_base(n, base):
 
 
 def convert_to_base_arbitrary(n, base):
-
-    if int(n) == 0:
-        return [0]
-
     try:
         n = int(n)
         base = int(base)
     except:
         return ""
+
+    if n == 0:
+        return [0]
 
     if n > 0 and base == 1:
         return "0" * n
@@ -213,6 +212,11 @@ def convert_from_base_arbitrary(n, base):
 
 
 def is_prime(n):
+    if is_digit_value(n) == 0:
+        return 0
+
+    n = int(n)
+
     if n == 2 or n == 3:
         return 1
     if n < 2 or n % 2 == 0 or n % 3 == 0:
@@ -1074,3 +1078,18 @@ def shape_like(a, b):
 
     elif type(a) is not list and type(b) is not list:
         return (str(a) * b)[:b]
+
+def sentence_case(a):
+    a = str(a)
+    temp_string = ""
+    begin_sentence = True
+    for Q in a:
+        if begin_sentence:
+            temp_string += Q.upper()
+            if not Q == " ":
+                begin_sentence = False
+        else:
+            temp_string += Q
+        if Q == "." or Q == "?" or Q == "!":
+            begin_sentence = True
+    return temp_string
