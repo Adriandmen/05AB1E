@@ -2833,6 +2833,12 @@ def run_program(commands,
                 counter_variable.pop()
                 counter_variable.append(a)
 
+            elif current_command == ".\u00bc":
+                a = pop_stack(1)
+                stack.append(single_vectorized_evaluation(
+                    a, lambda a: math.tan(ast_int_eval(a))
+                ))
+                
             elif current_command == "\u00bd":
                 a = counter_variable[-1]
                 if str(ast_int_eval(str(pop_stack(1)))) == "1":
@@ -2840,6 +2846,12 @@ def run_program(commands,
                 counter_variable.pop()
                 counter_variable.append(a)
 
+            elif current_command == ".\u00bd":
+                a = pop_stack(1)
+                stack.append(single_vectorized_evaluation(
+                    a, lambda a: math.sin(ast_int_eval(a))
+                ))
+                
             elif current_command == ".x":
                 b = pop_stack(1)
                 a = pop_stack(1)
@@ -2852,6 +2864,12 @@ def run_program(commands,
             elif current_command == "\u00be":
                 stack.append(counter_variable[-1])
 
+            elif current_command == ".\u00be":
+                a = pop_stack(1)
+                stack.append(single_vectorized_evaluation(
+                    a, lambda a: math.cos(ast_int_eval(a))
+                ))
+                
             elif current_command == "\u00f3":
                 a = pop_stack(1)
                 if type(a) is list:
