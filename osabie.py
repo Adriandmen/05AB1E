@@ -61,7 +61,6 @@ current_cursor = [0, 0]
 
 
 def opt_input():
-
     try:
         a = input()
         if a[:3] == "\"\"\"":
@@ -124,44 +123,21 @@ def get_block_statement(commands, pointer_position):
         if current_command in string_delimiters:
             temp_string_mode = not temp_string_mode
 
-        elif current_command in two_char_indicators:
+        string_exclusion_count = 1 if current_command in two_char_indicators else \
+            2 if current_command == "„" else \
+            3 if current_command == "…" else 0
 
-            # Add the second character to the current command
+        # Do the following <string_exclusion_count> times
+        for _ in range(0, string_exclusion_count):
+
+            # Add the character to the current command
             temp_position += 1
             current_command += commands[temp_position]
 
-            # If the command is a 1-char dictionary word, take the third character as well
-            if current_command[0] == "'" and current_command[1] in dictionary.unicode_index:
+            # If the last character is a dictionary word, take the second dict-character as well
+            if current_command[-1] in dictionary.unicode_index and current_command[0] in "'„…":
                 temp_position += 1
                 current_command += commands[temp_position]
-
-        elif current_command in '„':
-
-            # Do the following twice
-            for _ in range(0, 2):
-
-                # Add the character to the current command
-                temp_position += 1
-                current_command += commands[temp_position]
-
-                # If the last character is a dictionary word, take the second dict-character as well
-                if current_command[-1] in dictionary.unicode_index:
-                    temp_position += 1
-                    current_command += commands[temp_position]
-
-        elif current_command == "…":
-
-            # Do the following thrice
-            for _ in range(0, 3):
-
-                # Add the character to the current command
-                temp_position += 1
-                current_command += commands[temp_position]
-
-                # If the last character is a dictionary word, take the second dict-character as well
-                if current_command[-1] in dictionary.unicode_index:
-                    temp_position += 1
-                    current_command += commands[temp_position]
 
         if not temp_string_mode:
             if current_command == "}":
@@ -191,7 +167,6 @@ def run_program(commands,
                 suppress_print,
                 range_variable=0,
                 string_variable=""):
-
     global current_canvas
     global current_cursor
 
@@ -880,7 +855,7 @@ def run_program(commands,
                             break
 
                         pos += 1
-                    else_statement = statement[pos+1:]
+                    else_statement = statement[pos + 1:]
                     statement = statement[0:pos]
 
                 if debug:
@@ -2152,7 +2127,7 @@ def run_program(commands,
                         inner_list.append(a[i])
                     else:
                         inner_str += a[i]
-                    if i == len(a)-1 or a[i] != a[i+1]:
+                    if i == len(a) - 1 or a[i] != a[i + 1]:
                         if is_list:
                             temp_list.append(inner_list)
                         else:
@@ -2462,8 +2437,8 @@ def run_program(commands,
                     b = [str(x) if type(x) is int else x for x in a]
                 s = list(b)
                 s = list(itertools.chain.from_iterable(
-                    itertools.combinations(s, r) for r in range(len(s)+1)
-                    ))
+                    itertools.combinations(s, r) for r in range(len(s) + 1)
+                ))
                 list_of_lists = [list(elem) for elem in s]
 
                 if type(a) is str or type(a) is int:
@@ -2878,7 +2853,7 @@ def run_program(commands,
                 stack.append(single_vectorized_evaluation(
                     a, lambda a: math.tan(ast_int_eval(a))
                 ))
-                
+
             elif current_command == "\u00bd":
                 a = counter_variable[-1]
                 if str(ast_int_eval(str(pop_stack(1)))) == "1":
@@ -2891,7 +2866,7 @@ def run_program(commands,
                 stack.append(single_vectorized_evaluation(
                     a, lambda a: math.sin(ast_int_eval(a))
                 ))
-                
+
             elif current_command == ".x":
                 b = pop_stack(1)
                 a = pop_stack(1)
@@ -2909,7 +2884,7 @@ def run_program(commands,
                 stack.append(single_vectorized_evaluation(
                     a, lambda a: math.cos(ast_int_eval(a))
                 ))
-                
+
             elif current_command == "\u00f3":
                 a = pop_stack(1)
                 if type(a) is list:
@@ -3849,6 +3824,7 @@ def run_program(commands,
     if debug:
         print("stack > " + str(stack))
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -3902,6 +3878,7 @@ if __name__ == "__main__":
     else:
         if TIME_IT:
             import time
+
             start_time = time.time()
             run_program(code, DEBUG, SAFE_MODE, False, 0)
             end_time = time.time()
