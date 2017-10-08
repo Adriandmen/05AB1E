@@ -9,7 +9,7 @@
 η	= pop a      push prefixes(a)
 θ	= pop a      push a[-1]
 в	= pop a,b    push a converted to base b (arbitrary)
-и	=
+и	= pop a,b    push a n-repeat (list-multiply) b
 м	= pop a,b    push a.remove(all elements of b)
 н	= pop a      push a[0]
 т	=            push 100
