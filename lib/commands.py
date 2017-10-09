@@ -86,11 +86,8 @@ def convert_to_base(n, base):
              "\u00F1\u00F2\u00F3\u00F4\u00F5\u00F6\u00F7\u00F8\u00F9\u00FA" \
              "\u00FB\u00FC\u00FD\u00FE\u00FF"
 
-    try:
-        n = int(n)
-        base = int(base)
-    except:
-        return ""
+    n = int(n)
+    base = int(base)
 
     if n == 0:
         return "0"
@@ -118,11 +115,8 @@ def convert_to_base(n, base):
 
 
 def convert_to_base_arbitrary(n, base):
-    try:
-        n = int(n)
-        base = int(base)
-    except:
-        return ""
+    n = int(n)
+    base = int(base)
 
     if n == 0:
         return [0]
@@ -187,7 +181,8 @@ def convert_from_base(n, base):
              "\u00F1\u00F2\u00F3\u00F4\u00F5\u00F6\u00F7\u00F8\u00F9\u00FA" \
              "\u00FB\u00FC\u00FD\u00FE\u00FF"
 
-    n = str(n)[::-1]
+    n = str(int(n))[::-1]
+    base = int(base)
     r = 0
     range_v = 0
 
@@ -200,7 +195,7 @@ def convert_from_base(n, base):
 
 def convert_from_base_arbitrary(n, base):
 
-    n = n[::-1]
+    n = str(int(n))[::-1]
     r = 0
     range_v = 0
 
@@ -212,9 +207,6 @@ def convert_from_base_arbitrary(n, base):
 
 
 def is_prime(n):
-    if is_digit_value(n) == 0:
-        return 0
-
     n = int(n)
 
     if n == 2 or n == 3:

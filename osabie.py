@@ -93,17 +93,20 @@ def pop_stack(default=None):
     if stack:
         return stack.pop()
 
+    errored = False
     try:
         a = opt_input()
     except:
         if default is None:
             raise
         a = default
+        errored = True
 
     if is_array(a):
         a = ast_int_eval(a)
 
-    recent_inputs.append(a)
+    if not errored:
+        recent_inputs.append(a)
     return a
 
 def get_block_statement(commands, pointer_position):
@@ -190,82 +193,32 @@ def run_program(commands,
             # Command: h
             # pop a
             # push hex(a)
-            # Error: push ""
             if current_command == "h":
                 a = pop_stack(default="")
-
-                if type(a) is list:
-                    temp_list = []
-                    for Q in a:
-                        temp_list.append(convert_to_base(Q, 16))
-                    stack.append(temp_list)
-                else:
-                    stack.append(convert_to_base(a, 16))
+                stack.append(vectorized_evaluation(a, 16, convert_to_base))
 
             # Command: b
             # pop a
             # push bin(a)
-            # Error: push ""
             elif current_command == "b":
                 a = pop_stack(default="")
-
-                if type(a) is list:
-                    temp_list = []
-                    for Q in a:
-                        temp_list.append(convert_to_base(Q, 2))
-                    stack.append(temp_list)
-                else:
-                    stack.append(convert_to_base(a, 2))
+                stack.append(vectorized_evaluation(a, 2, convert_to_base))
 
             # Command: B
             # pop a,b
             # push base(a, b)
-            # Error: push ""
             elif current_command == "B":
                 b = pop_stack(default="")
                 a = pop_stack(default="")
-                if type(a) is list and type(b) is list:
-                    temp_list = []
-                    for Q in range(0, len(a)):
-                        temp_list.append(convert_to_base(a[Q], b[Q]))
-                    stack.append(temp_list)
-                elif type(a) is list:
-                    temp_list = []
-                    for Q in a:
-                        temp_list.append(convert_to_base(Q, b))
-                    stack.append(temp_list)
-                elif type(b) is list:
-                    temp_list = []
-                    for Q in b:
-                        temp_list.append(convert_to_base(a, Q))
-                    stack.append(temp_list)
-                else:
-                    stack.append(convert_to_base(a, b))
+                stack.append(vectorized_evaluation(a, b, convert_to_base))
 
             # Command: в
             # pop a,b
             # push a converted to base b (arbitrary)
-            # Error: push ""
             elif current_command == "\u0432":
                 b = pop_stack(default="")
                 a = pop_stack(default="")
-                if type(a) is list and type(b) is list:
-                    temp_list = []
-                    for Q in range(0, len(a)):
-                        temp_list.append(convert_to_base_arbitrary(a[Q], b[Q]))
-                    stack.append(temp_list)
-                elif type(a) is list:
-                    temp_list = []
-                    for Q in a:
-                        temp_list.append(convert_to_base_arbitrary(Q, b))
-                    stack.append(temp_list)
-                elif type(b) is list:
-                    temp_list = []
-                    for Q in b:
-                        temp_list.append(convert_to_base_arbitrary(a, Q))
-                    stack.append(temp_list)
-                else:
-                    stack.append(convert_to_base_arbitrary(a, b))
+                stack.append(vectorized_evaluation(a, b, convert_to_base_arbitrary))
 
             # Commands: [0-9]+
             # Push the corresponding digit value onto the stack,
@@ -503,18 +456,13 @@ def run_program(commands,
             # Command: ª
             # pop a
             # push sentence_cased(a)
-            # Error: push ""
             elif current_command == "\u00aa":
                 a = pop_stack(default="")
-
-                stack.append(single_vectorized_evaluation(
-                    a, sentence_case, str
-                ))
+                stack.append(single_vectorized_evaluation(a, sentence_case, str))
 
             # Command: ù
             # pop a,b
             # push a with elements of length b
-            # Error: push []
             elif current_command == "\u00f9":
                 if len(stack) > 1:
                     b = pop_stack(default=0)
@@ -525,18 +473,29 @@ def run_program(commands,
 
                 if type(b) is not list:
                     temp_list = []
+                    try:
+                        b_length = ast_int_eval(b)
+                    except:
+                        b_length = 0
+
                     for Q in a:
                         lenQ = len(Q if type(Q) is list else str(Q))
-                        if lenQ == ast_int_eval(b):
+                        if lenQ == b_length:
                             temp_list.append(Q)
                     stack.append(temp_list)
                 else:
                     temp_list_2 = []
                     for R in b:
                         temp_list = []
+
+                        try:
+                            R_length = ast_int_eval(R)
+                        except:
+                            R_length = 0
+
                         for Q in a:
                             lenQ = len(Q if type(Q) is list else str(Q))
-                            if lenQ == ast_int_eval(R):
+                            if lenQ == R_length:
                                 temp_list.append(Q)
                         temp_list_2.append(temp_list)
                     stack.append(temp_list_2)
@@ -544,7 +503,6 @@ def run_program(commands,
             # Command: Λ
             # pop a,b,c
             # store a canvas with {a: num, b: filler, c: pattern}
-            # Error: do nothing
             elif current_command == "\u039B":  
                 pattern = pop_stack()
                 filler = pop_stack()
@@ -558,7 +516,6 @@ def run_program(commands,
             # pop a,b,c
             # store a canvas with {a: num, b: filler, c: pattern} 
             # and push the string to the stack
-            # Error: do nothing
             elif current_command == ".\u039B":
                 pattern = pop_stack()
                 filler = pop_stack()
@@ -573,47 +530,46 @@ def run_program(commands,
             # Command: ∊
             # pop a
             # push vertically mirrored a
-            # Error: push ""
             elif current_command == "\u220A":
                 a = pop_stack(default="")
-                result = vertical_mirror(a)
+                result = apply_safe(vertical_mirror, a)
                 stack.append('\n'.join(result))
 
             # Command: .∊
             # pop a
             # push intersected vertical mirror a
-            # Error: push ""
             elif current_command == ".\u220A":
                 a = pop_stack(default="")
-                result = vertical_intersected_mirror(a)
+                result = apply_safe(vertical_intersected_mirror, a)
                 stack.append('\n'.join(result))
 
             # Command: ∍
             # pop a,b
             # push a extended/shortened to length b
-            # Error: push ""
             elif current_command == "\u220D":
                 b = pop_stack(default=0)
                 a = pop_stack(default="")
 
-                stack.append(shape_like(a, b))
+                stack.append(apply_safe(shape_like, a, b))
 
             # Command: ā
             # get a
             # push range(1, len(a) + 1)
-            # Error: push "", []
             elif current_command == "\u0101":
                 a = pop_stack(default="")
 
                 stack.append(a)
-                stack.append(list(range(1, len(a) + 1)))
+
+                if type(a) is int:
+                    a = str(a)
+
+                stack.append(apply_safe(lambda a: list(range(1, len(a) + 1)), a))
 
             # Command: Ā
             # pop a
             # push truthified a:
             #   if a can be converted to a number: 1 if != 0, 0 otherwise
             #   if a is a string or a list: 1 if non-empty, 0 otherwise
-            # Error: push 0
             elif current_command == "\u0100":
                 a = pop_stack(default=0)
 
@@ -624,24 +580,20 @@ def run_program(commands,
             # Command: ∞
             # pop a
             # push mirrored a
-            # Error: push ""
             elif current_command == "\u221e":
                 a = pop_stack(default="")
-
-                stack.append(mirror(a))
+                stack.append(apply_safe(mirror, a))
 
             # Command: .∞
             # pop a
             # push intersected mirror a
-            # Error: push ""
             elif current_command == ".\u221e":
                 a = pop_stack(default="")
-                stack.append(intersected_mirror(a))
+                stack.append(apply_safe(intersected_mirror, a))
 
             # Command: н
             # pop a
             # push a[0]
-            # Error: push ""
             elif current_command == "\u043D":
                 a = pop_stack(default="")
                 if type(a) is list:
@@ -652,7 +604,6 @@ def run_program(commands,
             # Command: θ
             # pop a
             # push a[-1]
-            # Error: push ""
             elif current_command == "\u03B8":
                 a = pop_stack(default="")
                 if type(a) is list:
@@ -664,23 +615,21 @@ def run_program(commands,
             # pop a,(b):
             # if a is list, zip with spaces
             # otherwise: pop b, zip a with b
-            # Error: push ""
             elif current_command == "\u03B6":
                 b = pop_stack(default="")
 
                 if type(b) is list:
                     a, b = b, " "
-                    stack.append(zip_with(a, b))
+                    stack.append(apply_safe(zip_with(a, b)))
                 else:
                     b = str(b)
                     a = pop_stack(default="")
-                    stack.append(zip_with(a, b))
+                    stack.append(apply_safe(zip_with(a, b)))
 
             # Command: ε
             # Usage: εCODE}
             # pop a
             # apply each on a
-            # Error: push ""
             elif current_command == "\u03B5":
                 a = pop_stack(default="")
 
@@ -717,21 +666,13 @@ def run_program(commands,
             # Command: !
             # pop a
             # push factorial(a)
-            # Error: push [] if a is a list, "" otherwise
             elif current_command == "!":
                 a = pop_stack(default="")
-
-                try:
-                    result = single_vectorized_evaluation(a, math.factorial, int)
-                except:
-                    result = [] if type(a) is list else ""
-
-                stack.append(result)
+                stack.append(single_vectorized_evaluation(a, math.factorial, int))
 
             # Command: +
             # pop a,b
-            # push a+b (vectorized)
-            # Error: push ""
+            # push a+b 
             elif current_command == "+":
                 if stack:
                     b = pop_stack(default="")
@@ -740,77 +681,57 @@ def run_program(commands,
                     a = pop_stack(default="")
                     b = pop_stack(default="")
 
-                try:
-                    stack.append(vectorized_evaluation(
-                        a, b, lambda a, b: a + b, ast_int_eval
-                    ))
-                except:
-                    stack.append("")
+                stack.append(vectorized_evaluation(
+                    a, b, lambda a, b: a + b, ast_int_eval
+                ))
 
             # Command: -
             # pop a,b
-            # push a-b (vectorized)
-            # Error: push ""
+            # push a-b
             elif current_command == "-":
                 b = pop_stack(default="")
                 a = pop_stack(default="")
 
-                try:
-                    stack.append(vectorized_evaluation(
-                        a, b, lambda a, b: a - b, ast_int_eval
-                    ))
-                except:
-                    stack.append("")
+                stack.append(vectorized_evaluation(
+                    a, b, lambda a, b: a - b, ast_int_eval
+                ))
 
             # Command: *
             # pop a,b
-            # push a*b (vectorized)
-            # Error: push ""
+            # push a*b
             elif current_command == "*":
                 b = pop_stack(default="")
                 a = pop_stack(default="")
 
-                try:
-                    stack.append(vectorized_evaluation(
-                        a, b, lambda a, b: a * b, ast_int_eval
-                    ))
-                except:
-                    stack.append("")
+                stack.append(vectorized_evaluation(
+                    a, b, lambda a, b: a * b, ast_int_eval
+                ))
 
             # Command: /
             # pop a,b
-            # push a / b (vectorized)
-            # Error: push ""
+            # push a / b 
             elif current_command == "/":
                 b = pop_stack(default="")
                 a = pop_stack(default="")
 
-                try:
-                    stack.append(vectorized_evaluation(
-                        a, b, lambda a, b: a / b, ast_int_eval
-                    ))
-                except:
-                    stack.append("")
+                stack.append(vectorized_evaluation(
+                    a, b, lambda a, b: a / b, ast_int_eval
+                ))
 
             # Command: %
             # pop a,b
-            # push a % b (vectorized)
-            # Error: push ""
+            # push a % b
             elif current_command == "%":
                 b = pop_stack(default="")
                 a = pop_stack(default="")
 
-                try:
-                    stack.append(vectorized_evaluation(
-                        a, b, lambda a, b: a % b, ast_int_eval
-                    ))
-                except:
-                    stack.append("")
+                stack.append(vectorized_evaluation(
+                    a, b, lambda a, b: a % b, ast_int_eval
+                ))
 
             # Command: D
             # pop a
             # push a, a
-            # Error: push "", ""
             elif current_command == "D":
                 a = pop_stack(default="")
                 stack.append(a)
@@ -819,7 +740,6 @@ def run_program(commands,
             # Command: R
             # pop a
             # push reversed a
-            # Error: push ""
             elif current_command == "R":
                 a = pop_stack(default="")
                 if type(a) is list:
@@ -829,7 +749,6 @@ def run_program(commands,
 
             # Command: I
             # push input()
-            # Error: do nothing
             elif current_command == "I":
                 a = opt_input()
                 stack.append(a)
@@ -837,7 +756,6 @@ def run_program(commands,
 
             # Command: $
             # push 1, input()
-            # Error: push 1, ""
             elif current_command == "$":
                 stack.append(1)
 
@@ -851,16 +769,12 @@ def run_program(commands,
             # Command: H
             # pop a
             # push int(a, 16)
-            # Error: push ""
             elif current_command == "H":
                 a = pop_stack(default="")
 
-                try:
-                    stack.append(single_vectorized_evaluation(
-                        a, lambda a: int(a, 16), str
-                    ))
-                except:
-                    stack.append("")
+                stack.append(single_vectorized_evaluation(
+                    a, lambda a: int(a, 16), str
+                ))
 
             # Command: C
             # pop a
@@ -869,17 +783,13 @@ def run_program(commands,
             elif current_command == "C":
                 a = pop_stack(default="")
 
-                try:
-                    stack.append(single_vectorized_evaluation(
-                        a, lambda a: int(a, 2), str
-                    ))
-                except:
-                    stack.append("")
+                stack.append(single_vectorized_evaluation(
+                    a, lambda a: int(a, 2), str
+                ))
 
             # Command: a
             # pop a
             # push isAlpha(a)
-            # Error: push 0
             elif current_command == "a":
                 a = pop_stack(default=0)
                 stack.append(single_vectorized_evaluation(
@@ -889,7 +799,6 @@ def run_program(commands,
             # Command: d
             # pop a
             # push isNumber(a)
-            # Error: push 0
             elif current_command == "d":
                 a = pop_stack(default="")
                 stack.append(single_vectorized_evaluation(
@@ -899,7 +808,6 @@ def run_program(commands,
             # Command: p
             # pop a
             # push isPrime(a)
-            # Error: push 0
             elif current_command == "p":
                 a = pop_stack(default=0)
                 stack.append(single_vectorized_evaluation(
@@ -909,7 +817,6 @@ def run_program(commands,
             # Command: u
             # pop a
             # push uppercase(a)
-            # Error: push ""
             elif current_command == "u":
                 a = pop_stack(default="")
                 stack.append(single_vectorized_evaluation(
@@ -919,7 +826,6 @@ def run_program(commands,
             # Command: l
             # pop a
             # push lowercase(a)
-            # Error: push ""
             elif current_command == "l":
                 a = pop_stack(default="")
                 stack.append(single_vectorized_evaluation(
@@ -941,7 +847,6 @@ def run_program(commands,
             # Command: s
             # pop a,b
             # push b,a
-            # Error: "", ""
             elif current_command == "s":
                 a = pop_stack(default="")
                 b = pop_stack(default="")
@@ -950,7 +855,6 @@ def run_program(commands,
 
             # Command: |
             # push the rest of input as an array with strings
-            # Error: do nothing
             elif current_command == "|":
                 a = input()
                 temp_list = []
@@ -967,7 +871,6 @@ def run_program(commands,
             # Command: ≠
             # pop a
             # push 05AB1E falsified a (a != 1)
-            # Error: push 1
             elif current_command == "\u2260":
                 a = pop_stack(default=0)
 
@@ -978,7 +881,6 @@ def run_program(commands,
             # Command: Θ
             # pop a
             # push 05AB1E truthified a (a == 1)
-            # Error: push 0
             elif current_command == "\u0398":
                 a = pop_stack(default=0)
                 stack.append(single_vectorized_evaluation(
@@ -988,19 +890,24 @@ def run_program(commands,
             # Command: м
             # pop a,b
             # push a.remove(all elements of b)
-            # Error: push ""
             elif current_command == "\u043C":
                 b = pop_stack(default="")
                 a = pop_stack(default="")
-                stack.append(remove_all(a, b))
+                stack.append(apply_save(remove_all, a, b))
 
+            # Command: L
+            # pop a
+            # push [1 .. a]
             elif current_command == "L":
                 temp_list = []
-                a = pop_stack(1)
+                a = pop_stack(default=1)
                 if type(a) is list:
                     for Q in a:
-                        Q = int(Q)
-                        if Q > 0:
+                        Q = apply_safe(int, Q)
+
+                        if type(Q) is not int:
+                            temp_list.append(Q)
+                        elif Q > 0:
                             for X in range(1, Q + 1):
                                 temp_list.append(X)
                         elif Q < 0:
@@ -1009,8 +916,11 @@ def run_program(commands,
                         else:
                             temp_list.append(0)
                 else:
-                    a = int(a)
-                    if a > 0:
+                    a = apply_safe(int, a)
+
+                    if type(a) is not int:
+                        temp_list.append(a)
+                    elif a > 0:
                         for X in range(1, a + 1):
                             temp_list.append(X)
                     elif a < 0:
@@ -1021,9 +931,13 @@ def run_program(commands,
 
                 stack.append(temp_list)
 
+            # Command: r
+            # reverse the stack
             elif current_command == "r":
                 stack.reverse()
 
+            # Command: i
+            # if...}else...} statement
             elif current_command == "i":
                 statement, temp_position = get_block_statement(commands, pointer_position)
                 else_statement = ""
@@ -1060,7 +974,9 @@ def run_program(commands,
                             except:
                                 print("?", end="")
                         print()
-                a = pop_stack(1)
+
+                a = pop_stack(default=0)
+
                 if a == 1 or a == "1":
                     run_program(statement, debug, safe_mode, True,
                                 range_variable, string_variable)
@@ -1069,26 +985,34 @@ def run_program(commands,
                                 range_variable, string_variable)
                 pointer_position = temp_position
 
+            # Command: \
+            # pop a
             elif current_command == "\\":
-                pop_stack(1)
+                pop_stack()
 
+            # Command: `
+            # pop a
+            # push all items of a into the stack
             elif current_command == "`":
-                a = pop_stack(1)
+                a = pop_stack()
+
+                if type(a) is int:
+                    a = str(a)
+
                 for x in a:
                     stack.append(x)
 
+            # Command: x
+            # pop a
+            # push a, a * 2
             elif current_command == "x":
-                a = pop_stack(1)
+                a = pop_stack(default="")
                 stack.append(a)
+                stack.append(single_vectorized_evaluation(a, lambda a: int(a)*2))
 
-                if type(a) is list:
-                    temp_list = []
-                    for Q in a:
-                        temp_list.append(ast_int_eval(str(Q)) * 2)
-                    stack.append(temp_list)
-                else:
-                    stack.append(ast_int_eval(str(a)) * 2)
-
+            # Command: F
+            # pop a
+            # for N in range(0, a) { }: F(commands)} / N = variable
             elif current_command == "F":
                 statement, temp_position = get_block_statement(commands, pointer_position)
 
@@ -1098,18 +1022,17 @@ def run_program(commands,
                     except:
                         pass
 
-                a = 0
-                try:
-                    a = int(pop_stack(1))
-                except:
-                    pass
+                a = apply_safe(int, pop_stack(default=0))
 
-                if a != 0:
+                if type(a) is int and a != 0:
                     for range_variable in range(0, a):
                         run_program(statement, debug, safe_mode, True,
                                     range_variable, string_variable)
                 pointer_position = temp_position
 
+            # Command: G
+            # pop a
+            # for N in range(1, a) { }: F(commands)} / N = variable
             elif current_command == "G":
                 statement, temp_position = get_block_statement(commands, pointer_position)
 
@@ -1118,19 +1041,18 @@ def run_program(commands,
                         print("Loop: {}".format(statement))
                     except:
                         pass
-                a = 0
+                
+                a = apply_safe(int, pop_stack(default=0))
 
-                try:
-                    a = int(pop_stack(1))
-                except:
-                    pass
-
-                if a > 1:
+                if type(a) is int and a > 1:
                     for range_variable in range(1, a):
                         run_program(statement, debug, safe_mode, True,
                                     range_variable, string_variable)
                 pointer_position = temp_position
 
+            # Command: µ
+            # pop a
+            # while counter_variable != a, do...
             elif current_command == "\u00b5":
                 statement, temp_position = get_block_statement(commands, pointer_position)
 
@@ -1140,21 +1062,26 @@ def run_program(commands,
                     except:
                         pass
 
-                a = pop_stack(1)
-                range_variable = 0
+                a = apply_safe(int, pop_stack(default=0))
 
-                if '\u00bc' not in statement and '\u00bd' not in statement:
-                    statement += '\u00bd'
+                if type(a) is int:
+                    range_variable = 0
 
-                while counter_variable[-1] != int(a):
-                    range_variable += 1
-                    run_program(statement, debug, safe_mode, True,
-                                range_variable, string_variable)
+                    if '\u00bc' not in statement and '\u00bd' not in statement:
+                        statement += '\u00bd'
+
+                    while counter_variable[-1] != a:
+                        range_variable += 1
+                        run_program(statement, debug, safe_mode, True,
+                                    range_variable, string_variable)
 
                 pointer_position = temp_position
 
+            # Command: Ë
+            # pop a
+            # push 1 if all equal else 0
             elif current_command == "\u00cb":
-                a = pop_stack(1)
+                a = pop_stack(default="")
 
                 if type(a) is int:
                     a = str(a)
@@ -1169,8 +1096,11 @@ def run_program(commands,
                         if str(element) != FIRST_ELEMENT:
                             all_equal = False
 
-                    stack.append(1 if all_equal else 0)
+                    stack.append(int(all_equal))
 
+            # Command: ƒ
+            # pop a
+            # push for N in range(0, a + 1)
             elif current_command == "\u0192":
                 statement, temp_position = get_block_statement(commands, pointer_position)
 
@@ -1180,26 +1110,29 @@ def run_program(commands,
                     except:
                         pass
 
-                a = 0
-                try:
-                    a = int(pop_stack(1))
-                except:
-                    pass
+                a = apply_safe(int, pop_stack(default=-1))
 
-                if a > -1:
+                if type(a) is int and a > -1:
                     for range_variable in range(0, a + 1):
                         run_program(statement, debug, safe_mode, True,
                                     range_variable, string_variable)
                 pointer_position = temp_position
 
+            # Command: N
+            # Push iteration counter
             elif current_command == "N":
                 stack.append(range_variable)
 
+            # Command: T
+            # Push 10
             elif current_command == "T":
                 stack.append(10)
 
+            # Command: S
+            # pop a
+            # push all chars a seperate
             elif current_command == "S":
-                a = pop_stack(1)
+                a = pop_stack(default="")
                 if type(a) is list:
                     temp_list = []
                     for Q in a:
@@ -1212,53 +1145,76 @@ def run_program(commands,
                         temp_list.append(X)
                     stack.append(temp_list)
 
+            # Command: ^
+            # pop a,b
+            # push a XOR b
             elif current_command == "^":
-                b = pop_stack(1)
-                a = pop_stack(1)
+                b = pop_stack(default=0)
+                a = pop_stack(default=0)
                 stack.append(vectorized_evaluation(
                     a, b, lambda a, b: a ^ b, int
                 ))
 
+            # Command: ~
+            # pop a,b
+            # push a OR b
             elif current_command == "~":
-                b = pop_stack(1)
-                a = pop_stack(1)
+                b = pop_stack(default=0)
+                a = pop_stack(default=0)
                 stack.append(vectorized_evaluation(
                     a, b, lambda a, b: a | b, int
                 ))
 
+            # Command: &
+            # pop a,b
+            # push a AND b
             elif current_command == "&":
-                b = pop_stack(1)
-                a = pop_stack(1)
+                b = pop_stack(default=0)
+                a = pop_stack(default=0)
                 stack.append(vectorized_evaluation(
                     a, b, lambda a, b: a & b, int
                 ))
 
+            # Command: c
+            # pop a,b
+            # push a nCr b
             elif current_command == "c":
-                b = pop_stack(1)
-                a = pop_stack(1)
+                b = pop_stack(default=1)
+                a = pop_stack(default=0)
                 stack.append(vectorized_evaluation(
                     a, b, lambda a, b: combinations(a, b), int
                 ))
 
+            # Command: e
+            # pop a,b
+            # push a nPr b
             elif current_command == "e":
-                b = pop_stack(1)
-                a = pop_stack(1)
+                b = pop_stack(default=1)
+                a = pop_stack(default=0)
                 stack.append(vectorized_evaluation(
                     a, b, lambda a, b: permutations(a, b), int
                 ))
 
+            # Command: >
+            # pop a
+            # push a + 1
             elif current_command == ">":
-                a = pop_stack(1)
+                a = pop_stack(default="")
                 stack.append(single_vectorized_evaluation(
                     a, lambda a: a + 1, ast_int_eval
                 ))
 
+            # Command: >
+            # pop a
+            # push a - 1
             elif current_command == "<":
-                a = pop_stack(1)
+                a = pop_stack(default="")
                 stack.append(single_vectorized_evaluation(
                     a, lambda a: a - 1, ast_int_eval
                 ))
 
+            # Command: '
+            # push char ( 'a pushes "a" )
             elif current_command == "'":
                 temp_string = ""
                 temp_index = ""
@@ -1284,6 +1240,8 @@ def run_program(commands,
                     temp_string = commands[pointer_position]
                     stack.append(temp_string)
 
+            # Command: „
+            # 2 char string / can also be used for 2 compressed strings
             elif current_command == "\u201e":
                 temp_string = ""
                 temp_index = ""
@@ -1310,8 +1268,9 @@ def run_program(commands,
                                 int(temp_index)]
                         temp_index = ""
                         word_count += 1
+                    # String interpolation (command: ÿ)
                     elif current_command == "\u00ff":
-                        temp_string += str(pop_stack(1))
+                        temp_string += str(pop_stack(default=""))
                         word_count += 1
                     else:
                         temp_string += commands[pointer_position]
@@ -1319,6 +1278,8 @@ def run_program(commands,
 
                 stack.append(temp_string)
 
+            # Command: …
+            # 3 char string / can also be used for 3 compressed strings
             elif current_command == "\u2026":
                 temp_string = ""
                 temp_index = ""
@@ -1345,8 +1306,9 @@ def run_program(commands,
                                 int(temp_index)]
                         temp_index = ""
                         word_count += 1
+                    # String interpolation (command: ÿ)
                     elif current_command == "\u00ff":
-                        temp_string += str(pop_stack(1))
+                        temp_string += str(pop_stack(default=""))
                         word_count += 1
                     else:
                         temp_string += commands[pointer_position]
@@ -1354,28 +1316,41 @@ def run_program(commands,
 
                 stack.append(temp_string)
 
+            # Command: ö
+            # pop a,b
+            # push int(a, b)
             elif current_command == "\u00f6":
-                b = pop_stack(1)
-                a = pop_stack(1)
+                b = pop_stack(default="")
+                a = pop_stack(default="")
 
                 stack.append(vectorized_evaluation(
-                    a, b, lambda a, b: convert_from_base(str(a), int(b))
+                    a, b, lambda a, b: convert_from_base(a, b)
                 ))
 
+            # Command: ¸
+            # pop a
+            # push [a]
             elif current_command == "\u00b8":
-                a = pop_stack(1)
+                a = pop_stack(default="")
                 stack.append([a])
 
+            # Command: .S
+            # pop a,b
+            # push 1 if a > b, -1 if a < b, 0 if a == b
             elif current_command == ".S":
-                b = pop_stack(1)
-                a = pop_stack(1)
+                b = pop_stack(default="")
+                a = pop_stack(default="")
+
                 if type(a) is list:
                     if type(b) is list:
                         temp_list = []
                         for Q in range(0, len(a)):
-                            aieAq = ast_int_eval(str(a[Q]))
-                            aieBq = ast_int_eval(str(b[Q]))
-                            if aieAq > aieBq:
+                            aieAq = apply_safe(ast_int_eval, str(a[Q]))
+                            aieBq = apply_safe(ast_int_eval, str(b[Q]))
+
+                            if type(aieAq) is not int or type(aieBq) is not int:
+                                temp_list.append(aieAq)
+                            elif aieAq > aieBq:
                                 temp_list.append(1)
                             elif aieAq < aieBq:
                                 temp_list.append(-1)
@@ -1384,33 +1359,52 @@ def run_program(commands,
                         stack.append(temp_list)
                     else:
                         temp_list = []
+                        aieBq = apply_safe(ast_int_eval, str(b))
+
                         for Q in a:
-                            if ast_int_eval(str(Q)) > ast_int_eval(str(b)):
+                            aieAq = apply_safe(ast_int_eval, str(Q))
+
+                            if type(aieAq) is not int or type(aieBq) is not int:
+                                temp_list.append(aieAq)
+                            elif aieAq > aieBq:
                                 temp_list.append(1)
-                            if ast_int_eval(str(Q)) < ast_int_eval(str(b)):
+                            elif aieAq < aieBq:
                                 temp_list.append(-1)
-                            if ast_int_eval(str(Q)) == ast_int_eval(str(b)):
+                            elif aieAq == aieBq:
                                 temp_list.append(0)
                         stack.append(temp_list)
                 else:
                     if type(b) is list:
                         temp_list = []
+                        aieAq = apply_safe(ast_int_eval, str(a))
+
                         for Q in b:
-                            if ast_int_eval(str(a)) > ast_int_eval(str(Q)):
+                            aieBq = apply_safe(ast_int_eval, str(Q))
+
+                            if type(aieAq) is not int or type(aieBq) is not int:
+                                temp_list.append(aieAq)
+                            elif aieAq > aieBq:
                                 temp_list.append(1)
-                            if ast_int_eval(str(a)) < ast_int_eval(str(Q)):
+                            elif aieAq < aieBq:
                                 temp_list.append(-1)
-                            if ast_int_eval(str(a)) == ast_int_eval(str(Q)):
+                            elif aieAq == aieBq:
                                 temp_list.append(0)
                         stack.append(temp_list)
                     else:
-                        if ast_int_eval(str(a)) > ast_int_eval(str(b)):
+                        aieAq = apply_safe(ast_int_eval, str(a))
+                        aieBq = apply_safe(ast_int_eval, str(b))
+
+                        if type(aieAq) is not int or type(aieBq) is not int:
+                            stack.append(aieAq)
+                        elif aieAq > aieBq:
                             stack.append(1)
-                        if ast_int_eval(str(a)) < ast_int_eval(str(b)):
+                        elif aieAq < aieBq:
                             stack.append(-1)
-                        if ast_int_eval(str(a)) == ast_int_eval(str(b)):
+                        elif aieAq == aieBq:
                             stack.append(0)
 
+            # Command: [
+            # Infinite loop start
             elif current_command == "[":
                 STATEMENT = ""
                 temp_position = pointer_position

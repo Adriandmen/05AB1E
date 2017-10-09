@@ -1,3 +1,9 @@
+def apply_safe(function, *args):
+    try:
+        return function(*args)
+    except:
+        return args[0]
+
 def vectorized_evaluation(a, b, function, pre_function=None):
     """
     Uses the given function in the form of a lambda and produces a vectorized result if
@@ -12,14 +18,14 @@ def vectorized_evaluation(a, b, function, pre_function=None):
     try:
         if pre_function is not None:
             if type(a) is list:
-                a = [pre_function(x) for x in a]
+                a = [apply_safe(pre_function, x) for x in a]
             else:
-                a = pre_function(a)
+                a = apply_safe(pre_function, a)
 
             if type(b) is list:
-                b = [pre_function(x) for x in b]
+                b = [apply_safe(pre_function, x) for x in b]
             else:
-                b = pre_function(b)
+                b = apply_safe(pre_function, b)
 
         # When both are lists
         if type(a) is list and type(b) is list:
@@ -31,7 +37,7 @@ def vectorized_evaluation(a, b, function, pre_function=None):
 
             # Compute the function for all in range elements
             for index in range(0, vector_range):
-                vectorized_result.append(function(a[index], b[index]))
+                vectorized_result.append(apply_safe(function, a[index], b[index]))
 
             # Append all out of range elements without being processed
             for index in range(vector_range, max_range):
@@ -64,7 +70,7 @@ def vectorized_evaluation(a, b, function, pre_function=None):
 
             return vectorized_result
 
-        return function(a, b)
+        return apply_safe(function, a, b)
 
     except:
         if type(a) is list and type(b) is not list:
@@ -90,9 +96,9 @@ def single_vectorized_evaluation(a, function, pre_function=None):
     try:
         if pre_function is not None:
             if type(a) is list:
-                a = [pre_function(x) for x in a]
+                a = [apply_safe(pre_function, x) for x in a]
             else:
-                a = pre_function(a)
+                a = apply_safe(pre_function, a)
 
         if type(a) is list:
 
@@ -104,7 +110,7 @@ def single_vectorized_evaluation(a, function, pre_function=None):
 
             return vectorized_result
 
-        return function(a)
+        return apply_safe(function, a)
     except:
         if type(a) is list:
             vectorized_result = []
