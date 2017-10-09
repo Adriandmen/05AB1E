@@ -1445,8 +1445,12 @@ def run_program(commands,
 
                 pointer_position = temp_position
 
+            # Command: #
+            # pop a
+            # if contains spaces, split on spaces
+            # else if 1, break/end
             elif current_command == "#":
-                a = pop_stack(1)
+                a = pop_stack(default=0)
                 if " " in str(a):
                     stack.append(str(a).split(" "))
                 else:
@@ -1456,8 +1460,15 @@ def run_program(commands,
                     except:
                         pass
 
+            # Command: é
+            # pop a
+            # push sorted a (key=length)
             elif current_command == "\u00e9":
-                a = pop_stack(1)
+                a = pop_stack(default="")
+
+                if type(a) is not list:
+                    a = str(a)
+
                 temp_list = []
                 for Q in a:
                     if type(Q) is int:
@@ -1466,85 +1477,90 @@ def run_program(commands,
                         temp_list.append(Q)
                 stack.append(sorted(temp_list, key=len))
 
+            # Command: =
+            # print last item
             elif current_command == "=":
-                a = pop_stack(1)
-                stack.append(a)
+                try:
+                    a = pop_stack()
+                    stack.append(a)
+                except:
+                    a = ""
+
                 print(a)
                 has_printed.append(True)
 
+            # Command: Q
+            # pop a,b
+            # push a == b (bool)
             elif current_command == "Q":
-                b = pop_stack(1)
-                a = pop_stack(1)
-                if type(a) is list and type(b) is list:
-                    a = [str(x) for x in a]
-                    b = [str(x) for x in b]
+                b = pop_stack(default=0)
+                a = pop_stack(default=1)
 
-                    a = ast_int_eval(str(a))
-                    b = ast_int_eval(str(b))
-
-                    stack.append(int(str(a) == str(b)))
-                elif type(a) is list:
-                    temp_list = []
-                    b = ast_int_eval("\"" + str(b) + "\"")
-                    for Q in a:
-                        if is_digit_value(str(Q)):
-                            Q = ast_int_eval(str(Q))
-                        temp_list.append(int(str(Q) == str(b)))
-                    stack.append(temp_list)
-                elif type(b) is list:
-                    temp_list = []
-                    a = ast_int_eval("\"" + str(a) + "\"")
-                    for Q in b:
-                        if is_digit_value(str(Q)):
-                            Q = ast_int_eval(str(Q))
-                        temp_list.append(int(str(Q) == str(a)))
-                    stack.append(temp_list)
-                else:
-                    a = ast_int_eval("\"" + str(a) + "\"")
-                    b = ast_int_eval("\"" + str(b) + "\"")
-                    stack.append(int(str(a) == str(b)))
-
-            elif current_command == "\u00ca":
-                b = pop_stack(1)
-                a = pop_stack(1)
                 if type(a) is list and type(b) is list:
                     stack.append(int(
-                        str([str(x) for x in a]) != str([str(x) for x in b])
+                        str([str(apply_safe(ast_int_eval, x)) for x in a]) == str([str(apply_safe(ast_int_eval, x)) for x in b])
                     ))
                 else:
                     stack.append(vectorized_evaluation(
-                        a, b, lambda a, b: int(str(a) != str(b))
+                        a, b, lambda a, b: int(apply_safe(ast_int_eval, a) == apply_safe(ast_int_eval, b))
                     ))
 
+            # Command: Ê
+            # pop a,b
+            # push a != b (bool)
+            elif current_command == "\u00ca":
+                b = pop_stack(default=0)
+                a = pop_stack(default=0)
+
+                if type(a) is list and type(b) is list:
+                    stack.append(int(
+                        str([str(apply_safe(ast_int_eval, x)) for x in a]) != str([str(apply_safe(ast_int_eval, x)) for x in b])
+                    ))
+                else:
+                    stack.append(vectorized_evaluation(
+                        a, b, lambda a, b: int(apply_safe(ast_int_eval, a) != apply_safe(ast_int_eval, b))
+                    ))
+
+            # Command: (
+            # pop a
+            # push -a
             elif current_command == "(":
-                a = pop_stack(1)
+                a = pop_stack(default="")
                 stack.append(single_vectorized_evaluation(
-                    a, lambda a: a * -1, ast_int_eval
+                    a, lambda a: ast_int_eval(a) * -1
                 ))
 
+            # Command: A
+            # push [a-z]
             elif current_command == "A":
                 stack.append('abcdefghijklmnopqrstuvwxyz')
 
+            # Command: ™
+            # pop a
+            # push title_cased(a)
             elif current_command == "\u2122":
-                a = pop_stack(1)
+                a = pop_stack(default="")
                 stack.append(single_vectorized_evaluation(
                     a, lambda a: a.title(), str
                 ))
 
+            # Command: E
+            # get input
             elif current_command == "E":
                 a = get_input()
+
+                if type(a) is list:
+                    a = [apply_safe(ast_int_eval, x) for x in a]
+
                 stack.append(a)
 
+            # Command: )
+            # wrap total stack to an array
             elif current_command == ")":
                 temp_list = []
-                temp_list_2 = []
                 if stack:
-                    for S in stack:
-                        temp_list_2.append(S)
-                    for Q in temp_list_2:
-                        R = pop_stack(1)
-                        temp_list.append(R)
-                    temp_list.reverse()
+                    temp_list = list(stack)
+                    stack.clear()
                 stack.append(temp_list)
 
             elif current_command == "P":
