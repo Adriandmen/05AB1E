@@ -95,7 +95,7 @@ def convert_to_base(n, base):
     if n < 0 or base < 2 or base > 255:
         if n > 0 and base == 1:
             return "0" * n
-        return ""
+        return str(n)
 
     s = ""
     while True:
@@ -207,7 +207,10 @@ def convert_from_base_arbitrary(n, base):
 
 
 def is_prime(n):
-    n = int(n)
+    try:
+        n = int(n)
+    except:
+        return 0
 
     if n == 2 or n == 3:
         return 1
