@@ -9,7 +9,7 @@
 η	= pop a      push prefixes(a)
 θ	= pop a      push a[-1]
 в	= pop a,b    push a converted to base b (arbitrary)
-и	=
+и	= pop a,b    push a n-repeat (list-multiply) b
 м	= pop a,b    push a.remove(all elements of b)
 н	= pop a      push a[0]
 т	=            push 100
@@ -92,7 +92,7 @@ Y	=            integer variable
 Z	=            push max(a) without popping
 [	=            infinite loop start
 \	=            delete last item
-]	=            infinite loop end
+]	=            close all loops and if statements
 ^	= pop a,b    push a XOR b
 _	= pop a      push negative bool
 `	= pop a      push all the items of a into the stack
@@ -124,7 +124,7 @@ y	=            push string variable (used in mapping loops)
 z	= pop a      push 1 / a
 {	= pop a      push sorted a
 |	=            push the rest of input as an array with strings
-}	=            used to close if statements, loops, etc.
+}	=            close a single if statement, loop, etc.
 ~	= pop a,b    push a OR b
 
 
@@ -351,6 +351,9 @@ z	= pop a      push 1 / a
 .ø	= pop a,b    surround a with b
 .«	= foldr	     folds a dyadic command between each element in a list from right to left
 .»	= foldl      folds a dyadic command between each element in a list from right to left with opposite right/left operands
+.¼  = pop a      tan(a)
+.½  = pop a      sin(a)
+.¾  = pop a      cos(a)
 .À	=            rotate stack 1 left
 .Á	=            rotate stack 1 right
 .×      = pop a,b    push the list a repeated b times

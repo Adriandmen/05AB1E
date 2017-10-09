@@ -2006,7 +2006,7 @@ constant_e = "2.7182818284590452353602874713526624977572470936999595749669676"\
              "079438005666336488436508914480557103976521469602766258359905198"\
              "04230017946553679"
 
-zero_byte_code = """I)©g0Q    "check if the input is not empty"\\
+zero_byte_code = """Ig0Q    "check if the input is not empty"\\
 
 
 
@@ -2020,8 +2020,6 @@ i “curr=__file__;curr=curr[:-9]+"docs/info.txt";f=open(curr, "r");print(f.read
 "If the input is not empty, do random stuff with it
  --------------------------------------------------"\\
 
-®g1Q
-i
 ¹d©
 
     "1: Create a snake using the canvas

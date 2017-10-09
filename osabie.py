@@ -47,7 +47,9 @@ is_queue = []
 previous_len = []
 
 # Block commands:
-block_commands = ["F", "i", "v", "G", "\u0192", "\u0292", "\u03A3", "\u03B5", "\u00b5"]
+block_commands = ["F", "i", "v", "G", "[", "ƒ", "ʒ", "Σ", "ε", "µ"]
+string_delimiters = "\"‘’“”"
+two_char_indicators = [".", "Å", "ž", "'", "λ"]
 
 # Global data
 
@@ -117,13 +119,36 @@ def get_block_statement(commands, pointer_position):
     amount_brackets = 1
     temp_string_mode = False
     while amount_brackets != 0:
-        if current_command in "\"\u2018\u2019\u201C\u201D":
+
+        # Check for code exclusion to exclude 'block-commands' in strings or
+        # multi-character commands.
+        if current_command in string_delimiters:
             temp_string_mode = not temp_string_mode
+
+        string_exclusion_count = 1 if current_command in two_char_indicators else \
+            2 if current_command == "„" else \
+            3 if current_command == "…" else 0
+
+        # Do the following <string_exclusion_count> times
+        for _ in range(0, string_exclusion_count):
+
+            # Add the character to the current command
+            temp_position += 1
+            current_command += commands[temp_position]
+
+            # If the last character is a dictionary word, take the second dict-character as well
+            if current_command[-1] in dictionary.unicode_index and current_command[0] in "'„…":
+                temp_position += 1
+                current_command += commands[temp_position]
+
         if not temp_string_mode:
             if current_command == "}":
                 amount_brackets -= 1
                 if amount_brackets == 0:
                     break
+            elif current_command == "]":
+                amount_brackets = 0
+                break
             elif current_command in block_commands:
                 amount_brackets += 1
             statement += current_command
@@ -136,6 +161,7 @@ def get_block_statement(commands, pointer_position):
             break
 
     return statement, temp_position
+
 
 def run_program(commands,
                 debug,
@@ -255,7 +281,6 @@ def run_program(commands,
                     if current_command == "\"":
                         break
                     # String interpolation (command: ÿ)
-                    # Error: replace with nothing
                     elif current_command == "\u00ff":
                         temp_string += str(pop_stack(default=""))
                         pointer_position += 1
@@ -292,7 +317,6 @@ def run_program(commands,
                             pointer_position += 1
                             break
                         # String interpolation (command: ÿ)
-                        # Error: replace with nothing
                         elif current_command == "\u00ff":
                             temp_string += str(pop_stack(default=""))
                             pointer_position += 1
@@ -340,7 +364,6 @@ def run_program(commands,
                             pointer_position += 1
                             break
                         # String interpolation (command: ÿ)
-                        # Error: replace with nothing
                         elif current_command == "\u00ff":
                             temp_string += str(pop_stack(default=""))
                             pointer_position += 1
@@ -387,9 +410,8 @@ def run_program(commands,
                         elif current_command == "\u201c":
                             pointer_position += 1
                             break
+                        # String interpolation (command: ÿ)
                         elif current_command == "\u00ff":
-                            # String interpolation (command: ÿ)
-                            # Error: replace with nothing
                             temp_string += str(pop_stack(default=""))
                             pointer_position += 1
                         else:
@@ -436,7 +458,6 @@ def run_program(commands,
                             pointer_position += 1
                             break
                         # String interpolation (command: ÿ)
-                        # Error: replace with nothing
                         elif current_command == "\u00ff":
                             temp_string += str(pop_stack(default=""))
                             pointer_position += 1
@@ -503,7 +524,7 @@ def run_program(commands,
             # Command: Λ
             # pop a,b,c
             # store a canvas with {a: num, b: filler, c: pattern}
-            elif current_command == "\u039B":  
+            elif current_command == "\u039B":
                 pattern = pop_stack()
                 filler = pop_stack()
                 number_pattern = pop_stack()
@@ -811,7 +832,7 @@ def run_program(commands,
             elif current_command == "p":
                 a = pop_stack(default=0)
                 stack.append(single_vectorized_evaluation(
-                    a, lambda a: is_prime(a)
+                    a, lambda a: is_prime(a), ast_int_eval
                 ))
 
             # Command: u
@@ -955,7 +976,7 @@ def run_program(commands,
                             break
 
                         pos += 1
-                    else_statement = statement[pos+1:]
+                    else_statement = statement[pos + 1:]
                     statement = statement[0:pos]
 
                 if debug:
@@ -1406,32 +1427,22 @@ def run_program(commands,
             # Command: [
             # Infinite loop start
             elif current_command == "[":
-                STATEMENT = ""
-                temp_position = pointer_position
-                temp_position += 1
-                current_command = commands[temp_position]
-                amount_brackets = 1
-                while amount_brackets != 0:
-                    if current_command == "]":
-                        amount_brackets -= 1
-                        if amount_brackets == 0:
-                            break
-                    elif current_command == "[":
-                        amount_brackets += 1
-                    STATEMENT += current_command
-                    try:
-                        temp_position += 1
-                        current_command = commands[temp_position]
-                    except:
-                        break
+                statement, temp_position = get_block_statement(commands, pointer_position)
+
                 if debug:
-                    print(STATEMENT)
+                    try:
+                        print("Infinite Loop: {}".format(statement))
+                    except:
+                        pass
+
                 range_variable = -1
+
                 while True:
                     range_variable += 1
-                    if run_program(STATEMENT, debug, safe_mode, True,
+                    if run_program(statement, debug, safe_mode, True,
                                    range_variable, string_variable):
                         break
+
                 pointer_position = temp_position
 
             elif current_command == "#":
@@ -1521,11 +1532,8 @@ def run_program(commands,
                 ))
 
             elif current_command == "E":
-                try:
-                    a = get_input()
-                    stack.append(a)
-                except:
-                    pass
+                a = get_input()
+                stack.append(a)
 
             elif current_command == ")":
                 temp_list = []
@@ -1542,10 +1550,7 @@ def run_program(commands,
             elif current_command == "P":
                 temp_number = 1
                 if not stack:
-                    try:
-                        stack.append(get_input())
-                    except:
-                        stack.append([])
+                    stack.append(get_input())
 
                 if type(stack[-1]) is list:
                     a = pop_stack(1)
@@ -1576,10 +1581,7 @@ def run_program(commands,
                 temp_list_2 = []
 
                 if not stack:
-                    try:
-                        stack.append(get_input())
-                    except:
-                        stack.append([])
+                    stack.append(get_input())
 
                 if type(stack[-1]) is list:
                     a = pop_stack(1)
@@ -1701,10 +1703,7 @@ def run_program(commands,
                 temp_list = []
                 temp_string = ""
                 if not stack:
-                    try:
-                        stack.append(get_input())
-                    except:
-                        stack.append('')
+                    stack.append(get_input())
                 for Q in stack:
                     temp_list.append(Q)
                 a = temp_list.pop()
@@ -2327,7 +2326,7 @@ def run_program(commands,
                         inner_list.append(a[i])
                     else:
                         inner_str += a[i]
-                    if i == len(a)-1 or a[i] != a[i+1]:
+                    if i == len(a) - 1 or a[i] != a[i + 1]:
                         if is_list:
                             temp_list.append(inner_list)
                         else:
@@ -2637,8 +2636,8 @@ def run_program(commands,
                     b = [str(x) if type(x) is int else x for x in a]
                 s = list(b)
                 s = list(itertools.chain.from_iterable(
-                    itertools.combinations(s, r) for r in range(len(s)+1)
-                    ))
+                    itertools.combinations(s, r) for r in range(len(s) + 1)
+                ))
                 list_of_lists = [list(elem) for elem in s]
 
                 if type(a) is str or type(a) is int:
@@ -2925,17 +2924,10 @@ def run_program(commands,
 
                 stack.append(string_multiplication(a, b))
 
-            elif current_command == ".\u00d7":
-                a = pop_stack(1)
+            elif current_command == ".\u00d7" or current_command == "и":
                 b = pop_stack(1)
-                temp_list = []
-                if type(a) is list and is_digit_value(b):
-                    a, b = b, a
-                if type(b) is list and is_digit_value(a):
-                    for Q in range(ast_int_eval(a)):
-                        for R in b:
-                            temp_list.append(R)
-                stack.append(temp_list)
+                a = pop_stack(1)
+                stack.append(list_multiply(a, b))
 
             elif current_command == "\u00f2":
                 a = pop_stack(1)
@@ -3055,12 +3047,24 @@ def run_program(commands,
                 counter_variable.pop()
                 counter_variable.append(a)
 
+            elif current_command == ".\u00bc":
+                a = pop_stack(1)
+                stack.append(single_vectorized_evaluation(
+                    a, lambda a: math.tan(ast_int_eval(a))
+                ))
+
             elif current_command == "\u00bd":
                 a = counter_variable[-1]
                 if str(ast_int_eval(str(pop_stack(1)))) == "1":
                     a += 1
                 counter_variable.pop()
                 counter_variable.append(a)
+
+            elif current_command == ".\u00bd":
+                a = pop_stack(1)
+                stack.append(single_vectorized_evaluation(
+                    a, lambda a: math.sin(ast_int_eval(a))
+                ))
 
             elif current_command == ".x":
                 b = pop_stack(1)
@@ -3073,6 +3077,12 @@ def run_program(commands,
 
             elif current_command == "\u00be":
                 stack.append(counter_variable[-1])
+
+            elif current_command == ".\u00be":
+                a = pop_stack(1)
+                stack.append(single_vectorized_evaluation(
+                    a, lambda a: math.cos(ast_int_eval(a))
+                ))
 
             elif current_command == "\u00f3":
                 a = pop_stack(1)
@@ -3293,21 +3303,80 @@ def run_program(commands,
                 if len(recent_inputs) > 0:
                     stack.append(recent_inputs[0])
                 else:
-                    stack.append(get_input())
+                    a = input()
+                    if is_array(a):
+                        recent_inputs.append(ast_int_eval(a))
+                    else:
+                        recent_inputs.append(a)
+                    stack.append(recent_inputs[0])
 
             elif current_command == "\u00b2":
                 if len(recent_inputs) > 1:
                     stack.append(recent_inputs[1])
+                elif len(recent_inputs) == 1:
+                    a = input()
+                    if is_array(a):
+                        recent_inputs.append(ast_int_eval(a))
+                    else:
+                        recent_inputs.append(a)
+                    stack.append(recent_inputs[1])
                 else:
-                    if len(recent_inputs) == 0:
-                        get_input()
-                    stack.append(get_input())
-    
-            elif current_command == "\u00b3":
-                while len(recent_inputs) < 3:
-                    get_input()
+                    a = input()
+                    if is_array(a):
+                        recent_inputs.append(ast_int_eval(a))
+                    else:
+                        recent_inputs.append(a)
 
-                stack.append(recent_inputs[2])
+                    b = input()
+                    if is_array(b):
+                        recent_inputs.append(ast_int_eval(b))
+                    else:
+                        recent_inputs.append(b)
+                    stack.append(recent_inputs[1])
+
+            elif current_command == "\u00b3":
+                if len(recent_inputs) > 2:
+                    stack.append(recent_inputs[2])
+                elif len(recent_inputs) == 2:
+                    a = input()
+                    if is_array(a):
+                        recent_inputs.append(ast_int_eval(a))
+                    else:
+                        recent_inputs.append(a)
+                    stack.append(recent_inputs[2])
+                elif len(recent_inputs) == 1:
+                    a = input()
+                    if is_array(a):
+                        recent_inputs.append(ast_int_eval(a))
+                    else:
+                        recent_inputs.append(a)
+
+                    b = input()
+                    if is_array(b):
+                        recent_inputs.append(ast_int_eval(b))
+                    else:
+                        recent_inputs.append(b)
+                    stack.append(recent_inputs[2])
+                elif len(recent_inputs) == 0:
+                    a = input()
+                    if is_array(a):
+                        recent_inputs.append(ast_int_eval(a))
+                    else:
+                        recent_inputs.append(a)
+
+                    b = input()
+                    if is_array(b):
+                        recent_inputs.append(ast_int_eval(b))
+                    else:
+                        recent_inputs.append(b)
+
+                    c = input()
+                    if is_array(c):
+                        recent_inputs.append(ast_int_eval(c))
+                    else:
+                        recent_inputs.append(c)
+
+                    stack.append(recent_inputs[2])
 
             elif current_command == "\u2022":
                 temp_string = ""
@@ -3954,6 +4023,7 @@ def run_program(commands,
     if debug:
         print("stack > " + str(stack))
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -4007,6 +4077,7 @@ if __name__ == "__main__":
     else:
         if TIME_IT:
             import time
+
             start_time = time.time()
             run_program(code, DEBUG, SAFE_MODE, False, 0)
             end_time = time.time()

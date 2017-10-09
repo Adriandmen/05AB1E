@@ -1085,3 +1085,30 @@ def sentence_case(a):
         if Q == "." or Q == "?" or Q == "!":
             begin_sentence = True
     return temp_string
+
+def list_multiply(a, b, recur=True):
+
+    try:
+        if type(a) is not list:
+            a = [a]
+
+        if type(b) is list:
+            result = []
+
+            for element in b:
+                try:
+                    result.append(a * int(element))
+                except:
+                    result.append(list_multiply(a, element, False))
+
+            return result
+        else:
+            return a * int(b)
+
+    except Exception as e:
+
+        if recur:
+            return list_multiply(b, a, False)
+
+        else:
+            raise e

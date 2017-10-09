@@ -15,3 +15,28 @@
 // Nested ifs / nested loops in ifs
 1i0ië1i42ë13        EXPECT `42`
 1i0i13ë2 4LFD·}Oë42 EXPECT `6`
+
+// Infinite close
+9LvyÈiyDF>]O        EXPECT `40`
+
+// Nested loops
+56 78 90)vyvy}4+}   EXPECT `4`
+5[N+N3Qi20+}N6Q#}7+ EXPECT `53`
+4[N7Q#NÈi3+N6Qi8]+  EXPECT `24`
+
+// 1-, 2- and 3-char strings
+4 0i123'}456}       EXPECT `4`
+
+4 0i123„}}456}      EXPECT `4`
+4 0i123„ƒƒ}456}     EXPECT `4`
+4 0i123„}ƒƒ456}     EXPECT `4`
+4 0i123„ƒƒƒƒ456}    EXPECT `4`
+
+4 0i123…}}}456}     EXPECT `4`
+4 0i123…ƒƒ}}456}     EXPECT `4`
+4 0i123…}ƒƒ}456}     EXPECT `4`
+4 0i123…}}ƒƒ456}     EXPECT `4`
+4 0i123…ƒƒƒƒ}456}     EXPECT `4`
+4 0i123…ƒƒ}ƒƒ456}     EXPECT `4`
+4 0i123…}ƒƒƒƒ456}     EXPECT `4`
+4 0i123…ƒƒƒƒƒƒ456}     EXPECT `4`
