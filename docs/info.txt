@@ -105,7 +105,7 @@ f	= pop a      push list of prime factors (no duplicates)
 g	= pop a      push length of a
 h	= pop a      push hex(a)
 i	= pop a      if statement: iTHEN}: if true { then }
-j	= pop a      max_a_spaces.join(stack)
+j	= pop a      Same as J, with each substring right justified w/ a length of b
 k	= pop a,b    push 0-indexed index of b in a (-1 when not found)
 l	= pop a      push lower_case(a)
 m	= pop a,b    push a**b
@@ -308,7 +308,6 @@ z	= pop a      push 1 / a
 
 .€	= debug printer
 .ä	= debug printer
-.å	= pop a,b    push a in b (vectorized)
 .0	= throw a division by zero error
 .A      = pop a      push acronymified a
 .b	= pop a      push letterified(a)

@@ -9,6 +9,11 @@ from itertools import count
 letters = "abcdefghijklmnopqrstuvwxyz"
 numbers = "0123456789"
 
+def apply_safe(function, *args):
+    try:
+        return function(*args)
+    except:
+        return args[0]
 
 def ast_int_eval(number):
     a = str(number)
@@ -18,7 +23,6 @@ def ast_int_eval(number):
         a = int(a)
 
     return a
-
 
 def is_digit_value(value):
     value = str(value)
@@ -30,7 +34,7 @@ def is_digit_value(value):
 
 
 def flatten(x):
-    if isinstance(x, collections.Iterable):
+    if type(x) is list:
         return [a for i in x for a in flatten(i)]
     return [x]
 
@@ -45,6 +49,10 @@ def deep_flatten(S):
 
 def is_alpha_value(value):
     value = str(value)
+    
+    if len(value) == 0:
+        return 0
+
     try:
         for X in value:
             if not X.lower() in letters:
@@ -900,10 +908,6 @@ def string_multiplication(a, b):
 
 
 def even_divide(a, b):
-
-    if type(b) is list:
-        raise Exception
-
     b = int(b)
 
     if type(a) is int:
@@ -1115,3 +1119,85 @@ def list_multiply(a, b, recur=True):
 
         else:
             raise e
+
+# recursive product of a list and all its sublists
+def list_product(a):
+    result = 1
+
+    for item in a:
+        if type(item) is list:
+            result *= list_product(item)
+        else:
+            try:
+                result *= ast_int_eval(item)
+            except:
+                pass
+
+    return result
+
+# recursive sum of a list and all its sublists
+def list_sum(a):
+    result = 0
+
+    for item in a:
+        if type(item) is list:
+            result += list_sum(item)
+        else:
+            try:
+                result += ast_int_eval(item)
+            except:
+                pass
+
+    return result
+
+def recursive_join(a, rjust=0, result=None):
+    if type(a) is not list:
+        return str(a).rjust(rjust) if type(a) is not bool else str(int(a)).rjust(rjust)
+
+    for item in a:
+        if type(item) is list:
+            result = recursive_join(item, rjust, result)
+        else:
+            item = str(item) if type(item) is not bool else str(int(item))
+
+            if result is None:
+                result = str(item).rjust(rjust)
+            else:
+                result += str(item).rjust(rjust)
+
+    return result if result is not None else "".rjust(rjust)
+
+def sort_uniquify(a):
+    sublists = []
+    values = []
+
+    if type(a) is not list:
+        values = str(a)
+    else:
+        numbers = True
+
+        for i in a:
+            if type(i) is list:
+                sublists.append(i)
+            else:
+                i = apply_safe(ast_int_eval, i)
+                values.append(i)
+                if type(i) is str:
+                    numbers = False
+
+        # converts all to string if there are strings to compare
+        if not numbers:
+            values = [str(i) for i in values]
+
+    result = []
+
+    for v in sorted(values):
+        if v not in result:
+            result.append(v)
+
+    if type(a) is not list:
+        result = ''.join(result)
+    elif len(sublists):
+        result += [sort_uniquify(i) for i in sublists]
+    
+    return result

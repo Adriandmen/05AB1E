@@ -124,6 +124,7 @@
 "-2"O               EXPECT `-2`
 )O                  EXPECT `0`
 123S 234S 345S)O    EXPECT `[6, 9, 12]`
+9L;2ô42S"foo")O     EXPECT `[[1.5, 3.5, 5.5, 7.5, 4.5], 6]`
 
 // Product of lists or stack
 2 3 4)P             EXPECT `24`
@@ -131,16 +132,21 @@
 "-4"P               EXPECT `-4`
 )P                  EXPECT `1`
 123S 234S 345S)P    EXPECT `[6, 24, 60]`
+9L;2ô42S"foo")P     EXPECT `[[0.5, 3.0, 7.5, 14.0, 4.5], 8]`
 
 // Minimum of list without popping
 123W                EXPECT `1`
 123W)g              EXPECT `2`
 123S( W             EXPECT `-3`
+9L2ô)))W            EXPECT `1`
+"foobar"2äZ         EXPECT `bar`
 
 // Maximum of list without popping
 123Z                EXPECT `3`
 123Z)g              EXPECT `2`
 123S( Z             EXPECT `-1`
+9L2ô)))Z            EXPECT `9`
+"foobar"2äZ         EXPECT `foo`
 
 // Smaller than
 1 2‹                EXPECT `1`
@@ -196,6 +202,7 @@
 4t                  EXPECT `2.0`
 16t                 EXPECT `4.0`
 4 16)t              EXPECT `[2.0, 4.0]`
+4 9 25"foo")t       EXPECT `[2.0, 3.0, 5.0, 'foo']`
 
 // Inverse
 4z                  EXPECT `0.25`
@@ -320,6 +327,7 @@
 11 4÷               EXPECT `2`
 12 4÷               EXPECT `3`
 8 9 10 11 12) 4÷    EXPECT `[2, 2, 2, 2, 3]`
+9 10 11 12"foo")4÷  EXPECT `[2, 2, 2, 3, 'foo']`
 
 // Sign of numbers
 1 3 .S              EXPECT `-1`

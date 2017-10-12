@@ -1,8 +1,4 @@
-def apply_safe(function, *args):
-    try:
-        return function(*args)
-    except:
-        return args[0]
+from lib.commands import *
 
 def vectorized_evaluation(a, b, function, pre_function=None):
     """
@@ -18,12 +14,12 @@ def vectorized_evaluation(a, b, function, pre_function=None):
     try:
         if pre_function is not None:
             if type(a) is list:
-                a = [apply_safe(pre_function, x) for x in a]
+                a = [apply_safe(pre_function, x) if type(x) is not list else x for x in a]
             else:
                 a = apply_safe(pre_function, a)
 
             if type(b) is list:
-                b = [apply_safe(pre_function, x) for x in b]
+                b = [apply_safe(pre_function, x) if type(x) is not list else x for x in b]
             else:
                 b = apply_safe(pre_function, b)
 
@@ -96,12 +92,11 @@ def single_vectorized_evaluation(a, function, pre_function=None):
     try:
         if pre_function is not None:
             if type(a) is list:
-                a = [apply_safe(pre_function, x) for x in a]
+                a = [apply_safe(pre_function, x) if type(x) is not list else x for x in a]
             else:
                 a = apply_safe(pre_function, a)
 
         if type(a) is list:
-
             vectorized_result = []
             for element in a:
                 vectorized_result.append(
@@ -121,3 +116,52 @@ def single_vectorized_evaluation(a, function, pre_function=None):
             return vectorized_result
 
         raise Exception
+
+# Vectorized aggregation
+# The "function" argument takes a function(accumulator, value), where:
+#   * accumulator is the result of previously aggregated values
+#   * value is the current value to aggregate
+# 
+# The accumulator value is the starting value of the aggregation, usually
+# it's a neutral value.
+# If not provided, the starting point will be the first value to pass the
+# pre_function check without an exception been raised
+def vectorized_aggregator(a, function, pre_function=None, accumulator=None):
+    result = accumulator
+    sublists = []
+    values = []
+
+    if pre_function is None:
+        pre_function = lambda a: a
+
+    if type(a) is not list:
+        a = [a]
+
+    for i in a:
+        if type(i) is list:
+            sublists.append(i)
+        else:
+            try:
+                i = pre_function(i)
+                if result is None:
+                    result = i
+                else:
+                    values.append(i)
+            except:
+                pass
+
+    for i in values:
+        try:
+            result = function(result, i)
+        except:
+            pass
+
+    if len(sublists):
+        subresults = [vectorized_aggregator(i, function, pre_function, accumulator) for i in sublists]
+
+        if len(values):
+            result = [result] + subresults
+        else:
+            result = subresults
+
+    return result

@@ -96,3 +96,10 @@
 3ï6и                EXPECT `[3, 3, 3, 3, 3, 3]`
 6ï3и                EXPECT `[6, 6, 6]`
 "abc"3и             EXPECT `['abc', 'abc', 'abc']`
+
+// Joining lists
+)J                  EXPECT `''`
+9L2ô42S)J           EXPECT `'[['12', '34', '56', '78', '9'], '42']'`
+
+// Joining lists right justified
+"foo"9L)5j    EXPECT `['  foo', '    1    2    3    4    5    6    7    8    9']`

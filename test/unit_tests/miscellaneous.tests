@@ -119,6 +119,7 @@ Y                   EXPECT `2`
 
 // Stack indexing
 1 2 3 4 0@          EXPECT `1`
+1 2 3 4 "foo"@      EXPECT `4` 
 
 // Alphabet
 A                   EXPECT `abcdefghijklmnopqrstuvwxyz`
@@ -308,6 +309,8 @@ r)                  EXPECT `[]`
 // ASCII values
 "ABCD"Ç             EXPECT `[65, 66, 67, 68]`
 "ABCD"SÇ            EXPECT `[65, 66, 67, 68]`
+"AB""CD")Ç          EXPECT `[[65, 66], [67, 68]]`
+123ïÇ               EXPECT `[49, 50, 51]`
 
 // Not equal boolean
 1 1Ê                EXPECT `0`
@@ -362,9 +365,9 @@ r)                  EXPECT `[]`
 ) 1 Ü               EXPECT `[]`
 
 // Only letters
-"abcd123"á          EXPECT `abcd`
-"abc12"S á          EXPECT `['a', 'b', 'c']`
-"abc""def""gh1")á   EXPECT `['abc', 'def']`
+"abcd123"á           EXPECT `abcd`
+"abc12"S á           EXPECT `['a', 'b', 'c']`
+"abc")"def"))"gh1")á EXPECT `['abc', 'def']`
 
 // Cartesian product
 123 456âï           EXPECT `[14, 15, 16, 24, 25, 26, 34, 35, 36]`
@@ -390,6 +393,7 @@ r)                  EXPECT `[]`
 1234S4 å            EXPECT `1`
 1234S5 å            EXPECT `0`
 1234S45S å          EXPECT `[1, 0]`
+"foobar"4ï)45Så     EXPECT `[1, 0]`
 
 // Powerset
 123æ                EXPECT `['', '1', '2', '3', '12', '13', '23', '123']`
@@ -398,6 +402,7 @@ r)                  EXPECT `[]`
 // Int to char
 65ç                 EXPECT `A`
 65 66 67 68)ç       EXPECT `['A', 'B', 'C', 'D']`
+65 66)67)68"foo")ç  EXPECT `[[['A', 'B'], 'C'], 'D', 'foo']`
 
 // Subelement
 01234 3è            EXPECT `3`
@@ -415,6 +420,8 @@ r)                  EXPECT `[]`
 44332211ê           EXPECT `1234`
 11223344Sê     ï    EXPECT `[1, 2, 3, 4]`
 44332211Sê     ï    EXPECT `[1, 2, 3, 4]`
+3LR4LR;)ê           EXPECT `[[1, 2, 3], [0.5, 1.0, 1.5, 2.0]]`
+"foobarbar123"3ôê   EXPECT `['123', 'bar', 'foo']`
 
 // Prepend
 1234 0ì             EXPECT `01234`
@@ -430,6 +437,8 @@ r)                  EXPECT `[]`
 123456Sï2ô          EXPECT `[[1, 2], [3, 4], [5, 6]]`
 123456Sï4ô          EXPECT `[[1, 2, 3, 4], [5, 6]]`
 123456Sï4sô         EXPECT `[[1, 2, 3, 4], [5, 6]]`
+# Error: b is not an int => pushes a back on the stack, unchanged
+123456Sï"foo"ô      EXPECT `[1, 2, 3, 4, 5, 6]`
 
 // Convert from base
 12345 77B 77ö       EXPECT `12345`
@@ -457,7 +466,7 @@ r)                  EXPECT `[]`
 
 // Only digits
 "ab12cd"þ           EXPECT `12`
-"ab" 12 "c3")þ      EXPECT `['12']`
+"ab")12))"c3")))þ   EXPECT `['12']`
 
 // Insert
 123456 "a" 3ǝ       EXPECT `123a56`
@@ -526,3 +535,13 @@ r)                  EXPECT `[]`
 3L   1∍             EXPECT `[1]`
 3L   1234S∍         EXPECT `[[1], [1, 2], [1, 2, 3], [1, 2, 3, 1]]`
 "abc"1234S∍         EXPECT `["a", "ab", "abc", "abca"]`
+
+// is_upper
+"abcd".u              EXPECT `0`
+"".u                  EXPECT `0`
+1)"abc""DEF""GH"4)).u EXPECT `[[[0], 0, 1, 1, 0]]`
+
+// is_lower
+"abcd".u              EXPECT `1`
+"".u                  EXPECT `0`
+1)"abc""DEF""GH"4)).u EXPECT `[[[0], 1, 0, 0, 0]]`
