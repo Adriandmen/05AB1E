@@ -134,9 +134,6 @@ def vectorized_aggregator(a, function, pre_function=None, accumulator=None):
     if pre_function is None:
         pre_function = lambda a: a
 
-    if type(a) is not list:
-        a = [a]
-
     for i in a:
         if type(i) is list:
             sublists.append(i)
@@ -147,8 +144,7 @@ def vectorized_aggregator(a, function, pre_function=None, accumulator=None):
                     result = i
                 else:
                     values.append(i)
-            except:
-                pass
+            except: pass
 
     for i in values:
         try:
@@ -159,9 +155,12 @@ def vectorized_aggregator(a, function, pre_function=None, accumulator=None):
     if len(sublists):
         subresults = [vectorized_aggregator(i, function, pre_function, accumulator) for i in sublists]
 
-        if len(values):
+        if result is not None:
             result = [result] + subresults
         else:
             result = subresults
 
-    return result
+    if result is None:
+        result = []
+
+    return result if result is not None else []

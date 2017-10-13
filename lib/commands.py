@@ -393,16 +393,6 @@ def get_all_substrings(input_string):
         input_string[i:j+1] for i in range(length) for j in range(i, length)
     ]
 
-
-def command_gcd(numbers):
-    if 0 in numbers:
-        return 0
-    try:
-        return reduce(fractions.gcd, numbers)
-    except:
-        return 1
-
-
 def command_lcm(numbers):
     if 0 in numbers:
         return 0
@@ -1120,53 +1110,6 @@ def list_multiply(a, b, recur=True):
         else:
             raise e
 
-# recursive product of a list and all its sublists
-def list_product(a):
-    result = 1
-
-    for item in a:
-        if type(item) is list:
-            result *= list_product(item)
-        else:
-            try:
-                result *= ast_int_eval(item)
-            except:
-                pass
-
-    return result
-
-# recursive sum of a list and all its sublists
-def list_sum(a):
-    result = 0
-
-    for item in a:
-        if type(item) is list:
-            result += list_sum(item)
-        else:
-            try:
-                result += ast_int_eval(item)
-            except:
-                pass
-
-    return result
-
-def recursive_join(a, rjust=0, result=None):
-    if type(a) is not list:
-        return str(a).rjust(rjust) if type(a) is not bool else str(int(a)).rjust(rjust)
-
-    for item in a:
-        if type(item) is list:
-            result = recursive_join(item, rjust, result)
-        else:
-            item = str(item) if type(item) is not bool else str(int(item))
-
-            if result is None:
-                result = str(item).rjust(rjust)
-            else:
-                result += str(item).rjust(rjust)
-
-    return result if result is not None else "".rjust(rjust)
-
 def sort_uniquify(a):
     sublists = []
     values = []
@@ -1200,4 +1143,29 @@ def sort_uniquify(a):
     elif len(sublists):
         result += [sort_uniquify(i) for i in sublists]
     
+    return result
+
+def deltaify(a):
+    if type(a) is not list:
+        a = str(a)
+
+    sublists = []
+    values = []
+
+    for i in a:
+        if type(i) is list:
+            sublists.append(i)
+        else:
+            try:
+                values.append(ast_int_eval(i))
+            except:
+                pass
+
+    result = []
+    for Q in range(len(values) - 1):
+        result.append(values[Q+1] - values[Q])
+
+    if len(sublists):
+        result += [deltaify(l) for l in sublists]    
+
     return result

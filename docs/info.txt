@@ -239,7 +239,7 @@ z	= pop a      push 1 / a
 ¼ 51	= counter_variable += 1
 ½ 52	= pop a,     if 1, then counter_variable += 1
 ¾ 53	=            push counter_variable
-¿ 54	= pop a      push gcd(a)
+¿ 54	= pop (a,)b  push gcd(b) if b is list, else push gcd([b, a])
 À 55	= pop a      push a rotated 1 left
 Á 56	= pop a      push a rotated 1 right
 Â 57	= pop a      push bifurcated a
@@ -296,7 +296,7 @@ z	= pop a      push 1 / a
 õ	=  	     push empty string
 ö	= pop a,b    push int(a, b)
 ÷	= pop a,b    push a // b (integer division)
-ø	= pop a      push zipped a
+ø	= pop (a,)b  push zipped b if b is list, else zipped a with b
 ù	= pop a,b    push a with elements of length b
 ú	= pop a,b    push a padded with b spaces in the front
 û	= pop a      push palindromized(a), 12345 becomes 123454321 (a + a[::-1][1:])

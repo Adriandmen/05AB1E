@@ -139,7 +139,7 @@
 123W)g              EXPECT `2`
 123S( W             EXPECT `-3`
 9L2ô)))W            EXPECT `1`
-"foobar"2äZ         EXPECT `bar`
+"foobar"2äW         EXPECT `bar`
 
 // Maximum of list without popping
 123Z                EXPECT `3`
@@ -227,6 +227,9 @@
 1234¥               EXPECT `[1, 1, 1]`
 4132¥               EXPECT `[-3, 2, -1]`
 1¥                  EXPECT `[]`
+"1234"¥             EXPECT `[1, 1, 1]`
+1234ï¥              EXPECT `[1, 1, 1]`
+4L5LR)¥             EXPECT `[[1, 1, 1], [-1, -1, -1, -1]]`
 
 // 10**a function
 3°                  EXPECT `1000`
@@ -247,7 +250,13 @@
 // GCD
 45 5¿               EXPECT `5`
 45 7¿               EXPECT `1`
-45 24 30)¿          EXPECT `3`
+45 24 30)45 45;‚)¿  EXPECT `[3, 22.5]`
+45 45;¿             EXPECT `22.5`
+45 24 30)45 5‚23)¿  EXPECT `[23, 3, 5]`
+45"foo"¿            EXPECT `45`
+¿                   EXPECT `[]`
+45 0 9)¿            EXPECT `0`
+4¿                  EXPECT `4`
 
 // Absolute value
 45Ä                 EXPECT `45`
@@ -257,11 +266,13 @@
 // Reduced subtraction
 1 2 3 4)Æ           EXPECT `-8`
 1 2 3 4 Æ           EXPECT `-8`
+3L5L;"foo")Æ        EXPECT `[-4, -6.5]`
 
 // Is even (modulo 2)
 5 È                 EXPECT `0`
 6 È                 EXPECT `1`
 5 6)È               EXPECT `[0, 1]`
+4L"foo"3L)È         EXPECT `[[0, 1, 0, 1], 'foo', [0, 1, 0]]`
 
 // Is odd (modulo 2 + 1)
 5 É                 EXPECT `1`
