@@ -3,8 +3,10 @@ import math
 import fractions
 import ast
 import random
+import re
 from functools import reduce
 from itertools import count
+from difflib import SequenceMatcher
 
 letters = "abcdefghijklmnopqrstuvwxyz"
 numbers = "0123456789"
@@ -202,7 +204,6 @@ def convert_from_base(n, base):
 
 
 def convert_from_base_arbitrary(n, base):
-
     n = str(int(n))[::-1]
     r = 0
     range_v = 0
@@ -409,8 +410,19 @@ def lcm(a, b):
 
 
 def floatify(string):
-    a = str(string)
+    # force an exception if not a number
+    ast_int_eval(string)
+
+    a = str(string).lower()
     is_neg = False
+
+    # handling scientific notation
+    if "e" in a:
+        if "e-" in a:
+            dec = re.search("e-([0-9]+)", a)
+            a = ("%." + dec.group(1) + "f") % float(a)
+        else:
+            a = "%f" % float(a)
 
     if a[0] == "-":
         is_neg = True
@@ -934,45 +946,57 @@ def get_hash(string):
 
 
 def closest_to(a, b):
+    if type(b) is list:
+        return a
+
     try:
         b = ast_int_eval(b)
     except:
-        b = ord(b)
+        # if a is not a list, applies char difference
+        # otherwise we can use string distances
+        if type(a) is not list:
+            b = ord(b)
+        pass
 
-    if type(a) is int:
+    if type(a) is list:
+        a = deep_flatten(a)
+
+        if type(b) is not str:
+            try:
+                a = [ast_int_eval(x) for x in a]
+            except:
+                # fallback to string distances if there is a string in a
+                b = str(b)
+                a = [str(x) for x in a]
+        else:
+            a = [str(x) for x in a]
+    else:
         a = str(a)
 
-    closest = a[0]
-    closest_num = float('inf')
+    closest = a
+    distance = float('inf')
 
     for element in a:
         if type(a) is str:
-            if abs(ord(element) - b) < closest_num:
-                closest_num = abs(ord(element) - b)
+            if abs(ord(element) - b) < distance:
+                distance = abs(ord(element) - b)
                 closest = element
-        elif abs(ast_int_eval(element) - b) < closest_num:
-            closest_num = abs(ast_int_eval(element) - b)
+        elif type(b) is str:
+            element_dist = 1 - SequenceMatcher(None, str(element), b).ratio()
+
+            if element_dist < distance:
+                distance = element_dist
+                closest = str(element)
+        elif abs(element - b) < distance:
+            distance = abs(element - b)
             closest = element
 
     return closest
 
-
-def undelta(a):
-
-    start = [0]
-
-    for element in a:
-        element = ast_int_eval(element)
-        start.append(start[-1] + element)
-
-    return start
-
-
 def zip_with(a, b):
-
     temp = a
 
-    if type(temp) is int:
+    if type(temp) is not list:
         temp = str(temp)
 
     if type(temp) is str:
@@ -1027,7 +1051,7 @@ def remove_all(a, b):
 
 
 def multi_split(a, b: list):
-    if type(a) is int:
+    if type(a) is not list:
         a = str(a)
 
     delimiter = ''.join(
@@ -1042,7 +1066,7 @@ def multi_split(a, b: list):
 
     a = transliterate(a, b, [delimiter] * len(b))
 
-    return a.split(delimiter)
+    return [i for i in a.split(delimiter) if i]
 
 
 def shape_like(a, b):
@@ -1169,3 +1193,22 @@ def deltaify(a):
         result += [deltaify(l) for l in sublists]    
 
     return result
+
+def filtered_to_the_front(a, b):
+    if type(a) is not list:
+        a = str(a)
+
+    filtered = []
+    remaining = []
+
+    for i in a:
+        if type(i) is list:
+            remaining.append(filtered_to_the_front(i, b))
+        elif str(i) == str(b):
+            filtered.append(str(i))
+        else:
+            remaining.append(str(i))
+
+    result = filtered + remaining
+
+    return result if type(a) is list else ''.join([str(x) for x in result])

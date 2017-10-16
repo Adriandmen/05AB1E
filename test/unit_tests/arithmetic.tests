@@ -149,20 +149,24 @@
 "foobar"2äZ         EXPECT `foo`
 
 // Smaller than
-1 2‹                EXPECT `1`
-2 1‹                EXPECT `0`
-1 3‹                EXPECT `1`
-"0.4" "0.41"‹       EXPECT `1`
-123S2‹              EXPECT `[1, 0, 0]`
-123S; 1‹            EXPECT `[1, 0, 0]`
+1 2‹                   EXPECT `1`
+2 1‹                   EXPECT `0`
+1 3‹                   EXPECT `1`
+"0.4" "0.41"‹          EXPECT `1`
+123S2‹                 EXPECT `[1, 0, 0]`
+123S; 1‹               EXPECT `[1, 0, 0]`
+123ï"foo")"bar"‹       EXPECT `[1, 0]`
+"foo""bar""qux")"baz"‹ EXPECT `[0, 1, 0]`
 
 // Greater than
-1 2›                EXPECT `0`
-2 1›                EXPECT `1`
-1 3›                EXPECT `0`
-"0.41""0.4"›        EXPECT `1`
-123S2›              EXPECT `[0, 0, 1]`
-123S; 1›            EXPECT `[0, 0, 1]`
+1 2›                   EXPECT `0`
+2 1›                   EXPECT `1`
+1 3›                   EXPECT `0`
+"0.41""0.4"›           EXPECT `1`
+123S2›                 EXPECT `[0, 0, 1]`
+123S; 1›               EXPECT `[0, 0, 1]`
+123ï"foo")"bar"›       EXPECT `[0, 1]`
+"foo""bar""qux")"baz"› EXPECT `[1, 0, 1]`
 
 // nCr
 5 2c                EXPECT `10`
@@ -262,6 +266,9 @@
 45Ä                 EXPECT `45`
 "-45"Ä              EXPECT `45`
 45 "-45")Ä          EXPECT `[45, 45]`
+3;(Ä                EXPECT `1.5`
+3L("foo"4L;)Ä       EXPECT `[[1, 2, 3], 'foo', [0.5, 1.0, 1.5, 2.0]]`
+
 
 // Reduced subtraction
 1 2 3 4)Æ           EXPECT `-8`
@@ -282,10 +289,12 @@
 // Add two
 4 Ì                 EXPECT `6`
 4 5 6)Ì             EXPECT `[6, 7, 8]`
+3L"foo"2L;)Ì        EXPECT `[[3, 4, 5], 'foo', [2.5, 3.0]]`
 
 // Subtract two
 4 Í                 EXPECT `2`
 4 5 6)Í             EXPECT `[2, 3, 4]`
+3L"foo"2L;)Í        EXPECT `[[-1, 0, 1], 'foo', [-1.5, -1.0]]`
 
 // Divisors
 10 Ñ                EXPECT `[1, 2, 5, 10]`
@@ -350,9 +359,11 @@
 Ƶ0                  EXPECT `101`
 
 // Closest to
-1234S "1.7".x       EXPECT `2`
-"az""c".x           EXPECT `a`
-1 2 3 4)9.x         EXPECT `4`
+1234S "1.7".x           EXPECT `2`
+"az""c".x               EXPECT `a`
+1 2 3 4)9.x             EXPECT `4`
+"foo""bar""qux")"baz".x EXPECT `bar`
+"foo""bar""qux9")9.x    EXPECT `qux9`
 
 // Undelta
 1234S.¥             EXPECT `[0, 1, 3, 6, 10]`
@@ -404,3 +415,20 @@
 "0.5".¾             EXPECT `0.8775825618903728`
 "0.8".¾             EXPECT `0.6967067093471654`
 "0.5" "0.8").¾      EXPECT `[0.8775825618903728, 0.6967067093471654]`
+
+// Conversion to int
+1 2 3)ï             EXPECT `[1, 2, 3]`
+1 2)3)ï             EXPECT `[[1, 2], 3]`
+3L"foo"3;"3.14")ï   EXPECT `[[1, 2, 3], 'foo', 1, 3]`
+
+// Floatify
+1 2 3("foo")Þ        EXPECT `['1.0', '2.0', '-3.0', 'foo']`
+"0000000.000010000"Þ EXPECT `0.00001`
+"1E-05"Þ             EXPECT `0.00001`
+"314E13"Þ            EXPECT `3140000000000000.0`
+
+// Inclusive round up
+4;ò                  EXPECT `3`
+3;ò                  EXPECT `2`
+3L;2L)ò              EXPECT `[[1, 2, 2], [2, 3]]`
+"bar"3L;"foo")ò      EXPECT `['bar', [1, 2, 2], 'foo']`

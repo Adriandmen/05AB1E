@@ -41,6 +41,10 @@
 5 9)Ÿ               EXPECT `[5, 6, 7, 8, 9]`
 1 3 1)Ÿ             EXPECT `[1, 2, 3, 2, 1]`
 5 5Ÿ                EXPECT `[5]`
+5 5 5)Ÿ             EXPECT `[5, 5]`
+1"foo"3"bar"2(4)Ÿ   EXPECT `[1, 2, 3, 2, 1, 0, -1, -2, -1, 0, 1, 2, 3, 4]`
+1"foo"Ÿ             EXPECT `[]`
+
 
 // Ï filtering
 1234S 1001S Ï ï     EXPECT `[1, 4]`
@@ -51,7 +55,7 @@
 1Ý                  EXPECT `[0, 1]`
 0Ý                  EXPECT `[0]`
 5(Ý                 EXPECT `[0, -1, -2, -3, -4, -5]`
-3ÝÝ                 EXPECT `[0, 0, 1, 0, 1, 2, 0, 1, 2, 3]`
+3ÝÝ                 EXPECT `[[0], [0, 1], [0, 1, 2], [0, 1, 2, 3]]`
 
 // Pop smallest
 1 2 3 4)ï ß )       EXPECT `[[2, 3, 4], 1]`
@@ -76,7 +80,8 @@
 "abc"ƶ              EXPECT `['a', 'bb', 'ccc']`
 123Sƶ               EXPECT `[1, 4, 9]`
 123S456S)ƶ          EXPECT `[[1, 2, 3], [8, 10, 12]]`
-"a""b""c")ƶ         EXPECT `['a', 'bb', 'ccc']`
+"a""b")"c")ƶ        EXPECT `['a', 'bb', 'ccc']`
+3;ƶ                 EXPECT `['1', '..', '555']`
 
 // Prefixes
 1234ηï              EXPECT `[1, 12, 123, 1234]`
@@ -97,9 +102,14 @@
 6ï3и                EXPECT `[6, 6, 6]`
 "abc"3и             EXPECT `['abc', 'abc', 'abc']`
 
-// Joining lists
-)J                  EXPECT `''`
-9L2ô42S)J           EXPECT `'[['12', '34', '56', '78', '9'], '42']'`
+// Most frequent
+123S.M{              EXPECT `['1', '2', '3']`
+2132.M               EXPECT `['2']`
+"foobar".M           EXPECT `['o']`
+"foobar"123S)1)3L).M EXPECT `['1']`
 
-// Joining lists right justified
-"foo"9L)5j    EXPECT `['  foo', '    1    2    3    4    5    6    7    8    9']`
+// Least frequent
+123S.m{              EXPECT `['1', '2', '3']`
+21323.m              EXPECT `['1']`
+"foo".m              EXPECT `['f']`
+"foobar"123S)1)3L).m EXPECT `['foobar']`

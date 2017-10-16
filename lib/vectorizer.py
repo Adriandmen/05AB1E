@@ -122,29 +122,34 @@ def single_vectorized_evaluation(a, function, pre_function=None):
 #   * accumulator is the result of previously aggregated values
 #   * value is the current value to aggregate
 # 
-# The accumulator value is the starting value of the aggregation, usually
-# it's a neutral value.
+# The "start" argument is the starting value of the aggregation
 # If not provided, the starting point will be the first value to pass the
 # pre_function check without an exception been raised
-def vectorized_aggregator(a, function, pre_function=None, accumulator=None):
-    result = accumulator
-    sublists = []
+# 
+# Result will keep the same order of values/sublists than input
+# Aggregated value will be at the first non-list valid value 
+# encountered in the input
+def vectorized_aggregator(a, function, pre_function=None, start=None):
+    result = start
+    index = -1
+    subresults = []
     values = []
 
-    if pre_function is None:
-        pre_function = lambda a: a
-
-    for i in a:
-        if type(i) is list:
-            sublists.append(i)
+    for i in range(len(a)):
+        if type(a[i]) is list:
+            subresults.append(vectorized_aggregator(a[i], function, pre_function, start))
         else:
             try:
-                i = pre_function(i)
-                if result is None:
-                    result = i
-                else:
-                    values.append(i)
+                if pre_function is not None:
+                    a[i] = pre_function(a[i])
             except: pass
+            else:
+                if index == -1:
+                    index = i
+                if result is None:
+                    result = a[i]
+                else:
+                    values.append(a[i])
 
     for i in values:
         try:
@@ -152,15 +157,31 @@ def vectorized_aggregator(a, function, pre_function=None, accumulator=None):
         except:
             pass
 
-    if len(sublists):
-        subresults = [vectorized_aggregator(i, function, pre_function, accumulator) for i in sublists]
-
-        if result is not None:
-            result = [result] + subresults
-        else:
-            result = subresults
-
-    if result is None:
-        result = []
+    if subresults:
+        if index > -1:
+            subresults.insert(index, result)
+        result = subresults
 
     return result if result is not None else []
+
+# Vectorized filter
+# Keep only elements of a where function(a) is truthy
+def vectorized_filter(a, function, pre_function=None):
+
+    if pre_function is not None:
+        if type(a) is list:
+            a = [apply_safe(pre_function, x) if type(x) is not list else x for x in a]
+        else:
+            a = apply_safe(pre_function, a)
+
+    vectorized_result = []
+    for element in a:
+        if type(element) is list:
+            vectorized_result.append(
+                vectorized_filter(element, function, pre_function)
+            )
+        else:
+            if function(element):
+                vectorized_result.append(element)
+
+    return vectorized_result if type(a) is list else ''.join(a)

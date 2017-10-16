@@ -45,14 +45,24 @@
 1 2 3ïJ             EXPECT `123`
 1ï 2ï 3ï)J          EXPECT `123`
 12Sï 34Sï)  J       EXPECT `['12', '34']`
+)J                  EXPECT `''`
+9L2ô42S)J           EXPECT `'[['12', '34', '56', '78', '9'], '42']'`
+"foo"S9L3ä)J        EXPECT `['foo', ['123', '456', '789']]`
+
+// Join (right justified)
+"foo"9L)5j          EXPECT `['  foo', '    1    2    3    4    5    6    7    8    9']`
+3L"bar""foo"5j      EXPECT `['  bar  foo', '    1    2    3']`
+1 2 3ï2j            EXPECT `' 1 2 3'`
 
 // String removal
-"abc" "c"K          EXPECT `ab`
-"abcde" "cd" K      EXPECT `abe`
-"abba" "ab" K       EXPECT `ba`
-"ab""bc""cd") "bc"K EXPECT `['ab', 'cd']`
-1234S23SK           EXPECT `['1', '4']`
-1234ï 23ïK          EXPECT `14`
+"abc" "c"K                  EXPECT `ab`
+"abcde" "cd" K              EXPECT `abe`
+"abba" "ab" K               EXPECT `ba`
+"ab""bc""cd") "bc"K         EXPECT `['ab', 'cd']`
+1234S23SK                   EXPECT `['1', '4']`
+1234ï 23ïK                  EXPECT `14`
+"foobar"2ä"foobar"2ä)"bar"K EXPECT `[['foo'], ['foo']]`
+"""foo")"o"K                EXPECT `['', 'foo']`
 
 // Replacement bug fix (https://codegolf.stackexchange.com/a/77154/34388)
 "'[([]{})<{[()<()>]}()>{}]'" "[](){}<>"2ô"":g2Q     EXPECT `1`
@@ -178,6 +188,10 @@ r)                  EXPECT `[]`
 11223344S 4†ï       EXPECT `[4, 4, 1, 1, 2, 2, 3, 3]`
 1 1†                EXPECT `1`
 1 2†                EXPECT `1`
+3L4L5L)3†ï          EXPECT `[[3, 1, 2], [3, 1, 2, 4], [3, 1, 2, 4, 5]]`
+"foobar""bar"†      EXPECT `foobar`
+"foobar"3ô"bar"†    EXPECT `['bar', 'foo']`
+
 
 // Transliteration
 "abcde" "cd" "dc"‡  EXPECT `abdce`
@@ -194,8 +208,11 @@ r)                  EXPECT `[]`
 
 // Substrings
 123Œï               EXPECT `[1, 12, 123, 2, 23, 3]`
+123ïŒï              EXPECT `[1, 12, 123, 2, 23, 3]`
 1Œï                 EXPECT `[1]`
 ""Œ                 EXPECT `[]`
+123"foo")Œï         EXPECT `[[1, 12, 123, 2, 23, 3], ['f', 'fo', 'foo', 'o', 'oo', 'o']]`
+3;Œ                 EXPECT `['1', '1.', '1.5', '.', '.5', '5']`
 
 // Base-255 compressed string
 •1•                 EXPECT `1`
@@ -214,6 +231,7 @@ r)                  EXPECT `[]`
 // Permutations
 123œ      ï         EXPECT `[123, 132, 213, 231, 312, 321]`
 123Sœ               EXPECT `[['1', '2', '3'], ['1', '3', '2'], ['2', '1', '3'], ['2', '3', '1'], ['3', '1', '2'], ['3', '2', '1']]`
+3;œ                 EXPECT `['1.5', '15.', '.15', '.51', '51.', '5.1']`
 
 // Split on occurences
 "abcd" "b"¡         EXPECT `['a', 'cd']`
@@ -221,18 +239,17 @@ r)                  EXPECT `[]`
 "abcd""12b3")"b"¡   EXPECT `[['a', 'cd'], ['12', '3']]`
 "1234"5¡            EXPECT `['1234']`
 "123456"25S¡        EXPECT `['1', '34', '6']`
-"abcde""be"S¡       EXPECT `['a', 'cd', '']`
-"abcde""be"S¡       EXPECT `['a', 'cd', '']`
-"abcde""be"S¡       EXPECT `['a', 'cd', '']`
-"abcde""be"S¡       EXPECT `['a', 'cd', '']`
-"abcde""be"S¡       EXPECT `['a', 'cd', '']`
-"abcde""be"S¡       EXPECT `['a', 'cd', '']`
+"abcde""be"S¡       EXPECT `['a', 'cd']`
+"abcde"D)"be"S¡     EXPECT `[['a', 'cd'], ['a', 'cd']]`
+"123456"34¡         EXPECT `['12', '56']`
 
 // Count occurences
 1234321 3¢          EXPECT `2`
 1234321 4¢          EXPECT `1`
 1234321S3¢          EXPECT `2`  
 1234321S4¢          EXPECT `1`
+1234321S42S¢        EXPECT `[4, 2]`
+4L9L)5L¢            EXPECT `[2, 2, 2, 2, 1]`
 
 // Substring function
 1234 2£             EXPECT `12`
@@ -242,6 +259,7 @@ r)                  EXPECT `[]`
 123456 12S£         EXPECT `['1', '23']`
 123456S12S£         EXPECT `[['1'], ['2', '3']]`
 23SA£               EXPECT `['ab', 'cde']`
+AA£                 EXPECT `abcdefghijklmnopqrstuvwxyz`
 
 // Head method
 1234¬)ï             EXPECT `[1234, 1]`
@@ -276,6 +294,8 @@ r)                  EXPECT `[]`
 123S 4«ï            EXPECT `[14, 24, 34]`
 4)123Ss«ï           EXPECT `[1, 2, 3, 4]`
 4)123S«ï            EXPECT `[4, 1, 2, 3]`
+4L3L)"foo"«         EXPECT `[['1foo', '2foo', '3foo', '4foo'], ['1foo', '2foo', '3foo']]`
+4L3L)"foo"s«        EXPECT `[['foo1', 'foo2', 'foo3', 'foo4'], ['foo1', 'foo2', 'foo3']]`
 
 // Enwrap
 1¸              ï   EXPECT `[1]`
@@ -406,6 +426,7 @@ r)                  EXPECT `[]`
 // Powerset
 123æ                EXPECT `['', '1', '2', '3', '12', '13', '23', '123']`
 123Sæ               EXPECT `[[], ['1'], ['2'], ['3'], ['1', '2'], ['1', '3'], ['2', '3'], ['1', '2', '3']]`
+3;æ                 EXPECT `['', '1', '.', '5', '1.', '15', '.5', '1.5']`
 
 // Int to char
 65ç                 EXPECT `A`
@@ -435,6 +456,8 @@ r)                  EXPECT `[]`
 1234 0ì             EXPECT `01234`
 1234S 5ìï           EXPECT `[51, 52, 53, 54]`
 1234S 5Sìï          EXPECT `[5, 1, 2, 3, 4]`
+4L3L)"foo"ì         EXPECT `[['foo1', 'foo2', 'foo3', 'foo4'], ['foo1', 'foo2', 'foo3']]`
+4L3L)"foo"sì        EXPECT `[['1foo', '2foo', '3foo', '4foo'], ['1foo', '2foo', '3foo']]`
 
 // Reverse each
 123 456 789)íï      EXPECT `[321, 654, 987]`
@@ -445,7 +468,7 @@ r)                  EXPECT `[]`
 123456Sï2ô          EXPECT `[[1, 2], [3, 4], [5, 6]]`
 123456Sï4ô          EXPECT `[[1, 2, 3, 4], [5, 6]]`
 123456Sï4sô         EXPECT `[[1, 2, 3, 4], [5, 6]]`
-# Error: b is not an int => pushes a back on the stack, unchanged
+// Error: b is not an int => pushes a back on the stack, unchanged
 123456Sï"foo"ô      EXPECT `[1, 2, 3, 4, 5, 6]`
 
 // Convert from base
@@ -471,10 +494,14 @@ r)                  EXPECT `[]`
 // Join by seperator
 1 2 3 4 5ý          EXPECT `1525354`
 1 2 3 4)ï5ý         EXPECT `1525354`
+4L9L)ï'-ý           EXPECT `['1-2-3-4', '1-2-3-4-5-6-7-8-9']
+5ý                  EXPECT `''`
 
 // Only digits
 "ab12cd"þ           EXPECT `12`
-"ab")12))"c3")))þ   EXPECT `['12']`
+"abcde"þ            EXPECT`''`
+"ab12cd"123"3.14")þ EXPECT `['123']`
+123S"foo"42)þ       EXPECT `[['1', '2', '3'], ['42']]`
 
 // Insert
 123456 "a" 3ǝ       EXPECT `123a56`
@@ -553,3 +580,18 @@ r)                  EXPECT `[]`
 "abcd".u              EXPECT `1`
 "".u                  EXPECT `0`
 1)"abc""DEF""GH"4)).u EXPECT `[[[0], 1, 0, 0, 0]]`
+
+// pairwise command
+"abcd"üJ              EXPECT `['abbccd']`
+1234ïüJ               EXPECT `['122334']`
+1234Sü‚O              EXPECT `[3, 5, 7]`
+
+// split into chunks of consecutive elements
+"aaabbcdddde"γ        EXPECT `['aaa', 'bb', 'c', 'dddd', 'e']`
+"aaabb"D3)γ           EXPECT `[['aaabb', 'aaabb'], ['3']]`
+4LïD)˜{γ              EXPECT `[[1, 1], [2, 2], [3, 3], [4, 4]]`
+
+// dynamic filtering
+"foo"Sʒ'oQ            EXPECT `['o', 'o']`
+"foo"ʒ'oQ             EXPECT `oo`
+"foo"Sʒ\              EXPECT `[]`
