@@ -46,12 +46,12 @@
 1ï 2ï 3ï)J          EXPECT `123`
 12Sï 34Sï)  J       EXPECT `['12', '34']`
 )J                  EXPECT `''`
-9L2ô42S)J           EXPECT `'[['12', '34', '56', '78', '9'], '42']'`
+9L2ô42S)J           EXPECT `[['12', '34', '56', '78', '9'], '42']`
 "foo"S9L3ä)J        EXPECT `['foo', ['123', '456', '789']]`
 
 // Join (right justified)
 "foo"9L)5j          EXPECT `['  foo', '    1    2    3    4    5    6    7    8    9']`
-3L"bar""foo"5j      EXPECT `['  bar  foo', '    1    2    3']`
+3L"bar""foo"5j      EXPECT `['    1    2    3', '  bar  foo']`
 1 2 3ï2j            EXPECT `' 1 2 3'`
 
 // String removal
@@ -88,6 +88,7 @@
 123S                EXPECT `['1', '2', '3']`
 1S                  EXPECT `['1']`
 123)S               EXPECT `['1', '2', '3']`
+"foo"123)"bar")S    EXPECT `[['f', 'o', 'o', '1', '2', '3'], ['b', 'a', 'r']]`
 
 // Variable assignment
 15UX                EXPECT `15`
@@ -250,7 +251,7 @@ r)                  EXPECT `[]`
 1234321 4¢          EXPECT `1`
 1234321S3¢          EXPECT `2`  
 1234321S4¢          EXPECT `1`
-1234321S42S¢        EXPECT `[4, 2]`
+1234321S42S¢        EXPECT `[1, 2]`
 4L9L)5L¢            EXPECT `[2, 2, 2, 2, 1]`
 
 // Substring function
@@ -327,6 +328,9 @@ AA£                 EXPECT `abcdefghijklmnopqrstuvwxyz`
 11223344 3Ã         EXPECT `33`
 1234S 4Ã ï          EXPECT `[4]`
 11223344S 3SÃ ï     EXPECT `[3, 3]`
+11223344S4L)3SÃï    EXPECT `[[3, 3], [3]]`
+1)2)ï11223344sÃï    EXPECT `1122`
+'[4SÃ               EXPECT ``
 
 // ASCII values
 "ABCD"Ç             EXPECT `[65, 66, 67, 68]`
@@ -351,6 +355,8 @@ AA£                 EXPECT `abcdefghijklmnopqrstuvwxyz`
 1112233344 Ô        EXPECT `1234`
 1122332211 Ô        EXPECT `12321`
 123321SÔ        ï   EXPECT `[1, 2, 3, 2, 1]`
+123321S"foo"S)Ô     EXPECT `[['1', '2', '3', '2', '1'], ['f', 'o']]`
+1)123321Sï«Ôï       EXPECT `[1, 2, 3, 2, 1]`
 
 // String multiplication
 "ab" 4×             EXPECT `abababab`
@@ -413,8 +419,7 @@ AA£                 EXPECT `abcdefghijklmnopqrstuvwxyz`
 123456789 3ä    ï   EXPECT `[123, 456, 789]`
 123456 3 ä  ï       EXPECT `[12, 34, 56]`
 123456Sï 3ä         EXPECT `[[1, 2], [3, 4], [5, 6]]`
-123456Sï3sä         EXPECT `[[1, 2], [3, 4], [5, 6]]`
-// 8L7ä                EXPECT `[[1, 2], [3], [4], [5], [6], [7], [8]]`
+8L7ä                EXPECT `[[1, 2], [3], [4], [5], [6], [7], [8]]`
 
 // A in B
 1234 4 å            EXPECT `1`
@@ -496,8 +501,8 @@ AA£                 EXPECT `abcdefghijklmnopqrstuvwxyz`
 // Join by seperator
 1 2 3 4 5ý          EXPECT `1525354`
 1 2 3 4)ï5ý         EXPECT `1525354`
-4L9L)ï'-ý           EXPECT `['1-2-3-4', '1-2-3-4-5-6-7-8-9']
-5ý                  EXPECT `''`
+4L9L)ï'-ý           EXPECT `['1-2-3-4', '1-2-3-4-5-6-7-8-9']`
+5ý                  EXPECT ``
 
 // Only digits
 "ab12cd"þ           EXPECT `12`
@@ -579,9 +584,9 @@ AA£                 EXPECT `abcdefghijklmnopqrstuvwxyz`
 1)"abc""DEF""GH"4)).u EXPECT `[[[0], 0, 1, 1, 0]]`
 
 // is_lower
-"abcd".u              EXPECT `1`
-"".u                  EXPECT `0`
-1)"abc""DEF""GH"4)).u EXPECT `[[[0], 1, 0, 0, 0]]`
+"abcd".l              EXPECT `1`
+"".l                  EXPECT `0`
+1)"abc""DEF""GH"4)).l EXPECT `[[[0], 1, 0, 0, 0]]`
 
 // pairwise command
 "abcd"üJ              EXPECT `['abbccd']`

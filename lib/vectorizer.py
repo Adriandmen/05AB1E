@@ -191,4 +191,4 @@ def vectorized_filter(a, function, pre_function=None):
             if function(element):
                 vectorized_result.append(element)
 
-    return vectorized_result if type(a) is list else ''.join(a)
+    return vectorized_result if type(a) is list else ''.join(vectorized_result)

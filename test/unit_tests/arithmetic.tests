@@ -33,6 +33,9 @@
 0_                  EXPECT `1`
 46_                 EXPECT `0`
 0 0 1 1 2 3 4)_     EXPECT `[1, 1, 0, 0, 0, 0, 0]`
+""_                 EXPECT `1`
+"foo"_              EXPECT `0`
+)3L<"foo")_         EXPECT `[[], [1, 0, 0], 0]`
 
 // Addition
 3 4+                EXPECT `7`
@@ -253,6 +256,7 @@
 // Double function
 4·                  EXPECT `8`
 1 2 3 4) ·          EXPECT `[2, 4, 6, 8]`
+3L"foo"4L3+)·       EXPECT `[[2, 4, 6], 'foofoo', [8, 10, 12, 14]]`
 
 // GCD
 45 5¿               EXPECT `5`
@@ -262,7 +266,6 @@
 45 24 30)45 5‚23)¿  EXPECT `[3, 5, 23]`
 45"foo"¿            EXPECT `45`
 45 0 9)¿            EXPECT `0`
-4¿                  EXPECT `4`
 
 // Absolute value
 45Ä                 EXPECT `45`
@@ -318,6 +321,8 @@
 12 Õ                EXPECT `4`
 13 Õ                EXPECT `12`
 11 12 13) Õ         EXPECT `[10, 4, 12]`
+11 12 13)"foo"3L)Õ  EXPECT `[[10, 4, 12], 'foo', [1, 1, 2]]`
+5L10+;Õ             EXPECT `[4, 2, 2, 6, 6]`
 
 // Divisible by
 6 2Ö                EXPECT `1`
@@ -373,7 +378,7 @@
 1).¥                EXPECT `[0, 1]`
 ).¥                 EXPECT `[0]`
 41S"foo"S«32S(«.¥   EXPECT `[0, 4, 5, 2, 0]`
-1¥                  EXPECT `[0, 1]`
+1.¥                 EXPECT `[0, 1]`
 4L5LR).¥            EXPECT `[[0, 1, 3, 6, 10], [0, 5, 9, 12, 14, 15]]`
 
 
@@ -391,22 +396,27 @@
 "0.0"Ā              EXPECT `0`
 "0.1"Ā              EXPECT `1`
 1 0 2 "1.5" "0.0")Ā EXPECT `[1, 0, 1, 1, 0]`
+""Ā                 EXPECT `0`
+"foo"Ā              EXPECT `1`
+)3L<"foo")Ā         EXPECT `[[], [0, 1, 1], 1]`
 
 // 05AB1E falsify
-1 ≠                 EXPECT `0`
-0 ≠                 EXPECT `1`
-2 ≠                 EXPECT `1`
-"0.4" ≠             EXPECT `1`
-"1.0" ≠             EXPECT `0`
-1 0 2 "1.0") ≠      EXPECT `[0, 1, 1, 0]`
+1 ≠                    EXPECT `0`
+0 ≠                    EXPECT `1`
+2 ≠                    EXPECT `1`
+"0.4" ≠                EXPECT `1`
+"1.0" ≠                EXPECT `0`
+1 0 2 "1.0") ≠         EXPECT `[0, 1, 1, 0]`
+102S"1.0")"0+1""foo")≠ EXPECT `[[[0, 1, 1], 0], 0, 1]`
 
 // 05AB1E truthify
-1 Θ                 EXPECT `1`
-0 Θ                 EXPECT `0`
-2 Θ                 EXPECT `0`
-"1.0" Θ             EXPECT `1`
-"0.4" Θ             EXPECT `0`
-1 0 2 "1.0" "0.4")Θ EXPECT `[1, 0, 0, 1, 0]`
+1 Θ                     EXPECT `1`
+0 Θ                     EXPECT `0`
+2 Θ                     EXPECT `0`
+"1.0" Θ                 EXPECT `1`
+"0.4" Θ                 EXPECT `0`
+1 0 2 "1.0" "0.4")Θ     EXPECT `[1, 0, 0, 1, 0]`
+102S"1.0")"0+1""foo")Θ  EXPECT `[[[1, 0, 0], 1], 1, 0]`
 
 // Trigonometric functions
 // tan
@@ -455,5 +465,23 @@
 45 45;.¿            EXPECT `45.0`
 45 24 30)45 5‚23).¿ EXPECT `[360, 45, 23]`
 45"foo".¿           EXPECT `45`
-"foo".¿             EXPECT `[]`
 45 0 9).¿           EXPECT `0`
+
+// Bijective base conversion
+10 2.h              EXPECT `122`
+5L"foo"S)4.h        EXPECT `[['1', '2', '3', '4', '11'], ['f', 'o', 'o']]`
+
+// Bijective decimal conversion
+122 2.H             EXPECT `10`
+11)4Ls«"foo"S)4.H   EXPECT `[[1, 2, 3, 4, 5], ['f', 'o', 'o']]`
+
+// log_b(a)
+1 4.n               EXPECT `0.0`
+3 4.n               EXPECT `0.7924812503605781`
+4 4.n               EXPECT `1.0`
+3L"foo"4L3+)4.n     EXPECT `[[0.0, 0.5, 0.7924812503605781], 'foo', [1.0, 1.160964047443681, 1.292481250360578, 1.403677461028802]]`
+
+// round_up(a)
+5;î                 EXPECT `3`
+5;(î                EXPECT `-2`
+3L4+3/"foo"2L4/)î   EXPECT `[[2, 2, 3], 'foo', [1, 1]]`

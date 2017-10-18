@@ -14,7 +14,7 @@
 
 // Nested ifs / nested loops in ifs
 1i0ië1i42ë13        EXPECT `42`
-1i0i13ë2 4LFD·}Oë42 EXPECT `6`
+1i0i13ë2 4FD·}Oë42  EXPECT `62`
 
 // Infinite close
 9LvyÈiyDF>]O        EXPECT `40`
