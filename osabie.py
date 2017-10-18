@@ -689,12 +689,8 @@ def run_program(commands,
             # pop a,b
             # push a+b 
             elif current_command == "+":
-                if stack:
-                    b = pop_stack(default="")
-                    a = pop_stack(default="")
-                else:
-                    a = pop_stack(default="")
-                    b = pop_stack(default="")
+                b = pop_stack(default="")
+                a = pop_stack(default="")
 
                 stack.append(vectorized_evaluation(
                     a, b, lambda a, b: a + b, ast_int_eval
@@ -1822,12 +1818,8 @@ def run_program(commands,
             # pop a,b
             # push 0-indexed index of b in a (-1 when not found)
             elif current_command == "k":
-                if stack:
-                    b = pop_stack()
-                    a = pop_stack()
-                else:
-                    a = pop_stack(default="")
-                    b = pop_stack(default="")
+                b = pop_stack(default="")
+                a = pop_stack(default="")
 
                 try:
                     if type(a) is list:
@@ -1879,12 +1871,8 @@ def run_program(commands,
             # pop a,b
             # push a in b
             elif current_command == "\u00e5":
-                if stack:
-                    b = pop_stack()
-                    a = pop_stack()
-                else:
-                    a = pop_stack(default="")
-                    b = pop_stack(default=0)
+                b = pop_stack(default=0)
+                a = pop_stack(default="")
 
                 if type(a) is list:
                     a = [str(c) for c in deep_flatten(a)]
@@ -2903,12 +2891,8 @@ def run_program(commands,
             # pop a,b
             # push concatenated(a, b)
             elif current_command == "\u00ab":
-                if len(stack) > 1:
-                    b = pop_stack()
-                    a = pop_stack()
-                else:
-                    a = pop_stack(default="")
-                    b = pop_stack(default="")
+                b = pop_stack(default="")
+                a = pop_stack(default="")
 
                 if type(a) is list and type(b) is list:
                     stack.append(a+b)
@@ -2923,12 +2907,8 @@ def run_program(commands,
             # pop a,b
             # push a.prepend(b)
             elif current_command == "\u00ec":
-                if len(stack) > 1:
-                    b = pop_stack()
-                    a = pop_stack()
-                else:
-                    a = pop_stack(default="")
-                    b = pop_stack(default="")
+                b = pop_stack(default="")
+                a = pop_stack(default="")
 
                 if type(a) is list and type(b) is list:
                     stack.append(b+a)
@@ -2943,12 +2923,8 @@ def run_program(commands,
             # pop a,b
             # push a x b (strings)
             elif current_command == "\u00d7":
-                if len(stack) > 1:
-                    b = pop_stack()
-                    a = pop_stack()
-                else:
-                    a = pop_stack(default="")
-                    b = pop_stack(default="")
+                b = pop_stack(default="")
+                a = pop_stack(default="")
 
                 stack.append(string_multiplication(a, b))
 
@@ -3056,12 +3032,8 @@ def run_program(commands,
             # pop a,b
             # push a with b filtered to the front
             elif current_command == "\u2020":
-                if len(stack) > 1:
-                    b = pop_stack()
-                    a = pop_stack()
-                else:
-                    a = pop_stack(default="")
-                    b = pop_stack(default="")
+                b = pop_stack(default="")
+                a = pop_stack(default="")
 
                 stack.append(filtered_to_the_front(a, b))
 
