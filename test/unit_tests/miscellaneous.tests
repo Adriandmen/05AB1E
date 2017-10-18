@@ -403,7 +403,7 @@ AA£                 EXPECT `abcdefghijklmnopqrstuvwxyz`
 // Only letters
 "abcd123"á           EXPECT `abcd`
 "abc12"S á           EXPECT `['a', 'b', 'c']`
-"abc")"def"))"gh1")á EXPECT `['abc', 'def']`
+"abc""def")"gh1")á   EXPECT `[['abc', 'def']]`
 
 // Cartesian product
 123 456âï           EXPECT `[14, 15, 16, 24, 25, 26, 34, 35, 36]`
@@ -508,7 +508,7 @@ AA£                 EXPECT `abcdefghijklmnopqrstuvwxyz`
 "ab12cd"þ           EXPECT `12`
 "abcde"þ            EXPECT`''`
 "ab12cd"123"3.14")þ EXPECT `['123']`
-123S"foo"42)þ       EXPECT `[['1', '2', '3'], ['42']]`
+123S"foo"42)þ       EXPECT `[['1', '2', '3'], '42']`
 
 // Insert
 123456 "a" 3ǝ       EXPECT `123a56`
@@ -567,6 +567,8 @@ AA£                 EXPECT `abcdefghijklmnopqrstuvwxyz`
 "abba""a"м          EXPECT `bb`
 "ab""b")"b"м        EXPECT `['a', '']`
 "ab""bc")"ba"¸м     EXPECT `['ab', 'bc']`
+5L;3;м              EXPECT `['0', '0', '', '20', '2']`
+5L;23;)3L;м         EXPECT `[['', '', '', '2.0', '2.5'], '1']`
 
 // Extend
 "abc"10∍            EXPECT `abcabcabca`

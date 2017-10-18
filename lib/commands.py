@@ -1000,24 +1000,6 @@ def zip_with(a, b):
     return result
 
 
-def remove_all(a, b):
-    if type(b) is not list:
-        b = str(b)
-
-    if type(a) is list:
-        result = []
-        for element in a:
-            for char in b:
-                element = element.replace(str(char), "")
-            result.append(element)
-        return result
-    else:
-        a = str(a)
-        for char in b:
-            a = a.replace(str(char), "")
-        return a
-
-
 def multi_split(a, b: list):
     if type(a) is not list:
         a = str(a)

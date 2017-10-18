@@ -78,8 +78,8 @@ K	= pop a,b    push a with no b's
 L	= pop a      push [1 .. a]
 M	=            push the largest number in the stack
 N	=            reserved for variables
-O	= pop a      push total sum (only on lists)
-P	= pop a      push total product (only on lists)
+O	= pop (a)    push total sum of a if a is list, else total sum of stack
+P	= pop (a)    push total product of a if a is list, else total product of stack
 Q	= pop a,b    push a == b (bool)
 R	= pop a      push reversed(a)
 S	= pop a      push all chars a seperate
@@ -246,7 +246,7 @@ z	= pop a      push 1 / a
 Ã 58	= pop a,b    push a.keep(b)
 Ä 59	= pop a      push abs(a)
 Å 60	= list commands
-Æ 61	= pop a      push reduced substraction a
+Æ 61	= pop a      push reduced_substraction(a) if a is list, else reduced_substraction(stack)
 Ç 62	= pop a      push ASCII value of a
 È 63	= pop a      push a % 2 == 0 (is even)
 É 64	= pop a      push a % 2 == 1 (is uneven)
@@ -284,7 +284,7 @@ z	= pop a      push 1 / a
 é 96	= pop a      push sorted a (key=length)
 ê 97    = pop a      push sorted_uniquified(a)
 ë 98	= else statement
-ì 99	= pop a,b    push a.prepend(b)
+ì 99	= pop a,b    push merged(b, a) if both are lists, else a.prepend(b)
 í 13	= pop a      push [reversed Q for Q in a] (short for €R)
 î 14	= pop a      push round_up(a)
 ï 18	= pop a      push int(a)

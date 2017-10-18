@@ -71,7 +71,7 @@ def get_input():
         a = a[:-3]
 
     if is_array(a):
-        a = ast.literal_eval(a)
+        a = apply_safe(ast.literal_eval, a)
 
     recent_inputs.append(a)
     return a
@@ -693,7 +693,7 @@ def run_program(commands,
                 a = pop_stack(default="")
 
                 stack.append(vectorized_evaluation(
-                    a, b, lambda a, b: a + b, ast_int_eval
+                    a, b, lambda a, b: a + b if type(a) is not str and type(b) is not str else str(a) + str(b), ast_int_eval
                 ))
 
             # Command: -
@@ -902,7 +902,18 @@ def run_program(commands,
             elif current_command == "\u043C":
                 b = pop_stack(default="")
                 a = pop_stack(default="")
-                stack.append(apply_safe(remove_all, a, b))
+
+                if type(b) is list:
+                    b = [str(x) for x in deep_flatten(b)]
+                else:
+                    b = [x for x in str(b)]
+
+                for i in b:
+                    a = single_vectorized_evaluation(
+                        a, lambda a: a.replace(i, ''), str
+                    )
+
+                stack.append(a)
 
             # Command: L
             # pop a
@@ -1195,7 +1206,7 @@ def run_program(commands,
                     a, lambda a: a + 1, ast_int_eval
                 ))
 
-            # Command: >
+            # Command: <
             # pop a
             # push a - 1
             elif current_command == "<":
@@ -1517,12 +1528,7 @@ def run_program(commands,
             # Command: E
             # get input
             elif current_command == "E":
-                a = get_input()
-
-                if type(a) is list:
-                    a = [apply_safe(ast_int_eval, x) for x in a]
-
-                stack.append(a)
+                stack.append(single_vectorized_evaluation(get_input(), ast_int_eval))
 
             # Command: )
             # wrap total stack to an array
@@ -1601,7 +1607,7 @@ def run_program(commands,
             elif current_command == "z":
                 a = pop_stack(default="")
                 stack.append(single_vectorized_evaluation(
-                    a, lambda a: "" if a == 0 else 1 / a, ast_int_eval))
+                    a, lambda a:  1 / a, ast_int_eval))
 
             # Command: U
             # pop a
@@ -1970,28 +1976,14 @@ def run_program(commands,
             # push only digits of a
             elif current_command == "\u00fe":
                 a = pop_stack(default="")
-
-                if type(a) is list:
-                    stack.append(vectorized_aggregator(
-                        a, lambda acc, val: acc + [val] if is_digit_value(val) else acc, str, []
-                    ))
-                else:
-                    stack.append(''.join(c for c in a if is_digit_value(c)))
+                stack.append(vectorized_filter(a, is_digit_value, str))
 
             # Command: á
             # pop a
             # push only letters of a
             elif current_command == "\u00e1":
                 a = pop_stack(default="")
-
-                if type(a) is list:
-                    temp_list = []
-                    for Q in deep_flatten(a):
-                        if is_alpha_value(Q):
-                            temp_list.append(Q)
-                    stack.append(temp_list)
-                else:
-                    stack.append(''.join(c for c in a if is_alpha_value(c)))
+                stack.append(vectorized_filter(a, is_alpha_value, str))
 
             # Command: .u
             # pop a
