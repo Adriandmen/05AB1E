@@ -49,6 +49,7 @@
 // Ï filtering
 1234S 1001S Ï ï     EXPECT `[1, 4]`
 1234S 10S   Ï ï     EXPECT `[1]`
+1234 1001Ïï         EXPECT `14`
 
 // [0 .. N] Lists
 5Ý                  EXPECT `[0, 1, 2, 3, 4, 5]`

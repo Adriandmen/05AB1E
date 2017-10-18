@@ -163,7 +163,6 @@ def convert_to_base_arbitrary(n, base):
 
 
 def convert_from_base(n, base):
-
     digits = "\u0030\u0031\u0032\u0033\u0034\u0035\u0036\u0037\u0038\u0039" \
              "\u0041\u0042\u0043\u0044\u0045\u0046\u0047\u0048\u0049\u004A" \
              "\u004B\u004C\u004D\u004E\u004F\u0050\u0051\u0052\u0053\u0054" \
@@ -204,7 +203,9 @@ def convert_from_base(n, base):
 
 
 def convert_from_base_arbitrary(n, base):
-    n = str(int(n))[::-1]
+    print("n before: ", n)
+    n = str(n)[::-1]
+    print("n after: ", n)
     r = 0
     range_v = 0
 
@@ -212,6 +213,7 @@ def convert_from_base_arbitrary(n, base):
         r += int(Q) * base ** range_v
         range_v += 1
 
+    print("returned: ", r)
     return r
 
 
@@ -393,21 +395,6 @@ def get_all_substrings(input_string):
     return [
         input_string[i:j+1] for i in range(length) for j in range(i, length)
     ]
-
-def command_lcm(numbers):
-    if 0 in numbers:
-        return 0
-    try:
-        return reduce(lcm, numbers)
-    except:
-        return 1
-
-
-def lcm(a, b):
-    if a == 0 or b == 0:
-        return 0
-    return abs(a) * abs(b) // command_gcd([a, b])
-
 
 def floatify(string):
     # force an exception if not a number
@@ -844,13 +831,11 @@ def intersected_mirror(a):
 
 
 def transliterate(string: str, prev, next):
-
     processed = ""
 
     for character in string:
-
         has_replaced = False
-        for Q in range(0, len(prev)):
+        for Q in range(min(len(prev), len(next))):
             if character == prev[Q]:
                 processed += next[Q]
                 has_replaced = True
@@ -967,9 +952,6 @@ def closest_to(a, b):
             except:
                 # fallback to string distances if there is a string in a
                 b = str(b)
-                a = [str(x) for x in a]
-        else:
-            a = [str(x) for x in a]
     else:
         a = str(a)
 

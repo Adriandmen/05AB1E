@@ -130,10 +130,17 @@ def single_vectorized_evaluation(a, function, pre_function=None):
 # Aggregated value will be at the first non-list valid value 
 # encountered in the input
 def vectorized_aggregator(a, function, pre_function=None, start=None):
-    result = start
     index = -1
     subresults = []
     values = []
+
+    if start is list:
+        result = list(start)
+    else:
+        result = start
+
+    if type(a) is not list:
+        a = str(a)
 
     for i in range(len(a)):
         if type(a[i]) is list:

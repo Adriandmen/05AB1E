@@ -194,11 +194,13 @@ r)                  EXPECT `[]`
 
 
 // Transliteration
-"abcde" "cd" "dc"‡  EXPECT `abdce`
-"abcde" "cd"S"dc"S‡ EXPECT `abdce`
-"abcde" "cd"S"dc"‡  EXPECT `abdce`
-"abcde" "cd" "dc"S‡ EXPECT `abdce`
-"!" "!!""23"‡       EXPECT `2`
+"abcde" "cd" "dc"‡         EXPECT `abdce`
+"abcde" "cd"S"dc"S‡        EXPECT `abdce`
+"abcde" "cd"S"dc"‡         EXPECT `abdce`
+"abcde" "cd" "dc"S‡        EXPECT `abdce`
+"!" "!!""23"‡              EXPECT `2`
+"fuu""btr")"btz")"ut""oa"‡ EXPECT `[['foo', 'bar'], 'baz']`
+1234;6 8‡                  EXPECT `817.0`
 
 // https://codegolf.stackexchange.com/questions/135802/
 "pull!"94Ýn95%32+çžQ‡  EXPECT `HC33!`
@@ -595,3 +597,15 @@ AA£                 EXPECT `abcdefghijklmnopqrstuvwxyz`
 "foo"Sʒ'oQ            EXPECT `['o', 'o']`
 "foo"ʒ'oQ             EXPECT `oo`
 "foo"Sʒ\              EXPECT `[]`
+
+// surround a with b
+"foo""bar".ø          EXPECT `barfoobar`
+"foo""bar"S.ø         EXPECT `rabfoobar`
+"foo")"bar".ø         EXPECT `['bar', 'foo', 'bar']`
+"foo")"bar"S.ø        EXPECT `['r', 'a', 'b', 'foo', 'b', 'a', 'r']`
+
+// levenshtein distance
+"foo""bar".L          EXPECT `3`
+"foobar""foobao".L    EXPECT `1`
+"foo"S"zoo"S.L        EXPECT `[1, 0, 0]`
+
