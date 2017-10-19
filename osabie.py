@@ -611,16 +611,20 @@ def run_program(commands,
             # push a[0]
             elif current_command == "\u043D":
                 a = pop_stack(default="")
-                if type(a) is list:
-                    stack.append(a[0])
-                else:
-                    stack.append(str(a)[0])
+                try:
+                    if type(a) is list:
+                        stack.append(a[0])
+                    else:
+                        stack.append(str(a)[0])
+                except:
+                    stack.append(a)
 
             # Command: θ
             # pop a
             # push a[-1]
             elif current_command == "\u03B8":
                 a = pop_stack(default="")
+                
                 if type(a) is list:
                     stack.append(a[-1])
                 else:
@@ -3497,6 +3501,10 @@ def run_program(commands,
 
                 if type(a) is not list:
                     a = str(a)
+
+                if not len(a):
+                    stack.append(a)
+                    continue
 
                 if type(b) is list:
                     temp_list = []
