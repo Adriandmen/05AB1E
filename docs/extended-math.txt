@@ -38,7 +38,7 @@
 ÅD	=
 ÅE	=
 ÅF	= List of Fibonacci numbers
-ÅG	=
+ÅG	= List of Lucas numbers
 ÅH	=
 ÅI	=
 ÅJ	=
@@ -70,7 +70,7 @@
 Åd	=
 Åe	=
 Åf	= Compute the nth fibonacci term (0: 1, 1: 1)
-Åg	=
+Åg	= Compute the nth lucas term (0: 2, 1: 1)
 Åh	=
 Åi	=
 Åj	=
