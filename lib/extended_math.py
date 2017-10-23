@@ -7,6 +7,7 @@ sys.setrecursionlimit(5000)
 
 # Global dicts for recursive methods
 pre_fibonacci = {0: 0, 1: 1}
+pre_lucas = {0: 2, 1: 1}
 
 
 class MethodAttribute:
@@ -59,6 +60,22 @@ def fibonacci(number):
 
     pre_fibonacci[number] = fibonacci(number - 1) + fibonacci(number - 2)
     return pre_fibonacci[number]
+
+
+def lucas(number):
+    """
+    Calculates the <number>th term of the Lucas sequence
+    :param number: The term that needs to be calculated of the Lucas sequence
+    :return: The corresponding term of the Lucas sequence
+    """
+    if number in pre_lucas:
+        return pre_lucas[number]
+
+    if number - 500 > max(pre_lucas):
+        pre_lucas[number - 500] = lucas(number - 500)
+
+    pre_lucas[number] = lucas(number - 1) + lucas(number - 2)
+    return pre_lucas[number]
 
 
 def is_square(number):
@@ -175,7 +192,17 @@ extended_commands = {
         lambda x: fibonacci(int(x)),
         arity=1
     ),
-    
+
+    "ÅG": MethodAttribute(
+        lambda x: list_until(lucas, int(x), lambda a: a > 0),
+        arity=1
+    ),
+
+    "Åg": MethodAttribute(
+        lambda x: lucas(int(x)),
+        arity=1
+    ),
+
     "Åp": MethodAttribute(
         lambda x: first_n_primes(int(x)),
         arity=1
