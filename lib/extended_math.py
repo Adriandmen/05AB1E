@@ -78,6 +78,16 @@ def lucas(number):
     return pre_lucas[number]
 
 
+def polygonal_number(sides, n):
+    """
+    Calculates the nth-order polygonal number with sides sides
+    :param sides: Number of sides
+    :param n: The order of the polygonal number
+    :return: The corresponding polygonal number
+    """
+    return (n**2*(sides - 2) - n*(sides - 4)) // 2
+
+
 def is_square(number):
     """
     Check whether a number is a squared number or not without precision errors
@@ -221,6 +231,11 @@ extended_commands = {
     "ÅT": MethodAttribute(
         lambda x: list_until(lambda a: a * (a + 1) // 2, int(x)),
         arity=1
+    ),
+
+    "ÅU": MethodAttribute(
+        lambda sides, n: polygonal_number(ast_int_eval(sides), ast_int_eval(n)),
+        arity=2
     ),
 
     "Å²": MethodAttribute(
