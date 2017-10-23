@@ -1106,7 +1106,36 @@ def run_program(commands,
             # push 1 if all equal else 0
             elif current_command == "\u00cb":
                 a = pop_stack(default="")
-                stack.append(all_equal(a))                
+
+                if type(a) is not list:
+                    a = str(a)
+
+                if not len(a):
+                    stack.append(1)
+                    continue
+
+                # try to convert floats to int first so that
+                # 1.0 and 1 are considered equal
+                converted = []
+                for item in a:
+                    item = str(item)
+                    try:
+                        item = float(item)
+                    except:
+                        pass
+                    else:
+                        if int(item) == item:
+                            item = int(item)
+
+                    converted.append(item)
+
+                compare = converted[0]
+                result = True
+
+                for item in converted:
+                    result = result and item == compare
+
+                stack.append(int(result))
 
             # Command: ƒ
             # pop a

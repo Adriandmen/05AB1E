@@ -1185,27 +1185,3 @@ def bijective_decimal_conversion(a, from_base):
     for Q in a:
         number = number * from_base + int(Q)
     return number
-
-def all_equal(a):
-    if type(a) is not list:
-        a = [x for x in str(a)]
-
-    result = []
-
-    if len(a):
-        idx = -1
-        compare = None
-        for i in range(len(a)):
-            if type(a[i]) is list:
-                result.append(all_equal(a[i]))
-            else:
-                if compare is None:
-                    compare = str(a[i])
-                    idx = len(result)
-                    result.append(1)
-                elif str(a[i]) != compare:
-                    result[idx] = 0
-    else:
-        result.append(1)
-
-    return result if len(result) > 1 else result[0]

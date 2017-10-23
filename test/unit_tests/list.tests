@@ -10,7 +10,9 @@
 1234ï Ë	              EXPECT `0`
 1111ï Ë	              EXPECT `1`
 1   ï Ë	              EXPECT `1`
-'o···2ô3L)1111"foo")Ë EXPECT `[[1, 0], 0]`
+2LÐ)Ë                 EXPECT `1`
+2;1ï'1)Ë              EXPECT `1`
+3;1)Ë                 EXPECT `0`
 
 // Largest number of stack
 2 3 4M              EXPECT `4`
