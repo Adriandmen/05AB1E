@@ -421,7 +421,7 @@ AA£                 EXPECT `abcdefghijklmnopqrstuvwxyz`
 123456Sï 3ä         EXPECT `[[1, 2], [3, 4], [5, 6]]`
 8L7ä                EXPECT `[[1, 2], [3], [4], [5], [6], [7], [8]]`
 
-// A in B
+// B in A
 1234 4 å            EXPECT `1`
 1234 5 å            EXPECT `0`
 1234 45S å          EXPECT `[1, 0]`
@@ -429,6 +429,17 @@ AA£                 EXPECT `abcdefghijklmnopqrstuvwxyz`
 1234S5 å            EXPECT `0`
 1234S45S å          EXPECT `[1, 0]`
 "foobar"4ï)45Så     EXPECT `[1, 0]`
+12 23 34) 34å       EXPECT `1`
+
+// B in A (vectorized)
+1234 4 .å           EXPECT `1`
+1234 5 .å           EXPECT `0`
+1234 45S .å         EXPECT `[1, 0]`
+1234S4 .å           EXPECT `[0, 0, 0, 1]`
+1234S5 .å           EXPECT `[0, 0, 0, 0]`
+1234S45S .å         EXPECT `[1, 0]`
+"foobar"4ï)45S.å    EXPECT `[1, 0]`
+12 23 34) 34.å      EXPECT `[0, 0, 1]`
 
 // Powerset
 123æ                EXPECT `['', '1', '2', '3', '12', '13', '23', '123']`

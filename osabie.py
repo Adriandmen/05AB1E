@@ -1923,6 +1923,24 @@ def run_program(commands,
                 else:
                     stack.append(int(str(b) in a))
 
+            # Command: .å
+            # pop a,b
+            # push a in b (vectorized)
+            elif current_command == ".\u00e5":
+                b = pop_stack(default=0)
+                a = pop_stack(default="")
+
+                if type(b) is list:
+                    a = [str(x) for x in deep_flatten(a)] if type(a) is list else str(a)
+
+                    stack.append(single_vectorized_evaluation(
+                        b, lambda b: int(b in a), str
+                    ))
+                else:
+                    stack.append(vectorized_evaluation(
+                        a, b, lambda a, b: int(b in a), str
+                    ))
+
             # Command: v
             # pop a
             # range loop: for y in a (y = string, N = index)

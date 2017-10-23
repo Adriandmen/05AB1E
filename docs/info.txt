@@ -277,7 +277,7 @@ z	= pop a      push 1 / a
 â 89	= pop a,b    push cartesian product
 ã 90	= pop (a,)b  push cartesian product of b.repeat(2) if b is list, else cartesian product of a.repeat(b)
 ä 91	= pop a,b    push a sliced into b pieces
-å 92	= pop a,b    push a in b
+å 92	= pop a,b    push b in a
 æ 93	= pop a      push powerset(a)
 ç 94	= pop a      push char a
 è 95	= pop a,b    push a[b]
@@ -308,6 +308,7 @@ z	= pop a      push 1 / a
 
 .€	= pop a      debug printer (default encoding, fallbacks on cp1252)
 .ä	= pop a      debug printer (cp1252)
+.å      = pop a,b    push b in a (vectorized)
 .0	= throw a division by zero error
 .A      = pop a      push acronymified a
 .b	= pop a      push letterified(a)
