@@ -69,6 +69,8 @@
 6 6ÅU              EXPECT `66`
 10 3ÅU             EXPECT `55`
 3 10ÅU             EXPECT `27`
+3456S3ÅU           EXPECT `[6, 10, 15, 21]`
+3456SDÅU           EXPECT `[6, 16, 35, 66]`
 
 // Is square
 0Å²                 EXPECT `1`
