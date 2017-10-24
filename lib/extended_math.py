@@ -85,7 +85,7 @@ def polygonal_number(sides, n):
     :param n: The order of the polygonal number
     :return: The corresponding polygonal number
     """
-    return (n**2*(sides - 2) - n*(sides - 4)) // 2
+    return (n ** 2 * (sides - 2) - n * (sides - 4)) // 2
 
 
 def is_square(number):
