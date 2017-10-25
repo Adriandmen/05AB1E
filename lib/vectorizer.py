@@ -1,5 +1,19 @@
 from lib.commands import *
 
+def apply_pre_function(pre_function, value):
+    result = value
+
+    if pre_function is not None:
+        try:
+            if type(value) is list:
+                result = [apply_safe(pre_function, x) if type(x) is not list else x for x in value]
+            else:
+                result = apply_safe(pre_function, value)
+        except:
+            pass
+
+    return result
+
 def vectorized_evaluation(a, b, function, pre_function=None):
     """
     Uses the given function in the form of a lambda and produces a vectorized result if
@@ -12,16 +26,8 @@ def vectorized_evaluation(a, b, function, pre_function=None):
     """
 
     try:
-        if pre_function is not None:
-            if type(a) is list:
-                a = [apply_safe(pre_function, x) if type(x) is not list else x for x in a]
-            else:
-                a = apply_safe(pre_function, a)
-
-            if type(b) is list:
-                b = [apply_safe(pre_function, x) if type(x) is not list else x for x in b]
-            else:
-                b = apply_safe(pre_function, b)
+        a = apply_pre_function(pre_function, a)
+        b = apply_pre_function(pre_function, b)
 
         # When both are lists
         if type(a) is list and type(b) is list:
@@ -88,13 +94,8 @@ def vectorized_evaluation(a, b, function, pre_function=None):
 
 
 def single_vectorized_evaluation(a, function, pre_function=None):
-
     try:
-        if pre_function is not None:
-            if type(a) is list:
-                a = [apply_safe(pre_function, x) if type(x) is not list else x for x in a]
-            else:
-                a = apply_safe(pre_function, a)
+        a = apply_pre_function(pre_function, a)
 
         if type(a) is list:
             vectorized_result = []
@@ -134,10 +135,7 @@ def vectorized_aggregator(a, function, pre_function=None, start=None):
     subresults = []
     values = []
 
-    if start is list:
-        result = list(start)
-    else:
-        result = start
+    result = list(start) if start is list else start
 
     if type(a) is not list:
         a = str(a)
@@ -149,20 +147,17 @@ def vectorized_aggregator(a, function, pre_function=None, start=None):
             try:
                 if pre_function is not None:
                     a[i] = pre_function(a[i])
-            except: pass
-            else:
                 if index == -1:
                     index = i
                 if result is None:
                     result = a[i]
                 else:
                     values.append(a[i])
+            except: 
+                pass
 
     for i in values:
-        try:
-            result = function(result, i)
-        except:
-            pass
+        result = apply_safe(function, result, i)
 
     if subresults:
         if index > -1:
@@ -174,21 +169,13 @@ def vectorized_aggregator(a, function, pre_function=None, start=None):
 # Vectorized filter
 # Keep only elements of a where function(a) is truthy
 def vectorized_filter(a, function, pre_function=None):
-
-    if pre_function is not None:
-        if type(a) is list:
-            a = [apply_safe(pre_function, x) if type(x) is not list else x for x in a]
-        else:
-            a = apply_safe(pre_function, a)
+    a = apply_pre_function(pre_function, a)
 
     vectorized_result = []
     for element in a:
         if type(element) is list:
-            vectorized_result.append(
-                vectorized_filter(element, function, pre_function)
-            )
-        else:
-            if function(element):
-                vectorized_result.append(element)
+            vectorized_result.append(vectorized_filter(element, function, pre_function))
+        elif function(element):
+            vectorized_result.append(element)
 
     return vectorized_result if type(a) is list else ''.join(vectorized_result)
