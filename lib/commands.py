@@ -132,7 +132,7 @@ def convert_to_base_arbitrary(n, base):
         return [0]
 
     if n > 0 and base == 1:
-        return "0" * n
+        return [0] * n
 
     s = []
     if base > 0:
