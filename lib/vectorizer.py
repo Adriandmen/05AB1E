@@ -1,18 +1,13 @@
 from lib.commands import *
 
 def apply_pre_function(pre_function, value):
-    result = value
-
     if pre_function is not None:
-        try:
-            if type(value) is list:
-                result = [apply_safe(pre_function, x) if type(x) is not list else x for x in value]
-            else:
-                result = apply_safe(pre_function, value)
-        except:
-            pass
+        if type(value) is list:
+            value = [apply_safe(pre_function, x) if type(x) is not list else x for x in value]
+        else:
+            value = apply_safe(pre_function, value)
 
-    return result
+    return value
 
 def vectorized_evaluation(a, b, function, pre_function=None):
     """
