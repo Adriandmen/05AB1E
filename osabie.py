@@ -60,6 +60,7 @@ DATE = "14:37 - May 9, 2016"
 current_canvas = {}
 current_cursor = [0, 0]
 
+
 def get_input():
     a = input()
 
@@ -76,11 +77,13 @@ def get_input():
     recent_inputs.append(a)
     return a
 
+
 def opt_input():
     try:
         return get_input()
     except:
         return recent_inputs[-1]
+
 
 def is_array(array):
     if not array:
@@ -111,6 +114,7 @@ def pop_stack(default=None):
     if not errored:
         recent_inputs.append(a)
     return a
+
 
 def get_block_statement(commands, pointer_position):
     statement = ""
@@ -2195,7 +2199,9 @@ def run_program(commands,
             # push reverse uniquified a
             elif current_command == "\u00da":
                 a = pop_stack(default="")
-                stack.append(uniquify(a)[::-1])
+                if type(a) is int:
+                    a = str(a)
+                stack.append(uniquify(a[::-1])[::-1])
 
             # Command: Û
             # pop a,b
@@ -3304,7 +3310,6 @@ def run_program(commands,
                 stack.append(vectorized_aggregator(
                     a, lambda acc, val: abs(acc) * abs(val) // fractions.gcd(acc, val) if acc and val else 0, ast_int_eval
                 ))
-
 
             # Command: .ø
             # pop a,b

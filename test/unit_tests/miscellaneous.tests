@@ -384,8 +384,8 @@ AA£                 EXPECT `abcdefghijklmnopqrstuvwxyz`
 // Reverse uniquified
 1122332211Ú         EXPECT `321`
 1122332211SÚï       EXPECT `[3, 2, 1]`
-112232211"foo")SÚï  EXPECT `['o', 'f', 3, 2, 1]`
-0 2;1)Úï            EXPECT `[1, 0]`
+112232211"foo")SÚï  EXPECT `[3, 2, 1, 'f', 'o']`
+0 2;1)Úï            EXPECT `[0, 1]`
 2LD3L2L)Ú           EXPECT `[[1, 2, 3], [1, 2]]`
 
 // Trim leading elements
