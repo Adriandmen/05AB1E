@@ -3160,7 +3160,7 @@ def run_program(commands,
 
             # Command: ó
             # pop a
-            # push inclusive round down a
+            # push round_down(a)
             elif current_command == "\u00f3":
                 a = pop_stack(default="")
                 stack.append(single_vectorized_evaluation(
