@@ -2969,10 +2969,21 @@ def run_program(commands,
 
             # Command: ò
             # pop a
-            # push inclusive round up a
+            # push a rounded to nearest integer
             elif current_command == "\u00f2":
                 a = pop_stack(default="")
-                stack.append(single_vectorized_evaluation(a, lambda a: int(a)+1))
+                stack.append(single_vectorized_evaluation(a, round, ast_int_eval))
+
+            # Command: .ò
+            # pop a,b
+            # round a with b digits precision (bankers rounding)
+            elif current_command == ".\u00f2":
+                b = pop_stack(default="")
+                a = pop_stack(default="")
+
+                stack.append(vectorized_evaluation(
+                    a, b, lambda a, b: round(a, b), ast_int_eval
+                ))
 
             # Command: ð
             # push a space character
@@ -3153,7 +3164,7 @@ def run_program(commands,
             elif current_command == "\u00f3":
                 a = pop_stack(default="")
                 stack.append(single_vectorized_evaluation(
-                    a, lambda a: int(a) - int(int(a) == float(a))
+                    a, math.floor, ast_int_eval
                 ))
 
             # Command: ?

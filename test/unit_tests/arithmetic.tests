@@ -445,12 +445,6 @@
 "1E-05"Þ             EXPECT `0.00001`
 "314E13"Þ            EXPECT `3140000000000000.0`
 
-// Inclusive round up
-4;ò                  EXPECT `3`
-3;ò                  EXPECT `2`
-3L;2L)ò              EXPECT `[[1, 2, 2], [2, 3]]`
-"bar"3L;"foo")ò      EXPECT `['bar', [1, 2, 2], 'foo']`
-
 // Push is_int(a)
 "foo".ï              EXPECT `0`
 1.ï                  EXPECT `1`
@@ -485,3 +479,23 @@
 5;î                 EXPECT `3`
 5;(î                EXPECT `-2`
 3L4+3/"foo"2L4/)î   EXPECT `[[2, 2, 3], 'foo', [1, 1]]`
+"1.2"î              EXPECT `2`
+
+// round_down(a)
+5;ó                 EXPECT `2`
+5;(ó                EXPECT `-3`
+3L4+3/"foo"2L4/)ó   EXPECT `[[1, 2, 2], 'foo', [0, 0]]`
+"1.8"ó              EXPECT `1`
+
+// round_nearest(a)
+7;ò                 EXPECT `4`
+5;ò                 EXPECT `2`
+5;(ò                EXPECT `-2`
+3L4+3/"foo"2L4/)ò   EXPECT `[[2, 2, 2], 'foo', [0, 0]]`
+"1.2"ò              EXPECT `1`
+
+// round a to b digits
+5;;;2.ò             EXPECT `0.62`
+1 3/3.ò             EXPECT `0.333`
+5;(0.ò              EXPECT `-2.0`
+3L4+3/"foo"2L4/)2.ò EXPECT `[[1.67, 2.0, 2.33], 'foo', [0.25, 0.5]]`
