@@ -3,12 +3,19 @@ import math
 import fractions
 import ast
 import random
+import re
 from functools import reduce
 from itertools import count
+from difflib import SequenceMatcher
 
 letters = "abcdefghijklmnopqrstuvwxyz"
 numbers = "0123456789"
 
+def apply_safe(function, *args):
+    try:
+        return function(*args)
+    except:
+        return args[0]
 
 def ast_int_eval(number):
     a = str(number)
@@ -18,7 +25,6 @@ def ast_int_eval(number):
         a = int(a)
 
     return a
-
 
 def is_digit_value(value):
     value = str(value)
@@ -30,7 +36,7 @@ def is_digit_value(value):
 
 
 def flatten(x):
-    if isinstance(x, collections.Iterable):
+    if type(x) is list:
         return [a for i in x for a in flatten(i)]
     return [x]
 
@@ -45,6 +51,10 @@ def deep_flatten(S):
 
 def is_alpha_value(value):
     value = str(value)
+    
+    if len(value) == 0:
+        return 0
+
     try:
         for X in value:
             if not X.lower() in letters:
@@ -56,7 +66,7 @@ def is_alpha_value(value):
 
 def convert_to_base(n, base):
     """
-    convert positive decimal integer n to equivalent in another base(2-36)
+    convert positive decimal integer n to equivalent in another base(1-255)
     """
 
     digits = "\u0030\u0031\u0032\u0033\u0034\u0035\u0036\u0037\u0038\u0039" \
@@ -86,19 +96,16 @@ def convert_to_base(n, base):
              "\u00F1\u00F2\u00F3\u00F4\u00F5\u00F6\u00F7\u00F8\u00F9\u00FA" \
              "\u00FB\u00FC\u00FD\u00FE\u00FF"
 
-    if int(n) == 0:
-        return "0"
+    n = int(n)
+    base = int(base)
 
-    try:
-        n = int(n)
-        base = int(base)
-    except:
-        return ""
+    if n == 0:
+        return "0"
 
     if n < 0 or base < 2 or base > 255:
         if n > 0 and base == 1:
             return "0" * n
-        return ""
+        return str(n)
 
     s = ""
     while True:
@@ -118,15 +125,11 @@ def convert_to_base(n, base):
 
 
 def convert_to_base_arbitrary(n, base):
+    n = int(n)
+    base = int(base)
 
-    if int(n) == 0:
+    if n == 0:
         return [0]
-
-    try:
-        n = int(n)
-        base = int(base)
-    except:
-        return ""
 
     if n > 0 and base == 1:
         return "0" * n
@@ -160,7 +163,6 @@ def convert_to_base_arbitrary(n, base):
 
 
 def convert_from_base(n, base):
-
     digits = "\u0030\u0031\u0032\u0033\u0034\u0035\u0036\u0037\u0038\u0039" \
              "\u0041\u0042\u0043\u0044\u0045\u0046\u0047\u0048\u0049\u004A" \
              "\u004B\u004C\u004D\u004E\u004F\u0050\u0051\u0052\u0053\u0054" \
@@ -189,6 +191,7 @@ def convert_from_base(n, base):
              "\u00FB\u00FC\u00FD\u00FE\u00FF"
 
     n = str(n)[::-1]
+    base = int(base)
     r = 0
     range_v = 0
 
@@ -200,8 +203,7 @@ def convert_from_base(n, base):
 
 
 def convert_from_base_arbitrary(n, base):
-
-    n = n[::-1]
+    n = str(n)[::-1]
     r = 0
     range_v = 0
 
@@ -213,6 +215,11 @@ def convert_from_base_arbitrary(n, base):
 
 
 def is_prime(n):
+    try:
+        n = int(n)
+    except:
+        return 0
+
     if n == 2 or n == 3:
         return 1
     if n < 2 or n % 2 == 0 or n % 3 == 0:
@@ -381,39 +388,28 @@ def get_index_of_prime(n):
     return len(list(takewhile(lambda x: x <= n, g)))-1
 
 def get_all_substrings(input_string):
+    if type(input_string) is not list:
+        input_string = str(input_string)
+        
     length = len(input_string)
     return [
         input_string[i:j+1] for i in range(length) for j in range(i, length)
     ]
 
-
-def command_gcd(numbers):
-    if 0 in numbers:
-        return 0
-    try:
-        return reduce(fractions.gcd, numbers)
-    except:
-        return 1
-
-
-def command_lcm(numbers):
-    if 0 in numbers:
-        return 0
-    try:
-        return reduce(lcm, numbers)
-    except:
-        return 1
-
-
-def lcm(a, b):
-    if a == 0 or b == 0:
-        return 0
-    return abs(a) * abs(b) // command_gcd([a, b])
-
-
 def floatify(string):
-    a = str(string)
+    # force an exception if not a number
+    ast_int_eval(string)
+
+    a = str(string).lower()
     is_neg = False
+
+    # handling scientific notation
+    if "e" in a:
+        if "e-" in a:
+            dec = re.search("e-([0-9]+)", a)
+            a = ("%." + dec.group(1) + "f") % float(a)
+        else:
+            a = "%f" % float(a)
 
     if a[0] == "-":
         is_neg = True
@@ -452,7 +448,7 @@ def is_float_value(string):
 
 
 def euler_totient(n):
-
+    n = int(n)
     if is_prime(n):
         return n - 1
 
@@ -466,24 +462,37 @@ def euler_totient(n):
 
 
 def chunk_divide(seq, num):
+    num = ast_int_eval(num)
+    avg = len(seq) / float(num)
+    is_list = type(seq) is list
 
-    if type(num) is list:
-        raise Exception
-
-    if type(seq) is int:
+    if not is_list:
         seq = str(seq)
 
-    seq = seq[::-1]
+    if avg < 1: 
+        return seq
+    # special case: there are more parts than possible groupings
+    elif avg < 2:    
+        seq = [[x] for x in seq]
 
-    avg = len(seq) / float(num)
-    out = []
-    last = 0.0
+        idx = 0
+        while len(seq) > num:
+            seq.insert(idx, seq.pop(idx) + seq.pop(idx))
+            idx = idx + 1 if idx < len(seq) - 1 else 0
 
-    while last < len(seq):
-        out.append(seq[int(last):int(last + avg)][::-1])
-        last += avg
+        if not is_list:
+            seq = [''.join(x) for x in seq]
+        return seq
+    else:
+        seq = seq[::-1]
+        out = []
+        last = 0.0
 
-    return out[::-1]
+        while last < len(seq):
+            out.append(seq[int(last):int(last + avg)][::-1])
+            last += avg
+
+        return out[::-1]
 
 
 def minimum_edit_distance(s1, s2):
@@ -510,20 +519,17 @@ def infinite_replace(object1, object2, object3):
 
     if type(object1) is list:
         object1 = [str(x) for x in object1]
-
-    elif type(object1) is int:
+    elif type(object1) is not list:
         object1 = str(object1)
 
     if type(object2) is list:
         object2 = [str(x) for x in object2]
-
-    elif type(object2) is int:
+    elif type(object2) is not list:
         object2 = str(object2)
 
     if type(object3) is list:
         object3 = [str(x) for x in object3]
-
-    elif type(object3) is int:
+    elif type(object3) is not list:
         object3 = str(object3)
 
     type1 = type(object1)
@@ -604,20 +610,17 @@ def single_replace(object1, object2, object3):
 
     if type(object1) is list:
         object1 = [str(x) for x in object1]
-
-    elif type(object1) is int:
+    else:
         object1 = str(object1)
 
     if type(object2) is list:
         object2 = [str(x) for x in object2]
-
-    elif type(object2) is int:
+    else:
         object2 = str(object2)
 
     if type(object3) is list:
         object3 = [str(x) for x in object3]
-
-    elif type(object3) is int:
+    else:
         object3 = str(object3)
 
     type1 = type(object1)
@@ -674,20 +677,17 @@ def first_replace(object1, object2, object3):
 
     if type(object1) is list:
         object1 = [str(x) for x in object1]
-
-    elif type(object1) is int:
+    elif type(object1) is not list:
         object1 = str(object1)
 
     if type(object2) is list:
         object2 = [str(x) for x in object2]
-
-    elif type(object2) is int:
+    elif type(object2) is not list:
         object2 = str(object2)
 
     if type(object3) is list:
         object3 = [str(x) for x in object3]
-
-    elif type(object3) is int:
+    elif type(object3) is not list:
         object3 = str(object3)
 
     type1 = type(object1)
@@ -752,7 +752,7 @@ def divisors_of_number(n):
 
 
 def insert(object1, character, location):
-    if type(object1) is int:
+    if type(object1) is not list:
         object1 = str(object1)
 
     location = int(location)
@@ -763,15 +763,12 @@ def insert(object1, character, location):
     if type(object1) is list:
         return object1[0:location] + [character] + object1[location + 1:]
 
-    return object1[0:location] + character + object1[location + 1:]
+    return object1[0:location] + str(character) + object1[location + 1:]
 
 
 def mirror(a):
-    if type(a) is int:
-        a = str(a)
-
-    if type(a) is str:
-        a = a.split("\n")
+    if type(a) is not list:
+        a = str(a).split("\n")
 
     result = []
     for element in a:
@@ -783,11 +780,8 @@ def mirror(a):
 
 
 def vertical_mirror(a):
-    if type(a) is int:
-        a = str(a)
-
-    if type(a) is str:
-        a = a.split("\n")
+    if type(a) is not list:
+        a = str(a).split("\n")
 
     result = []
     for element in a:
@@ -797,15 +791,12 @@ def vertical_mirror(a):
         reversed_element = transliterate(element,  "\\/", "/\\")
         result.append(reversed_element)
 
-    return result
+    return '\n'.join(result)
 
 
 def vertical_intersected_mirror(a):
-    if type(a) is int:
-        a = str(a)
-
-    if type(a) is str:
-        a = a.split("\n")
+    if type(a) is not list:
+        a = str(a).split("\n")
 
     result = []
     for element in a:
@@ -815,15 +806,12 @@ def vertical_intersected_mirror(a):
         reversed_element = transliterate(element,  "\\/", "/\\")
         result.append(reversed_element)
 
-    return result
+    return '\n'.join(result)
 
 
 def intersected_mirror(a):
-    if type(a) is int:
-        a = str(a)
-
-    if type(a) is str:
-        a = a.split("\n")
+    if type(a) is not list:
+        a = str(a).split("\n")
 
     result = []
     for element in a:
@@ -835,13 +823,11 @@ def intersected_mirror(a):
 
 
 def transliterate(string: str, prev, next):
-
     processed = ""
 
     for character in string:
-
         has_replaced = False
-        for Q in range(0, len(prev)):
+        for Q in range(min(len(prev), len(next))):
             if character == prev[Q]:
                 processed += next[Q]
                 has_replaced = True
@@ -901,20 +887,15 @@ def string_multiplication(a, b):
 
 
 def even_divide(a, b):
+    b = int(ast_int_eval(b))
 
-    if type(b) is list:
-        raise Exception
-
-    b = int(b)
-
-    if type(a) is int:
+    if type(a) is not list:
         a = str(a)
 
     result = []
     temp_list = []
 
     for index in range(0, len(a)):
-
         temp_list.append(a[index])
         if len(temp_list) == b:
             result.append(temp_list)
@@ -941,45 +922,54 @@ def get_hash(string):
 
 
 def closest_to(a, b):
+    if type(b) is list:
+        return a
+
     try:
         b = ast_int_eval(b)
     except:
-        b = ord(b)
+        # if a is not a list, applies char difference
+        # otherwise we can use string distances
+        if type(a) is not list:
+            b = ord(b)
+        pass
 
-    if type(a) is int:
+    if type(a) is list:
+        a = deep_flatten(a)
+
+        if type(b) is not str:
+            try:
+                a = [ast_int_eval(x) for x in a]
+            except:
+                # fallback to string distances if there is a string in a
+                b = str(b)
+    else:
         a = str(a)
 
-    closest = a[0]
-    closest_num = float('inf')
+    closest = a
+    distance = float('inf')
 
     for element in a:
         if type(a) is str:
-            if abs(ord(element) - b) < closest_num:
-                closest_num = abs(ord(element) - b)
+            if abs(ord(element) - b) < distance:
+                distance = abs(ord(element) - b)
                 closest = element
-        elif abs(ast_int_eval(element) - b) < closest_num:
-            closest_num = abs(ast_int_eval(element) - b)
+        elif type(b) is str:
+            element_dist = 1 - SequenceMatcher(None, str(element), b).ratio()
+
+            if element_dist < distance:
+                distance = element_dist
+                closest = str(element)
+        elif abs(element - b) < distance:
+            distance = abs(element - b)
             closest = element
 
     return closest
 
-
-def undelta(a):
-
-    start = [0]
-
-    for element in a:
-        element = ast_int_eval(element)
-        start.append(start[-1] + element)
-
-    return start
-
-
 def zip_with(a, b):
-
     temp = a
 
-    if type(temp) is int:
+    if type(temp) is not list:
         temp = str(temp)
 
     if type(temp) is str:
@@ -1013,28 +1003,8 @@ def zip_with(a, b):
     return result
 
 
-def remove_all(a, b):
-    if type(a) is int:
-        a = str(a)
-
-    if type(b) is int:
-        b = str(b)
-
-    if type(a) is list:
-        result = []
-        for element in a:
-            for char in b:
-                element = element.replace(str(char), "")
-            result.append(element)
-        return result
-    else:
-        for char in b:
-            a = a.replace(str(char), "")
-        return a
-
-
 def multi_split(a, b: list):
-    if type(a) is int:
+    if type(a) is not list:
         a = str(a)
 
     delimiter = ''.join(
@@ -1049,13 +1019,13 @@ def multi_split(a, b: list):
 
     a = transliterate(a, b, [delimiter] * len(b))
 
-    return a.split(delimiter)
+    return [i for i in a.split(delimiter) if i]
 
 
 def shape_like(a, b):
 
     if type(b) is str:
-        b = int(b)
+        b = int(ast_int_eval(b))
 
     if type(a) is list and type(b) is list:
         result = []
@@ -1075,6 +1045,20 @@ def shape_like(a, b):
     elif type(a) is not list and type(b) is not list:
         return (str(a) * b)[:b]
 
+def sentence_case(a):
+    a = str(a)
+    temp_string = ""
+    begin_sentence = True
+    for Q in a:
+        if begin_sentence:
+            temp_string += Q.upper()
+            if not Q == " ":
+                begin_sentence = False
+        else:
+            temp_string += Q
+        if Q == "." or Q == "?" or Q == "!":
+            begin_sentence = True
+    return temp_string
 
 def list_multiply(a, b, recur=True):
 
@@ -1102,3 +1086,94 @@ def list_multiply(a, b, recur=True):
 
         else:
             raise e
+
+def deltaify(a):
+    if type(a) is not list:
+        a = str(a)
+
+    sublists = []
+    values = []
+
+    for i in a:
+        if type(i) is list:
+            sublists.append(i)
+        else:
+            try:
+                values.append(ast_int_eval(i))
+            except:
+                pass
+
+    result = []
+    for Q in range(len(values) - 1):
+        result.append(values[Q+1] - values[Q])
+
+    if len(sublists):
+        result += [deltaify(l) for l in sublists]    
+
+    return result
+
+def filtered_to_the_front(a, b):
+    if type(a) is not list:
+        a = str(a)
+
+    filtered = []
+    remaining = []
+
+    for i in a:
+        if type(i) is list:
+            remaining.append(filtered_to_the_front(i, b))
+        elif str(i) == str(b):
+            filtered.append(str(i))
+        else:
+            remaining.append(str(i))
+
+    result = filtered + remaining
+
+    return result if type(a) is list else ''.join([str(x) for x in result])
+
+def bijective_base_conversion(a, to_base):
+    a = int(a)
+
+    number = ""
+    while a:
+        a -= 1
+        r = a % to_base
+        a = a // to_base
+        r += 1
+        if r < 0:
+            a += 1
+            r -= to_base
+        number += str(r)
+    return number[::-1]
+
+def bijective_decimal_conversion(a, from_base):
+    a = str(int(a))
+
+    number = 0
+    for Q in a:
+        number = number * from_base + int(Q)
+    return number
+
+def uniquify(a, connected=False):
+    buf = []
+
+    if type(a) is not list:
+        a = str(a)
+
+    for item in a:
+        if type(item) is not list:
+            try:
+                if int(item) == float(item):
+                    item = str(int(item))
+                else:
+                    item = str(float(item))
+            except:
+                pass
+
+        if item not in buf:
+            buf.append(item)
+        elif connected and len(buf) and buf[-1] != item:
+            buf.append(item)
+
+    return buf if type(a) is list else ''.join(buf)
+

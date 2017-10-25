@@ -1,3 +1,14 @@
+from lib.commands import *
+
+def apply_pre_function(pre_function, value):
+    if pre_function is not None:
+        if type(value) is list:
+            value = [apply_safe(pre_function, x) if type(x) is not list else x for x in value]
+        else:
+            value = apply_safe(pre_function, value)
+
+    return value
+
 def vectorized_evaluation(a, b, function, pre_function=None):
     """
     Uses the given function in the form of a lambda and produces a vectorized result if
@@ -10,16 +21,8 @@ def vectorized_evaluation(a, b, function, pre_function=None):
     """
 
     try:
-        if pre_function is not None:
-            if type(a) is list:
-                a = [pre_function(x) for x in a]
-            else:
-                a = pre_function(a)
-
-            if type(b) is list:
-                b = [pre_function(x) for x in b]
-            else:
-                b = pre_function(b)
+        a = apply_pre_function(pre_function, a)
+        b = apply_pre_function(pre_function, b)
 
         # When both are lists
         if type(a) is list and type(b) is list:
@@ -31,7 +34,7 @@ def vectorized_evaluation(a, b, function, pre_function=None):
 
             # Compute the function for all in range elements
             for index in range(0, vector_range):
-                vectorized_result.append(function(a[index], b[index]))
+                vectorized_result.append(apply_safe(function, a[index], b[index]))
 
             # Append all out of range elements without being processed
             for index in range(vector_range, max_range):
@@ -64,7 +67,7 @@ def vectorized_evaluation(a, b, function, pre_function=None):
 
             return vectorized_result
 
-        return function(a, b)
+        return apply_safe(function, a, b)
 
     except:
         if type(a) is list and type(b) is not list:
@@ -86,16 +89,10 @@ def vectorized_evaluation(a, b, function, pre_function=None):
 
 
 def single_vectorized_evaluation(a, function, pre_function=None):
-
     try:
-        if pre_function is not None:
-            if type(a) is list:
-                a = [pre_function(x) for x in a]
-            else:
-                a = pre_function(a)
+        a = apply_pre_function(pre_function, a)
 
         if type(a) is list:
-
             vectorized_result = []
             for element in a:
                 vectorized_result.append(
@@ -104,7 +101,7 @@ def single_vectorized_evaluation(a, function, pre_function=None):
 
             return vectorized_result
 
-        return function(a)
+        return apply_safe(function, a)
     except:
         if type(a) is list:
             vectorized_result = []
@@ -115,3 +112,65 @@ def single_vectorized_evaluation(a, function, pre_function=None):
             return vectorized_result
 
         raise Exception
+
+# Vectorized aggregation
+# The "function" argument takes a function(accumulator, value), where:
+#   * accumulator is the result of previously aggregated values
+#   * value is the current value to aggregate
+# 
+# The "start" argument is the starting value of the aggregation
+# If not provided, the starting point will be the first value to pass the
+# pre_function check without an exception been raised
+# 
+# Result will keep the same order of values/sublists than input
+# Aggregated value will be at the first non-list valid value 
+# encountered in the input
+def vectorized_aggregator(a, function, pre_function=None, start=None):
+    index = -1
+    subresults = []
+    values = []
+
+    result = list(start) if start is list else start
+
+    if type(a) is not list:
+        a = str(a)
+
+    for i in range(len(a)):
+        if type(a[i]) is list:
+            subresults.append(vectorized_aggregator(a[i], function, pre_function, start))
+        else:
+            try:
+                if pre_function is not None:
+                    a[i] = pre_function(a[i])
+                if index == -1:
+                    index = i
+                if result is None:
+                    result = a[i]
+                else:
+                    values.append(a[i])
+            except: 
+                pass
+
+    for i in values:
+        result = apply_safe(function, result, i)
+
+    if subresults:
+        if index > -1:
+            subresults.insert(index, result)
+        result = subresults
+
+    return result if result is not None else []
+
+# Vectorized filter
+# Keep only elements of a where function(a) is truthy
+def vectorized_filter(a, function, pre_function=None):
+    a = apply_pre_function(pre_function, a)
+
+    vectorized_result = []
+    for element in a:
+        if type(element) is list:
+            vectorized_result.append(vectorized_filter(element, function, pre_function))
+        elif function(element):
+            vectorized_result.append(element)
+
+    return vectorized_result if type(a) is list else ''.join(vectorized_result)
