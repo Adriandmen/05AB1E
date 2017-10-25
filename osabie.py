@@ -1884,9 +1884,9 @@ def run_program(commands,
             elif current_command == "{":
                 a = pop_stack(default="")
                 if type(a) is list:
-                    stack.append(sorted(a))
+                    stack.append(apply_safe(sorted, a))
                 else:
-                    stack.append(''.join(sorted(str(a))))
+                    stack.append(''.join(apply_safe(sorted, str(a))))
 
             # Command: °
             # pop a
@@ -2061,7 +2061,9 @@ def run_program(commands,
             # push sorted_uniquified(a)
             elif current_command == "\u00ea":
                 a = pop_stack(default="")
-                stack.append(sort_uniquify(a))
+                a = apply_safe(uniquify, a)
+                sorted_a = apply_safe(sorted, a)
+                stack.append(sorted_a if type(a) is list else ''.join(sorted_a))
 
             # Command: Ç
             # pop a
@@ -2152,16 +2154,7 @@ def run_program(commands,
             elif current_command == "\u00d9":
                 a = pop_stack(default="")
 
-                if type(a) is not list:
-                    result = ""
-                    for x in str(a):
-                        if x not in result:
-                            result = result + x
-                    stack.append(result)
-                else:
-                    stack.append(vectorized_aggregator(
-                        a, lambda acc, val: acc if val in acc else acc+[val], str, []
-                    ))
+                stack.append(uniquify(a))
 
             # Command: ø
             # pop (a,)b
@@ -2202,17 +2195,7 @@ def run_program(commands,
             # push reverse uniquified a
             elif current_command == "\u00da":
                 a = pop_stack(default="")
-
-                if type(a) is not list:
-                    result = ""
-                    for x in str(a):
-                        if x not in result:
-                            result = x + result
-                    stack.append(result)
-                else:
-                    stack.append(vectorized_aggregator(
-                        a, lambda acc, val: acc if val in acc else [val]+acc, str, []
-                    ))
+                stack.append(uniquify(a)[::-1])
 
             # Command: Û
             # pop a,b
@@ -2768,9 +2751,7 @@ def run_program(commands,
             # push substrings(a)
             elif current_command == "\u0152":
                 a = pop_stack(default="")
-                stack.append(single_vectorized_evaluation(
-                    a, get_all_substrings, str
-                ))
+                stack.append(apply_safe(get_all_substrings, a))
 
             # Command: Ð
             # pop a
@@ -3019,9 +3000,17 @@ def run_program(commands,
                 a = pop_stack(default="")
 
                 if type(a) is list:
-                    a = [str(x) for x in deep_flatten(a)]
+                    buf = []
+                    for item in a:
+                        if type(item) is list:
+                            # stringify sublists to make them hashable
+                            buf.append(str(item))
+                        else:
+                            buf.append(apply_safe(ast_int_eval, item))
+                    a = buf
                 else:
                     a = list(str(a))
+
                 result = []
 
                 if a:
@@ -3032,7 +3021,9 @@ def run_program(commands,
                     for Q in range(len(counts)):
                         if counts[Q] == max_count:
                             result.append(uniques[Q])
-                stack.append(result)
+
+                # unstringified sublists if necessary
+                stack.append([apply_safe(ast_int_eval, x) for x in result])
 
             # Command: .m
             # pop a
@@ -3041,7 +3032,14 @@ def run_program(commands,
                 a = pop_stack(default="")
                 
                 if type(a) is list:
-                    a = [str(x) for x in deep_flatten(a)]
+                    buf = []
+                    for item in a:
+                        if type(item) is list:
+                            # stringify sublists to make them hashable
+                            buf.append(str(item))
+                        else:
+                            buf.append(apply_safe(ast_int_eval, item))
+                    a = buf
                 else:
                     a = list(str(a))
 
@@ -3055,7 +3053,9 @@ def run_program(commands,
                     for Q in range(len(counts)):
                         if counts[Q] == min_count:
                             result.append(uniques[Q])
-                stack.append(result)
+
+                # unstringified sublists if necessary
+                stack.append([apply_safe(ast_int_eval, x) for x in result])
 
             # Command: Ì
             # pop a
@@ -3807,23 +3807,8 @@ def run_program(commands,
             # push connected uniquified a
             elif current_command == "\u00d4":
                 a = pop_stack(default="")
-
-                if type(a) is list:
-                    payload = a
-                else:
-                    payload = []
-                    for c in str(a):
-                        payload.append(c)
-
-                result = vectorized_aggregator(
-                    payload, 
-                    lambda acc, val: acc + [val] if not len(acc) or acc[-1] != val else acc, 
-                    str, 
-                    start=[]
-                )
-
-                stack.append(result if type(a) is list else ''.join(result))
-
+                stack.append(apply_safe(uniquify, a, True))
+                
             # Command: ‚
             # pop a,b
             # push [a, b]

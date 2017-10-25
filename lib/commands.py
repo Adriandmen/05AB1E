@@ -388,6 +388,9 @@ def get_index_of_prime(n):
     return len(list(takewhile(lambda x: x <= n, g)))-1
 
 def get_all_substrings(input_string):
+    if type(input_string) is not list:
+        input_string = str(input_string)
+        
     length = len(input_string)
     return [
         input_string[i:j+1] for i in range(length) for j in range(i, length)
@@ -1084,41 +1087,6 @@ def list_multiply(a, b, recur=True):
         else:
             raise e
 
-def sort_uniquify(a):
-    sublists = []
-    values = []
-
-    if type(a) is not list:
-        values = str(a)
-    else:
-        numbers = True
-
-        for i in a:
-            if type(i) is list:
-                sublists.append(i)
-            else:
-                i = apply_safe(ast_int_eval, i)
-                values.append(i)
-                if type(i) is str:
-                    numbers = False
-
-        # converts all to string if there are strings to compare
-        if not numbers:
-            values = [str(i) for i in values]
-
-    result = []
-
-    for v in sorted(values):
-        if v not in result:
-            result.append(v)
-
-    if type(a) is not list:
-        result = ''.join(result)
-    elif len(sublists):
-        result += [sort_uniquify(i) for i in sublists]
-    
-    return result
-
 def deltaify(a):
     if type(a) is not list:
         a = str(a)
@@ -1185,3 +1153,27 @@ def bijective_decimal_conversion(a, from_base):
     for Q in a:
         number = number * from_base + int(Q)
     return number
+
+def uniquify(a, connected=False):
+    buf = []
+
+    if type(a) is not list:
+        a = str(a)
+
+    for item in a:
+        if type(item) is not list:
+            try:
+                if int(item) == float(item):
+                    item = str(int(item))
+                else:
+                    item = str(float(item))
+            except:
+                pass
+
+        if item not in buf:
+            buf.append(item)
+        elif connected and len(buf) and buf[-1] != item:
+            buf.append(item)
+
+    return buf if type(a) is list else ''.join(buf)
+

@@ -214,8 +214,9 @@ r)                  EXPECT `[]`
 123ïŒï              EXPECT `[1, 12, 123, 2, 23, 3]`
 1Œï                 EXPECT `[1]`
 ""Œ                 EXPECT `[]`
-123"foo")Œï         EXPECT `[[1, 12, 123, 2, 23, 3], ['f', 'fo', 'foo', 'o', 'oo', 'o']]`
+123"foo")Œï         EXPECT `[[123], [123, 'foo'], ['foo']]`
 3;Œ                 EXPECT `['1', '1.', '1.5', '.', '.5', '5']`
+
 
 // Base-255 compressed string
 •1•                 EXPECT `1`
@@ -355,8 +356,9 @@ AA£                 EXPECT `abcdefghijklmnopqrstuvwxyz`
 1112233344 Ô        EXPECT `1234`
 1122332211 Ô        EXPECT `12321`
 123321SÔ        ï   EXPECT `[1, 2, 3, 2, 1]`
-123321S"foo"S)Ô     EXPECT `[['1', '2', '3', '2', '1'], ['f', 'o']]`
+123321 221113)SÔï   EXPECT `[1, 2, 3, 2, 1, 2, 1, 3]`
 1)123321Sï«Ôï       EXPECT `[1, 2, 3, 2, 1]`
+2L3LD2L)Ôï          EXPECT `[[1, 2], [1, 2, 3], [1, 2]]`
 
 // String multiplication
 "ab" 4×             EXPECT `abababab`
@@ -375,12 +377,16 @@ AA£                 EXPECT `abcdefghijklmnopqrstuvwxyz`
 // Uniquify
 1122332211Ù         EXPECT `123`
 1122332211SÙï       EXPECT `[1, 2, 3]`
-1122332211S"foo"S)Ù EXPECT `[['1', '2', '3'], ['f', 'o']]`
+112232211"foo")SÙï  EXPECT `[1, 2, 3, 'f', 'o']`
+0 2;1)Ùï            EXPECT `[0, 1]`
+2LD3L2L)Ù           EXPECT `[[1, 2], [1, 2, 3]]`
 
 // Reverse uniquified
 1122332211Ú         EXPECT `321`
 1122332211SÚï       EXPECT `[3, 2, 1]`
-1122332211S"foo"S)Ú EXPECT `[['3', '2', '1'], ['o', 'f']]`
+112232211"foo")SÚï  EXPECT `['o', 'f', 3, 2, 1]`
+0 2;1)Úï            EXPECT `[1, 0]`
+2LD3L2L)Ú           EXPECT `[[1, 2, 3], [1, 2]]`
 
 // Trim leading elements
 11223344 1Û         EXPECT `223344`
@@ -467,7 +473,7 @@ AA£                 EXPECT `abcdefghijklmnopqrstuvwxyz`
 44332211ê           EXPECT `1234`
 11223344Sê     ï    EXPECT `[1, 2, 3, 4]`
 44332211Sê     ï    EXPECT `[1, 2, 3, 4]`
-3LR4LR;)ê           EXPECT `[[1, 2, 3], [0.5, 1.0, 1.5, 2.0]]`
+3LD4L;)ê            EXPECT `[[0.5, 1.0, 1.5, 2.0], [1, 2, 3]]`
 "foobarbar123"3ôê   EXPECT `['123', 'bar', 'foo']`
 
 // Prepend

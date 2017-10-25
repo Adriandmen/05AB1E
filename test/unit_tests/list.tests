@@ -108,13 +108,15 @@
 "abc"3и             EXPECT `['abc', 'abc', 'abc']`
 
 // Most frequent
-123S.M{              EXPECT `['1', '2', '3']`
-2132.M               EXPECT `['2']`
+123S.M{              EXPECT `[1, 2, 3]`
+2132.M               EXPECT `[2]`
 "foobar".M           EXPECT `['o']`
-"foobar"123S)1)3L).M EXPECT `['1']`
+2 3 4;).M            EXPECT `[2]`
+3L2LD4L).M           EXPECT `[[1, 2]]`
 
 // Least frequent
-123S.m{              EXPECT `['1', '2', '3']`
-21323.m              EXPECT `['1']`
+123S.m{              EXPECT `[1, 2, 3]`
+21323.m              EXPECT `[1]`
+1 2 4;).m            EXPECT `[1]`
 "foo".m              EXPECT `['f']`
-"foobar"123S)1)3L).m EXPECT `['foobar']`
+2LD3L2L).m           EXPECT `[[1, 2, 3]]`
