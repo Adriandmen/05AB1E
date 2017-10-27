@@ -3500,10 +3500,9 @@ def run_program(commands,
                 b = pop_stack(default="")
                 a = pop_stack(default="")
 
-                if type(a) is list:
-                    a = vectorized_aggregator(a, lambda acc, val: acc + val, str, "")
-
-                stack.append(vectorized_evaluation(a, b, convert_from_base_arbitrary, int))
+                stack.append(single_vectorized_evaluation(
+                    b, lambda b: convert_from_base_arbitrary(a, b), int
+                ))
 
             # Command: .L
             # pop a,b

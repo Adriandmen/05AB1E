@@ -208,7 +208,12 @@ def convert_from_base(n, base):
 
 
 def convert_from_base_arbitrary(n, base):
-    n = str(n)[::-1]
+    if type(n) is not list:
+        n = str(n)
+
+    base = int(base)
+    
+    n = n[::-1]
     r = 0
     range_v = 0
 
