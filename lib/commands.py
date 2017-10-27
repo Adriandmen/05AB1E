@@ -1172,13 +1172,7 @@ def uniquify(a, connected=False):
 
     for item in a:
         if type(item) is not list:
-            try:
-                if int(item) == float(item):
-                    item = str(int(item))
-                else:
-                    item = str(float(item))
-            except:
-                pass
+            item = str(item)
 
         if item not in buf:
             buf.append(item)

@@ -359,6 +359,7 @@ AA£                 EXPECT `abcdefghijklmnopqrstuvwxyz`
 123321 221113)SÔï   EXPECT `[1, 2, 3, 2, 1, 2, 1, 3]`
 1)123321Sï«Ôï       EXPECT `[1, 2, 3, 2, 1]`
 2L3LD2L)Ôï          EXPECT `[[1, 2], [1, 2, 3], [1, 2]]`
+0ï0)Ôï              EXPECT `[0]`
 
 // String multiplication
 "ab" 4×             EXPECT `abababab`
@@ -378,14 +379,16 @@ AA£                 EXPECT `abcdefghijklmnopqrstuvwxyz`
 1122332211Ù         EXPECT `123`
 1122332211SÙï       EXPECT `[1, 2, 3]`
 112232211"foo")SÙï  EXPECT `[1, 2, 3, 'f', 'o']`
-0 2;1)Ùï            EXPECT `[0, 1]`
+0 2;1)Ù             EXPECT `['0', '1.0', '1']`
+0ï0)Ùï              EXPECT `[0]`
 2LD3L2L)Ù           EXPECT `[[1, 2], [1, 2, 3]]`
 
 // Reverse uniquified
 1122332211Ú         EXPECT `321`
 1122332211SÚï       EXPECT `[3, 2, 1]`
 112232211"foo")SÚï  EXPECT `[3, 2, 1, 'f', 'o']`
-0 2;1)Úï            EXPECT `[0, 1]`
+0 2;1)Ú             EXPECT `['0', '1.0', '1']`
+0ï0)Ùï              EXPECT `[0]`
 2LD3L2L)Ú           EXPECT `[[1, 2, 3], [1, 2]]`
 
 // Trim leading elements
