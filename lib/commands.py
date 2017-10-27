@@ -42,12 +42,17 @@ def flatten(x):
 
 
 def deep_flatten(S):
-    if not S:
+    if type(S) is not list or not S:
         return S
-    if isinstance(S[0], list):
-        return deep_flatten(S[0]) + deep_flatten(S[1:])
-    return S[:1] + deep_flatten(S[1:])
 
+    buf = []
+    for i in S:
+        if type(i) is list:
+            buf += deep_flatten(i)
+        else:
+            buf.append(i)
+
+    return buf
 
 def is_alpha_value(value):
     value = str(value)

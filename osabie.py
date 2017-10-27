@@ -1686,6 +1686,7 @@ def run_program(commands,
                 stack.append(a)
 
                 a = str(a) if type(a) is not list else deep_flatten(a)
+
                 maxval = apply_safe(ast_int_eval, a[0])
 
                 for i in a:
@@ -2189,7 +2190,7 @@ def run_program(commands,
                     else:
                         a = pop_stack(default="")
 
-                        if type(a) is int:
+                        if type(a) is not list:
                             a = str(a)
                         result = [list(x) for x in zip(*[a, b])]
                         stack.append(result)
@@ -2199,7 +2200,7 @@ def run_program(commands,
             # push reverse uniquified a
             elif current_command == "\u00da":
                 a = pop_stack(default="")
-                if type(a) is int:
+                if type(a) is not list:
                     a = str(a)
                 stack.append(uniquify(a[::-1])[::-1])
 
