@@ -4176,27 +4176,18 @@ def run_program(commands,
             # pop a
             # Repeat CODE until a doesn't change
             elif current_command == "\u0394":
-                a = pop_stack(default="")
+                a = pop_stack()
                 statement, pointer_position = get_block_statement(commands, pointer_position)
 
-                temp_stack = list(stack)
-                stack.clear()
-
+                stack.append(a)
                 previous_state = None
+                range_variable = -1
 
-                while a != previous_state:
-                    previous_state = copy.deepcopy(a)
-                    stack.append(a)
+                while stack and stack[-1] != previous_state:
+                    range_variable += 1
+                    previous_state = copy.deepcopy(stack[-1])
                     run_program(statement, debug, safe_mode, True,
                                 range_variable, string_variable)
-
-                    a = stack[-1]
-                    stack.clear()
-
-                for Q in temp_stack:
-                    stack.append(Q)
-
-                stack.append(a)
 
         except Exception as ex:
             if debug:

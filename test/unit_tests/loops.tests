@@ -13,4 +13,5 @@
 // Repeat until a doesn't change
 3L)2L2L)ΔO          EXPECT `12`
 1234567890ΔÒO       EXPECT `79`
-3L(ΔεD0‹i>]         EXPECT `[0, 0, 0]`
+1234567890ΔÒO]N     EXPECT `3`
+3L(ΔεD0‹i>          EXPECT `[0, 0, 0]`
