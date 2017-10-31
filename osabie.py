@@ -10,6 +10,7 @@ import os
 import tempfile
 import random
 import fractions
+import copy
 
 from sys import stderr
 
@@ -4170,6 +4171,32 @@ def run_program(commands,
                 stack.append(vectorized_aggregator(
                     a, lambda acc, val: acc + [val[0]], str, []
                 ))
+
+            # Command: Δ
+            # pop a
+            # apply repeatedly on a until it doesn't change
+            elif current_command == "\u0394":
+                a = pop_stack(default="")
+                statement, pointer_position = get_block_statement(commands, pointer_position)
+
+                temp_stack = list(stack)
+                stack.clear()
+
+                previous_state = None
+
+                while a != previous_state:
+                    previous_state = copy.deepcopy(a)
+                    stack.append(a)
+                    run_program(statement, debug, safe_mode, True,
+                                range_variable, string_variable)
+
+                    a = stack[-1]
+                    stack.clear()
+
+                for Q in temp_stack:
+                    stack.append(Q)
+
+                stack.append(a)
 
         except Exception as ex:
             if debug:
