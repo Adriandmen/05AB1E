@@ -4174,7 +4174,7 @@ def run_program(commands,
 
             # Command: Δ
             # pop a
-            # apply repeatedly on a until it doesn't change
+            # Repeat CODE until a doesn't change
             elif current_command == "\u0394":
                 a = pop_stack(default="")
                 statement, pointer_position = get_block_statement(commands, pointer_position)
