@@ -21,6 +21,10 @@ def ast_int_eval(number):
     a = str(number)
     try:
         a = ast.literal_eval(a)
+
+        # prevents conversion to a tuple, dict, set, and so on
+        if type(a) is not list and type(a) is not str and type(a) is not int and type(a) is not float:
+            a = str(number)
     except:
         a = int(a)
 
