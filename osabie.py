@@ -594,7 +594,7 @@ def run_program(commands,
                 a = pop_stack(default=0)
 
                 stack.append(single_vectorized_evaluation(
-                    a, lambda a: int(not not a), ast_int_eval
+                    a, lambda a: int(not not a), float
                 ))
 
             # Command: ∞
@@ -860,7 +860,7 @@ def run_program(commands,
             elif current_command == "_":
                 a = pop_stack(default=1)
                 stack.append(single_vectorized_evaluation(
-                    a, lambda a: int(not a), ast_int_eval
+                    a, lambda a: int(not a), float
                 ))
 
             # Command: s

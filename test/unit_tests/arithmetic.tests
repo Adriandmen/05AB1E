@@ -36,6 +36,7 @@
 ""_                 EXPECT `1`
 "foo"_              EXPECT `0`
 )3L<"foo")_         EXPECT `[[], [1, 0, 0], 0]`
+"()"_               EXPECT `0`
 
 // Addition
 3 4+                EXPECT `7`
@@ -399,6 +400,7 @@
 ""Ā                 EXPECT `0`
 "foo"Ā              EXPECT `1`
 )3L<"foo")Ā         EXPECT `[[], [0, 1, 1], 1]`
+"()"Ā               EXPECT `1`
 
 // 05AB1E falsify
 1 ≠                    EXPECT `0`
