@@ -14,7 +14,7 @@
 н	= pop a      push a[0]
 т	=            push 100
 Γ	=
-Δ	=
+Δ	= pop a      repeat CODE until a doesn't change: usage ΔCODE}
 Θ	= pop a      push 05AB1E truthified a (a == 1)
 ι	=
 Σ	= pop a      sort a by the result of code: usage ΣCODE}
