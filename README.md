@@ -83,7 +83,7 @@ For example:
     
 Or a more official way (whereas `inputs` is a file with all inputs):
 
-    > python34.exe oasbie.py test.abe < inputs
+    > python34.exe osabie.py test.abe < inputs
     
 If run without the inputs file, the 05AB1E program reads the input from STDIN.
 
