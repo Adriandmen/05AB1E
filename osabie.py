@@ -113,8 +113,6 @@ def pop_stack(default=None):
     if is_array(a):
         a = ast_int_eval(a)
 
-    if not errored:
-        recent_inputs.append(a)
     return a
 
 
@@ -3287,7 +3285,9 @@ def run_program(commands,
                 if len(recent_inputs) > 0:
                     stack.append(recent_inputs[0])
                 else:
-                    stack.append(get_input())
+                    while len(recent_inputs) <= 0:
+                        get_input()
+                    stack.append(recent_inputs[0])
 
             # Command: ²
             # push the second item from the input history
@@ -3295,9 +3295,9 @@ def run_program(commands,
                 if len(recent_inputs) > 1:
                     stack.append(recent_inputs[1])
                 else:
-                    for i in range(1-len(recent_inputs)):
+                    while len(recent_inputs) <= 1:
                         get_input()
-                    stack.append(get_input())
+                    stack.append(recent_inputs[1])
 
             # Command: ³
             # push the third item from the input history
@@ -3305,9 +3305,9 @@ def run_program(commands,
                 if len(recent_inputs) > 2:
                     stack.append(recent_inputs[2])
                 else:
-                    for i in range(2-len(recent_inputs)):
+                    while len(recent_inputs) <= 2:
                         get_input()
-                    stack.append(get_input())
+                    stack.append(recent_inputs[2])
 
             # Command: •
             # start/end a 1-9 char compressed string
