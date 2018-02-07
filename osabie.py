@@ -18,6 +18,7 @@ from lib.constants import *
 from lib.commands import *
 from lib.encoding import *
 from lib.vectorizer import *
+from lib.statements import *
 from lib.extended_math import ExtendedMathInvoker
 from lib.constants import ConstantsInvoker
 
@@ -50,7 +51,7 @@ previous_len = []
 
 # Block commands:
 block_commands = ["F", "i", "v", "G", "[", "ƒ", "ʒ", "Σ", "ε", "µ"]
-string_delimiters = "\"‘’“”"
+string_delimiters = ['"', '‘', '’', '“', '”']
 two_char_indicators = [".", "Å", "ž", "'", "λ"]
 
 # Global data
@@ -115,58 +116,6 @@ def pop_stack(default=None):
     if not errored:
         recent_inputs.append(a)
     return a
-
-
-def get_block_statement(commands, pointer_position):
-    statement = ""
-    temp_position = pointer_position
-    temp_position += 1
-    current_command = commands[temp_position]
-    amount_brackets = 1
-    temp_string_mode = False
-    while amount_brackets != 0:
-
-        # Check for code exclusion to exclude 'block-commands' in strings or
-        # multi-character commands.
-        if current_command in string_delimiters:
-            temp_string_mode = not temp_string_mode
-
-        string_exclusion_count = 1 if current_command in two_char_indicators else \
-            2 if current_command == "„" else \
-            3 if current_command == "…" else 0
-
-        # Do the following <string_exclusion_count> times
-        for _ in range(0, string_exclusion_count):
-
-            # Add the character to the current command
-            temp_position += 1
-            current_command += commands[temp_position]
-
-            # If the last character is a dictionary word, take the second dict-character as well
-            if current_command[-1] in dictionary.unicode_index and current_command[0] in "'„…":
-                temp_position += 1
-                current_command += commands[temp_position]
-
-        if not temp_string_mode:
-            if current_command == "}":
-                amount_brackets -= 1
-                if amount_brackets == 0:
-                    break
-            elif current_command == "]":
-                amount_brackets = 0
-                break
-            elif current_command in block_commands:
-                amount_brackets += 1
-            statement += current_command
-        else:
-            statement += current_command
-        try:
-            temp_position += 1
-            current_command = commands[temp_position]
-        except:
-            break
-
-    return statement, temp_position
 
 
 def run_program(commands,
@@ -537,7 +486,7 @@ def run_program(commands,
 
             # Command: .Λ
             # pop a,b,c
-            # store a canvas with {a: num, b: filler, c: pattern} 
+            # store a canvas with {a: num, b: filler, c: pattern}
             # and push the string to the stack
             elif current_command == ".\u039B":
                 pattern = pop_stack()
@@ -629,7 +578,7 @@ def run_program(commands,
             # push a[-1]
             elif current_command == "\u03B8":
                 a = pop_stack(default="")
-                
+
                 if type(a) is list:
                     stack.append(a[-1])
                 else:
@@ -666,13 +615,7 @@ def run_program(commands,
                     temp_stack.append(Q)
                 stack.clear()
 
-                statement, temp_position = get_block_statement(commands, pointer_position)
-
-                if debug:
-                    try:
-                        print("For each: {}".format(statement))
-                    except:
-                        pass
+                statement, remaining = get_statements(commands[pointer_position + 1:])
 
                 for Q in a:
                     stack.append(Q)
@@ -685,7 +628,7 @@ def run_program(commands,
                     stack.append(Q)
                 stack.append(temp_list)
 
-                pointer_position = temp_position
+                pointer_position += len(statement) + 1
 
             # Command: !
             # pop a
@@ -696,7 +639,7 @@ def run_program(commands,
 
             # Command: +
             # pop a,b
-            # push a+b 
+            # push a+b
             elif current_command == "+":
                 b = pop_stack(default="")
                 a = pop_stack(default="")
@@ -729,7 +672,7 @@ def run_program(commands,
 
             # Command: /
             # pop a,b
-            # push a / b 
+            # push a / b
             elif current_command == "/":
                 b = pop_stack(default="")
                 a = pop_stack(default="")
@@ -968,42 +911,7 @@ def run_program(commands,
             # Command: i
             # if...}else...} statement
             elif current_command == "i":
-                statement, temp_position = get_block_statement(commands, pointer_position)
-                else_statement = ""
-
-                if '\u00eb' in statement:
-                    expected_else = 1
-                    pos = 0
-                    for c in statement:
-                        if c == '\u00eb':
-                            expected_else -= 1
-                        elif c == 'i':
-                            expected_else += 1
-
-                        if expected_else == 0:
-                            break
-
-                        pos += 1
-                    else_statement = statement[pos + 1:]
-                    statement = statement[0:pos]
-
-                if debug:
-                    print("if: ", end="")
-                    for Q in statement:
-                        try:
-                            print(Q, end="")
-                        except:
-                            print("?", end="")
-                    print()
-                    if else_statement:
-                        print("else: ", end="")
-                        for Q in else_statement:
-                            try:
-                                print(Q, end="")
-                            except:
-                                print("?", end="")
-                        print()
-
+                statement, else_statement, remaining = get_statements(commands[pointer_position + 1:], True)
                 a = apply_safe(ast_int_eval, pop_stack(default=0))
 
                 if a == 1:
@@ -1012,7 +920,7 @@ def run_program(commands,
                 elif else_statement:
                     run_program(else_statement, debug, safe_mode, True,
                                 range_variable, string_variable)
-                pointer_position = temp_position
+                pointer_position += len(statement) + len(else_statement) + 1
 
             # Command: \
             # pop a
@@ -1043,54 +951,33 @@ def run_program(commands,
             # pop a
             # for N in range(0, a) { }: F(commands)} / N = variable
             elif current_command == "F":
-                statement, temp_position = get_block_statement(commands, pointer_position)
-
-                if debug:
-                    try:
-                        print("Loop: {}".format(statement))
-                    except:
-                        pass
-
+                statement, remaining = get_statements(commands[pointer_position + 1:])
                 a = apply_safe(int, pop_stack(default=0))
 
                 if type(a) is int and a != 0:
                     for range_variable in range(0, a):
                         run_program(statement, debug, safe_mode, True,
                                     range_variable, string_variable)
-                pointer_position = temp_position
+                pointer_position += len(statement) + 1
 
             # Command: G
             # pop a
             # for N in range(1, a) { }: F(commands)} / N = variable
             elif current_command == "G":
-                statement, temp_position = get_block_statement(commands, pointer_position)
-
-                if debug:
-                    try:
-                        print("Loop: {}".format(statement))
-                    except:
-                        pass
-                
+                statement, remaining = get_statements(commands[pointer_position + 1:])
                 a = apply_safe(int, pop_stack(default=0))
 
                 if type(a) is int and a > 1:
                     for range_variable in range(1, a):
                         run_program(statement, debug, safe_mode, True,
                                     range_variable, string_variable)
-                pointer_position = temp_position
+                pointer_position += len(statement) + 1
 
             # Command: µ
             # pop a
             # while counter_variable != a, do...
             elif current_command == "\u00b5":
-                statement, temp_position = get_block_statement(commands, pointer_position)
-
-                if debug:
-                    try:
-                        print("Loop: {}".format(statement))
-                    except:
-                        pass
-
+                statement, remaining = get_statements(commands[pointer_position + 1:])
                 a = apply_safe(int, pop_stack(default=0))
 
                 if type(a) is int:
@@ -1104,7 +991,7 @@ def run_program(commands,
                         run_program(statement, debug, safe_mode, True,
                                     range_variable, string_variable)
 
-                pointer_position = temp_position
+                pointer_position += len(statement) + 1
 
             # Command: Ë
             # pop a
@@ -1146,21 +1033,14 @@ def run_program(commands,
             # pop a
             # push for N in range(0, a + 1)
             elif current_command == "\u0192":
-                statement, temp_position = get_block_statement(commands, pointer_position)
-
-                if debug:
-                    try:
-                        print("Loop: {}".format(statement))
-                    except:
-                        pass
-
+                statement, remaining = get_statements(commands[pointer_position + 1:])
                 a = apply_safe(int, pop_stack(default=-1))
 
                 if type(a) is int and a > -1:
                     for range_variable in range(0, a + 1):
                         run_program(statement, debug, safe_mode, True,
                                     range_variable, string_variable)
-                pointer_position = temp_position
+                pointer_position += len(statement) + 1
 
             # Command: N
             # Push iteration counter
@@ -1446,14 +1326,7 @@ def run_program(commands,
             # Command: [
             # Infinite loop start
             elif current_command == "[":
-                statement, temp_position = get_block_statement(commands, pointer_position)
-
-                if debug:
-                    try:
-                        print("Infinite Loop: {}".format(statement))
-                    except:
-                        pass
-
+                statement, remaining = get_statements(commands[pointer_position + 1:])
                 range_variable = -1
 
                 while True:
@@ -1462,7 +1335,7 @@ def run_program(commands,
                                    range_variable, string_variable):
                         break
 
-                pointer_position = temp_position
+                pointer_position += len(statement) + 1
 
             # Command: #
             # pop a
@@ -1650,7 +1523,7 @@ def run_program(commands,
             # Command: U
             # pop a
             # stores a in variable X
-            elif current_command == "U": 
+            elif current_command == "U":
                 a = pop_stack()
                 register_x.append(a)
 
@@ -1755,7 +1628,7 @@ def run_program(commands,
                 if type(a) is not list:
                     a = stack + [a]
                     stack.clear()
-                
+
                 stack.append(vectorized_aggregator(
                     a, lambda acc, val: acc + val.rjust(b), str, ""
                 ))
@@ -1951,14 +1824,7 @@ def run_program(commands,
             # pop a
             # range loop: for y in a (y = string, N = index)
             elif current_command == "v":
-                statement, pointer_position = get_block_statement(commands, pointer_position)
-
-                if debug:
-                    try:
-                        print("Loop: {}".format(statement))
-                    except:
-                        pass
-
+                statement, remaining = get_statements(commands[pointer_position + 1:])
                 a = pop_stack()
 
                 range_variable = -1
@@ -1970,6 +1836,8 @@ def run_program(commands,
                         print("N = " + str(range_variable))
                     run_program(statement, debug, safe_mode, True,
                                 range_variable, string_variable)
+
+                pointer_position += len(statement) + 1
 
             # Command: y
             # push string variable (used in mapping loops)
@@ -2211,7 +2079,7 @@ def run_program(commands,
             elif current_command == "\u00db":
                 b = pop_stack(default="")
                 a = pop_stack(default=[])
-                
+
                 if type(a) is not list:
                     a = str(a)
 
@@ -2313,7 +2181,7 @@ def run_program(commands,
 
                 if type(a) is not list:
                     a = str(a)
-                
+
                 zipper = a if type(a[0]) is list else zip(*[a, a[1:]])
 
                 for Q in zipper:
@@ -2344,10 +2212,10 @@ def run_program(commands,
             # push a split into chunks of consecutive equal elements
             elif current_command == "\u03b3":
                 a = pop_stack(default="")
-                
+
                 if type(a) is not list:
                     a = str(a)
-                
+
                 is_list = type(a) is list
                 temp_list = []
                 inner_str = ""
@@ -2482,7 +2350,7 @@ def run_program(commands,
                     stack.append(a)
                     stack.append('')
                     continue
-                
+
                 for element in a:
                     if str(element) == str(min(a)) and not has_skipped:
                         has_skipped = True
@@ -2558,13 +2426,7 @@ def run_program(commands,
                 stack.clear()
                 temp_list = []
 
-                statement, pointer_position = get_block_statement(commands, pointer_position)
-
-                if debug:
-                    try:
-                        print("Filter: {}".format(statement))
-                    except:
-                        pass
+                statement, remaining = get_statements(commands[pointer_position + 1:])
 
                 for Q in a:
                     stack.append(Q)
@@ -2581,6 +2443,8 @@ def run_program(commands,
                     stack.append(Q)
                 stack.append(temp_list if type(a) is list else ''.join(temp_list))
 
+                pointer_position += len(statement) + 1
+
             # Command: Σ
             # pop a
             # sort a by the result of code: usage ΣCODE}
@@ -2594,13 +2458,7 @@ def run_program(commands,
                 temp_list = []
                 stack.clear()
 
-                statement, pointer_position = get_block_statement(commands, pointer_position)
-
-                if debug:
-                    try:
-                        print("Sort with: {}".format(statement))
-                    except:
-                        pass
+                statement, remaining = get_statements(commands[pointer_position + 1:])
 
                 for Q in a:
                     is_queue.append(Q)
@@ -2621,6 +2479,8 @@ def run_program(commands,
                 else:
                     stack.append(''.join([x[1] for x in temp_list]))
 
+                pointer_position += len(statement) + 1
+
             # Command: ›
             # pop a,b
             # push a > b
@@ -2636,7 +2496,7 @@ def run_program(commands,
             # push a rotated 1 left
             elif current_command == "\u00c0":
                 a = pop_stack(default="")
-                
+
                 if type(a) is list:
                     if len(a):
                         b = a[0]
@@ -2668,7 +2528,7 @@ def run_program(commands,
                     if len(a):
                         a = a[-1] + a
                         a = a[:-1]
-        
+
                 stack.append(a)
 
             # Command: Ø
@@ -2851,7 +2711,7 @@ def run_program(commands,
                     else:
                         incr = lambda: 1 if x < y else -1
                         # do not repeat a milestone
-                        if i > 0: 
+                        if i > 0:
                             x += incr()
                         ranges += list(range(x, y + incr(), incr()))
 
@@ -3049,7 +2909,7 @@ def run_program(commands,
             # push least frequent in a
             elif current_command == ".m":
                 a = pop_stack(default="")
-                
+
                 if type(a) is list:
                     buf = []
                     for item in a:
@@ -3427,7 +3287,7 @@ def run_program(commands,
                 if len(recent_inputs) > 0:
                     stack.append(recent_inputs[0])
                 else:
-                    stack.append(get_input())                        
+                    stack.append(get_input())
 
             # Command: ²
             # push the second item from the input history
@@ -3646,7 +3506,7 @@ def run_program(commands,
 
             # Command: ć
             # pop a
-            # push head_extracted a: a[1:], a[0] 
+            # push head_extracted a: a[1:], a[0]
             elif current_command == "\u0107":
                 a = pop_stack(default="")
                 if type(a) is not list:
@@ -3670,13 +3530,13 @@ def run_program(commands,
 
                 pointer_position += 1
                 for_each_command = commands[pointer_position]
-                # Double chars commands: . À 
+                # Double chars commands: . À
                 # Pairwise: ü
                 # or for-each itself: €
                 if for_each_command in ".\u00c5\u20AC\u00fc":
                     pointer_position += 1
                     for_each_command += commands[pointer_position]
-                
+
                 for Q in a:
                     stack.append(Q)
                     run_program(for_each_command, debug, safe_mode, True,
@@ -3721,9 +3581,9 @@ def run_program(commands,
                 stack.append(temp_list)
 
             # Command: .«
-            # foldr      
+            # foldr
             # folds a dyadic command between each element in a list from right to left
-            # 
+            #
             # Command: .»
             # foldl
             # folds a dyadic command between each element in a list from right to left
@@ -3825,7 +3685,7 @@ def run_program(commands,
             elif current_command == "\u00d4":
                 a = pop_stack(default="")
                 stack.append(apply_safe(uniquify, a, True))
-                
+
             # Command: ‚
             # pop a,b
             # push [a, b]
@@ -3952,7 +3812,7 @@ def run_program(commands,
 
             # Command: .^
             # pop a
-            # insert a into global array with immediate sorting and 
+            # insert a into global array with immediate sorting and
             # after quit, print array[input_1]
             elif current_command == ".^":
                 a = pop_stack()
@@ -4007,7 +3867,7 @@ def run_program(commands,
             # Command: .w
             # pop a
             # push a.readall()
-            # (internet access, doesn't work in safe mode) 
+            # (internet access, doesn't work in safe mode)
             # (returns 0 on error)
             elif current_command == ".w":
                 if safe_mode:
@@ -4177,7 +4037,7 @@ def run_program(commands,
             # Repeat CODE until a doesn't change
             elif current_command == "\u0394":
                 a = pop_stack()
-                statement, pointer_position = get_block_statement(commands, pointer_position)
+                statement, remaining = get_statements(commands[pointer_position + 1:])
 
                 stack.append(a)
                 previous_state = None
@@ -4188,6 +4048,8 @@ def run_program(commands,
                     previous_state = copy.deepcopy(stack[-1])
                     run_program(statement, debug, safe_mode, True,
                                 range_variable, string_variable)
+
+                pointer_position += len(statement) + 1
 
         except Exception as ex:
             if debug:

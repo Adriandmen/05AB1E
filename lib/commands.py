@@ -11,11 +11,13 @@ from difflib import SequenceMatcher
 letters = "abcdefghijklmnopqrstuvwxyz"
 numbers = "0123456789"
 
+
 def apply_safe(function, *args):
     try:
         return function(*args)
     except:
         return args[0]
+
 
 def ast_int_eval(number):
     a = str(number)
@@ -29,6 +31,7 @@ def ast_int_eval(number):
         a = int(a)
 
     return a
+
 
 def is_digit_value(value):
     value = str(value)
@@ -395,11 +398,13 @@ def get_nth_prime(n):
             current_prime += 1
     return current_prime
 
+
 def get_index_of_prime(n):
     from itertools import takewhile
     n = int(n)
     g = prime_sieve()
     return len(list(takewhile(lambda x: x <= n, g)))-1
+
 
 def get_all_substrings(input_string):
     if type(input_string) is not list:
@@ -409,6 +414,7 @@ def get_all_substrings(input_string):
     return [
         input_string[i:j+1] for i in range(length) for j in range(i, length)
     ]
+
 
 def floatify(string):
     # force an exception if not a number
@@ -980,6 +986,7 @@ def closest_to(a, b):
 
     return closest
 
+
 def zip_with(a, b):
     temp = a
 
@@ -1059,6 +1066,7 @@ def shape_like(a, b):
     elif type(a) is not list and type(b) is not list:
         return (str(a) * b)[:b]
 
+
 def sentence_case(a):
     a = str(a)
     temp_string = ""
@@ -1073,6 +1081,7 @@ def sentence_case(a):
         if Q == "." or Q == "?" or Q == "!":
             begin_sentence = True
     return temp_string
+
 
 def list_multiply(a, b, recur=True):
 
@@ -1101,6 +1110,7 @@ def list_multiply(a, b, recur=True):
         else:
             raise e
 
+
 def deltaify(a):
     if type(a) is not list:
         a = str(a)
@@ -1126,6 +1136,7 @@ def deltaify(a):
 
     return result
 
+
 def filtered_to_the_front(a, b):
     if type(a) is not list:
         a = str(a)
@@ -1145,6 +1156,7 @@ def filtered_to_the_front(a, b):
 
     return result if type(a) is list else ''.join([str(x) for x in result])
 
+
 def bijective_base_conversion(a, to_base):
     a = int(a)
 
@@ -1160,6 +1172,7 @@ def bijective_base_conversion(a, to_base):
         number += str(r)
     return number[::-1]
 
+
 def bijective_decimal_conversion(a, from_base):
     a = str(int(a))
 
@@ -1167,6 +1180,7 @@ def bijective_decimal_conversion(a, from_base):
     for Q in a:
         number = number * from_base + int(Q)
     return number
+
 
 def uniquify(a, connected=False):
     buf = []
@@ -1184,4 +1198,3 @@ def uniquify(a, connected=False):
             buf.append(item)
 
     return buf if type(a) is list else ''.join(buf)
-
