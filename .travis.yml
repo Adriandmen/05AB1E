@@ -9,3 +9,4 @@ sudo: false
     
 script:
  - python test/unit_tests.py
+ - python test.py
