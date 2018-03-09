@@ -482,6 +482,10 @@ def euler_totient(n):
 
 
 def chunk_divide(seq, num):
+
+    if type(seq) is int:
+        seq = str(seq)
+    
     num = ast_int_eval(num)
     avg = len(seq) / float(num)
     is_list = type(seq) is list
