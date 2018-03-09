@@ -426,6 +426,7 @@ AA£                 EXPECT `abcdefghijklmnopqrstuvwxyz`
 
 // Slicing
 123456789 3ä    ï   EXPECT `[123, 456, 789]`
+123456789ï3ä    ï   EXPECT `[123, 456, 789]`
 123456 3 ä  ï       EXPECT `[12, 34, 56]`
 123456Sï 3ä         EXPECT `[[1, 2], [3, 4], [5, 6]]`
 8L7ä                EXPECT `[[1, 2], [3], [4], [5], [6], [7], [8]]`
