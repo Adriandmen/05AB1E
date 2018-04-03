@@ -3959,6 +3959,40 @@ def run_program(commands,
             elif current_command == ".0":
                 zero_division.append(1)
 
+            # Command: .æ
+            # Permute by function
+            elif current_command == ".æ":
+                a = pop_stack(default="")
+                if type(a) is not list:
+                    a = str(a)
+
+                temp_stack = list(stack)
+                stack.clear()
+
+                statement, remaining = get_statements(commands[pointer_position + 1:])
+
+                results = []
+                for element in a:
+                    sub_result = [element]
+
+                    while True:
+                        stack.append(element)
+                        run_program(statement, debug, safe_mode, True, range_variable, string_variable)
+                        current_result = stack.pop()
+                        if current_result in sub_result:
+                            break
+                        sub_result.append(current_result)
+                    results.append(sub_result)
+
+                pointer_position += len(statement) + 1
+
+                result = list_permutations(results)
+
+                stack.clear()
+                for Q in temp_stack:
+                    stack.append(Q)
+                stack.append(result)
+
             #
             # Extended commands
             #

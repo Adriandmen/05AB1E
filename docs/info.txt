@@ -346,6 +346,7 @@ z	= pop a      push 1 / a
 .²	= pop a      push log_2(a)
 .ï	= pop a      push is int(a)
 .¿	= pop (a,)b  push lcm(b) if b is list, else push lcm(b, a)
+.æ  = pop a      compute permutations by function, usage: .æ<FUNC>}
 .ˆ	= pop a      insert a into global array and after quit, print array[input_1]
 .^	= pop a	     insert a into global array with immediate sorting and after quit, print array[input_1]
 .ø	= pop a,b    surround a with b

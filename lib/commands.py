@@ -1157,6 +1157,24 @@ def filtered_to_the_front(a, b):
     return result if type(a) is list else ''.join([str(x) for x in result])
 
 
+def list_permutations(elements: list):
+    current_list = elements[0]
+    remaining = elements[1:]
+
+    perms = []
+
+    if remaining:
+        remaining_perms = list_permutations(remaining)
+        for element in current_list:
+            for remaining_perm in remaining_perms:
+                perms.append([element] + remaining_perm)
+    else:
+        for element in current_list:
+            perms.append([element])
+
+    return perms
+
+
 def bijective_base_conversion(a, to_base):
     a = int(a)
 
