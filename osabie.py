@@ -66,13 +66,15 @@ class Osabie:
                  safe_mode: bool=False,
                  suppress_print: bool=False,
                  environment: Environment=None,
-                 stack: list=None):
+                 stack: list=None,
+                 depth: int=0):
 
         # Params
         self.commands = commands
         self.debug = debug
         self.safe_mode = safe_mode
         self.suppress_print = suppress_print
+        self.depth = depth
 
         # Pointer position
         self.pointer_position = -1
@@ -89,11 +91,12 @@ class Osabie:
     def interp(self) -> (list, Status):
         while self.pointer_position < len(self.commands) - 1:
             try:
-                if self.debug:
-                    input()
                 status = self.step()
-                if status == Status.BREAK:
-                    return self.stack, Status.BREAK
+                if status == Status.BREAK or status == Status.EXIT:
+                    if self.debug:
+                        print("Status was", status)
+                    return self.stack, status
+
             except Exception as e:
                 if self.debug:
                     print(e)
@@ -151,7 +154,8 @@ class Osabie:
     def __run_subprogram(self, commands: str, environment: Environment=None, stack: list=None) -> (list, Status):
         env = environment if environment else self.environment
         stk = stack if stack else self.stack
-        sub_program = Osabie(commands, debug=self.debug, safe_mode=self.safe_mode, environment=env, stack=stk)
+        sub_program = Osabie(commands, debug=self.debug, safe_mode=self.safe_mode,
+                             environment=env, stack=stk, depth=self.depth + 1)
 
         return sub_program.interp()
 
@@ -165,6 +169,7 @@ class Osabie:
 
         self.pointer_position += 1
         current_command = self.commands[self.pointer_position]
+        status = Status.OK
 
         if current_command == ".":
             self.pointer_position += 1
@@ -180,6 +185,9 @@ class Osabie:
 
         if self.debug:
             try:
+                print()
+                print("----------------------------------")
+                print("Depth:", self.depth)
                 print("Stack:", self.stack)
                 print("Current command:", current_command)
             except:
@@ -915,10 +923,16 @@ class Osabie:
             a = apply_safe(ast_int_eval, self.pop_stack(default=0))
 
             if a == 1:
-                self.stack, _ = self.__run_subprogram(statement)
+                self.stack, status = self.__run_subprogram(statement)
             elif else_statement:
-                self.stack, _ = self.__run_subprogram(else_statement)
+                self.stack, status = self.__run_subprogram(else_statement)
+
             self.pointer_position += len(statement) + len(else_statement) + 1
+
+            if status == Status.BREAK:
+                return Status.OK
+            elif status == Status.EXIT:
+                return Status.EXIT
 
         # Command: \
         # pop a
@@ -952,12 +966,18 @@ class Osabie:
             statement, remaining = get_statements(self.commands[self.pointer_position + 1:])
             a = apply_safe(int, self.pop_stack(default=0))
 
+            self.pointer_position += len(statement) + 1
+
             if type(a) is int and a != 0:
                 for range_variable in range(0, a):
                     new_env = self.environment
                     new_env.range_variable = range_variable
-                    self.stack, _ = self.__run_subprogram(statement, environment=new_env)
-            self.pointer_position += len(statement) + 1
+                    self.stack, status = self.__run_subprogram(statement, environment=new_env)
+
+                    if status == Status.BREAK:
+                        return Status.OK
+                    elif status == Status.EXIT:
+                        return Status.EXIT
 
         # Command: G
         # pop a
@@ -966,10 +986,16 @@ class Osabie:
             statement, remaining = get_statements(self.commands[self.pointer_position + 1:])
             a = apply_safe(int, self.pop_stack(default=0))
 
+            self.pointer_position += len(statement) + 1
+
             if type(a) is int and a > 1:
                 for range_variable in range(1, a):
-                    self.stack, _ = self.__run_subprogram(statement)
-            self.pointer_position += len(statement) + 1
+                    self.stack, status = self.__run_subprogram(statement)
+
+                    if status == Status.BREAK:
+                        return Status.OK
+                    elif status == Status.EXIT:
+                        return Status.EXIT
 
         # Command: µ
         # pop a
@@ -977,6 +1003,8 @@ class Osabie:
         elif current_command == "\u00b5":
             statement, remaining = get_statements(self.commands[self.pointer_position + 1:])
             a = apply_safe(int, self.pop_stack(default=0))
+
+            self.pointer_position += len(statement) + 1
 
             if type(a) is int:
                 range_variable = 0
@@ -989,9 +1017,12 @@ class Osabie:
                     range_variable += 1
                     new_env = self.environment
                     new_env.range_variable = range_variable
-                    self.stack, _ = self.__run_subprogram(statement, environment=new_env)
+                    self.stack, status = self.__run_subprogram(statement, environment=new_env)
 
-            self.pointer_position += len(statement) + 1
+                    if status == Status.BREAK:
+                        return Status.OK
+                    elif status == Status.EXIT:
+                        return Status.EXIT
 
         # Command: Ë
         # pop a
@@ -1036,13 +1067,18 @@ class Osabie:
             statement, remaining = get_statements(self.commands[self.pointer_position + 1:])
             a = apply_safe(int, self.pop_stack(default=-1))
 
+            self.pointer_position += len(statement) + 1
+
             if type(a) is int and a > -1:
                 for range_variable in range(0, a + 1):
                     new_env = self.environment
                     new_env.range_variable = range_variable
-                    self.stack, _ = self.__run_subprogram(statement, environment=new_env)
+                    self.stack, status = self.__run_subprogram(statement, environment=new_env)
 
-            self.pointer_position += len(statement) + 1
+                    if status == Status.BREAK:
+                        return Status.OK
+                    elif status == Status.EXIT:
+                        return Status.EXIT
 
         # Command: N
         # Push iteration counter
@@ -1331,6 +1367,8 @@ class Osabie:
             statement, remaining = get_statements(self.commands[self.pointer_position + 1:])
             range_variable = -1
 
+            self.pointer_position += len(statement) + 1
+
             while True:
                 range_variable += 1
                 new_env = self.environment
@@ -1338,8 +1376,6 @@ class Osabie:
                 self.stack, status = self.__run_subprogram(statement, environment=new_env)
                 if status == Status.BREAK:
                     break
-
-            self.pointer_position += len(statement) + 1
 
         # Command: #
         # pop a
@@ -1832,6 +1868,8 @@ class Osabie:
             statement, remaining = get_statements(self.commands[self.pointer_position + 1:])
             a = self.pop_stack()
 
+            self.pointer_position += len(statement) + 1
+
             range_variable = -1
             if type(a) is not list:
                 a = str(a)
@@ -1843,9 +1881,12 @@ class Osabie:
                 new_env = self.environment
                 new_env.range_variable = range_variable
                 new_env.string_variable = string_variable
-                self.stack, _ = self.__run_subprogram(statement, environment=new_env)
+                self.stack, status = self.__run_subprogram(statement, environment=new_env)
 
-            self.pointer_position += len(statement) + 1
+                if status == Status.BREAK:
+                    return Status.OK
+                elif status == Status.EXIT:
+                    return Status.EXIT
 
         # Command: y
         # push string variable (used in mapping loops)
@@ -3228,7 +3269,12 @@ class Osabie:
         # run with experimental batch evaluation (does not work in safe mode)
         elif current_command == ".V":
             a = self.pop_stack(default="")
-            self.stack, _ = self.__run_subprogram(str(a))
+            self.stack, status = self.__run_subprogram(str(a))
+
+            if status == Status.BREAK:
+                return Status.OK
+            elif status == Status.EXIT:
+                return Status.EXIT
 
         # Command: .R
         # Command: Ω

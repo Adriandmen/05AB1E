@@ -1,6 +1,6 @@
 
 class Status:
 
-    OK = 0
-    EXIT = 1
-    BREAK = 2
+    OK = "STATUS.OK"
+    EXIT = "STATUS.EXIT"
+    BREAK = "STATUS.BREAK"
