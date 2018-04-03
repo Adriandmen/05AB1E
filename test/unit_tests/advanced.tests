@@ -1,4 +1,4 @@
-﻿// ADVANCED TESTS
+// ADVANCED TESTS
 // Here, tests that recursively calls itself are tested.
 // Examples of commands that recursively calls itself are
 // the for-each command, sort-by, filter-by, et cetera.

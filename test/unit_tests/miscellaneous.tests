@@ -612,8 +612,8 @@ AA£                 EXPECT `abcdefghijklmnopqrstuvwxyz`
 1)"abc""DEF""GH"4)).l EXPECT `[[[0], 1, 0, 0, 0]]`
 
 // pairwise command
-"abcd"üJ              EXPECT `['abbccd']`
-1234ïüJ               EXPECT `['122334']`
+"abcd"üJ              EXPECT `['ab', 'bc', 'cd']`
+1234ïüJ               EXPECT `['12', '23', '34']`
 1234Sü‚O              EXPECT `[3, 5, 7]`
 
 // split into chunks of consecutive elements
