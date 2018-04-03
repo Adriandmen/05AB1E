@@ -40,3 +40,7 @@
 4 0i123…ƒƒ}ƒƒ456}   EXPECT `4`
 4 0i123…}ƒƒƒƒ456}   EXPECT `4`
 4 0i123…ƒƒƒƒƒƒ456}  EXPECT `4`
+
+// Break and quit
+10FN5NQ#}8          EXPECT `8`
+10FN5NQq}8          EXPECT `0`
