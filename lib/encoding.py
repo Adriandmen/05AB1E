@@ -50,9 +50,9 @@ def osabie_to_utf8(code):
 
 def utf8_to_osabie(code):
     """
-    Translates the given code encoded in UTF-8 into raw osabie bytes
-    :param code: The code that needs to be converted into osabie bytes
-    :return: A string encoded in osabie bytes
+    Translates the given code encoded in UTF-8 into raw behaviour bytes
+    :param code: The code that needs to be converted into behaviour bytes
+    :return: A string encoded in behaviour bytes
     """
 
     # Keep the processed byte values into this string

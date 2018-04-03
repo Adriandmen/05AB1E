@@ -455,6 +455,15 @@ class Osabie:
             a = self.pop_stack(default="")
             self.stack.append(single_vectorized_evaluation(a, sentence_case, str))
 
+        elif current_command == ".Œ":
+            b = self.pop_stack(default=2)
+            a = self.pop_stack(default=[])
+
+            if type(a) is not list:
+                a = str(a)
+
+            self.stack.append(divide_into(a[::-1], ast_int_eval(b)))
+
         # Command: ù
         # pop a,b
         # push a with elements of length b

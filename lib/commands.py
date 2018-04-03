@@ -1,10 +1,10 @@
-import collections
 import math
 import fractions
 import ast
 import random
 import re
-from functools import reduce
+import copy
+
 from itertools import count
 from difflib import SequenceMatcher
 
@@ -1179,6 +1179,40 @@ def list_permutations(elements: list):
     return perms
 
 
+def divide_into(elements, num: int):
+
+    main_type = type(elements)
+    if main_type is not list:
+        elements = list(elements)
+
+    head = elements[0]
+    remaining = elements[1:]
+
+    if remaining:
+        containers = divide_into(remaining, num)
+        divisions = []
+
+        for container in containers:
+
+            sub_containers = [copy.deepcopy(container) for _ in range(0, num)]
+
+            for index in range(0, num):
+                sub_containers[index][index].append(head)
+
+            for c in sub_containers:
+                divisions.append(c)
+    else:
+        divisions = []
+        for index in range(0, num):
+            containers = [[] for _ in range(0, num)]
+            containers[index].append(head)
+            divisions.append(containers)
+
+    if main_type is not list:
+        divisions = [list(map(lambda x: ''.join(x), sub_div)) for sub_div in divisions]
+    return divisions
+
+
 def bijective_base_conversion(a, to_base):
     a = int(a)
 
@@ -1220,3 +1254,15 @@ def uniquify(a, connected=False):
             buf.append(item)
 
     return buf if type(a) is list else ''.join(buf)
+
+
+if __name__ == '__main__':
+    print(divide_into("cba", 2))
+
+
+
+
+
+
+
+
