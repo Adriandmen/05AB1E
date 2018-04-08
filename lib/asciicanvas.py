@@ -81,7 +81,6 @@ def canvas_code_to_string(number, pattern, filler, prev_canvas=None, prev_cursor
 
     elif type(number) is int and type(pattern) is list:
         pattern_index = 0
-        print("d")
         for num in [number] * number:
             prev_canvas, prev_cursor = canvasify(
                 pattern[pattern_index % len(pattern)], num, filler, prev_canvas, prev_cursor
