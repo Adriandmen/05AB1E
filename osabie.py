@@ -3962,6 +3962,44 @@ class Osabie:
         elif current_command == ".0":
             global_env.zero_division = True
 
+        # Command: .£
+        # pop a, b
+        # push a[-b:]
+        elif current_command == ".\u00a3":
+            b = self.pop_stack(default=0)
+            a = self.pop_stack(default="")
+
+            try:
+                b = [int(x) for x in b] if type(b) is list else int(b)
+            except:
+                a, b = b, a
+
+            try:
+                if type(a) is not list:
+                    a = str(a)
+
+                if type(b) is list:
+                    temp_list = []
+                    temp_element = a
+                    for Q in b:
+                        temp_list.append(temp_element[-int(Q):])
+                        temp_element = temp_element[:-int(Q)]
+                    self.stack.append(temp_list)
+                else:
+                    b = int(b)
+                    self.stack.append(a[-b:])
+            except:
+                self.stack.append(a)
+        
+        # Command: .œ
+        # pop a
+        # push partitions(a)
+        elif current_command == ".œ":
+            a = self.pop_stack(default=[])
+            result = partitions(a)
+            self.stack.append(result)
+            
+        
         # Command: .æ
         # Permute by function
         elif current_command == ".æ":

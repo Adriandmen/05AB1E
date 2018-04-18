@@ -1255,6 +1255,14 @@ def uniquify(a, connected=False):
 
     return buf if type(a) is list else ''.join(buf)
 
+def partitions(a):
+	result = []
+	for i in range(1, len(a)):
+		for part in partitions(a[i:]):
+			part.insert(0, a[:i])
+			result.append(part)
+	result.append([a])
+	return result
 
 if __name__ == '__main__':
     print(divide_into("cba", 2))
