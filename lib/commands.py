@@ -63,7 +63,7 @@ def deep_flatten(S):
 
 def is_alpha_value(value):
     value = str(value)
-    
+
     if len(value) == 0:
         return 0
 
@@ -219,7 +219,7 @@ def convert_from_base_arbitrary(n, base):
         n = str(n)
 
     base = int(base)
-    
+
     n = n[::-1]
     r = 0
     range_v = 0
@@ -262,7 +262,7 @@ def first_n_primes(n):
         prime_list.append(next(primes))
     return prime_list
 
-    
+
 def primes_upto_n(n):
     prime_list = []
     primes = prime_sieve()
@@ -272,7 +272,7 @@ def primes_upto_n(n):
             break
         prime_list.append(current_prime)
     return prime_list
-    
+
 
 def prime_sieve():
     yield 2
@@ -409,11 +409,11 @@ def get_index_of_prime(n):
 def get_all_substrings(input_string):
     if type(input_string) is not list:
         input_string = str(input_string)
-        
+
     length = len(input_string)
     return [
         input_string[i:j+1] for i in range(length) for j in range(i, length)
-    ]
+        ]
 
 
 def floatify(string):
@@ -485,7 +485,7 @@ def chunk_divide(seq, num):
 
     if type(seq) is int:
         seq = str(seq)
-    
+
     num = ast_int_eval(num)
     avg = len(seq) / float(num)
     is_list = type(seq) is list
@@ -493,10 +493,10 @@ def chunk_divide(seq, num):
     if not is_list:
         seq = str(seq)
 
-    if avg < 1: 
+    if avg < 1:
         return seq
     # special case: there are more parts than possible groupings
-    elif avg < 2:    
+    elif avg < 2:
         seq = [[x] for x in seq]
 
         idx = 0
@@ -582,7 +582,7 @@ def infinite_replace(object1, object2, object3):
         while previous_object != object1:
             previous_object = object1
             for index in range(0, len(object2)):
-                while object1.replace(object2[index], object3[index])\
+                while object1.replace(object2[index], object3[index]) \
                         != object1:
                     object1 = object1.replace(object2[index], object3[index])
         return object1
@@ -605,7 +605,7 @@ def infinite_replace(object1, object2, object3):
             while previous_object != sub_element:
                 previous_object = sub_element
                 for sub_start in object2:
-                    while sub_element.replace(sub_start, object3)\
+                    while sub_element.replace(sub_start, object3) \
                             != sub_element:
                         sub_element = sub_element.replace(sub_start, object3)
             result_list.append(sub_element)
@@ -620,7 +620,7 @@ def infinite_replace(object1, object2, object3):
                 previous_object = sub_element
                 for sub_index in range(0, len(object2)):
                     while sub_element.replace(
-                            object2[sub_index], object3[sub_index])\
+                            object2[sub_index], object3[sub_index]) \
                             != sub_element:
                         sub_element = sub_element.replace(
                             object2[sub_index], object3[sub_index])
@@ -1136,7 +1136,7 @@ def deltaify(a):
         result.append(values[Q+1] - values[Q])
 
     if len(sublists):
-        result += [deltaify(l) for l in sublists]    
+        result += [deltaify(l) for l in sublists]
 
     return result
 
@@ -1255,14 +1255,17 @@ def uniquify(a, connected=False):
 
     return buf if type(a) is list else ''.join(buf)
 
+
 def partitions(a):
-	result = []
-	for i in range(1, len(a)):
-		for part in partitions(a[i:]):
-			part.insert(0, a[:i])
-			result.append(part)
-	result.append([a])
-	return result
+    result = []
+    if type(a) is int:
+        a = str(a)
+    for i in range(1, len(a)):
+        for part in partitions(a[i:]):
+            part.insert(0, a[:i])
+            result.append(part)
+    result.append([a])
+    return result
 
 if __name__ == '__main__':
     print(divide_into("cba", 2))
