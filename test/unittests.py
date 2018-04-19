@@ -2,7 +2,6 @@ import os
 import sys
 import inspect
 import osabie
-from lib.encoding import utf8_to_osabie
 
 
 def run_unit_tests():
@@ -70,9 +69,9 @@ def run_unit_tests():
                     EXIT_CODE = 1
 
                 succeeded = "success" if result in expected_results else "fail"
-                print("{}:{}".format(test_file, LINE_NO), "- Test", TOTAL, "-", succeeded)
 
                 if succeeded == "fail":
+                    print("{}:{}".format(test_file, LINE_NO), "- Test", TOTAL, "-", succeeded)
                     print()
                     print("FAIL at line", LINE_NO, "in", test_file)
                     EXIT_CODE = 1
