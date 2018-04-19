@@ -367,3 +367,5 @@ z       = pop a      push 1 / a
 .Ø      = pop a      push 0-indexed number of the greatest prime ≤ a
 .ò      = pop a,b    round a with b digits precision (bankers rounding)
 .Œ      = pop a,b    push all possible ways to divide a into b pieces
+.£      = pop a,b    push a[:-b]
+.œ      = pop a      push partitions(a)
