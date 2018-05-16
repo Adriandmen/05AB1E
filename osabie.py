@@ -999,7 +999,9 @@ class Osabie:
 
             if type(a) is int and a > 1:
                 for range_variable in range(1, a):
-                    self.stack, status = self.__run_subprogram(statement)
+                    new_env = self.environment
+                    new_env.range_variable = range_variable
+                    self.stack, status = self.__run_subprogram(statement, environment=new_env)
 
                     if status == Status.BREAK:
                         return Status.OK
