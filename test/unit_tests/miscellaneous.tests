@@ -636,3 +636,7 @@ AA£                 EXPECT `abcdefghijklmnopqrstuvwxyz`
 "foo""bar".L          EXPECT `3`
 "foobar""foobao".L    EXPECT `1`
 "foo"S"zoo"S.L        EXPECT `[1, 0, 0]`
+
+// Python evaluation
+"12+34".E             EXPECT `46`
+"1+2""3+4""2**2").E EXPECT `[3, 7, 4]`
