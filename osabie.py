@@ -3265,13 +3265,8 @@ class Osabie:
             if self.safe_mode:
                 print("exec self.commands are ignored in safe mode")
             else:
-                a = str(self.pop_stack(default=""))
-
-                if len(a):
-                    f = tempfile.NamedTemporaryFile()
-                    f.write(bytes(str(a), "cp1252"))
-                    os.system(f.name)
-                    f.close()
+                a = self.pop_stack()
+                self.stack.append(single_vectorized_evaluation(a, eval, str))
 
         # Command: .V
         # pop a
