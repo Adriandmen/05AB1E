@@ -159,8 +159,8 @@ class Osabie:
 
         return sub_program.interp()
 
-    def value(self, commands: str, stack: list):
-        curr_stack, _ = self.__run_subprogram(commands, stack=stack)
+    def value(self, commands: str, stack: list, environment: Environment=None):
+        curr_stack, _ = self.__run_subprogram(commands, stack=stack, environment=environment)
         return curr_stack[-1] if curr_stack else None
 
     def step(self):
@@ -640,8 +640,12 @@ class Osabie:
             statement, remaining = get_statements(self.commands[self.pointer_position + 1:])
 
             result = []
+            program_index = 0
             for element in a:
-                value = self.value(statement, stack=[element])
+                new_env = self.environment.clone()
+                new_env.range_variable = program_index
+                value = self.value(statement, stack=[element], environment=new_env)
+                program_index += 1
                 result.append(value)
 
             self.pointer_position += len(statement) + 1
@@ -3610,9 +3614,10 @@ class Osabie:
             self.pointer_position += 1
             fold_command = self.commands[self.pointer_position]
 
-            if self.stack and type(self.stack[-1]) is list and len(self.stack[-1]) > 1:
-                a = self.pop_stack()
+            a = self.pop_stack()
+            a = list(str(a)) if type(a) is not list else a
 
+            if len(a) > 1:
                 if current_command == ".\u00AB":
                     result = a[-1]
                     for element in a[:-1][::-1]:
@@ -3623,6 +3628,8 @@ class Osabie:
                         result = self.value(fold_command, stack=[result, element])
 
                 self.stack.append(result)
+            else:
+                self.stack.append(a)
 
         # Command: .h
         # pop a,b
