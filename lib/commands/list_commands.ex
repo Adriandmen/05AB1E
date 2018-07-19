@@ -47,19 +47,7 @@ defmodule Commands.ListCommands do
     end
 
     defp take_split(value, counts, acc) do
-        curr_head = Stream.take(counts, 1) |> Enum.take(1)
-        if curr_head == [] do
-            acc |> Stream.map(fn x -> x end)
-        else
-            curr_count = hd(curr_head)
-            curr = Enum.take(value, Functions.to_number(curr_count))
-            if length(curr) == 0 do
-                take_split(curr, Stream.drop(counts, 1), Stream.concat(acc, ['']))
-            else
-                remaining = Stream.drop(value, Functions.to_number(curr_count))
-                take_split(remaining, Stream.drop(counts, 1), Stream.concat(acc, [curr]))
-            end
-        end
+        Stream.transform(counts, value, fn (x, acc) -> {[Stream.take(acc, Functions.to_number(x))], Stream.drop(acc, Functions.to_number(x))} end) |> Stream.map(fn x -> x end)
     end
 
     def enumerate(value) do

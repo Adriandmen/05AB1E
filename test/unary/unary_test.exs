@@ -300,6 +300,6 @@ defmodule UnaryTest do
         assert evaluate("3L 3L)O") == [6, 6]
         assert evaluate("3LL 3L)O") == [[1, 3, 6], 6]
         assert evaluate("1 2 3 4O") == 10
-        # assert evaluate("∞∞£2£") == [1, 3, 6]
+        assert evaluate("∞∞£O3£") == [1, 5, 15]
     end
 end

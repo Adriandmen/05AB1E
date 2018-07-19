@@ -115,7 +115,7 @@ defmodule BinaryTest do
         assert evaluate("123456 1234S£") == ["1", "23", "456", ""]
         assert evaluate("123456 1224S£") == ["1", "23", "45", "6"]
         assert evaluate("∞ 1234S£") == [[1], [2, 3], [4, 5, 6], [7, 8, 9, 10]]
-        # assert evaluate("∞∞£4£") == [[1], [2, 3], [4, 5, 6], [7, 8, 9, 10]]
+        assert evaluate("∞∞£4£") == [[1], [2, 3], [4, 5, 6], [7, 8, 9, 10]]
     end
 
     test "modulo" do
