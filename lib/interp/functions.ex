@@ -1,17 +1,20 @@
 defmodule Interp.Functions do
 
+
+    defmacro is_iterable(value) do
+        quote do: is_map(unquote(value)) or is_list(unquote(value))
+    end
+
     # ----------------
     # Value conversion
     # ----------------
     def to_number(value) do
         case value do
-            :infinity -> :infinity  
-            :min_infinity -> :min_infinity
             true -> 1
             false -> 0
             _ when is_integer(value) or is_float(value) ->
                 value
-            _ when is_map(value) or is_list(value) ->
+            _ when is_iterable(value) ->
                 value |> Stream.map(&to_number/1)
             _ ->
                 try do
@@ -36,6 +39,10 @@ defmodule Interp.Functions do
         case value do
             _ when is_integer(value) ->
                 Integer.to_string(value)
+            _ when is_float(value) ->
+                Float.to_string(value)
+            _ when is_iterable(value) ->
+                value |> Stream.map(&to_non_number/1)
             _ -> 
                 value
         end
@@ -71,11 +78,6 @@ defmodule Interp.Functions do
 
     def eval(value) do
         value
-    end
-
-
-    defmacro is_iterable(value) do
-        quote do: is_map(unquote(value)) or is_list(unquote(value))
     end
 
 

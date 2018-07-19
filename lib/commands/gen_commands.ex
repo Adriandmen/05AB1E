@@ -1,6 +1,8 @@
 defmodule Commands.GeneralCommands do
 
     alias Interp.Functions
+    alias Interp.Interpreter
+    alias Interp.Stack
     require Interp.Functions
     
     def head(value) do
@@ -61,6 +63,15 @@ defmodule Commands.GeneralCommands do
         cond do
             Functions.is_iterable(value) -> Stream.concat(value, Stream.take(value, 1)) |> Stream.map(fn x -> x end)
             true -> Functions.to_non_number(value) <> head(value)
+        end
+    end
+
+    def run_while(prev_result, commands, environment, index) do
+        {result_stack, new_env} = Interpreter.interp(commands, %Stack{elements: [prev_result]}, %{environment | range_variable: index, range_element: prev_result})
+        {result, _, new_env} = Stack.pop(result_stack, new_env)
+        cond do
+            result == prev_result -> {result, new_env}
+            true -> run_while(result, commands, new_env, index + 1)
         end
     end
 end

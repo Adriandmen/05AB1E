@@ -1,13 +1,14 @@
 defmodule BinaryTest do
     use ExUnit.Case
     alias Reading.Reader
+    alias Parsing.Parser
     alias Interp.Interpreter
     alias Interp.Stack
     alias Interp.Environment
     alias Interp.Functions
 
     def evaluate(code) do
-        code = Reader.read(code)
+        code = Parser.parse(Reader.read(code))
         {stack, environment} = Interpreter.interp(code, %Stack{}, %Environment{})
         {result, _, _} = Stack.pop(stack, environment)
 

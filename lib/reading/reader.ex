@@ -1,7 +1,7 @@
 defmodule Reading.Reader do
 
     def nullary_ops, do: "(" <> Enum.join(Enum.map(
-                        ["∞", "т", "₁", "₂", "₃", "₄", "A", "®"], fn x -> Regex.escape(x) end), "|") <> ")"
+                        ["∞", "т", "₁", "₂", "₃", "₄", "A", "®", "N"], fn x -> Regex.escape(x) end), "|") <> ")"
 
     def unary_ops, do: "(" <> Enum.join(Enum.map(
                         ["γ", "η", "θ", "н", "Θ", "Ω", "≠", "∊", "∞", "#", "!", "(", ",", ";", "<", ">", 
@@ -13,7 +13,7 @@ defmodule Reading.Reader do
                         "ê", "í", "î", "ï", "ò", "ó", "û", "þ", ".€", ".ä", ".A", ".b", ".B", ".c", 
                         ".C", ".e", ".E", ".j", ".J", ".l", ".M", ".m", ".N", ".p", ".R", ".r", ".s", 
                         ".u", ".V", ".w", ".W", ".²", ".ï", ".ˆ", ".^", ".¼", ".½", ".¾", ".∞", ".¥", 
-                        ".ǝ", ".∊", ".Ø", "\\", "ā", "¤", "¥", "¬", "O"], fn x -> Regex.escape(x) end), "|") <> ")"
+                        ".ǝ", ".∊", ".Ø", "\\", "ā", "¤", "¥", "¬", "O", "P"], fn x -> Regex.escape(x) end), "|") <> ")"
 
     # TODO: Special ops like Ÿ (multiple arities)?
 
@@ -28,7 +28,13 @@ defmodule Reading.Reader do
                         
 
     def special_ops, do: "(" <> Enum.join(Enum.map(
-                        [")", "r", "©", "¹", "²", "³"], fn x -> Regex.escape(x) end), "|") <> ")"
+                        [")", "r", "©", "¹", "²", "³", "I", "$", "Î"], fn x -> Regex.escape(x) end), "|") <> ")"
+    
+    def subprogram_ops, do: "(" <> Enum.join(Enum.map(
+                        ["ʒ", "ε", "Δ", "Σ", "F", "G", "v", "ƒ"], fn x -> Regex.escape(x) end), "|") <> ")"
+    
+    def closing_brackets, do: "(" <> Enum.join(Enum.map(
+                        ["}", "]"], fn x -> Regex.escape(x) end), "|") <> ")"
 
 
     alias Reading.CodePage
@@ -86,6 +92,19 @@ defmodule Reading.Reader do
             Regex.match?(~r/^#{special_ops()}/, raw_code) ->
                 matches = Regex.named_captures(~r/^(?<special_op>#{special_ops()})(?<remaining>.*)/, raw_code)
                 {:special_op, matches["special_op"], matches["remaining"]}
+            
+            # Subprograms
+            Regex.match?(~r/^#{subprogram_ops()}/, raw_code) ->
+                matches = Regex.named_captures(~r/^(?<subprogram>#{subprogram_ops()})(?<remaining>.*)/, raw_code)
+                {:subprogram, matches["subprogram"], matches["remaining"]}
+            
+            # Closing brackets
+            Regex.match?(~r/^#{closing_brackets()}/, raw_code) ->
+                matches = Regex.named_captures(~r/^(?<bracket>#{closing_brackets()})(?<remaining>.*)/, raw_code)
+                case matches["bracket"] do
+                    "}" -> {:end, "}", matches["remaining"]}
+                    "]" -> {:end_all, "]", matches["remaining"]}
+                end
             
             # No-ops
             Regex.match?(~r/^(.).*/, raw_code) ->

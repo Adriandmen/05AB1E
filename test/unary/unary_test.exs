@@ -1,13 +1,14 @@
 defmodule UnaryTest do
     use ExUnit.Case
     alias Reading.Reader
+    alias Parsing.Parser
     alias Interp.Interpreter
     alias Interp.Stack
     alias Interp.Environment
     alias Interp.Functions
 
     def evaluate(code) do
-        parsed_code = Reader.read(code)
+        parsed_code = Parser.parse(Reader.read(code))
         {stack, environment} = Interpreter.interp(parsed_code, %Stack{}, %Environment{})
         {result, _, _} = Stack.pop(stack, environment)
 
@@ -297,9 +298,29 @@ defmodule UnaryTest do
 
     test "sum up" do
         assert evaluate("1 2 3)O") == 6
+        assert evaluate(")O") == 0
+        assert evaluate(") 2L)O") == [0, 3]
         assert evaluate("3L 3L)O") == [6, 6]
         assert evaluate("3LL 3L)O") == [[1, 3, 6], 6]
         assert evaluate("1 2 3 4O") == 10
         assert evaluate("∞∞£O3£") == [1, 5, 15]
+    end
+
+    test "product" do
+        assert evaluate("1 2 3)P") == 6
+        assert evaluate(")P") == 1
+        assert evaluate(") 2L)P") == [1, 2]
+        assert evaluate("3L 3L)P") == [6, 6]
+        assert evaluate("3LL 3L)P") == [[1, 2, 6], 6]
+        assert evaluate("1 2 3 4P") == 24
+        assert evaluate("∞∞£3£P") == [1, 6, 120]
+        assert evaluate("∞∞£P3£") == [1, 6, 120]
+    end
+
+    test "join to string" do
+        assert evaluate("1 2 3)J") == "123"
+        assert evaluate("3LJ") == "123"
+        assert evaluate("3LLJ") == ["1", "12", "123"]
+        assert evaluate("1 2 3J") == "123"
     end
 end

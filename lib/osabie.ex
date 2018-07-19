@@ -31,6 +31,7 @@ end
 
 defmodule Osabie.CLI do
   alias Reading.Reader
+  alias Parsing.Parser
   alias Interp.Interpreter
   alias Interp.Stack
   alias Interp.Environment
@@ -39,7 +40,7 @@ defmodule Osabie.CLI do
   def main(args) do
     arguments = parse_args(args)
     encoding = if arguments.osabie_encoded do :osabie else :utf_8 end
-    commands = Reader.read(Enum.join(Reader.read_file(arguments.path, encoding), ""))
+    commands = Parser.parse(Reader.read(Enum.join(Reader.read_file(arguments.path, encoding), "")))
     {stack, environment} = Interpreter.interp(commands, %Stack{}, %Environment{})
     {last, stack, environment} = Stack.pop(stack, environment)
 

@@ -4,10 +4,10 @@ defmodule Commands.ListCommands do
     
     def prefixes(a) do
         case a do
-            _ when is_map(a) ->
+            _ when Functions.is_iterable(a) ->
                 a |> Stream.scan([], fn (x, y) -> y ++ [x] end) |> Functions.stream
             _ ->
-                String.to_charlist(a) |> Stream.scan([], fn (x, y) -> y ++ [x] end) |> Stream.map(fn x -> to_string(x) end)
+                String.to_charlist(to_string(a)) |> Stream.scan([], fn (x, y) -> y ++ [x] end) |> Stream.map(fn x -> to_string(x) end)
         end
     end
 
@@ -47,7 +47,8 @@ defmodule Commands.ListCommands do
     end
 
     defp take_split(value, counts, acc) do
-        Stream.transform(counts, value, fn (x, acc) -> {[Stream.take(acc, Functions.to_number(x))], Stream.drop(acc, Functions.to_number(x))} end) |> Stream.map(fn x -> x end)
+        Stream.transform(counts, value, fn (x, acc) -> {[Stream.take(acc, Functions.to_number(x))], Stream.drop(acc, Functions.to_number(x))} end) 
+            |> Stream.map(fn x -> x end)
     end
 
     def enumerate(value) do
@@ -75,8 +76,16 @@ defmodule Commands.ListCommands do
     def product(value) do
         case Enum.take(value, 1) do
             [] -> 1
-            _ when Functions.is_iterable(hd(value)) -> value |> Stream.map(fn x -> product(x) end)
+            x when Functions.is_iterable(hd(x)) -> value |> Stream.map(fn x -> product(x) end)
             _ -> value |> Enum.reduce(1, fn (x, acc) -> acc * Functions.to_number(x) end)
+        end
+    end
+
+    def join(value, joiner) do
+        case Enum.take(value, 1) do
+            [] -> ""
+            x when Functions.is_iterable(hd(x)) -> value |> Stream.map(fn x -> join(x, joiner) end)
+            _ -> Enum.to_list(value) |> Enum.join(joiner)
         end
     end
 end
