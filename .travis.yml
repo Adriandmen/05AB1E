@@ -1,11 +1,12 @@
 # language
-language: python
- 
-# version numbers
-python:
-    - "3.5"
+language: elixir
+
+elixir: '1.6.4'
 
 sudo: false
-    
+
+install:
+ - mix escript.build
+
 script:
- - python test.py
+ - mix test
