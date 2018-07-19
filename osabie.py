@@ -3548,6 +3548,21 @@ class Osabie:
                 self.stack.append(a[1:])
                 self.stack.append(a[0])
 
+        elif current_command == "\u03B9":
+            b = self.pop_stack(default=2)
+            if type(b) is list:
+                a, b = b, 2
+            else:
+                a = self.pop_stack(default=[])
+                if type(a) is not list:
+                    a = str(a)
+            result = []
+            b = int(b)
+            for n in range(0, b):
+                result.append(a[n::b])
+            self.stack.append(result)
+
+
         # Command: €
         # pop a
         elif current_command == "\u20AC":
