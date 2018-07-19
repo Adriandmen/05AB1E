@@ -4,7 +4,7 @@ defmodule Reading.Reader do
                         ["∞", "т", "₁", "₂", "₃", "₄", "A", "®", "N"], fn x -> Regex.escape(x) end), "|") <> ")"
 
     def unary_ops, do: "(" <> Enum.join(Enum.map(
-                        ["γ", "η", "θ", "н", "Θ", "Ω", "≠", "∊", "∞", "#", "!", "(", ",", ";", "<", ">", 
+                        ["γ", "η", "θ", "н", "Θ", "Ω", "≠", "∊", "∞", "!", "(", ",", ";", "<", ">", 
                         "?", "@", "C", "D", "H", "J", "L", "R", "S", "U", "V", "_", "`", "a", "b", 
                         "d", "f", "g", "h", "j", "l", "n", "o", "p", "t", "u", "x", "z", "{", "ˆ", 
                         "Œ", "Ć", "ƶ", "Ā", "–", "—", "˜", "™", "š", "œ", "ć", "¥", "¦", "§", "¨", 
@@ -28,7 +28,7 @@ defmodule Reading.Reader do
                         
 
     def special_ops, do: "(" <> Enum.join(Enum.map(
-                        [")", "r", "©", "¹", "²", "³", "I", "$", "Î"], fn x -> Regex.escape(x) end), "|") <> ")"
+                        [")", "r", "©", "¹", "²", "³", "I", "$", "Î", "#"], fn x -> Regex.escape(x) end), "|") <> ")"
     
     def subprogram_ops, do: "(" <> Enum.join(Enum.map(
                         ["ʒ", "ε", "Δ", "Σ", "F", "G", "v", "ƒ"], fn x -> Regex.escape(x) end), "|") <> ")"
@@ -45,7 +45,7 @@ defmodule Reading.Reader do
             :utf_8 -> 
                 String.codepoints(File.read!(file_path))
             :osabie -> 
-                {status, file} = :file.open(file_path, [:read, :binary])
+                {_, file} = :file.open(file_path, [:read, :binary])
                 Stream.map(IO.binread(file, :all), fn x -> CodePage.osabie_to_utf8(x) end)
         end
     end

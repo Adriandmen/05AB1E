@@ -42,7 +42,7 @@ defmodule Osabie.CLI do
     encoding = if arguments.osabie_encoded do :osabie else :utf_8 end
     commands = Parser.parse(Reader.read(Enum.join(Reader.read_file(arguments.path, encoding), "")))
     {stack, environment} = Interpreter.interp(commands, %Stack{}, %Environment{})
-    {last, stack, environment} = Stack.pop(stack, environment)
+    {last, _, _} = Stack.pop(stack, environment)
 
     last = Functions.eval(last)
     cond do

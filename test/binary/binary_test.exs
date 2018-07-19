@@ -131,4 +131,17 @@ defmodule BinaryTest do
         assert Float.round(evaluate("\"5.5\"(\"2.5\"%"), 10) == 2.0
         assert Float.round(evaluate("\"5.5\"(\"2.5\"(%"), 10) == -0.5
     end
+
+    test "equals to" do
+        assert evaluate("3 3Q") == 1
+        assert evaluate("3 3ïQ") == 1
+        assert evaluate("3ï 3ïQ") == 1
+        assert evaluate("3 4Q") == 0
+        assert evaluate("3 4ïQ") == 0
+        assert evaluate("3ï 4ïQ") == 0
+        assert evaluate("3L 3Q") == [0, 0, 1]
+        assert evaluate("3L 3ïQ") == [0, 0, 1]
+        assert evaluate("3 3LQ") == [0, 0, 1]
+        assert evaluate("3ï 3LQ") == [0, 0, 1]
+    end
 end

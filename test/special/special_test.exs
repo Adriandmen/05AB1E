@@ -67,4 +67,9 @@ defmodule SpecialOpsTest do
     test "run until no change" do
         assert evaluate("3LLLΔO") == 15
     end
+
+    test "break out of loop" do
+        assert evaluate("10FN N3Q#})") == [0, 1, 2, 3]
+        assert evaluate("10FN2Q# 10FN N3Q#} 1ï})") == [0, 1, 2, 3, 1, 0, 1, 2, 3, 1]
+    end
 end

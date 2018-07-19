@@ -322,5 +322,6 @@ defmodule UnaryTest do
         assert evaluate("3LJ") == "123"
         assert evaluate("3LLJ") == ["1", "12", "123"]
         assert evaluate("1 2 3J") == "123"
+        assert evaluate("1 32ï 3J") == "1323"
     end
 end

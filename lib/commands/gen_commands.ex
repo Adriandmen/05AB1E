@@ -59,10 +59,33 @@ defmodule Commands.GeneralCommands do
         end
     end
 
+    def equals(a, b) do
+        cond do
+            Functions.is_iterable(a) and not Functions.is_iterable(b) -> a |> Stream.map(fn x -> equals(x, b) end)
+            not Functions.is_iterable(a) and Functions.is_iterable(b) -> b |> Stream.map(fn x -> equals(a, x) end)
+            true -> Functions.to_number(a) == Functions.to_number(b)
+        end
+    end
+
     def enclose(value) do
         cond do
             Functions.is_iterable(value) -> Stream.concat(value, Stream.take(value, 1)) |> Stream.map(fn x -> x end)
             true -> Functions.to_non_number(value) <> head(value)
+        end
+    end
+
+    def loop(commands, stack, environment, range) do
+        case environment.status do
+            :ok -> 
+                case Enum.take(range, 1) do
+                    [] -> {stack, environment}
+                    [x] -> 
+                        {new_stack, new_env} = Interpreter.interp(commands, stack, %{environment | range_variable: x})
+                        loop(commands, new_stack, new_env, Stream.drop(range, 1))
+                end
+            :break -> 
+                {stack, %{environment | status: :ok}}
+            :quit -> {stack, environment}
         end
     end
 

@@ -71,7 +71,7 @@ defmodule Interp.Functions do
     # --------------------------------
     # Force evaluation on lazy objects
     # --------------------------------
-    def eval(value) when is_map(value) do
+    def eval(value) when is_iterable(value) do
         Enum.to_list(value)
         Enum.map(value, &eval/1)
     end

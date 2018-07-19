@@ -8,7 +8,8 @@ defmodule Interp.Environment do
               range_variable: 0,
               range_element: "",
               canvas: nil,       # TODO: create canvas module
-              inputs: []
+              inputs: [],
+              status: :ok
 
     def get_input(environment, n) do
         list = environment.inputs
@@ -175,6 +176,7 @@ defmodule Interp.Interpreter do
             "‰" -> Stack.push(stack, call_binary(fn x, y -> [IntCommands.divide(to_number(x), to_number(y)), IntCommands.mod(to_number(x), to_number(y))] end, a, b))
             "‹" -> Stack.push(stack, call_binary(fn x, y -> to_number(to_number(x) < to_number(y)) end, a, b))
             "›" -> Stack.push(stack, call_binary(fn x, y -> to_number(to_number(x) > to_number(y)) end, a, b))
+            "Q" -> Stack.push(stack, to_number(GeneralCommands.equals(a, b)))
             "s" -> Stack.push(Stack.push(stack, b), a)
         end
 
@@ -220,6 +222,12 @@ defmodule Interp.Interpreter do
             "Î" ->
                 {element, new_env} = InputHandler.read_input(environment)
                 {Stack.push(Stack.push(stack, 0), element), new_env}
+            "#" ->
+                {element, new_stack, new_env} = Stack.pop(stack, environment)
+                cond do
+                    GeneralCommands.equals(to_number(element), 1) -> {new_stack, %{new_env | status: :break}}
+                    true -> {new_stack, new_env}
+                end
         end
     end
 
@@ -229,21 +237,21 @@ defmodule Interp.Interpreter do
             "F" ->
                 {a, stack, environment} = Stack.pop(stack, environment)
                 current_n = environment.range_variable
-                {new_stack, new_env} = Enum.reduce(0..to_number(a) - 1, {stack, environment}, fn (x, {curr_stack, curr_env}) -> interp(subcommands, curr_stack, %{curr_env | range_variable: x}) end)
+                {new_stack, new_env} = GeneralCommands.loop(subcommands, stack, environment, 0..to_number(a) - 1)
                 {new_stack, %{new_env | range_variable: current_n}}
 
             # For N in range [1, n)
             "G" ->
                 {a, stack, environment} = Stack.pop(stack, environment)
                 current_n = environment.range_variable
-                {new_stack, new_env} = Enum.reduce(1..to_number(a) - 1, {stack, environment}, fn (x, {curr_stack, curr_env}) -> interp(subcommands, curr_stack, %{curr_env | range_variable: x}) end)
+                {new_stack, new_env} = GeneralCommands.loop(subcommands, stack, environment, 1..to_number(a) - 1)
                 {new_stack, %{new_env | range_variable: current_n}}
 
             # For N in range [0, n]
             "ƒ" ->
                 {a, stack, environment} = Stack.pop(stack, environment)
                 current_n = environment.range_variable
-                {new_stack, new_env} = Enum.reduce(0..to_number(a), {stack, environment}, fn (x, {curr_stack, curr_env}) -> interp(subcommands, curr_stack, %{curr_env | range_variable: x}) end)
+                {new_stack, new_env} = GeneralCommands.loop(subcommands, stack, environment, 0..to_number(a))
                 {new_stack, %{new_env | range_variable: current_n}}
 
             # Filter by
@@ -252,7 +260,7 @@ defmodule Interp.Interpreter do
                 result = a 
                         |> Stream.with_index 
                         |> Stream.transform(environment, fn ({x, index}, curr_env) ->
-                            {result_stack, new_env} = interp(subcommands, %Stack{elements: [x]}, %{environment | range_variable: index, range_element: x})
+                            {result_stack, new_env} = interp(subcommands, %Stack{elements: [x]}, %{curr_env | range_variable: index, range_element: x})
                             {result, _, new_env} = Stack.pop(result_stack, new_env)
                             case to_number(result) do
                                 1 -> {[x], new_env}
@@ -268,7 +276,7 @@ defmodule Interp.Interpreter do
                 result = a
                         |> Stream.with_index
                         |> Stream.transform(environment, fn ({x, index}, curr_env) ->
-                            {result_stack, new_env} = interp(subcommands, %Stack{elements: [x]}, %{environment | range_variable: index, range_element: x})
+                            {result_stack, new_env} = interp(subcommands, %Stack{elements: [x]}, %{curr_env | range_variable: index, range_element: x})
                             {result, _, new_env} = Stack.pop(result_stack, new_env)
                             {[result], new_env} end)
                         |> Stream.map(fn x -> x end)
@@ -280,10 +288,10 @@ defmodule Interp.Interpreter do
                 result = a
                         |> Stream.with_index
                         |> Stream.transform(environment, fn ({x, index}, curr_env) ->
-                            {result_stack, new_env} = interp(subcommands, %Stack{elements: [x]}, %{environment | range_variable: index, range_element: x})
+                            {result_stack, new_env} = interp(subcommands, %Stack{elements: [x]}, %{curr_env | range_variable: index, range_element: x})
                             {result, _, new_env} = Stack.pop(result_stack, new_env)
                             {[{result, x}], new_env} end)
-                        |> Enum.sort_by(fn {a, x} -> a end)
+                        |> Enum.sort_by(fn {a, _} -> a end)
                         |> Stream.map(fn {_, x} -> x end)
                 {Stack.push(stack, result), environment}
 
@@ -320,24 +328,24 @@ defmodule Interp.Interpreter do
     def interp(commands, stack, environment) do
         [current_command | remaining] = commands
 
-        {stack, environment} = case current_command do
-            {:number, value} -> {Stack.push(stack, value), environment}
-            {:string, value} -> interp_string(value, stack, environment)
-            {:nullary_op, op} -> interp_nullary(op, stack, environment)
-            {:unary_op, op} -> interp_unary(op, stack, environment)
-            {:binary_op, op} -> interp_binary(op, stack, environment)
-            {:ternary_op, op} -> interp_ternary(op, stack, environment)
-            {:special_op, op} -> interp_special(op, stack, environment)
-            {:subprogram, op, subcommands} -> interp_subprogram(op, subcommands, stack, environment)
-            {:no_op, _} -> {stack, environment}
-            {:eof, _} -> {stack, environment}
-            x -> IO.inspect x
-        end
-
-        if length(remaining) > 0 do
-            interp(remaining, stack, environment)
-        else
-            {stack, environment}
+        case environment.status do
+            :ok -> 
+                {new_stack, new_env} = case current_command do
+                    {:number, value} -> {Stack.push(stack, value), environment}
+                    {:string, value} -> interp_string(value, stack, environment)
+                    {:nullary_op, op} -> interp_nullary(op, stack, environment)
+                    {:unary_op, op} -> interp_unary(op, stack, environment)
+                    {:binary_op, op} -> interp_binary(op, stack, environment)
+                    {:ternary_op, op} -> interp_ternary(op, stack, environment)
+                    {:special_op, op} -> interp_special(op, stack, environment)
+                    {:subprogram, op, subcommands} -> interp_subprogram(op, subcommands, stack, environment)
+                    {:no_op, _} -> {stack, environment}
+                    {:eof, _} -> {stack, environment}
+                    x -> IO.inspect x
+                end
+                interp(remaining, new_stack, new_env)
+            :break -> {stack, environment}
+            :quit -> {stack, environment}
         end
     end
 end

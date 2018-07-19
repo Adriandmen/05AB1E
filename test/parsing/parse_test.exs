@@ -63,4 +63,29 @@ defmodule ParserTest do
              ]}
           ]
     end
+
+    test "parse multiple subprograms with break" do
+        assert Parser.parse(Reader.read("10FN2Q# 10FN N3Q#} 1ï})")) == [
+            {:number, "10"},
+            {:subprogram, "F",
+             [
+               {:nullary_op, "N"},
+               {:number, "2"},
+               {:binary_op, "Q"},
+               {:special_op, "#"},
+               {:number, "10"},
+               {:subprogram, "F",
+                [
+                  nullary_op: "N",
+                  nullary_op: "N",
+                  number: "3",
+                  binary_op: "Q",
+                  special_op: "#"
+                ]},
+               {:number, "1"},
+               {:unary_op, "ï"}
+             ]},
+            {:special_op, ")"}
+          ]
+    end
 end
