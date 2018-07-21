@@ -7,6 +7,9 @@ defmodule Parsing.Parser do
             [:subprogram, op] ->
                 {remaining, subcommands, _} = parse_subprogram(remaining)
                 parse_program(remaining, parsed ++ [{:subprogram, op, subcommands}])
+            [:subcommand, op] ->
+                [subcommand | new_remaining] = remaining
+                parse_program(new_remaining, parsed ++ [{:subprogram, op, parse_program([subcommand], [])}])
             [:no_op, _] -> parse_program(remaining, parsed)
             [:eof, _] -> parsed
             [op_type, op] -> parse_program(remaining, parsed ++ [{op_type, op}])
@@ -29,6 +32,9 @@ defmodule Parsing.Parser do
                     :end_all -> {remaining, parsed ++ [{:subprogram, op, subcommands}], :end_all}
                     :end -> parse_subprogram(remaining, parsed ++ [{:subprogram, op, subcommands}])
                 end
+            [:subcommand, op] ->
+                [subcommand | new_remaining] = remaining
+                parse_program(new_remaining, parsed ++ [{:subprogram, op, parse_subprogram([subcommand], [])}])
             [:no_op, _] -> parse_subprogram(remaining, parsed)
             [op_type, op] -> parse_subprogram(remaining, parsed ++ [{op_type, op}])
         end

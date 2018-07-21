@@ -74,14 +74,15 @@ defmodule Commands.GeneralCommands do
         end
     end
 
-    def loop(commands, stack, environment, range) do
+    def loop(commands, stack, environment, index, range) do
         case environment.status do
             :ok -> 
-                case Enum.take(range, 1) do
-                    [] -> {stack, environment}
-                    [x] -> 
-                        {new_stack, new_env} = Interpreter.interp(commands, stack, %{environment | range_variable: x})
-                        loop(commands, new_stack, new_env, Stream.drop(range, 1))
+                cond do
+                    index <= range ->
+                        {new_stack, new_env} = Interpreter.interp(commands, stack, %{environment | range_variable: index})
+                        loop(commands, new_stack, new_env, index + 1, range)
+                    true ->
+                        {stack, environment}
                 end
             :break -> 
                 {stack, %{environment | status: :ok}}

@@ -53,4 +53,16 @@ defmodule ReaderTest do
     test "read end of file" do
         assert Reader.read_step("") == {:eof, nil, nil}
     end
+
+    test "read compressed number" do
+        assert Reader.read_step("•1æa•") == {:number, 123456, ""}
+    end
+
+    test "read compressed number without end delimiter" do
+        assert Reader.read_step("•1æa") == {:number, 123456, ""}
+    end
+
+    test "read empty compressed number" do
+        assert Reader.read_step("••") == {:number, 0, ""}
+    end
 end

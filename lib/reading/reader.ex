@@ -31,13 +31,17 @@ defmodule Reading.Reader do
                         [")", "r", "©", "¹", "²", "³", "I", "$", "Î", "#"], fn x -> Regex.escape(x) end), "|") <> ")"
     
     def subprogram_ops, do: "(" <> Enum.join(Enum.map(
-                        ["ʒ", "ε", "Δ", "Σ", "F", "G", "v", "ƒ"], fn x -> Regex.escape(x) end), "|") <> ")"
+                        ["ʒ", "ε", "Δ", "Σ", "F", "G", "v", "ƒ", "µ"], fn x -> Regex.escape(x) end), "|") <> ")"
+    
+    def subcommand_ops, do: "(" <> Enum.join(Enum.map(
+                        ["δ", "€", "ü", ".«", ".»"], fn x -> Regex.escape(x) end), "|") <> ")"
     
     def closing_brackets, do: "(" <> Enum.join(Enum.map(
                         ["}", "]"], fn x -> Regex.escape(x) end), "|") <> ")"
 
 
     alias Reading.CodePage
+    alias Commands.IntCommands
     
     def read_file(file_path, encoding) do
 
@@ -57,6 +61,11 @@ defmodule Reading.Reader do
             Regex.match?(~r/^\d+/, raw_code) ->
                 matches = Regex.named_captures(~r/^(?<number>\d+)(?<remaining>.*)/, raw_code)
                 {:number, matches["number"], matches["remaining"]}
+
+            # Special numbers
+            Regex.match?(~r/^•(.*?)(•|$)/, raw_code) ->
+                matches = Regex.named_captures(~r/^•(?<number>.*?)(•|$)(?<remaining>.*)/, raw_code)
+                {:number, IntCommands.string_from_base(matches["number"], 255), matches["remaining"]}
 
             # Strings
             Regex.match?(~r/^"(.*?)("|$)/, raw_code) ->
@@ -97,6 +106,11 @@ defmodule Reading.Reader do
             Regex.match?(~r/^#{subprogram_ops()}/, raw_code) ->
                 matches = Regex.named_captures(~r/^(?<subprogram>#{subprogram_ops()})(?<remaining>.*)/, raw_code)
                 {:subprogram, matches["subprogram"], matches["remaining"]}
+            
+            # Subcommands
+            Regex.match?(~r/^#{subcommand_ops()}/, raw_code) ->
+                matches = Regex.named_captures(~r/^(?<subcommand>#{subcommand_ops()})(?<remaining>.*)/, raw_code)
+                {:subcommand, matches["subcommand"], matches["remaining"]}
             
             # Closing brackets
             Regex.match?(~r/^#{closing_brackets()}/, raw_code) ->

@@ -72,4 +72,9 @@ defmodule SpecialOpsTest do
         assert evaluate("10FN N3Q#})") == [0, 1, 2, 3]
         assert evaluate("10FN2Q# 10FN N3Q#} 1ï})") == [0, 1, 2, 3, 1, 0, 1, 2, 3, 1]
     end
+
+    test "map command for each" do
+        assert evaluate("5L€>") == [2, 3, 4, 5, 6]
+        assert evaluate("5L€D") == [1, 1, 2, 2, 3, 3, 4, 4, 5, 5]
+    end
 end

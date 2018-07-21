@@ -144,4 +144,27 @@ defmodule BinaryTest do
         assert evaluate("3 3LQ") == [0, 0, 1]
         assert evaluate("3ï 3LQ") == [0, 0, 1]
     end
+
+    test "remove from" do
+        assert evaluate("123456 45K") == "1236"
+        assert evaluate("12344556 45K") == "123456"
+        assert evaluate("12344556ï 45ïK") == "123456"
+        assert evaluate("1245344556ï 45ïK") == "123456"
+        # assert evaluate("5L 3K") == [1, 2, 4, 5]
+    end
+
+    test "contains" do
+        assert evaluate("123456 34å") == 1
+        assert evaluate("123456 43å") == 0
+        assert evaluate("123456 7Lå") == [1, 1, 1, 1, 1, 1, 0]
+        assert evaluate("123456ï 7Lå") == [1, 1, 1, 1, 1, 1, 0]
+        assert evaluate("12 34 56) 3å") == 0
+        assert evaluate("12 34 56) 34å") == 1
+        assert evaluate("1 3 4) 4Lå") == [1, 0, 1, 1]
+    end
+
+    test "wrap two" do
+        assert evaluate("1 2‚ï") == [1, 2]
+        assert evaluate("1L 2L‚") == [[1], [1, 2]]
+    end
 end

@@ -324,4 +324,15 @@ defmodule UnaryTest do
         assert evaluate("1 2 3J") == "123"
         assert evaluate("1 32ï 3J") == "1323"
     end
+
+    test "ten to the power of n" do
+        assert evaluate("2°") == 100
+        assert evaluate("3L°") == [10, 100, 1000]
+        assert_in_delta evaluate("\"0.5\"°"), 3.1622776601, 0.0000001
+    end
+
+    test "double number" do
+        assert evaluate("2·") == 4
+        assert evaluate("3L·") == [2, 4, 6]
+    end
 end

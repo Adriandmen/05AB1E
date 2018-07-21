@@ -109,11 +109,11 @@ defmodule Interp.Functions do
     end
 
     def call_binary(func, a, b, _, false) when is_iterable(b) do
-        b |> Stream.map(fn x -> call_binary(func, a, x) end)
+        b |> Stream.map(fn x -> call_binary(func, a, x, true, false) end)
     end
 
     def call_binary(func, a, b, false, _) when is_iterable(a) do
-        a |> Stream.map(fn x -> call_binary(func, x, b) end)
+        a |> Stream.map(fn x -> call_binary(func, x, b, false, true) end)
     end
 
     def call_binary(func, a, b, _, _) do

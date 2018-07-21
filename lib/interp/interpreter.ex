@@ -133,8 +133,10 @@ defmodule Interp.Interpreter do
             "Ć" -> Stack.push(stack, call_unary(fn x -> GeneralCommands.enclose(x) end, a, true))
             "Ì" -> Stack.push(stack, call_unary(fn x -> to_number(x) + 2 end, a))
             "Í" -> Stack.push(stack, call_unary(fn x -> to_number(x) - 2 end, a))
+            "·" -> Stack.push(stack, call_unary(fn x -> to_number(x) * 2 end, a))
             "È" -> Stack.push(stack, call_unary(fn x -> to_number(is_integer(to_number(x)) and IntCommands.mod(to_number(x), 2) == 0) end, a))
             "É" -> Stack.push(stack, call_unary(fn x -> to_number(is_integer(to_number(x)) and IntCommands.mod(to_number(x), 2) == 1) end, a))
+            "°" -> Stack.push(stack, call_unary(fn x -> IntCommands.pow(10, to_number(x)) end, a))
             "¦" -> Stack.push(stack, GeneralCommands.dehead(a))
             "¨" -> Stack.push(stack, GeneralCommands.detail(a))
             "¥" -> Stack.push(stack, ListCommands.deltas(a))
@@ -170,6 +172,8 @@ defmodule Interp.Interpreter do
             "~" -> Stack.push(stack, call_binary(fn x, y -> to_number(x) ||| to_number(y) end, a, b))
             "B" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.to_base(to_number(x), to_number(y)) end, a, b))
             "m" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.pow(to_number(x), to_number(y)) end, a, b))
+            "K" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.remove_from(x, y, false) end, a, b, true, true))
+            "å" -> Stack.push(stack, call_binary(fn x, y -> to_number(ListCommands.contains(to_non_number(x), y)) end, a, b, true, false))
             "è" -> Stack.push(stack, call_binary(fn x, y -> GeneralCommands.element_at(x, to_number(y)) end, a, b, true, false))
             "£" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.take_first(x, to_number(y)) end, a, b, true, true))
             "м" -> Stack.push(stack, call_binary(fn x, y -> GeneralCommands.remove_from(x, y) end, a, b, true, true))
@@ -177,6 +181,7 @@ defmodule Interp.Interpreter do
             "‹" -> Stack.push(stack, call_binary(fn x, y -> to_number(to_number(x) < to_number(y)) end, a, b))
             "›" -> Stack.push(stack, call_binary(fn x, y -> to_number(to_number(x) > to_number(y)) end, a, b))
             "Q" -> Stack.push(stack, to_number(GeneralCommands.equals(a, b)))
+            "‚" -> Stack.push(stack, [a, b])
             "s" -> Stack.push(Stack.push(stack, b), a)
         end
 
@@ -237,21 +242,21 @@ defmodule Interp.Interpreter do
             "F" ->
                 {a, stack, environment} = Stack.pop(stack, environment)
                 current_n = environment.range_variable
-                {new_stack, new_env} = GeneralCommands.loop(subcommands, stack, environment, 0..to_number(a) - 1)
+                {new_stack, new_env} = GeneralCommands.loop(subcommands, stack, environment, 0, to_number(a) - 1)
                 {new_stack, %{new_env | range_variable: current_n}}
 
             # For N in range [1, n)
             "G" ->
                 {a, stack, environment} = Stack.pop(stack, environment)
                 current_n = environment.range_variable
-                {new_stack, new_env} = GeneralCommands.loop(subcommands, stack, environment, 1..to_number(a) - 1)
+                {new_stack, new_env} = GeneralCommands.loop(subcommands, stack, environment, 1, to_number(a) - 1)
                 {new_stack, %{new_env | range_variable: current_n}}
 
             # For N in range [0, n]
             "ƒ" ->
                 {a, stack, environment} = Stack.pop(stack, environment)
                 current_n = environment.range_variable
-                {new_stack, new_env} = GeneralCommands.loop(subcommands, stack, environment, 0..to_number(a))
+                {new_stack, new_env} = GeneralCommands.loop(subcommands, stack, environment, 0, to_number(a))
                 {new_stack, %{new_env | range_variable: current_n}}
 
             # Filter by
@@ -300,6 +305,21 @@ defmodule Interp.Interpreter do
                 {a, stack, environment} = Stack.pop(stack, environment)
                 {result, new_env} = GeneralCommands.run_while(a, subcommands, environment, 0)
                 {Stack.push(stack, result), new_env}
+            
+            # Counter variable loop
+            "µ" ->
+                {a, stack, environment} = Stack.pop(stack, environment)
+            
+            # Map for each
+            "€" ->
+                {a, stack, environment} = Stack.pop(stack, environment)
+                result = a
+                        |> Stream.with_index
+                        |> Stream.transform(environment, fn ({x, index}, curr_env) ->
+                            {result_stack, new_env} = interp(subcommands, %Stack{elements: [x]}, %{curr_env | range_variable: index, range_element: x})
+                            {result_stack.elements, new_env} end)
+                        |> Stream.map(fn x -> x end)
+                {Stack.push(stack, result), environment}
         end
     end
 

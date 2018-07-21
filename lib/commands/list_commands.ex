@@ -1,5 +1,6 @@
 defmodule Commands.ListCommands do
     alias Interp.Functions
+    alias Commands.GeneralCommands
     require Interp.Functions
     
     def prefixes(a) do
@@ -38,15 +39,15 @@ defmodule Commands.ListCommands do
         end
     end
 
-
     defp take_split(value, counts) do
         cond do
-            Functions.is_iterable(value) -> take_split(value, counts, [])
-            true -> take_split(String.to_charlist(value), counts, []) |> Stream.map(fn x -> List.to_string(Enum.to_list(x)) end)
+            Functions.is_iterable(value) -> Stream.transform(counts, value, fn (x, acc) -> {[Stream.take(acc, Functions.to_number(x))], Stream.drop(acc, Functions.to_number(x))} end) 
+                                            |> Stream.map(fn x -> x end)
+            true -> take_split(String.to_charlist(value), counts) |> Stream.map(fn x -> List.to_string(Enum.to_list(x)) end)
         end
     end
 
-    defp take_split(value, counts, acc) do
+    defp take_split(value, counts) do
         Stream.transform(counts, value, fn (x, acc) -> {[Stream.take(acc, Functions.to_number(x))], Stream.drop(acc, Functions.to_number(x))} end) 
             |> Stream.map(fn x -> x end)
     end
@@ -86,6 +87,23 @@ defmodule Commands.ListCommands do
             [] -> ""
             x when Functions.is_iterable(hd(x)) -> value |> Stream.map(fn x -> join(x, joiner) end)
             _ -> Enum.to_list(value) |> Enum.join(joiner)
+        end
+    end
+
+    def contains(value, element) do
+        cond do
+            Functions.is_iterable(value) -> Enum.find(value, fn x -> GeneralCommands.equals(x, element) end) != nil
+            true -> String.contains?(to_string(value), to_string(element))
+        end
+    end
+
+    def remove_from(value, filter_elements, inner) do
+        cond do
+            Functions.is_iterable(value) and Functions.is_iterable(filter_elements) -> value |> Stream.filter(fn x -> contains(filter_elements, x) end)
+            inner == true -> Enum.reduce(Functions.to_non_number(value), fn (x, acc) -> Enum.replace(acc, Functions.to_non_number(x), "") end)
+            Functions.is_iterable(filter_elements) -> remove_from(value, filter_elements, true)
+            Functions.is_iterable(value) -> filter_elements |> Stream.filter(fn x -> contains(filter_elements, value) end)
+            true -> String.replace(to_string(value), to_string(filter_elements), "")
         end
     end
 end
