@@ -1,5 +1,6 @@
 defmodule Commands.StrCommands do
     alias Interp.Functions
+    require Interp.Functions
 
     def insert_at(a, b, c) when is_map(a) and is_map(b) and is_map(c) do
         pairs = Enum.to_list Stream.zip([b, c])
@@ -78,4 +79,14 @@ defmodule Commands.StrCommands do
     def keep_digits(list) do
         list |> Stream.filter(fn x -> Regex.match?(~r/^[0-9]+$/, to_string(x)) end)
     end
+
+    def to_codepoints(value) when Functions.is_iterable(value), do: value |> Stream.map(
+        fn x -> 
+            if not Functions.is_iterable(x) and String.length(to_string(x)) == 1 do 
+                hd(to_codepoints(to_string(x))) 
+            else 
+                to_codepoints(to_string(x)) 
+            end 
+        end)
+    def to_codepoints(value), do: String.to_charlist(to_string(value))
 end

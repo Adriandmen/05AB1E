@@ -447,4 +447,16 @@ defmodule UnaryTest do
         assert evaluate("11223344Sïγ") == [[1, 1], [2, 2], [3, 3], [4, 4]]
         assert evaluate("∞€Dγ4£") == [[1, 1], [2, 2], [3, 3], [4, 4]]
     end
+    
+    test "int to char" do
+        assert evaluate("33ç") == "!"
+        assert evaluate("33 34 35 36)ç") == ["!", "\"", "#", "$"]
+    end
+
+    test "char to int" do
+        assert evaluate("\"abc\"Ç") == [97, 98, 99]
+        assert evaluate("\"abc\"SÇ") == [97, 98, 99]
+        assert evaluate("\"abc\"\"def\")Ç") == [[97, 98, 99], [100, 101, 102]]
+        assert evaluate("\"abc\"\"def\"\"g\")Ç") == [[97, 98, 99], [100, 101, 102], 103]
+    end
 end

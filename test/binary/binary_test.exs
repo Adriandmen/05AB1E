@@ -225,4 +225,9 @@ defmodule BinaryTest do
         assert evaluate("\"abc\"S\"def\"ì") == ["defa", "defb", "defc"]
         assert evaluate("\"abc\"S\"def\"Sì") == ["d", "e", "f", "a", "b", "c"]
     end
+
+    test "join with" do
+        assert evaluate("1 2 3 0ý") == "10203"
+        assert evaluate("1 2 3) 0ý") == "10203"
+    end
 end
