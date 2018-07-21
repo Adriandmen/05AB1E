@@ -34,6 +34,7 @@ defmodule BinaryTest do
         assert evaluate("4ï 5ï+") == 9
         assert evaluate("4§ 5ï+") == 9
         assert evaluate("4ï 5§+") == 9
+        assert evaluate("1.2 1.2+") == 2.4
         assert evaluate("4L 5+") == [6, 7, 8, 9]
         assert evaluate("4 5L+") == [5, 6, 7, 8, 9]
         assert evaluate("5L 5L+") == [2, 4, 6, 8, 10]
@@ -229,5 +230,12 @@ defmodule BinaryTest do
     test "join with" do
         assert evaluate("1 2 3 0ý") == "10203"
         assert evaluate("1 2 3) 0ý") == "10203"
+    end
+
+    test "dividable by" do
+        assert evaluate("4 2Ö") == 1
+        assert evaluate("4 3Ö") == 0
+        assert evaluate("3 4Ö") == 0
+        assert evaluate("45 456SÖ") == [0, 1, 0]
     end
 end

@@ -14,6 +14,18 @@ defmodule ReaderTest do
         assert Reader.read_step("0123c") == {:number, "0123", "c"}
     end
 
+    test "read decimal number" do
+        assert Reader.read_step("1.2a") == {:number, "1.2", "a"}
+    end
+
+    test "read decimal number without leading number" do
+        assert Reader.read_step(".2a") == {:number, ".2", "a"}
+    end
+
+    test "read decimal number with no remaining code" do
+        assert Reader.read_step(".2") == {:number, ".2", ""}
+    end
+
     test "read nullary function" do
         assert Reader.read_step("∞abc") == {:nullary_op, "∞", "abc"}
     end

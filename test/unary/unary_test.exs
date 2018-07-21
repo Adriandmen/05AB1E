@@ -459,4 +459,10 @@ defmodule UnaryTest do
         assert evaluate("\"abc\"\"def\")Ç") == [[97, 98, 99], [100, 101, 102]]
         assert evaluate("\"abc\"\"def\"\"g\")Ç") == [[97, 98, 99], [100, 101, 102], 103]
     end
+
+    test "bifurcate" do
+        assert evaluate("123Â)") == ["123", "321"]
+        assert evaluate("123ïÂ)ï") == [123, 321]
+        assert evaluate("3LÂ)") == [[1, 2, 3], [3, 2, 1]]
+    end
 end

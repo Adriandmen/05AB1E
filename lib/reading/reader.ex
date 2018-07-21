@@ -61,8 +61,8 @@ defmodule Reading.Reader do
 
         cond do
             # Numbers
-            Regex.match?(~r/^\d+/, raw_code) ->
-                matches = Regex.named_captures(~r/^(?<number>\d+)(?<remaining>.*)/, raw_code)
+            Regex.match?(~r/^(\d*\.\d+|\d+)(.*)/, raw_code) ->
+                matches = Regex.named_captures(~r/^(?<number>(\d*\.\d+|\d+))(?<remaining>.*)/, raw_code)
                 {:number, matches["number"], matches["remaining"]}
 
             # Strings and equivalent values
