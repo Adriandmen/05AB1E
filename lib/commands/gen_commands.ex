@@ -67,6 +67,18 @@ defmodule Commands.GeneralCommands do
         end
     end
 
+    def all_equal(value) do
+        cond do
+            Functions.is_iterable(value) -> 
+                case Enum.take(value, 1) do
+                    [] -> true
+                    element -> Enum.all?(value, fn x -> equals(x, hd(element)) end)
+                end
+            true ->
+                all_equal(String.graphemes(to_string(value)))
+        end
+    end
+
     def enclose(value) do
         cond do
             Functions.is_iterable(value) -> Stream.concat(value, Stream.take(value, 1)) |> Stream.map(fn x -> x end)
@@ -74,13 +86,55 @@ defmodule Commands.GeneralCommands do
         end
     end
 
+    def concat(a, b) do
+        cond do
+            Functions.is_iterable(a) and Functions.is_iterable(b) -> Stream.concat(a, b) |> Stream.map(fn x -> x end)
+            Functions.is_iterable(a) and not Functions.is_iterable(b) -> a |> Stream.map(fn x -> concat(x, b) end)
+            not Functions.is_iterable(a) and Functions.is_iterable(b) -> b |> Stream.map(fn x -> concat(a, x) end)
+            true -> to_string(a) <> to_string(b)
+        end
+    end
+
+    @docs """
+    Loop method. This method iteratively runs the given commands on the given index and the given range.
+    After each iteration of running the code, it also gives the resulting stack and resulting environment.
+
+    ## Parameters
+
+     - commands:    A list of commands that the program will run on.
+     - stack:       A Stack object which contains the current state of the stack.
+     - environment: The environment in which the program will be run in.
+     - index:       The current index of the loop iteration.
+     - range:       The range of the loop. If the range is an integer, the loop will run from n <- index..range
+                    If the range of the loop is a string or a list, it will iterate over each element in the given range.  
+    """
     def loop(commands, stack, environment, index, range) do
         case environment.status do
             :ok -> 
                 cond do
-                    index <= range ->
+                    # If the range is an integer and the index is in bounds, run the commands
+                    # and increment the index by 1 on the next iteration.
+                    is_integer(range) and index <= range ->
                         {new_stack, new_env} = Interpreter.interp(commands, stack, %{environment | range_variable: index})
                         loop(commands, new_stack, new_env, index + 1, range)
+                    
+                    # If the range is a list/stream/map, take the first element after 'index' elements
+                    # and check if the current index is in bounds (i.e. curr_element != []).
+                    Functions.is_iterable(range) ->
+                        curr_element = range |> Stream.drop(index) |> Stream.take(1) |> Enum.to_list
+                        case curr_element do
+                            [] -> {stack, environment}
+                            x ->
+                                {new_stack, new_env} = Interpreter.interp(commands, stack, %{environment | range_variable: index, range_element: hd(x)})
+                                loop(commands, new_stack, new_env, index + 1, range)
+                        end
+                    
+                    # If the range is a string, convert to a list of strings and loop on that.
+                    is_bitstring(range) ->
+                        loop(commands, stack, environment, index, String.graphemes(range))
+                    
+                    # If none of the above applies, that means that the index is out of bounds and
+                    # we will return the final state of the stack and the environment.
                     true ->
                         {stack, environment}
                 end

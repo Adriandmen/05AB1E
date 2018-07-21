@@ -12,6 +12,13 @@ defmodule Commands.ListCommands do
         end
     end
 
+    def suffixes(a) do
+        cond do
+            Functions.is_iterable(a) -> a |> Enum.reverse |> prefixes |> Stream.map(fn x -> x |> Enum.reverse end)
+            true -> String.graphemes(to_string(a)) |> Enum.reverse |> prefixes |> Stream.map(fn x -> x |> Enum.reverse |> Enum.join("") end)
+        end
+    end
+
     def listify(a, b) do
         cond do
             a == :infinity ->
@@ -20,6 +27,22 @@ defmodule Commands.ListCommands do
                 Stream.scan(Stream.cycle([1]), fn (_, y) -> y + 1 end)
             true ->
                 a..b
+        end
+    end
+
+    def rangify(a) do
+        case Stream.take(a, 1) |> Enum.to_list |> List.first do
+            nil -> []
+            first -> 
+                a |> Stream.transform(nil, fn (element, acc) -> 
+                    case acc do
+                        nil -> {[element], element}
+                        x when element == x -> {[element], element}
+                        x when element > x -> {acc + 1..element, element}
+                        x when element < x -> {acc - 1..element, element}
+                    end
+                end)
+                  |> Stream.map(fn x -> x end)
         end
     end
 
@@ -47,11 +70,6 @@ defmodule Commands.ListCommands do
         end
     end
 
-    defp take_split(value, counts) do
-        Stream.transform(counts, value, fn (x, acc) -> {[Stream.take(acc, Functions.to_number(x))], Stream.drop(acc, Functions.to_number(x))} end) 
-            |> Stream.map(fn x -> x end)
-    end
-
     def enumerate(value) do
         cond do
             Functions.is_iterable(value) -> value |> Stream.with_index(1) |> Stream.map(fn {_, index} -> index end)
@@ -71,6 +89,14 @@ defmodule Commands.ListCommands do
             [] -> 0
             x when Functions.is_iterable(hd(x)) -> value |> Stream.map(fn x -> sum(x) end)
             _ -> value |> Enum.reduce(0, fn (x, acc) -> acc + Functions.to_number(x) end)
+        end
+    end
+
+    def reduce_subtraction(value) do
+        case Enum.take(value, 1) do
+            [] -> 0
+            x when Functions.is_iterable(hd(x)) -> value |> Stream.map(fn x -> reduce_subtraction(x) end)
+            _ -> value |> Functions.to_number |> Enum.reduce(fn (x, acc) -> acc - x end)
         end
     end
 
@@ -102,8 +128,41 @@ defmodule Commands.ListCommands do
             Functions.is_iterable(value) and Functions.is_iterable(filter_elements) -> value |> Stream.filter(fn x -> contains(filter_elements, x) end)
             inner == true -> Enum.reduce(Functions.to_non_number(value), fn (x, acc) -> Enum.replace(acc, Functions.to_non_number(x), "") end)
             Functions.is_iterable(filter_elements) -> remove_from(value, filter_elements, true)
-            Functions.is_iterable(value) -> filter_elements |> Stream.filter(fn x -> contains(filter_elements, value) end)
+            Functions.is_iterable(value) -> filter_elements |> Stream.filter(fn x -> contains(filter_elements, x) end)
             true -> String.replace(to_string(value), to_string(filter_elements), "")
+        end
+    end
+
+    def split_into(value, size) do
+        cond do
+            Functions.is_iterable(value) -> value |> Stream.chunk_every(size)
+            true -> to_charlist(to_string(value)) |> Stream.chunk_every(size) |> Stream.map(&to_string/1)
+        end
+    end
+
+    def lift(value) do
+        cond do
+            Functions.is_iterable(value) -> value |> Stream.with_index(1) |> Stream.map(fn {x, index} -> Functions.call_binary(fn a, b -> 
+                Functions.to_number(a) * Functions.to_number(b) end, x, index) end)
+            true -> lift(String.graphemes(to_string(value)))
+        end
+    end
+
+    def deep_flatten(list) do
+        list |> Stream.flat_map(fn x -> if Functions.is_iterable(x) do deep_flatten(x) else [x] end end)
+             |> Stream.map(fn x -> x end)
+    end
+
+    def substrings(list) do
+        list |> suffixes |> Enum.reverse |> Stream.flat_map(fn y -> prefixes(y) end) |> Stream.map(fn x -> x end)
+    end
+
+    def group_equal(list) do
+        cond do
+            Functions.is_iterable(list) -> Stream.chunk_while(list, {[], nil}, 
+                                            fn (x, {acc, last}) -> if GeneralCommands.equals(x, last) do {:cont, [x | acc], {[], nil}} else {:cont, {[x | acc], x}} end end,
+                                            fn ({acc, _}) -> case acc do [] -> {:cont, []}; acc -> {:cont, acc, []} end end)
+            true -> String.graphemes(to_string(list)) |> group_equal |> Stream.map(fn x -> x |> Enum.join("") end)
         end
     end
 end

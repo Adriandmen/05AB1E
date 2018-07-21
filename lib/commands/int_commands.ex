@@ -83,4 +83,17 @@ defmodule Commands.IntCommands do
         {result, _} = Enum.reduce(value, {0, length(value) - 1}, fn (x, {acc, index}) -> {acc + pow(base, index) * x, index - 1} end)
         result
     end
+
+    def is_prime?(value) when value in [2, 3], do: true
+    def is_prime?(value) when value < 2, do: false
+    def is_prime?(value) do
+        max_index = :math.sqrt(value) |> Float.floor |> round
+        !Enum.any?(2..max_index, fn x -> rem(value, x) == 0 end)
+    end
+
+    def n_choose_k(n, k) when k > n, do: 0
+    def n_choose_k(n, k), do: div(factorial(n), factorial(k) * factorial(n - k))
+
+    def n_permute_k(n, k) when k > n, do: 0
+    def n_permute_k(n, k), do: div(factorial(n), factorial(n - k))
 end

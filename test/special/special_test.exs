@@ -76,5 +76,33 @@ defmodule SpecialOpsTest do
     test "map command for each" do
         assert evaluate("5L€>") == [2, 3, 4, 5, 6]
         assert evaluate("5L€D") == [1, 1, 2, 2, 3, 3, 4, 4, 5, 5]
+        assert evaluate("3LL€D") == [[1], [1], [1, 2], [1, 2], [1, 2, 3], [1, 2, 3]]
+        assert evaluate("3LL€€D") == [[1, 1], [1, 1, 2, 2], [1, 1, 2, 2, 3, 3]]
+        assert evaluate("∞L€€D3£") == [[1, 1], [1, 1, 2, 2], [1, 1, 2, 2, 3, 3]]
+    end
+
+    test "2-arity map command for each" do
+        assert evaluate("5L3Lδ+") == [[2, 3, 4], [3, 4, 5], [4, 5, 6], [5, 6, 7], [6, 7, 8]]
+        assert evaluate("3L5Lδ+") == [[2, 3, 4, 5, 6], [3, 4, 5, 6, 7], [4, 5, 6, 7, 8]]
+        assert evaluate("3L5LδF>}2+") == [[4, 5, 6, 7, 8], [5, 6, 7, 8, 9], [6, 7, 8, 9, 10]]
+    end
+
+    test "pairwise command" do
+        assert evaluate("5Lü+") == [3, 5, 7, 9]
+        assert evaluate("5LüF>") == [3, 5, 7, 9]
+        assert evaluate("5LüF>") == [3, 5, 7, 9]
+    end
+
+    test "for each subprogram" do
+        assert evaluate("12345vyï} y N)") == [1, 2, 3, 4, 5, "", 0]
+        assert evaluate("5Lvy} y N)") == [1, 2, 3, 4, 5, "", 0]
+        assert evaluate("\"ÁßçÐÈ\"vy})") == ["Á", "ß", "ç", "Ð", "È"]
+    end
+
+    test "compressed string with interpolation" do
+        assert evaluate("\"test\"’Ÿ™ ÿ") == "hello test"
+        assert evaluate("\"test\"“Ÿ™ ÿ") == "hello test"
+        assert evaluate("\"test\"”Ÿ™ ÿ") == "Hello test"
+        assert evaluate("\"test\"‘Ÿ™ ÿ") == "HELLO test"
     end
 end

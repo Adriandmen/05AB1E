@@ -167,4 +167,62 @@ defmodule BinaryTest do
         assert evaluate("1 2‚ï") == [1, 2]
         assert evaluate("1L 2L‚") == [[1], [1, 2]]
     end
+
+    test "split a into pieces of length b" do
+        assert evaluate("5L2ô") == [[1, 2], [3, 4], [5]]
+        assert evaluate("123456 2ô") == ["12", "34", "56"]
+        assert evaluate("5L23Sô") == [[[1, 2], [3, 4], [5]], [[1, 2, 3], [4, 5]]]
+        assert evaluate("∞2ôO3£") == [3, 7, 11]
+    end
+
+    test "a nCr b" do
+        assert evaluate("5 2c") == 10
+        assert evaluate("120 30c") == 16974538760797408909460074096
+        assert evaluate("10L 3c") == [0, 0, 1, 4, 10, 20, 35, 56, 84, 120]
+        assert evaluate("10 6Lc") == [10, 45, 120, 210, 252, 210]
+        assert evaluate("6L6+6Lc") == [7, 28, 84, 210, 462, 924]
+    end
+
+    test "a nPr b" do
+        assert evaluate("5 2e") == 20
+        assert evaluate("5 2e") == 20
+        assert evaluate("5 8e") == 0
+        assert evaluate("5 5Le") == [5, 20, 60, 120, 120]
+        assert evaluate("5L3e") == [0, 0, 6, 24, 60]
+        assert evaluate("6L6+6Le") == [7, 56, 504, 5040, 55440, 665280]
+    end
+
+    test "not equals" do
+        assert evaluate("1 1Ê") == 0
+        assert evaluate("1 1ïÊ") == 0
+        assert evaluate("1 2Ê") == 1
+        assert evaluate("1 2ïÊ") == 1
+        assert evaluate("1ï 2ïÊ") == 1
+        assert evaluate("3L2Ê") == [1, 0, 1]
+    end
+
+    test "rangify" do
+        assert evaluate("1 5Ÿ") == [1, 2, 3, 4, 5]
+        assert evaluate("1( 5Ÿ") == [-1, 0, 1, 2, 3, 4, 5]
+        assert evaluate("5 1Ÿ") == [5, 4, 3, 2, 1]
+        assert evaluate("5 1(Ÿ") == [5, 4, 3, 2, 1, 0, -1]
+        assert evaluate("1 3 5)Ÿ") == [1, 2, 3, 4, 5]
+        assert evaluate("1 3 5()Ÿ") == [1, 2, 3, 2, 1, 0, -1, -2, -3, -4, -5]
+        assert evaluate("1 3 1ï 3)Ÿ") == [1, 2, 3, 2, 1, 2, 3]
+        assert evaluate("1 3 1 1 1 3)Ÿ") == [1, 2, 3, 2, 1, 1, 1, 2, 3]
+    end
+
+    test "concat" do
+        assert evaluate("123 456«") == "123456"
+        assert evaluate("3L 456«") == ["1456", "2456", "3456"]
+        assert evaluate("123 456S«") == ["1234", "1235", "1236"]
+        assert evaluate("3L 3L«") == [1, 2, 3, 1, 2, 3]
+    end
+
+    test "prepend" do
+        assert evaluate("\"abc\"\"def\"ì") == "defabc"
+        assert evaluate("\"abc\"\"def\"Sì") == ["dabc", "eabc", "fabc"]
+        assert evaluate("\"abc\"S\"def\"ì") == ["defa", "defb", "defc"]
+        assert evaluate("\"abc\"S\"def\"Sì") == ["d", "e", "f", "a", "b", "c"]
+    end
 end

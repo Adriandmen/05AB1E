@@ -335,4 +335,116 @@ defmodule UnaryTest do
         assert evaluate("2·") == 4
         assert evaluate("3L·") == [2, 4, 6]
     end
+
+    test "is prime" do
+        assert evaluate("0p") == 0
+        assert evaluate("1p") == 0
+        assert evaluate("2p") == 1
+        assert evaluate("3p") == 1
+        assert evaluate("4p") == 0
+        assert evaluate("5p") == 1
+        assert evaluate("10Lp") == [0, 1, 1, 0, 1, 0, 1, 0, 0, 0]
+    end
+
+    test "is numeric" do
+        assert evaluate("123d") == 1
+        assert evaluate("123ïd") == 1
+        assert evaluate("\"123a\"d") == 0
+        assert evaluate("\"123a\" 123 004)d") == [0, 1, 1]
+    end
+
+    test "lift" do
+        assert evaluate("3Lƶ") == [1, 4, 9]
+        assert evaluate("123ƶ") == [1, 4, 9]
+        assert evaluate("3LLƶ") == [[1], [2, 4], [3, 6, 9]]
+        assert evaluate("∞ƶ5£") == [1, 4, 9, 16, 25]
+    end
+
+    test "head extraction" do
+        assert evaluate("123ć)") == ["23", "1"]
+        assert evaluate("3Lć)") == [[2, 3], 1]
+        assert evaluate("∞ć") == 1
+    end
+
+    test "wrap single" do
+        assert evaluate("123¸") == ["123"]
+        assert evaluate("123ï¸") == [123]
+        assert evaluate("1 2 3¸)ï") == [1, 2, [3]]
+    end
+
+    test "absolute value" do
+        assert evaluate("123Ä") == 123
+        assert evaluate("123(Ä") == 123
+        assert evaluate("4L2-Ä") == [1, 0, 1, 2]
+    end
+
+    test "all equal" do
+        assert evaluate("111Ë") == 1
+        assert evaluate("\"\"Ë") == 1
+        assert evaluate("1 1ï 1)Ë") == 1
+        assert evaluate("121Ë") == 0
+        assert evaluate("1 1ï 2)Ë") == 0
+    end
+
+    test "title case" do
+        assert evaluate("\"abc\"™") == "Abc"
+        assert evaluate("\"abc def\"™") == "Abc Def"
+        assert evaluate("\"abc def\" \"ghi\")™") == ["Abc Def", "Ghi"]
+    end
+
+    test "switch case" do
+        assert evaluate("\"aBc\"š") == "AbC"
+        assert evaluate("\"aBc Def 123\"š") == "AbC dEF 123"
+        assert evaluate("\"aBc Def\" \"a12\")š") == ["AbC dEF", "A12"]
+    end
+
+    test "deep flatten" do
+        assert evaluate("1 2 3 4)ï˜") == [1, 2, 3, 4]
+        assert evaluate("1 2 3 4))ï˜") == [1, 2, 3, 4]
+        assert evaluate("3LLL˜") == [1, 1, 1, 2, 1, 1, 2, 1, 2, 3]
+    end
+
+    test "sentence case" do
+        assert evaluate("\"abc\"ª") == "Abc"
+        assert evaluate("\"abc. def? ghi! jkl mnop.\"ª") == "Abc. Def? Ghi! Jkl mnop."
+    end
+
+    test "reduced subtraction" do
+        assert evaluate("1 2 3 4)Æ") == -8
+        assert evaluate("1 2 3 4Æ") == -8
+        assert evaluate("3L 3L3+)Æ") == [-4, -7]
+    end
+
+    test "listify 0..n" do
+        assert evaluate("4Ý") == [0, 1, 2, 3, 4]
+        assert evaluate("4ÝÝ") == [[0], [0, 1], [0, 1, 2], [0, 1, 2, 3], [0, 1, 2, 3, 4]]
+    end
+
+    test "keep letters" do
+        assert evaluate("\"123abc\"á") == "abc"
+        assert evaluate("\"123\"á") == ""
+        assert evaluate("12 34 \"5a\" \"bc\" \"cd\")á") == ["bc", "cd"]
+    end
+
+    test "keep digits" do
+        assert evaluate("\"123abc\"þ") == "123"
+        assert evaluate("\"abc\"þ") == ""
+        assert evaluate("\"abc\" 123 456 \"ab4\")þ") == ["123", "456"]
+    end
+
+    test "suffixes" do
+        assert evaluate("5L.s") == [[5], [4, 5], [3, 4, 5], [2, 3, 4, 5], [1, 2, 3, 4, 5]]
+        assert evaluate("12345.s") == ["5", "45", "345", "2345", "12345"]
+    end
+
+    test "substrings" do
+        assert evaluate("4LŒ") == [[1], [1, 2], [1, 2, 3], [1, 2, 3, 4], [2], [2, 3], [2, 3, 4], [3], [3, 4], [4]]
+        assert evaluate("1234Œ") == ["1", "12", "123", "1234", "2", "23", "234", "3", "34", "4"]
+    end
+
+    test "group equal" do
+        assert evaluate("11223344γ") == ["11", "22", "33", "44"]
+        assert evaluate("11223344Sïγ") == [[1, 1], [2, 2], [3, 3], [4, 4]]
+        assert evaluate("∞€Dγ4£") == [[1, 1], [2, 2], [3, 3], [4, 4]]
+    end
 end

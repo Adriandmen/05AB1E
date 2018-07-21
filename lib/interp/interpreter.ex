@@ -46,6 +46,10 @@ defmodule Interp.Interpreter do
             "T" -> Stack.push(stack, 10)
             "®" -> Stack.push(stack, environment.c)
             "N" -> Stack.push(stack, environment.range_variable)
+            "y" -> Stack.push(stack, environment.range_element)
+            "¶" -> Stack.push(stack, "\n")
+            "õ" -> Stack.push(stack, "")
+            "w" -> :timer.sleep(1000); stack
             "ža" -> {_, {hour, _, _}} = :calendar.local_time(); Stack.push(stack, hour)
             "žb" -> {_, {_, minute, _}} = :calendar.local_time(); Stack.push(stack, minute)
             "žc" -> {_, {_, _, second}} = :calendar.local_time(); Stack.push(stack, second)
@@ -104,6 +108,7 @@ defmodule Interp.Interpreter do
             ">" -> Stack.push(stack, call_unary(fn x -> to_number(x) + 1 end, a))
             "<" -> Stack.push(stack, call_unary(fn x -> to_number(x) - 1 end, a))
             "L" -> Stack.push(stack, call_unary(fn x -> ListCommands.listify(1, to_number(x)) end, a))
+            "Ý" -> Stack.push(stack, call_unary(fn x -> ListCommands.listify(0, to_number(x)) end, a))
             "!" -> Stack.push(stack, call_unary(fn x -> IntCommands.factorial(to_number(x)) end, a))
             "η" -> Stack.push(stack, call_unary(fn x -> ListCommands.prefixes(x) end, a, true))
             "н" -> Stack.push(stack, call_unary(fn x -> GeneralCommands.head(x) end, a, true))
@@ -113,8 +118,10 @@ defmodule Interp.Interpreter do
             "_" -> Stack.push(stack, call_unary(fn x -> to_number(to_number(x) == 0) end, a))
             "(" -> Stack.push(stack, call_unary(fn x -> to_number(x) * -1 end, a))
             "a" -> Stack.push(stack, call_unary(fn x -> to_number(Regex.match?(~r/^[a-zA-Z]+$/, to_string(x))) end, a))
+            "d" -> Stack.push(stack, call_unary(fn x -> to_number(Regex.match?(~r/^\d+$/, to_string(x))) end, a))
             "b" -> Stack.push(stack, call_unary(fn x -> IntCommands.to_base(to_number(x), 2) end, a))
             "h" -> Stack.push(stack, call_unary(fn x -> IntCommands.to_base(to_number(x), 16) end, a))
+            "p" -> Stack.push(stack, call_unary(fn x -> to_number(IntCommands.is_prime?(to_number(x))) end, a))
             "z" -> Stack.push(stack, call_unary(fn x -> 1 / to_number(x) end, a))
             "C" -> Stack.push(stack, call_unary(fn x -> IntCommands.string_from_base(to_non_number(x), 2) end, a))
             "S" -> Stack.push(stack, call_unary(fn x -> ListCommands.split_individual(x) end, a, true))
@@ -134,9 +141,22 @@ defmodule Interp.Interpreter do
             "Ì" -> Stack.push(stack, call_unary(fn x -> to_number(x) + 2 end, a))
             "Í" -> Stack.push(stack, call_unary(fn x -> to_number(x) - 2 end, a))
             "·" -> Stack.push(stack, call_unary(fn x -> to_number(x) * 2 end, a))
+            "Ä" -> Stack.push(stack, call_unary(fn x -> abs(to_number(x)) end, a))
+            "™" -> Stack.push(stack, call_unary(fn x -> StrCommands.title_case(to_string(x)) end, a))
+            "š" -> Stack.push(stack, call_unary(fn x -> StrCommands.switch_case(to_string(x)) end, a))
+            "ª" -> Stack.push(stack, call_unary(fn x -> StrCommands.sentence_case(to_string(x)) end, a))
             "È" -> Stack.push(stack, call_unary(fn x -> to_number(is_integer(to_number(x)) and IntCommands.mod(to_number(x), 2) == 0) end, a))
             "É" -> Stack.push(stack, call_unary(fn x -> to_number(is_integer(to_number(x)) and IntCommands.mod(to_number(x), 2) == 1) end, a))
             "°" -> Stack.push(stack, call_unary(fn x -> IntCommands.pow(10, to_number(x)) end, a))
+            "Œ" -> Stack.push(stack, ListCommands.substrings(a))
+            "γ" -> Stack.push(stack, ListCommands.group_equal(a))
+           ".s" -> Stack.push(stack, ListCommands.suffixes(a))
+            "á" -> Stack.push(stack, StrCommands.keep_letters(a))
+            "þ" -> Stack.push(stack, StrCommands.keep_digits(a))
+            "˜" -> Stack.push(stack, ListCommands.deep_flatten(a))
+            "¸" -> Stack.push(stack, [a])
+            "Ë" -> Stack.push(stack, to_number(GeneralCommands.all_equal(a)))
+            "ƶ" -> Stack.push(stack, ListCommands.lift(a))
             "¦" -> Stack.push(stack, GeneralCommands.dehead(a))
             "¨" -> Stack.push(stack, GeneralCommands.detail(a))
             "¥" -> Stack.push(stack, ListCommands.deltas(a))
@@ -146,9 +166,11 @@ defmodule Interp.Interpreter do
             "D" -> Stack.push(Stack.push(stack, a), a)
             "ā" -> Stack.push(Stack.push(stack, a), ListCommands.enumerate(a))
             "Ð" -> Stack.push(Stack.push(Stack.push(stack, a), a), a)
-            "O" -> cond do (is_iterable(a) -> Stack.push(stack, ListCommands.sum(a)); true -> Stack.push(%Stack{}, ListCommands.sum(Stack.push(stack, a).elements))) end
-            "P" -> cond do (is_iterable(a) -> Stack.push(stack, ListCommands.product(a)); true -> Stack.push(%Stack{}, ListCommands.product(Stack.push(stack, a).elements))) end
-            "J" -> cond do (is_iterable(a) -> Stack.push(stack, ListCommands.join(a, "")); true -> Stack.push(%Stack{}, ListCommands.join(Enum.reverse(Stack.push(stack, to_string(a)).elements), ""))) end
+            "ć" -> Stack.push(Stack.push(stack, GeneralCommands.dehead(a)), GeneralCommands.head(a))
+            "O" -> if is_iterable(a) do Stack.push(stack, ListCommands.sum(a)) else Stack.push(%Stack{}, ListCommands.sum(Stack.push(stack, a).elements)) end
+            "Æ" -> if is_iterable(a) do Stack.push(stack, ListCommands.reduce_subtraction(a)) else Stack.push(%Stack{}, ListCommands.reduce_subtraction(Stack.push(stack, a).elements |> Enum.reverse)) end
+            "P" -> if is_iterable(a) do Stack.push(stack, ListCommands.product(a)) else Stack.push(%Stack{}, ListCommands.product(Stack.push(stack, a).elements)) end
+            "J" -> if is_iterable(a) do Stack.push(stack, ListCommands.join(a, "")) else Stack.push(%Stack{}, ListCommands.join(Enum.reverse(Stack.push(stack, to_string(a)).elements), "")) end
             "\\" -> stack
         end
 
@@ -171,6 +193,8 @@ defmodule Interp.Interpreter do
             "^" -> Stack.push(stack, call_binary(fn x, y -> to_number(x) ^^^ to_number(y) end, a, b))
             "~" -> Stack.push(stack, call_binary(fn x, y -> to_number(x) ||| to_number(y) end, a, b))
             "B" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.to_base(to_number(x), to_number(y)) end, a, b))
+            "c" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.n_choose_k(to_number(x), to_number(y)) end, a, b))
+            "e" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.n_permute_k(to_number(x), to_number(y)) end, a, b))
             "m" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.pow(to_number(x), to_number(y)) end, a, b))
             "K" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.remove_from(x, y, false) end, a, b, true, true))
             "å" -> Stack.push(stack, call_binary(fn x, y -> to_number(ListCommands.contains(to_non_number(x), y)) end, a, b, true, false))
@@ -180,7 +204,11 @@ defmodule Interp.Interpreter do
             "‰" -> Stack.push(stack, call_binary(fn x, y -> [IntCommands.divide(to_number(x), to_number(y)), IntCommands.mod(to_number(x), to_number(y))] end, a, b))
             "‹" -> Stack.push(stack, call_binary(fn x, y -> to_number(to_number(x) < to_number(y)) end, a, b))
             "›" -> Stack.push(stack, call_binary(fn x, y -> to_number(to_number(x) > to_number(y)) end, a, b))
+            "ô" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.split_into(x, to_number(y)) end, a, b, true, false))
+            "«" -> Stack.push(stack, GeneralCommands.concat(a, b))
+            "ì" -> Stack.push(stack, GeneralCommands.concat(b, a))
             "Q" -> Stack.push(stack, to_number(GeneralCommands.equals(a, b)))
+            "Ê" -> Stack.push(stack, call_unary(fn x -> to_number(to_number(x) == 0) end, GeneralCommands.equals(a, b)))
             "‚" -> Stack.push(stack, [a, b])
             "s" -> Stack.push(Stack.push(stack, b), a)
         end
@@ -195,6 +223,7 @@ defmodule Interp.Interpreter do
 
         new_stack = case op do
             "ǝ" -> Stack.push(stack, call_ternary(fn x, y, z -> StrCommands.insert_at(x, y, z) end, a, b, c, true, true, true))
+            "Š" -> Stack.push(Stack.push(Stack.push(stack, c), a), b)
         end
 
         {new_stack, environment}
@@ -233,6 +262,14 @@ defmodule Interp.Interpreter do
                     GeneralCommands.equals(to_number(element), 1) -> {new_stack, %{new_env | status: :break}}
                     true -> {new_stack, new_env}
                 end
+            "Ÿ" -> 
+                {b, stack, environment} = Stack.pop(stack, environment)
+                if is_iterable(b) do 
+                    {Stack.push(stack, ListCommands.rangify(to_number(b))), environment} 
+                else 
+                    {a, stack, environment} = Stack.pop(stack, environment)
+                    {Stack.push(stack, to_number(a)..to_number(b)), environment}
+                end
         end
     end
 
@@ -258,6 +295,13 @@ defmodule Interp.Interpreter do
                 current_n = environment.range_variable
                 {new_stack, new_env} = GeneralCommands.loop(subcommands, stack, environment, 0, to_number(a))
                 {new_stack, %{new_env | range_variable: current_n}}
+            
+            "v" ->
+                {a, stack, environment} = Stack.pop(stack, environment)
+                current_n = environment.range_variable
+                current_y = environment.range_element
+                {new_stack, new_env} = GeneralCommands.loop(subcommands, stack, environment, 0, if is_iterable(a) do a else to_non_number(a) end)
+                {new_stack, %{new_env | range_variable: current_n, range_element: current_y}}
 
             # Filter by
             "ʒ" ->
@@ -319,6 +363,27 @@ defmodule Interp.Interpreter do
                             {result_stack, new_env} = interp(subcommands, %Stack{elements: [x]}, %{curr_env | range_variable: index, range_element: x})
                             {result_stack.elements, new_env} end)
                         |> Stream.map(fn x -> x end)
+                {Stack.push(stack, result), environment}
+            
+            # 2-arity map for each
+            "δ" ->
+                {b, stack, environment} = Stack.pop(stack, environment)
+                {a, stack, environment} = Stack.pop(stack, environment)
+                result = a |> Stream.map(fn y -> Stream.map(b, fn x ->
+                    {result_stack, _} = interp(subcommands, %Stack{elements: [x, y]}, environment)
+                    {result_elem, _, _} = Stack.pop(result_stack, environment)
+                    result_elem end)
+                end)
+                {Stack.push(stack, result), environment}
+            
+            # Pairwise command
+            "ü" ->
+                {a, stack, environment} = Stack.pop(stack, environment)
+                result = a |> Stream.chunk_every(2, 1, :discard)
+                           |> Stream.map(fn [x, y] ->        
+                                {result_stack, _} = interp(subcommands, %Stack{elements: [x, y]}, environment)
+                                {result_elem, _, _} = Stack.pop(result_stack, environment)
+                                result_elem end)
                 {Stack.push(stack, result), environment}
         end
     end

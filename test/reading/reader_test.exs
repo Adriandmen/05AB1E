@@ -65,4 +65,36 @@ defmodule ReaderTest do
     test "read empty compressed number" do
         assert Reader.read_step("••") == {:number, 0, ""}
     end
+
+    test "read compressed string upper" do
+        assert Reader.read_step("‘Ÿ™,‚ï!‘") == {:string, "HELLO, WORLD!", ""}
+    end
+
+    test "read compressed string one compressed char" do
+        assert Reader.read_step("‘Ÿ") == {:string, "Ÿ", ""}
+    end
+
+    test "read compressed string title" do
+        assert Reader.read_step("”Ÿ™,‚ï!") == {:string, "Hello, World!", ""}
+    end
+
+    test "read compressed string title one compressed char" do
+        assert Reader.read_step("”Ÿ") == {:string, "Ÿ", ""}
+    end
+
+    test "read compressed string normal" do
+        assert Reader.read_step("“Ÿ™,‚ï!") == {:string, "hello, world!", ""}
+    end
+
+    test "read compressed string normal one compressed char" do
+        assert Reader.read_step("“Ÿ") == {:string, "Ÿ", ""}
+    end
+
+    test "read compressed string no space" do
+        assert Reader.read_step("’Ÿ™,‚ï!") == {:string, "hello,world!", ""}
+    end
+
+    test "read compressed string no space one compressed char" do
+        assert Reader.read_step("’Ÿ") == {:string, "Ÿ", ""}
+    end
 end

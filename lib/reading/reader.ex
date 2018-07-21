@@ -1,46 +1,49 @@
 defmodule Reading.Reader do
-
-    def nullary_ops, do: "(" <> Enum.join(Enum.map(
-                        ["∞", "т", "₁", "₂", "₃", "₄", "A", "®", "N"], fn x -> Regex.escape(x) end), "|") <> ")"
-
-    def unary_ops, do: "(" <> Enum.join(Enum.map(
-                        ["γ", "η", "θ", "н", "Θ", "Ω", "≠", "∊", "∞", "!", "(", ",", ";", "<", ">", 
-                        "?", "@", "C", "D", "H", "J", "L", "R", "S", "U", "V", "_", "`", "a", "b", 
-                        "d", "f", "g", "h", "j", "l", "n", "o", "p", "t", "u", "x", "z", "{", "ˆ", 
-                        "Œ", "Ć", "ƶ", "Ā", "–", "—", "˜", "™", "š", "œ", "ć", "¥", "¦", "§", "¨", 
-                        "ª", "°", "±", "·", "¸", "À", "Á", "Â", "Ä", "Æ", "Ç", "È", "É", "Ë", "Ì", 
-                        "Í", "Ñ", "Ò", "Ó", "Ô", "Õ", "Ø", "Ù", "Ú", "Ý", "Þ", "á", "æ", "ç", "é", 
-                        "ê", "í", "î", "ï", "ò", "ó", "û", "þ", ".€", ".ä", ".A", ".b", ".B", ".c", 
-                        ".C", ".e", ".E", ".j", ".J", ".l", ".M", ".m", ".N", ".p", ".R", ".r", ".s", 
-                        ".u", ".V", ".w", ".W", ".²", ".ï", ".ˆ", ".^", ".¼", ".½", ".¾", ".∞", ".¥", 
-                        ".ǝ", ".∊", ".Ø", "\\", "ā", "¤", "¥", "¬", "O", "P"], fn x -> Regex.escape(x) end), "|") <> ")"
-
-    # TODO: Special ops like Ÿ (multiple arities)?
-
-    def binary_ops, do: "(" <> Enum.join(Enum.map(
-                        ["α", "β", "δ", "ζ", "в", "и", "м", "∍", "%", "&", "*", "+", "-", "/", "B", "K",
-                         "Q", "^", "c", "e", "k", "m", "s", "~", "‚", "†", "‰", "‹", "›", "Ÿ", "¡", "¢",
-                         "£", "«", "¿", "Ã", "Ê", "Ï", "Ö", "×", "Û", "Ü", "Ý", "â", "ã", "ä", "å", "è",
-                         "ì", "ô", "ö", "÷", "ø", "ù", "ú", "ý", ".å", ".D", ".h", ".H"], fn x -> Regex.escape(x) end), "|") <> ")"
     
-    def ternary_ops, do: "(" <> Enum.join(Enum.map(
-                        ["ǝ"], fn x -> Regex.escape(x) end), "|") <> ")"
+    defp regexify(list) do
+        "(" <> Enum.join(Enum.map(list, fn x -> Regex.escape(x) end), "|") <> ")"
+    end
+    
+    def nullary_ops, do: regexify ["∞", "т", "₁", "₂", "₃", "₄", "A", "®", "N", "y", "w", "¶", "õ"]
+
+    def unary_ops, do: regexify ["γ", "η", "θ", "н", "Θ", "Ω", "≠", "∊", "∞", "!", "(", ",", ";", "<", ">", 
+                                 "?", "@", "C", "D", "H", "J", "L", "R", "S", "U", "V", "_", "`", "a", "b", 
+                                 "d", "f", "g", "h", "j", "l", "n", "o", "p", "t", "u", "x", "z", "{", "ˆ", 
+                                 "Œ", "Ć", "ƶ", "Ā", "–", "—", "˜", "™", "š", "œ", "ć", "¥", "¦", "§", "¨", 
+                                 "ª", "°", "±", "·", "¸", "À", "Á", "Â", "Ä", "Æ", "Ç", "È", "É", "Ë", "Ì", 
+                                 "Í", "Ñ", "Ò", "Ó", "Ô", "Õ", "Ø", "Ù", "Ú", "Ý", "Þ", "á", "æ", "ç", "é", 
+                                 "ê", "í", "î", "ï", "ò", "ó", "û", "þ", ".€", ".ä", ".A", ".b", ".B", ".c", 
+                                 ".C", ".e", ".E", ".j", ".J", ".l", ".M", ".m", ".N", ".p", ".R", ".r", ".s", 
+                                 ".u", ".V", ".w", ".W", ".²", ".ï", ".ˆ", ".^", ".¼", ".½", ".¾", ".∞", ".¥", 
+                                 ".ǝ", ".∊", ".Ø", "\\", "ā", "¤", "¥", "¬", "O", "P"]
+
+    def binary_ops, do: regexify ["α", "β", "ζ", "в", "и", "м", "∍", "%", "&", "*", "+", "-", "/", "B", "K",
+                                  "Q", "^", "c", "e", "k", "m", "s", "~", "‚", "†", "‰", "‹", "›", "¡", "¢",
+                                  "£", "«", "¿", "Ã", "Ê", "Ï", "Ö", "×", "Û", "Ü", "Ý", "â", "ã", "ä", "å", "è",
+                                  "ì", "ô", "ö", "÷", "ø", "ù", "ú", "ý", ".å", ".D", ".h", ".H"]
+    
+    def ternary_ops, do: regexify ["ǝ", "Š"]
+
+    def special_ops, do: regexify [")", "r", "©", "¹", "²", "³", "I", "$", "Î", "#", "Ÿ"]
+    
+    def subprogram_ops, do: regexify ["ʒ", "ε", "Δ", "Σ", "F", "G", "v", "ƒ", "µ"]
+    
+    def subcommand_ops, do: regexify ["δ", "€", "ü", ".«", ".»"]
+    
+    def closing_brackets, do: regexify ["}", "]"]
+    
+    def string_delimiters, do: regexify ["\"", "•", "‘", "’", "“", "”"]
+    
+    def compressed_chars, do: regexify ["€", "‚", "ƒ", "„", "…", "†", "‡", "ˆ", "‰", "Š", "‹", "Œ", "Ž", "í", "î", "•", "–", "—", 
+                                        "ï", "™", "š", "›", "œ", "ž", "Ÿ", "¡", "¢", "£", "¤", "¥", "¦", "§", "¨", "©", "ª", "«", 
+                                        "¬", "®", "¯", "°", "±", "²", "³", "´", "µ", "¶", "·", "¸", "¹", "º", "»", "¼", "½", "¾", 
+                                        "¿", "À", "Á", "Â", "Ã", "Ä", "Å", "Æ", "Ç", "È", "É", "Ê", "Ë", "Ì", "Í", "Î", "Ï", "Ð", 
+                                        "Ñ", "Ò", "Ó", "Ô", "Õ", "Ö", "×", "Ø", "Ù", "Ú", "Û", "Ü", "Ý", "Þ", "ß", "à", "á", "â", 
+                                        "ã", "ä", "å", "æ", "ç", "è", "é", "ê", "ë", "ì"]
                         
 
-    def special_ops, do: "(" <> Enum.join(Enum.map(
-                        [")", "r", "©", "¹", "²", "³", "I", "$", "Î", "#"], fn x -> Regex.escape(x) end), "|") <> ")"
-    
-    def subprogram_ops, do: "(" <> Enum.join(Enum.map(
-                        ["ʒ", "ε", "Δ", "Σ", "F", "G", "v", "ƒ", "µ"], fn x -> Regex.escape(x) end), "|") <> ")"
-    
-    def subcommand_ops, do: "(" <> Enum.join(Enum.map(
-                        ["δ", "€", "ü", ".«", ".»"], fn x -> Regex.escape(x) end), "|") <> ")"
-    
-    def closing_brackets, do: "(" <> Enum.join(Enum.map(
-                        ["}", "]"], fn x -> Regex.escape(x) end), "|") <> ")"
-
-
     alias Reading.CodePage
+    alias Reading.Dictionary
     alias Commands.IntCommands
     
     def read_file(file_path, encoding) do
@@ -62,15 +65,22 @@ defmodule Reading.Reader do
                 matches = Regex.named_captures(~r/^(?<number>\d+)(?<remaining>.*)/, raw_code)
                 {:number, matches["number"], matches["remaining"]}
 
-            # Special numbers
-            Regex.match?(~r/^•(.*?)(•|$)/, raw_code) ->
-                matches = Regex.named_captures(~r/^•(?<number>.*?)(•|$)(?<remaining>.*)/, raw_code)
-                {:number, IntCommands.string_from_base(matches["number"], 255), matches["remaining"]}
+            # Strings and equivalent values
+            Regex.match?(~r/^#{string_delimiters()}(.*?)(\1|$)/, raw_code) ->
+                matches = Regex.named_captures(~r/^(?<delimiter>#{string_delimiters()})(?<string>.*?)(\1|$)(?<remaining>.*)/, raw_code)
+                case matches["delimiter"] do
+                    # Compressed numbers
+                    "•" -> {:number, IntCommands.string_from_base(matches["string"], 255), matches["remaining"]}
 
-            # Strings
-            Regex.match?(~r/^"(.*?)("|$)/, raw_code) ->
-                matches = Regex.named_captures(~r/^"(?<string>.*?)("|$)(?<remaining>.*)/, raw_code)
-                {:string, matches["string"], matches["remaining"]}
+                    # Strings
+                    "\"" -> {:string, matches["string"], matches["remaining"]}
+
+                    # Compressed strings
+                    "‘" -> {:string, Dictionary.uncompress(matches["string"], :upper), matches["remaining"]}
+                    "’" -> {:string, Dictionary.uncompress(matches["string"], :no_space), matches["remaining"]}
+                    "“" -> {:string, Dictionary.uncompress(matches["string"], :normal), matches["remaining"]}
+                    "”" -> {:string, Dictionary.uncompress(matches["string"], :title), matches["remaining"]}
+                end
 
             # Nullary functions
             Regex.match?(~r/^#{nullary_ops()}/, raw_code) ->
