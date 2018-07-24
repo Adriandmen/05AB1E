@@ -110,4 +110,8 @@ defmodule SpecialOpsTest do
         assert evaluate("\"test\"”Ÿ™ ÿ") == "Hello test"
         assert evaluate("\"test\"‘Ÿ™ ÿ") == "HELLO test"
     end
+
+    test "infinite loop" do
+        assert evaluate("[NO N5Q#") == 15
+    end
 end

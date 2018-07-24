@@ -305,4 +305,17 @@ defmodule BinaryTest do
         assert evaluate("1234S 5k") == -1
         assert evaluate("1234S 54Sk") == [-1, 3]
     end
+
+    test "list multiply" do
+        assert evaluate("123ï 3и") == [123, 123, 123]
+        assert evaluate("3L 3и") == [1, 2, 3, 1, 2, 3, 1, 2, 3]
+        assert evaluate("3L 0и") == []
+        assert evaluate("3L 123Sи") == [[1, 2, 3], [1, 2, 3, 1, 2, 3], [1, 2, 3, 1, 2, 3, 1, 2, 3]]
+    end
+
+    test "extract each nth" do
+        assert evaluate("6L2ι") == [[1, 3, 5], [2, 4, 6]]
+        assert evaluate("6Lι") == [[1, 3, 5], [2, 4, 6]]
+        assert evaluate("123456 2ι") == ["135", "246"]
+    end
 end

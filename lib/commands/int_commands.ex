@@ -2,6 +2,7 @@ defmodule Commands.IntCommands do
 
     alias Interp.Functions
     alias Commands.GeneralCommands
+    require Interp.Functions
 
     # All characters available from the 05AB1E code page, where the
     # alphanumeric digits come first and the remaining characters
@@ -96,4 +97,40 @@ defmodule Commands.IntCommands do
 
     def n_permute_k(n, k) when k > n, do: 0
     def n_permute_k(n, k), do: div(factorial(n), factorial(n - k))
+
+    def max_of(list) do
+        cond do
+            Functions.is_iterable(list) -> max_of(Enum.to_list(list), nil)
+            true -> max_of(String.graphemes(to_string(list)), nil)
+        end
+    end
+    def max_of([], value), do: value
+    def max_of(list, value) do
+        head = List.first Enum.take(list, 1)
+        cond do
+            Functions.is_iterable(head) and value == nil -> max_of(Enum.drop(list, 1), max_of(head))
+            Functions.is_iterable(head) -> max_of(Enum.drop(list, 1), max(max_of(head), value))
+            value == nil -> max_of(Enum.drop(list, 1), Functions.to_number(head))
+            Functions.to_number(head) > value and is_number(Functions.to_number(head)) -> max_of(Enum.drop(list, 1), Functions.to_number(head))
+            true -> max_of(Enum.drop(list, 1), value)
+        end
+    end
+
+    def min_of(list) do
+        cond do
+            Functions.is_iterable(list) -> min_of(Enum.to_list(list), nil)
+            true -> min_of(String.graphemes(to_string(list)), nil)
+        end
+    end
+    def min_of([], value), do: value
+    def min_of(list, value) do
+        head = List.first Enum.take(list, 1)
+        cond do
+            Functions.is_iterable(head) and value == nil -> min_of(Enum.drop(list, 1), min_of(head))
+            Functions.is_iterable(head) -> min_of(Enum.drop(list, 1), min(min_of(head), value))
+            value == nil -> min_of(Enum.drop(list, 1), Functions.to_number(head))
+            Functions.to_number(head) < value and is_number(Functions.to_number(head)) -> min_of(Enum.drop(list, 1), Functions.to_number(head))
+            true -> min_of(Enum.drop(list, 1), value)
+        end
+    end
 end

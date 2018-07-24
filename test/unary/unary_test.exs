@@ -478,4 +478,28 @@ defmodule UnaryTest do
         assert evaluate("1 2 1234S`)ï") == [1, 2, 1, 2, 3, 4]
         assert evaluate("1 2 1234`)ï") == [1, 2, 1, 2, 3, 4]
     end
+
+    test "reverse each" do
+        assert evaluate("123 456 789)í") == ["321", "654", "987"]
+        assert evaluate("3L 3L3+ 3L6+)í") == [[3, 2, 1], [6, 5, 4], [9, 8, 7]]
+    end
+
+    test "random element" do
+        assert evaluate("12345Ω 12345SQO") == 1
+        assert evaluate("5LΩ 12345SQO") == 1
+    end
+
+    test "max of without popping" do
+        assert evaluate("12345Z") == 5
+        assert evaluate("12345SZ") == 5
+        assert evaluate("5LZ") == 5
+        assert evaluate("5L7L)Z") == 7
+    end
+
+    test "min of without popping" do
+        assert evaluate("12345W") == 1
+        assert evaluate("12345SW") == 1
+        assert evaluate("5LW") == 1
+        assert evaluate("345S 4324S 58S)W") == 2
+    end
 end

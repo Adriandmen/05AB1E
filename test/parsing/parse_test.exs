@@ -39,6 +39,19 @@ defmodule ParserTest do
           ]
     end
 
+    test "parse infinite loop" do
+        assert Parser.parse(Reader.read("[NO N5Q#")) == [
+            {:subprogram, "[", [
+               nullary_op: "N",
+               unary_op: "O",
+               nullary_op: "N",
+               number: "5",
+               binary_op: "Q",
+               special_op: "#"
+            ]}
+        ]
+    end
+
     test "parse subprograms next to each other" do
         assert Parser.parse(Reader.read("5F 3 4F 2}F 7}")) == [
             {:number, "5"},
@@ -276,6 +289,6 @@ defmodule ParserTest do
         assert Parser.parse(Reader.read("2i4+ë1")) == [
             {:number, "2"},
             {:if_statement, [number: "4", binary_op: "+"], [number: "1"]}
-          ]
+        ]
     end
 end

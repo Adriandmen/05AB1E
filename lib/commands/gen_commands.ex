@@ -122,7 +122,7 @@ defmodule Commands.GeneralCommands do
                 cond do
                     # If the range is an integer and the index is in bounds, run the commands
                     # and increment the index by 1 on the next iteration.
-                    is_integer(range) and index <= range ->
+                    is_integer(range) and index <= range or range == -1 ->
                         {new_stack, new_env} = Interpreter.interp(commands, stack, %{environment | range_variable: index})
                         loop(commands, new_stack, new_env, index + 1, range)
                     

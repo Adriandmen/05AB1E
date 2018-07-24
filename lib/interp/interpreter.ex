@@ -150,6 +150,8 @@ defmodule Interp.Interpreter do
             "°" -> Stack.push(stack, call_unary(fn x -> IntCommands.pow(10, to_number(x)) end, a))
             "Ç" -> Stack.push(stack, call_unary(fn x -> StrCommands.to_codepoints(x) end, a, true))
             "ç" -> Stack.push(stack, call_unary(fn x -> List.to_string [to_number(x)] end, a))
+            "í" -> Stack.push(stack, a |> Stream.map(fn x -> if is_iterable(x) do Enum.to_list(x) |> Enum.reverse else String.reverse(to_string(x)) end end))
+            "Ω" -> Stack.push(stack, if is_iterable(a) do Enum.random(Enum.to_list(a)) else Enum.random(String.graphemes(to_string(a))) end)
             "Œ" -> Stack.push(stack, ListCommands.substrings(a))
             "γ" -> Stack.push(stack, ListCommands.group_equal(a))
            ".s" -> Stack.push(stack, ListCommands.suffixes(a))
@@ -162,6 +164,8 @@ defmodule Interp.Interpreter do
             "¦" -> Stack.push(stack, GeneralCommands.dehead(a))
             "¨" -> Stack.push(stack, GeneralCommands.detail(a))
             "¥" -> Stack.push(stack, ListCommands.deltas(a))
+            "W" -> Stack.push(Stack.push(stack, a), IntCommands.min_of(a))
+            "Z" -> Stack.push(Stack.push(stack, a), IntCommands.max_of(a))
             "x" -> Stack.push(Stack.push(stack, a), call_unary(fn x -> 2 * to_number(x) end, a))
             "¤" -> Stack.push(Stack.push(stack, a), GeneralCommands.tail(a))
             "¬" -> Stack.push(Stack.push(stack, a), GeneralCommands.head(a))
@@ -213,6 +217,7 @@ defmodule Interp.Interpreter do
             "Ö" -> Stack.push(stack, call_binary(fn x, y -> to_number(IntCommands.mod(to_number(x), to_number(y)) == 0) end, a, b))
             "ù" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.keep_with_length(x, to_number(y)) end, a, b, true, false))
             "k" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.index_in(x, y) end, a, b, true, false))
+            "и" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.list_multiply(x, to_number(y)) end, a, b, true, false))
             "ý" -> if is_iterable(a) do Stack.push(stack, ListCommands.join(a, to_string(b))) else Stack.push(%Stack{}, ListCommands.join(Enum.reverse(Stack.push(stack, a).elements), to_string(b))) end
             "¡" -> Stack.push(stack, ListCommands.split_on(a, to_non_number(b)))
             "«" -> Stack.push(stack, GeneralCommands.concat(a, b))
@@ -310,6 +315,14 @@ defmodule Interp.Interpreter do
                         end
                     end
                 end
+            "ι" ->
+                {b, stack, environment} = Stack.pop(stack, environment)
+                if is_iterable(b) do
+                    {Stack.push(stack, ListCommands.extract_every(b, 2)), environment}
+                else
+                    {a, stack, environment} = Stack.pop(stack, environment)
+                    {Stack.push(stack, ListCommands.extract_every(a, to_number(b))), environment}
+                end
         end
     end
 
@@ -335,7 +348,14 @@ defmodule Interp.Interpreter do
                 current_n = environment.range_variable
                 {new_stack, new_env} = GeneralCommands.loop(subcommands, stack, environment, 0, to_number(a))
                 {new_stack, %{new_env | range_variable: current_n}}
+
+            # Infinite loop
+            "[" ->
+                current_n = environment.range_variable
+                {new_stack, new_env} = GeneralCommands.loop(subcommands, stack, environment, 0, -1)
+                {new_stack, %{new_env | range_variable: current_n}}
             
+            # Iterate through string
             "v" ->
                 {a, stack, environment} = Stack.pop(stack, environment)
                 current_n = environment.range_variable

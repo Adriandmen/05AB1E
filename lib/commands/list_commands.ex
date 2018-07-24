@@ -156,6 +156,20 @@ defmodule Commands.ListCommands do
         end
     end
 
+    def list_multiply(value, len) do
+        cond do
+            Functions.is_iterable(value) -> value |> Stream.cycle |> Stream.take(length(Enum.to_list(value)) * len)
+            true -> Stream.cycle([value]) |> Stream.take(len)
+        end
+    end
+
+    def extract_every(value, n) do
+        cond do
+            Functions.is_iterable(value) -> 0..n - 1 |> Stream.map(fn x -> value |> Stream.drop(x) |> Stream.take_every(n) end)
+            true -> extract_every(String.graphemes(to_string(value)), n) |> Stream.map(fn x -> Enum.join(Enum.to_list(x), "") end)
+        end
+    end
+
     def index_in(value, element) do
         cond do
             Functions.is_iterable(value) -> 
