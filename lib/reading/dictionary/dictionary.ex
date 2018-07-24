@@ -14,10 +14,10 @@ defmodule Reading.Dictionary do
     end
     
     # --------------------------------
-    # Uncompressing dictionary strings
+    # Decompressing dictionary strings
     # --------------------------------
-    def uncompress(compressed_string, mode) when is_binary(compressed_string), do: uncompress(String.graphemes(compressed_string), mode, "")
-    defp uncompress([first, second | remaining], mode, uncompressed_string) do
+    def decompress(compressed_string, mode) when is_binary(compressed_string), do: decompress(String.graphemes(compressed_string), mode, "")
+    defp decompress([first, second | remaining], mode, decompressed_string) do
         if first in compressed_chars() and second in compressed_chars() do
 
             # Find the index of the compressed string and retrieve the dictionary word.
@@ -28,18 +28,18 @@ defmodule Reading.Dictionary do
             
             # Adjust to the given mode.
             word = case mode do
-                :upper -> (if uncompressed_string == "" do "" else " " end) <> String.upcase(word)
+                :upper -> (if decompressed_string == "" do "" else " " end) <> String.upcase(word)
                 :no_space -> word
-                :normal -> (if uncompressed_string == "" do "" else " " end) <> word
-                :title -> (if uncompressed_string == "" do "" else " " end) <> String.capitalize(word)
+                :normal -> (if decompressed_string == "" do "" else " " end) <> word
+                :title -> (if decompressed_string == "" do "" else " " end) <> String.capitalize(word)
             end
 
-            uncompress(remaining, mode, uncompressed_string <> word)
+            decompress(remaining, mode, decompressed_string <> word)
         else
-            uncompress([second | remaining], mode, uncompressed_string <> first)
+            decompress([second | remaining], mode, decompressed_string <> first)
         end
     end
 
-    defp uncompress([char | remaining], mode, uncompressed_string), do: uncompress(remaining, mode, uncompressed_string <> char)
-    defp uncompress([], _, uncompressed_string), do: uncompressed_string
+    defp decompress([char | remaining], mode, decompressed_string), do: decompress(remaining, mode, decompressed_string <> char)
+    defp decompress([], _, decompressed_string), do: decompressed_string
 end

@@ -54,12 +54,20 @@ defmodule ReaderTest do
         assert Reader.read_step("\"abc\"def") == {:string, "abc", "def"}
     end
 
+    test "read normal string with newlines" do
+        assert Reader.read_step("\"abc\ndef\"ghi") == {:string, "abc\ndef", "ghi"}
+    end
+
     test "read normal with no remaining code" do
         assert Reader.read_step("\"abc\"") == {:string, "abc", ""}
     end
 
     test "read string without end delimiter" do
         assert Reader.read_step("\"abc") == {:string, "abc", ""}
+    end
+
+    test "read string with newlines without end delimiter" do
+        assert Reader.read_step("\"abc\n") == {:string, "abc\n", ""}
     end
 
     test "read end of file" do
@@ -108,5 +116,50 @@ defmodule ReaderTest do
 
     test "read compressed string no space one compressed char" do
         assert Reader.read_step("’Ÿ") == {:string, "Ÿ", ""}
+    end
+
+    test "read normal 1 char string" do
+        assert Reader.read_step("'a1") == {:string, "a", "1"}
+    end
+
+    test "read normal 2 char string" do
+        assert Reader.read_step("„ab1") == {:string, "ab", "1"}
+    end
+
+    test "read normal 3 char string" do
+        assert Reader.read_step("…abc1") == {:string, "abc", "1"}
+    end
+
+    test "read compressed 1 word string" do
+        assert Reader.read_step("'Ÿ™1") == {:string, "hello", "1"}
+    end
+
+    test "read compressed 2 word string" do
+        assert Reader.read_step("„Ÿ™‚ï1") == {:string, "hello world", "1"}
+    end
+
+    test "read compressed 3 word string" do
+        assert Reader.read_step("…Ÿ™‚ïŸ™1") == {:string, "hello world hello", "1"}
+    end
+    
+    test "read compressed char 1 char string" do
+        assert Reader.read_step("'Ÿ1") == {:string, "Ÿ", "1"}
+    end
+    
+    test "read 2 char string with one word and one char" do
+        assert Reader.read_step("„Ÿ™12") == {:string, "hello1", "2"}
+        assert Reader.read_step("„1Ÿ™2") == {:string, "1 hello", "2"}
+    end
+    
+    test "read 2 char string with one compressed char and one char" do
+        assert Reader.read_step("„1™2") == {:string, "1™", "2"}
+    end
+    
+    test "read 3 char string with one word and two chars" do
+        assert Reader.read_step("…Ÿ™abc") == {:string, "helloab", "c"}
+    end
+    
+    test "read 3 char string with one word and one char and one compressed char" do
+        assert Reader.read_step("…Ÿ™aŸc") == {:string, "helloaŸ", "c"}
     end
 end
