@@ -209,6 +209,7 @@ defmodule Interp.Interpreter do
             "›" -> Stack.push(stack, call_binary(fn x, y -> to_number(to_number(x) > to_number(y)) end, a, b))
             "ô" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.split_into(x, to_number(y)) end, a, b, true, false))
             "Ö" -> Stack.push(stack, call_binary(fn x, y -> to_number(IntCommands.mod(to_number(x), to_number(y)) == 0) end, a, b))
+            "ù" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.keep_with_length(x, to_number(y)) end, a, b, true, false))
             "ý" -> if is_iterable(a) do Stack.push(stack, ListCommands.join(a, to_string(b))) else Stack.push(%Stack{}, ListCommands.join(Enum.reverse(Stack.push(stack, a).elements), to_string(b))) end
             "«" -> Stack.push(stack, GeneralCommands.concat(a, b))
             "ì" -> Stack.push(stack, GeneralCommands.concat(b, a))
@@ -274,6 +275,14 @@ defmodule Interp.Interpreter do
                 else 
                     {a, stack, environment} = Stack.pop(stack, environment)
                     {Stack.push(stack, to_number(a)..to_number(b)), environment}
+                end
+            "ø" -> 
+                {b, stack, environment} = Stack.pop(stack, environment)
+                if is_iterable(b) and is_iterable(List.first(Enum.take(b, 1))) do 
+                    {Stack.push(stack, ListCommands.zip(b)), environment}
+                else
+                    {a, stack, environment} = Stack.pop(stack, environment)
+                    {Stack.push(stack, ListCommands.zip(a, b)), environment}
                 end
         end
     end

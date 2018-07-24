@@ -238,4 +238,19 @@ defmodule BinaryTest do
         assert evaluate("3 4Ö") == 0
         assert evaluate("45 456SÖ") == [0, 1, 0]
     end
+
+    test "normal zip" do
+        assert evaluate("3L 3L3+)ø") == [[1, 4], [2, 5], [3, 6]]
+        assert evaluate("123 456ø") == ["14", "25", "36"]
+        assert evaluate("123S 456øï") == [[1, 4], [2, 5], [3, 6]]
+        assert evaluate("123 456Søï") == [[1, 4], [2, 5], [3, 6]]
+        assert evaluate("∞ 3Lø") == [[1, 1], [2, 2], [3, 3]]
+        assert evaluate("3L ∞ø") == [[1, 1], [2, 2], [3, 3]]
+        assert evaluate("∞ ∞ø3£") == [[1, 1], [2, 2], [3, 3]]
+    end
+
+    test "keep with length" do
+        assert evaluate("1 2 3 12 23 123) 2ù") == ["12", "23"]
+        assert evaluate("1 2 3 12 23 123) 23Sù") == [["12", "23"], ["123"]]
+    end
 end

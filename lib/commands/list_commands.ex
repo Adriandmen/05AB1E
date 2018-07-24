@@ -148,6 +148,19 @@ defmodule Commands.ListCommands do
         end
     end
 
+    def zip(a) do
+        Stream.zip(a) |> Stream.map(fn x -> Tuple.to_list x end)
+    end
+
+    def zip(a, b) do
+        cond do
+            Functions.is_iterable(a) and Functions.is_iterable(b) -> Stream.zip(a, b) |> Stream.map(fn x -> Tuple.to_list x end)
+            Functions.is_iterable(a) -> Stream.zip(a, String.graphemes(to_string(b))) |> Stream.map(fn x -> Tuple.to_list x end)
+            Functions.is_iterable(b) -> Stream.zip(String.graphemes(to_string(a)), b) |> Stream.map(fn x -> Tuple.to_list x end)
+            true -> Stream.zip(String.graphemes(to_string(a)), String.graphemes(to_string(b))) |> Stream.map(fn x -> Enum.join(Tuple.to_list(x), "") end)
+        end
+    end
+
     def deep_flatten(list) do
         list |> Stream.flat_map(fn x -> if Functions.is_iterable(x) do deep_flatten(x) else [x] end end)
              |> Stream.map(fn x -> x end)
@@ -163,6 +176,13 @@ defmodule Commands.ListCommands do
                                             fn (x, {acc, last}) -> if GeneralCommands.equals(x, last) do {:cont, [x | acc], {[], nil}} else {:cont, {[x | acc], x}} end end,
                                             fn ({acc, _}) -> case acc do [] -> {:cont, []}; acc -> {:cont, acc, []} end end)
             true -> String.graphemes(to_string(list)) |> group_equal |> Stream.map(fn x -> x |> Enum.join("") end)
+        end
+    end
+
+    def keep_with_length(list, length) do
+        cond do
+            Functions.is_iterable(list) -> list |> Stream.filter(fn x -> GeneralCommands.length_of(x) == length end)
+            true -> []
         end
     end
 end
