@@ -170,6 +170,8 @@ defmodule Interp.Interpreter do
             "Ð" -> Stack.push(Stack.push(Stack.push(stack, a), a), a)
             "ć" -> Stack.push(Stack.push(stack, GeneralCommands.dehead(a)), GeneralCommands.head(a))
             "Â" -> Stack.push(Stack.push(stack, a), if is_iterable(a) do a |> Enum.reverse else to_string(a) |> String.reverse end)
+            "{" -> Stack.push(stack, if is_iterable(a) do Enum.sort(Enum.to_list(a)) else Enum.join(Enum.sort(String.graphemes(to_string(a)))) end)
+            "`" -> %Stack{elements: Enum.reverse(if is_iterable(a) do Enum.to_list(a) else String.graphemes(to_string(a)) end) ++ stack.elements}
             "O" -> if is_iterable(a) do Stack.push(stack, ListCommands.sum(a)) else Stack.push(%Stack{}, ListCommands.sum(Stack.push(stack, a).elements)) end
             "Æ" -> if is_iterable(a) do Stack.push(stack, ListCommands.reduce_subtraction(a)) else Stack.push(%Stack{}, ListCommands.reduce_subtraction(Stack.push(stack, a).elements |> Enum.reverse)) end
             "P" -> if is_iterable(a) do Stack.push(stack, ListCommands.product(a)) else Stack.push(%Stack{}, ListCommands.product(Stack.push(stack, a).elements)) end
@@ -210,7 +212,9 @@ defmodule Interp.Interpreter do
             "ô" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.split_into(x, to_number(y)) end, a, b, true, false))
             "Ö" -> Stack.push(stack, call_binary(fn x, y -> to_number(IntCommands.mod(to_number(x), to_number(y)) == 0) end, a, b))
             "ù" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.keep_with_length(x, to_number(y)) end, a, b, true, false))
+            "k" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.index_in(x, y) end, a, b, true, false))
             "ý" -> if is_iterable(a) do Stack.push(stack, ListCommands.join(a, to_string(b))) else Stack.push(%Stack{}, ListCommands.join(Enum.reverse(Stack.push(stack, a).elements), to_string(b))) end
+            "¡" -> Stack.push(stack, ListCommands.split_on(a, to_non_number(b)))
             "«" -> Stack.push(stack, GeneralCommands.concat(a, b))
             "ì" -> Stack.push(stack, GeneralCommands.concat(b, a))
             "Q" -> Stack.push(stack, to_number(GeneralCommands.equals(a, b)))
@@ -265,6 +269,7 @@ defmodule Interp.Interpreter do
             "#" ->
                 {element, new_stack, new_env} = Stack.pop(stack, environment)
                 cond do
+                    is_iterable(element) or String.contains?(to_string(element), " ") -> {Stack.push(new_stack, ListCommands.split_on(element, " ")), new_env}
                     GeneralCommands.equals(to_number(element), 1) -> {new_stack, %{new_env | status: :break}}
                     true -> {new_stack, new_env}
                 end

@@ -3,6 +3,7 @@ defmodule Commands.GeneralCommands do
     alias Interp.Functions
     alias Interp.Interpreter
     alias Interp.Stack
+    alias Commands.ListCommands
     require Interp.Functions
     
     def head(value) do

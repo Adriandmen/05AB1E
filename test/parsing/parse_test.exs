@@ -193,4 +193,89 @@ defmodule ParserTest do
             {:special_op, ")"}
         ]
     end
+
+    test "parse normal if statement" do
+        assert Parser.parse(Reader.read("1i4 5 +} 2+")) == [
+            {:number, "1"},
+            {:if_statement, [number: "4", number: "5", binary_op: "+"], []},
+            {:number, "2"},
+            {:binary_op, "+"}
+        ]
+    end
+
+    test "parse normal if/else statement" do
+        assert Parser.parse(Reader.read("1i4 5 +ë 2+} 7+")) == [
+            {:number, "1"},
+            {:if_statement, [
+                number: "4",
+                number: "5",
+                binary_op: "+"
+            ], [
+                number: "2",
+                binary_op: "+"
+            ]},
+            {:number, "7"},
+            {:binary_op, "+"}
+        ]
+    end
+
+    test "parse if/else in if/else" do
+        assert Parser.parse(Reader.read("1i4 5i 3ë2+ë 2+} 7+")) == [
+            {:number, "1"},
+            {:if_statement,
+                [
+                    {:number, "4"},
+                    {:number, "5"},
+                    {:if_statement, 
+                        [number: "3"], 
+                        [number: "2", binary_op: "+"]
+                    }
+                ], 
+                [number: "2", binary_op: "+"]
+            },
+            {:number, "7"},
+            {:binary_op, "+"}
+        ]
+    end
+
+    test "parse if/else in subprogram in if/else" do
+        #                                  ____________________
+        #  The structure of the if-       |     __ ________|   |
+        #  statements is as following:    |    |  |  ___ __|   |
+        #                                 |    |  | |   |  |   | 
+        assert Parser.parse(Reader.read("2i4F 5i 3ë2i88+ë33ë 2+} 7+")) == [
+            {:number, "2"},
+            {:if_statement,
+                [
+                    {:number, "4"},
+                    {:subprogram, "F", [
+                        {:number, "5"},
+                        {:if_statement, 
+                            [number: "3"],
+                            [
+                                {:number, "2"},
+                                {:if_statement, 
+                                    [number: "88", binary_op: "+"],
+                                    [number: "33"]
+                                }
+                            ]
+                        }
+                    ]}
+                ], 
+                [
+                    {:number, "2"},
+                    {:binary_op, "+"}
+                ]
+            },
+            {:number, "7"},
+            {:binary_op, "+"}
+          ]
+    end
+
+    test "parse if/else with eof" do
+        assert Parser.parse(Reader.read("2i4+ë1")) == [
+            {:number, "2"},
+            {:if_statement, [number: "4", binary_op: "+"], [number: "1"]}
+          ]
+    end
 end

@@ -162,4 +162,12 @@ defmodule ReaderTest do
     test "read 3 char string with one word and one char and one compressed char" do
         assert Reader.read_step("…Ÿ™aŸc") == {:string, "helloaŸ", "c"}
     end
+
+    test "read compressed number char" do
+        assert Reader.read_step("Ƶ1abc") == {:number, 102, "abc"}
+    end
+
+    test "read compressed number char without remaining code" do
+        assert Reader.read_step("Ƶa") == {:number, 137, ""}
+    end
 end

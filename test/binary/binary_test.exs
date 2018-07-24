@@ -280,4 +280,29 @@ defmodule BinaryTest do
         assert evaluate("1 2 3 12 23 123) 2ù") == ["12", "23"]
         assert evaluate("1 2 3 12 23 123) 23Sù") == [["12", "23"], ["123"]]
     end
+
+    test "split on" do
+        assert evaluate("12345 3¡") == ["12", "45"]
+        assert evaluate("12345367 3¡") == ["12", "45", "67"]
+        assert evaluate("12345367ï 3¡") == ["12", "45", "67"]
+        assert evaluate("12345367 3ï¡") == ["12", "45", "67"]
+        assert evaluate("7L 3¡ï") == [[1, 2], [4, 5, 6, 7]]
+        assert evaluate("7L 3ï¡ï") == [[1, 2], [4, 5, 6, 7]]
+        assert evaluate("123456378Sï 3ï¡ï") == [[1, 2], [4, 5, 6], [7, 8]]
+        assert evaluate("12345678 36S¡") == ["12", "45", "78"]
+        assert evaluate("12345678ï 36Sï¡") == ["12", "45", "78"]
+        assert evaluate("12345678Sï 36Sï¡") == [[1, 2], [4, 5], [7, 8]]
+    end
+
+    test "index in" do
+        assert evaluate("1234 1k") == 0
+        assert evaluate("1234 4k") == 3
+        assert evaluate("1234 14Sk") == [0, 3]
+        assert evaluate("1234Sï 14Sïk") == [0, 3]
+        assert evaluate("1234S 14Sïk") == [0, 3]
+        assert evaluate("1234Sï 14Sk") == [0, 3]
+        assert evaluate("1234S 14Sk") == [0, 3]
+        assert evaluate("1234S 5k") == -1
+        assert evaluate("1234S 54Sk") == [-1, 3]
+    end
 end

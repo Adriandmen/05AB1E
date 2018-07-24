@@ -140,6 +140,33 @@ defmodule Commands.ListCommands do
         end
     end
 
+    def split_on(value, split) do
+        split_chars = cond do
+            Functions.is_iterable(split) -> Enum.to_list split
+            true -> [to_string(split)]
+        end
+
+        cond do
+            Functions.is_iterable(value) ->
+                value |> Stream.chunk_while([],
+                    fn (x, acc) -> if contains(split_chars, x) do {:cont, Enum.reverse(acc), []} else {:cont, [x | acc]} end end,
+                    fn [] -> {:cont, []}; acc -> {:cont, Enum.reverse(acc), []} end)
+            true ->
+                String.split(to_string(value), split_chars)
+        end
+    end
+
+    def index_in(value, element) do
+        cond do
+            Functions.is_iterable(value) -> 
+                case value |> Enum.to_list |> Enum.find_index(fn x -> GeneralCommands.equals(x, element) end) do
+                    nil -> -1
+                    x -> x
+                end
+            true -> index_in(String.graphemes(to_string(value)), element)
+        end
+    end
+
     def lift(value) do
         cond do
             Functions.is_iterable(value) -> value |> Stream.with_index(1) |> Stream.map(fn {x, index} -> Functions.call_binary(fn a, b -> 
@@ -203,7 +230,7 @@ defmodule Commands.ListCommands do
             Functions.is_iterable(a) -> a
             true -> String.graphemes(to_string(a))
         end
-        
+
         b = cond do
             Functions.is_iterable(b) -> b
             true -> String.graphemes(to_string(b))

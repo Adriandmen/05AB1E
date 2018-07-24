@@ -38,7 +38,7 @@ defmodule Reading.Reader do
     
     def string_delimiters, do: regexify ["\"", "•", "‘", "’", "“", "”"]
 
-    def char_indicators, do: regexify ["'", "„", "…"]
+    def char_indicators, do: regexify ["'", "„", "…", "Ƶ"]
     
     def compressed_chars, do: regexify ["€", "‚", "ƒ", "„", "…", "†", "‡", "ˆ", "‰", "Š", "‹", "Œ", "Ž", "í", "î", "•", "–", "—", 
                                         "ï", "™", "š", "›", "œ", "ž", "Ÿ", "¡", "¢", "£", "¤", "¥", "¦", "§", "¨", "©", "ª", "«", 
@@ -62,11 +62,27 @@ defmodule Reading.Reader do
         end
     end
 
+    @docs """
+    Reads a number of characters of compressed words from the given string.
+
+    ## Parameters
+
+     - string:  The string from which the characters/compressed words will be read.
+     - count:   The number of characters that will be read from the string.
+
+    ## Returns
+
+    Returns a tuple {:string, parsed, remaining}, with the following variables:
+
+     - parsed:      The completely parsed word where possible compressed words are decompressed.
+     - remaining:   The leftover string of code/commands that still needs to be parsed.
+
+    """
     def read_chars(string, count), do: read_chars(string, count, "")
-    def read_chars(string, 0, parsed) do
+    defp read_chars(string, 0, parsed) do
         {:string, Dictionary.decompress(parsed, :normal), string}
     end
-    def read_chars(string, count, parsed) do
+    defp read_chars(string, count, parsed) do
         matches = Regex.named_captures(~r/((?<compressed>#{compressed_chars()}{2})|(?<char>(#{any_osabie_char()}|.)))#{remaining()}/s, string)
         case matches["compressed"] do
             "" -> read_chars(matches["remaining"], count - 1, parsed <> matches["char"])
@@ -83,7 +99,7 @@ defmodule Reading.Reader do
                 {:number, matches["number"], matches["remaining"]}
 
             # Strings and equivalent values
-            Regex.match?(~r/^#{string_delimiters()}((.|\n)*?)(\1|\z)/, raw_code) ->
+            Regex.match?(~r/^#{string_delimiters()}(.*?)(\1|\z)/s, raw_code) ->
                 matches = Regex.named_captures(~r/^(?<delimiter>#{string_delimiters()})(?<string>.*?)(\1|\z)#{remaining()}/s, raw_code)
                 case matches["delimiter"] do
                     # Compressed numbers
@@ -99,13 +115,24 @@ defmodule Reading.Reader do
                     "”" -> {:string, Dictionary.decompress(matches["string"], :title), matches["remaining"]}
                 end
             
-            # Chars or normal compressed words
+            # If/else statements
+            Regex.match?(~r/^(i|ë)/, raw_code) ->
+                matches = Regex.named_captures(~r/^(?<if_else>(i|ë))#{remaining()}/s, raw_code)
+                case matches["if_else"] do
+                    "i" -> {:if_statement, "i", matches["remaining"]}
+                    "ë" -> {:else_statement, "ë", matches["remaining"]}
+                end
+            
+            # Chars or normal compressed words/numbers
             Regex.match?(~r/^#{char_indicators()}/s, raw_code) ->
                 matches = Regex.named_captures(~r/(?<indicator>#{char_indicators()})#{remaining()}/s, raw_code)
                 case matches["indicator"] do
                     "'" -> read_chars(matches["remaining"], 1)
                     "„" -> read_chars(matches["remaining"], 2)
                     "…" -> read_chars(matches["remaining"], 3)
+                    "Ƶ" -> 
+                        new_matches = Regex.named_captures(~r/(?<char>#{any_osabie_char()})#{remaining()}/s, matches["remaining"])
+                        {:number, IntCommands.string_from_base(new_matches["char"], 255) + 101, new_matches["remaining"]}
                 end
 
             # Nullary functions

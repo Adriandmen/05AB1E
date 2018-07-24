@@ -465,4 +465,17 @@ defmodule UnaryTest do
         assert evaluate("123ïÂ)ï") == [123, 321]
         assert evaluate("3LÂ)") == [[1, 2, 3], [3, 2, 1]]
     end
+
+    test "sort" do
+        assert evaluate("123321{") == "112233"
+        assert evaluate("123321S{") == ["1", "1", "2", "2", "3", "3"]
+        assert evaluate("123321Sï{") == [1, 1, 2, 2, 3, 3]
+        assert evaluate("1 2 12 2ï 1ï){") == [1, 2, "1", "12", "2"]
+        assert evaluate("3L>>3L>3L){") == [[1, 2, 3], [2, 3, 4], [3, 4, 5]]
+    end
+
+    test "peel" do
+        assert evaluate("1 2 1234S`)ï") == [1, 2, 1, 2, 3, 4]
+        assert evaluate("1 2 1234`)ï") == [1, 2, 1, 2, 3, 4]
+    end
 end
