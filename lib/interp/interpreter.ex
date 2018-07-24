@@ -152,6 +152,8 @@ defmodule Interp.Interpreter do
             "ç" -> Stack.push(stack, call_unary(fn x -> List.to_string [to_number(x)] end, a))
             "í" -> Stack.push(stack, a |> Stream.map(fn x -> if is_iterable(x) do Enum.to_list(x) |> Enum.reverse else String.reverse(to_string(x)) end end))
             "Ω" -> Stack.push(stack, if is_iterable(a) do Enum.random(Enum.to_list(a)) else Enum.random(String.graphemes(to_string(a))) end)
+            "œ" -> Stack.push(stack, if is_iterable(a) do ListCommands.permutations(a) else ListCommands.permutations(String.graphemes(to_string(a))) |> Enum.map(fn x -> Enum.join(x, "") end) end)
+            "Ù" -> Stack.push(stack, ListCommands.uniques(a))
             "Œ" -> Stack.push(stack, ListCommands.substrings(a))
             "γ" -> Stack.push(stack, ListCommands.group_equal(a))
            ".s" -> Stack.push(stack, ListCommands.suffixes(a))
@@ -218,7 +220,7 @@ defmodule Interp.Interpreter do
             "ù" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.keep_with_length(x, to_number(y)) end, a, b, true, false))
             "k" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.index_in(x, y) end, a, b, true, false))
             "и" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.list_multiply(x, to_number(y)) end, a, b, true, false))
-            "ý" -> if is_iterable(a) do Stack.push(stack, ListCommands.join(a, to_string(b))) else Stack.push(%Stack{}, ListCommands.join(Enum.reverse(Stack.push(stack, a).elements), to_string(b))) end
+            "†" -> Stack.push(stack, ListCommands.filter_to_front(a, b))
             "¡" -> Stack.push(stack, ListCommands.split_on(a, to_non_number(b)))
             "«" -> Stack.push(stack, GeneralCommands.concat(a, b))
             "ì" -> Stack.push(stack, GeneralCommands.concat(b, a))
@@ -226,6 +228,7 @@ defmodule Interp.Interpreter do
             "Ê" -> Stack.push(stack, call_unary(fn x -> to_number(to_number(x) == 0) end, GeneralCommands.equals(a, b)))
             "‚" -> Stack.push(stack, [a, b])
             "s" -> Stack.push(Stack.push(stack, b), a)
+            "ý" -> if is_iterable(a) do Stack.push(stack, ListCommands.join(a, to_string(b))) else Stack.push(%Stack{}, ListCommands.join(Enum.reverse(Stack.push(stack, a).elements), to_string(b))) end
         end
 
         {new_stack, environment}

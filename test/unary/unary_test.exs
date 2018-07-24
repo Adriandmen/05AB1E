@@ -502,4 +502,16 @@ defmodule UnaryTest do
         assert evaluate("5LW") == 1
         assert evaluate("345S 4324S 58S)W") == 2
     end
+
+    test "uniques of list" do
+        assert evaluate("123321Ù") == "123"
+        assert evaluate("123321SïÙ") == [1, 2, 3]
+        assert evaluate("312321SïÙ") == [3, 1, 2]
+        assert evaluate("∞€DÙ5£") == [1, 2, 3, 4, 5]
+    end
+
+    test "permutations" do
+        assert evaluate("3Lœ") == [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]
+        assert evaluate("123œ") == ["123", "132", "213", "231", "312", "321"]
+    end
 end

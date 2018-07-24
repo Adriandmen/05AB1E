@@ -318,4 +318,11 @@ defmodule BinaryTest do
         assert evaluate("6Lι") == [[1, 3, 5], [2, 4, 6]]
         assert evaluate("123456 2ι") == ["135", "246"]
     end
+
+    test "filter to front" do
+        assert evaluate("1122332211 1†") == "1111223322"
+        assert evaluate("1122332211 2†") == "2222113311"
+        assert evaluate("1122332211 23S†") == "2233221111"
+        assert evaluate("1122332211Sï 23S†") == [2, 2, 3, 3, 2, 2, 1, 1, 1, 1]
+    end
 end

@@ -170,6 +170,21 @@ defmodule Commands.ListCommands do
         end
     end
 
+    def uniques(value) do
+        cond do
+            Functions.is_iterable(value) -> value |> Stream.transform([], fn (x, acc) -> if contains(acc, x) do {[], acc} else {[x], [x | acc]} end end) |> Stream.map(fn x -> x end)
+            true -> Enum.join(uniques(String.graphemes(to_string(value))))
+        end
+    end
+
+    def filter_to_front(value, filter_chars) do
+        cond do
+            Functions.is_iterable(value) and Functions.is_iterable(filter_chars) -> value |> Enum.sort_by(fn x -> not contains(filter_chars, x) end)
+            Functions.is_iterable(value) -> value |> Enum.sort_by(fn x -> not GeneralCommands.equals(x, filter_chars) end)
+            true -> filter_to_front(String.graphemes(to_string(value)), filter_chars) |> Enum.join("")
+        end
+    end
+
     def index_in(value, element) do
         cond do
             Functions.is_iterable(value) -> 
@@ -295,5 +310,11 @@ defmodule Commands.ListCommands do
             Functions.is_iterable(list) -> list |> Stream.filter(fn x -> GeneralCommands.length_of(x) == length end)
             true -> []
         end
+    end
+
+    def permutations([]), do: [[]]
+    def permutations(list) do
+        list = Enum.to_list list
+        for element <- list, remaining <- permutations(list -- [element]), do: [element | remaining]
     end
 end
