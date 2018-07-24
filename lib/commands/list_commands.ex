@@ -161,6 +161,76 @@ defmodule Commands.ListCommands do
         end
     end
 
+    @docs """
+    Zip with filler for a single list. Zipping is done internally within the first given argument and
+    fills the remaining spaces with the given filler character. Since Elixir does not have a zip with filler
+    function, this is done using a resource generator for a new stream, repeatedly taking the first element of
+    the given list of lists and dropping one element for the next iteration. It checks each iteration whether
+    at least one element of the intermediate results is not equal to [] and replaces any occurence of [] with
+    the filler element. If all elements of the intermediate result equals [], it halts the stream generation.
+
+    ## Parameters
+
+     - a:       The element that will be zipped. Assuming that this element is a list of lists.
+     - filler:  The filler character, which can be of any type.
+
+    """
+    def zip_with_filler(a, filler) do
+        Stream.resource(
+            # Initialize the accumulator with the given list of lists.
+            fn -> a end,
+
+            # With the intermediate accumulator as a parameter..
+            fn acc ->
+
+                # Take the first element of each sublist.
+                elements = acc |> Stream.map(fn n -> n |> Stream.take(1) |> Enum.to_list end)
+
+                # Check if there exists at least one element that does not equal []. If all elements equal [], 
+                # we would now know that the zipping is done.
+                if Enum.any?(elements, fn n -> n != [] end) do
+                    {[elements |> Stream.flat_map(fn n -> if n == [] do [filler] else n end end) |> Stream.map(fn x -> x end)], acc |> Stream.map(fn n -> n |> Stream.drop(1) end)}
+                else
+                    {:halt, nil}
+                end
+            end,
+            fn acc -> nil end)
+            |> Stream.map(fn x -> x end)
+    end
+
+    def zip_with_filler(a, b, filler) do
+        a = cond do
+            Functions.is_iterable(a) -> a
+            true -> String.graphemes(to_string(a))
+        end
+        
+        b = cond do
+            Functions.is_iterable(b) -> b
+            true -> String.graphemes(to_string(b))
+        end
+
+        Stream.resource(
+            # Initialize the accumulator with the given list of lists.
+            fn -> {a, b} end,
+
+            # With the intermediate accumulator as a parameter..
+            fn {left, right} ->
+
+                # Take the first element of each sublist.
+                elements = [left |> Stream.take(1) |> Enum.to_list, right |> Stream.take(1) |> Enum.to_list]
+
+                # Check if there exists at least one element that does not equal []. If all elements equal [], 
+                # we would now know that the zipping is done.
+                if Enum.any?(elements, fn n -> n != [] end) do
+                    {[elements |> Stream.flat_map(fn n -> if n == [] do [filler] else n end end) |> Stream.map(fn x -> x end)], {left |> Stream.drop(1), right |> Stream.drop(1)}}
+                else
+                    {:halt, nil}
+                end
+            end,
+            fn acc -> nil end)
+            |> Stream.map(fn x -> x end)
+    end
+
     def deep_flatten(list) do
         list |> Stream.flat_map(fn x -> if Functions.is_iterable(x) do deep_flatten(x) else [x] end end)
              |> Stream.map(fn x -> x end)

@@ -284,6 +284,27 @@ defmodule Interp.Interpreter do
                     {a, stack, environment} = Stack.pop(stack, environment)
                     {Stack.push(stack, ListCommands.zip(a, b)), environment}
                 end
+            "ζ" ->
+                {c, stack, environment} = Stack.pop(stack, environment)
+                if is_iterable(c) and is_iterable(List.first(Enum.take(c, 1))) do
+                    {Stack.push(stack, ListCommands.zip_with_filler(c, " ")), environment}
+                else
+                    {b, stack, environment} = Stack.pop(stack, environment)
+                    if is_iterable(c) and is_iterable(b) do
+                        {Stack.push(stack, ListCommands.zip_with_filler(b, c, " ")), environment}
+                    else 
+                        if is_iterable(b) and is_iterable(List.first(Enum.take(b, 1))) do
+                            {Stack.push(stack, ListCommands.zip_with_filler(b, c)), environment}
+                        else
+                            {a, stack, environment} = Stack.pop(stack, environment)
+                            result = cond do
+                                not is_iterable(a) and not is_iterable(b) -> ListCommands.zip_with_filler(a, b, c) |> Stream.map(fn x -> Enum.join(Enum.to_list(x), "") end)
+                                true -> ListCommands.zip_with_filler(a, b, c)
+                            end
+                            {Stack.push(stack, result), environment}
+                        end
+                    end
+                end
         end
     end
 

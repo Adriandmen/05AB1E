@@ -249,6 +249,33 @@ defmodule BinaryTest do
         assert evaluate("∞ ∞ø3£") == [[1, 1], [2, 2], [3, 3]]
     end
 
+    test "zip with filler" do
+        # if c is list of lists: zip(c) with space filler
+        assert evaluate("3L 3L3+)ζ") == [[1, 4], [2, 5], [3, 6]]
+        assert evaluate("4L 3L3+)ζ") == [[1, 4], [2, 5], [3, 6], [4, " "]]
+        assert evaluate("3L 4L3+)ζ") == [[1, 4], [2, 5], [3, 6], [" ", 7]]
+
+        # else if c is list: zip(b, c) with space filler
+        assert evaluate("3L 3L3+ζ") == [[1, 4], [2, 5], [3, 6]]
+        assert evaluate("3L 4L3+ζ") == [[1, 4], [2, 5], [3, 6], [" ", 7]]
+        assert evaluate("4L 3L3+ζ") == [[1, 4], [2, 5], [3, 6], [4, " "]]
+
+        # else if b is list of lists: zip(b) with c filler
+        assert evaluate("3L 3L3+)10ïζ") == [[1, 4], [2, 5], [3, 6]]
+        assert evaluate("4L 3L3+)10ïζ") == [[1, 4], [2, 5], [3, 6], [4, 10]]
+        assert evaluate("3L 4L3+)10ïζ") == [[1, 4], [2, 5], [3, 6], [10, 7]]
+
+        # else zip(a, b) with c filler
+        assert evaluate("123 456 0ζ") == ["14", "25", "36"]
+        assert evaluate("123 4567 0ζ") == ["14", "25", "36", "07"]
+        assert evaluate("1234 456 0ζ") == ["14", "25", "36", "40"]
+        assert evaluate("123 4567S 0ζï") == [[1, 4], [2, 5], [3, 6], [0, 7]]
+        assert evaluate("1234S 456 0ζï") == [[1, 4], [2, 5], [3, 6], [4, 0]]
+        assert evaluate("123S 456S 0ζï") == [[1, 4], [2, 5], [3, 6]]
+        assert evaluate("123S 4567S 0ζï") == [[1, 4], [2, 5], [3, 6], [0, 7]]
+        assert evaluate("1234S 456S 0ζï") == [[1, 4], [2, 5], [3, 6], [4, 0]]
+    end
+
     test "keep with length" do
         assert evaluate("1 2 3 12 23 123) 2ù") == ["12", "23"]
         assert evaluate("1 2 3 12 23 123) 23Sù") == [["12", "23"], ["123"]]
