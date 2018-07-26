@@ -10,6 +10,7 @@ defmodule Interp.Functions do
     # ----------------
     def to_number(value) do
         value = cond do
+            is_iterable(value) -> value
             Regex.match?(~r/^\.\d+/, to_string(value)) -> "0" <> to_string(value)
             true -> value
         end
