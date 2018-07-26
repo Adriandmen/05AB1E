@@ -693,6 +693,11 @@ defmodule UnaryTest do
         assert evaluate("5ïÐ)") == [5, 5, 5]
     end
 
+    test "eval string" do
+        assert evaluate("\"3 + 4\".E") == 7
+        assert evaluate("\"3 + 4\" \"8 + 2\").E") == [7, 10]
+    end
+
     test "powerset" do
         # assert evaluate("3Læ") == [[], [1], [2], [1, 2]]
     end

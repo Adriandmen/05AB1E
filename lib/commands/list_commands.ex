@@ -178,6 +178,19 @@ defmodule Commands.ListCommands do
         end
     end
 
+    def closest_to(value, element) when Functions.is_iterable(value), do: closest_to(Functions.to_number(value), Functions.to_number(element), nil, nil)
+    def closest_to(value, element), do: closest_to(Functions.to_number(String.graphemes(to_string(value))), Functions.to_number(element), nil, nil)
+    def closest_to(value, element), do: closest_to(Functions.to_number(String.graphemes(to_string(value))), Functions.to_number(element), nil, nil)
+    def closest_to(value, element, acc, min_distance) do
+        head = Enum.take(value, 1) |> Enum.to_list |> List.first
+        cond do
+            head == nil and acc == nil -> []
+            head == nil -> acc
+            abs(element - head) < min_distance -> closest_to(Enum.drop(value, 1), element, head, abs(element - head))
+            true -> closest_to(Enum.drop(value, 1), element, acc, min_distance)
+        end
+    end
+
     def extract_every(value, n) do
         cond do
             Functions.is_iterable(value) -> 0..n - 1 |> Stream.map(fn x -> value |> Stream.drop(x) |> Stream.take_every(n) end)

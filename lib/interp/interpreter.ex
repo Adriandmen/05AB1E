@@ -16,6 +16,8 @@ defmodule Interp.Interpreter do
     alias Commands.IntCommands
     alias Commands.GeneralCommands
     alias Reading.InputHandler
+    alias Reading.Reader
+    alias Parsing.Parser
     import Interp.Functions
     use Bitwise
 
@@ -90,6 +92,7 @@ defmodule Interp.Interpreter do
             "žW" -> Stack.push(stack, "qwertyuiopasdfghjklzxcvbnm")
             ".À" -> %Stack{elements: ListCommands.rotate(stack.elements, -1)}
             ".Á" -> %Stack{elements: ListCommands.rotate(stack.elements, 1)}
+            ".g" -> Stack.push(stack, GeneralCommands.length_of(stack.elements))
         end
 
         {new_stack, environment}
@@ -160,6 +163,7 @@ defmodule Interp.Interpreter do
            ".¾" -> Stack.push(stack, call_unary(fn x -> :math.cos(to_number(x)) end, a))
            ".ï" -> Stack.push(stack, call_unary(fn x -> to_number(is_integer(to_number(x))) end, a))
            ".²" -> Stack.push(stack, call_unary(fn x -> :math.log2(to_number(x)) end, a))
+           ".E" -> Stack.push(stack, call_unary(fn x -> {result, _} = Code.eval_string(to_string(x)); result end, a))
            ".B" -> Stack.push(stack, if is_iterable(a) do StrCommands.squarify(a) else StrCommands.squarify(String.split(to_string(a), "\n")) end)
            ".c" -> Stack.push(stack, if is_iterable(a) do StrCommands.align_center(a, :left) else StrCommands.align_center(String.split(to_string(a), "\n"), :left) end)
            ".C" -> Stack.push(stack, if is_iterable(a) do StrCommands.align_center(a, :right) else StrCommands.align_center(String.split(to_string(a), "\n"), :right) end)
@@ -263,6 +267,7 @@ defmodule Interp.Interpreter do
            ".S" -> Stack.push(stack, call_binary(fn x, y -> cond do to_number(x) > to_number(y) -> 1; to_number(x) < to_number(y) -> -1; true -> 0 end end, a, b))
            ".£" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.take_last(x, to_number(y)) end, a, b, true, false))
            ".n" -> Stack.push(stack, call_binary(fn x, y -> :math.log(to_number(x)) / :math.log(to_number(y)) end, a, b))
+           ".x" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.closest_to(x, y) end, a, b, true, false))
            ".o" -> Stack.push(stack, StrCommands.overlap(a, b))
            ".ø" -> Stack.push(stack, ListCommands.surround(a, b))
             "Û" -> Stack.push(stack, ListCommands.remove_leading(a, b))
@@ -279,6 +284,7 @@ defmodule Interp.Interpreter do
             "‚" -> Stack.push(stack, [a, b])
             "s" -> Stack.push(Stack.push(stack, b), a)
             "ý" -> if is_iterable(a) do Stack.push(stack, ListCommands.join(a, to_string(b))) else Stack.push(%Stack{}, ListCommands.join(Enum.reverse(Stack.push(stack, a).elements), to_string(b))) end
+           ".D" -> if is_number(to_number(b)) do %Stack{elements: (Stream.cycle([a]) |> Enum.take(to_number(b))) ++ stack.elements} else %Stack{elements: (Stream.cycle([a]) |> Enum.take(GeneralCommands.length_of(b))) ++ stack.elements} end
         end
 
         {new_stack, environment}
@@ -406,6 +412,9 @@ defmodule Interp.Interpreter do
                     {a, stack} = Stack.pop(stack)
                     {Stack.push(stack, IntCommands.lcm_of(to_number(a), to_number(b))), environment}
                 end
+            ".V" ->
+                {a, stack} = Stack.pop(stack)
+                interp(Parser.parse(Reader.read(to_string(a))), stack, environment)
         end
     end
 

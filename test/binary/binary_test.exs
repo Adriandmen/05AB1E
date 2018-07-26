@@ -451,4 +451,16 @@ defmodule BinaryTest do
         assert evaluate("1 2.¿ 3.¿ 4.¿ 5.¿ 6.¿ 7.¿ 8.¿ 9.¿ 10.¿") == 2520
         assert evaluate("10L.¿") == 2520
     end
+
+    test "n-plicate" do
+        assert evaluate("5ï 3.D)") == [5, 5, 5]
+        assert evaluate("5ï \"abc\".D)") == [5, 5, 5]
+    end
+
+    test "closest to" do
+        assert evaluate("5L 2.8.x") == 3
+        assert evaluate("5L 3.x") == 3
+        assert evaluate("5L 23S.x") == [2, 3]
+        assert evaluate(") 2.x") == []
+    end
 end

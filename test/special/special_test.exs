@@ -139,4 +139,13 @@ defmodule SpecialOpsTest do
     test "shift stack one to the right" do
         assert evaluate("1 2 3.Á)ï") == [3, 1, 2]
     end
+
+    test "length of stack" do
+        assert evaluate("1 2 3.g)ï") == [1, 2, 3, 3]
+        assert evaluate("1 2 3 2 1.g)ï") == [1, 2, 3, 2, 1, 5]
+    end
+
+    test "evaluate 05AB1E code" do
+        assert evaluate("\"2 3+\".V") == 5
+    end
 end
