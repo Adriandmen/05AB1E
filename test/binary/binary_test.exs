@@ -446,4 +446,9 @@ defmodule BinaryTest do
         assert evaluate("16 2.n") == 4
         assert evaluate("100 10.n") == 2
     end
+
+    test "lcm of" do
+        assert evaluate("1 2.¿ 3.¿ 4.¿ 5.¿ 6.¿ 7.¿ 8.¿ 9.¿ 10.¿") == 2520
+        assert evaluate("10L.¿") == 2520
+    end
 end

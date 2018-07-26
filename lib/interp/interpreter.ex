@@ -398,6 +398,14 @@ defmodule Interp.Interpreter do
                     {a, stack} = Stack.pop(stack)
                     {Stack.push(stack, IntCommands.gcd_of(to_number(a), to_number(b))), environment}
                 end
+            ".¿" ->
+                {b, stack} = Stack.pop(stack)
+                if is_iterable(b) do
+                    {Stack.push(stack, Enum.reduce(to_number(b), &IntCommands.lcm_of/2)), environment}
+                else
+                    {a, stack} = Stack.pop(stack)
+                    {Stack.push(stack, IntCommands.lcm_of(to_number(a), to_number(b))), environment}
+                end
         end
     end
 
