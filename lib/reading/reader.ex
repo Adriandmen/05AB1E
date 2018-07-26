@@ -8,7 +8,7 @@ defmodule Reading.Reader do
         "(" <> Enum.join(Enum.map(list, fn x -> Regex.escape(x) end), "|") <> ")"
     end
     
-    def nullary_ops, do: regexify ["∞", "т", "₁", "₂", "₃", "₄", "A", "®", "N", "y", "w", "¶", "õ", "X", "Y", "¼", "¾", "q", "ð"]
+    def nullary_ops, do: regexify ["∞", "т", "₁", "₂", "₃", "₄", "A", "®", "N", "y", "w", "¶", "õ", "X", "Y", "¼", "¾", "q", "ð", ".À", ".Á"]
 
     def unary_ops, do: regexify ["γ", "η", "θ", "н", "Θ", "Ω", "≠", "∊", "∞", "!", "(", ",", ";", "<", ">", 
                                  "?", "@", "C", "D", "H", "J", "L", "R", "S", "U", "V", "_", "`", "a", "b", 

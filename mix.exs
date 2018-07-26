@@ -8,7 +8,13 @@ defmodule Osabie.MixProject do
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      escript: escript()
+      escript: escript(),
+      preferred_cli_env: [
+        "coveralls": :test,
+        "coveralls.html": :test,
+        "coveralls.json": :test,
+      ],
+      test_coverage: [tool: ExCoveralls]
     ]
   end
 

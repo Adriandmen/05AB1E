@@ -131,4 +131,12 @@ defmodule SpecialOpsTest do
         assert evaluate("1 [2 q4 5") == "2"
         assert evaluate("1 [2 3 5F 2 i 45 ë 7 [ q 4 5") == "7"
     end
+
+    test "shift stack one to the left" do
+        assert evaluate("1 2 3.À)ï") == [2, 3, 1]
+    end
+
+    test "shift stack one to the right" do
+        assert evaluate("1 2 3.Á)ï") == [3, 1, 2]
+    end
 end

@@ -88,6 +88,8 @@ defmodule Interp.Interpreter do
             "žU" -> Stack.push(stack, "zxcvbnm")
             "žV" -> Stack.push(stack, ["qwertyuiop", "asdfghjkl", "zxcvbnm"])
             "žW" -> Stack.push(stack, "qwertyuiopasdfghjklzxcvbnm")
+            ".À" -> %Stack{elements: ListCommands.rotate(stack.elements, -1)}
+            ".Á" -> %Stack{elements: ListCommands.rotate(stack.elements, 1)}
         end
 
         {new_stack, environment}
