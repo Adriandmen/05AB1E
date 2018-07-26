@@ -369,5 +369,43 @@ defmodule BinaryTest do
         assert evaluate("5L 10010Ïï") == [1, 4]
         assert evaluate("12345 10010SÏ") == "14"
         assert evaluate("12345 10010Ï") == "14"
+        assert evaluate("∞ 10010Ïï") == [1, 4]
+        assert evaluate("5L ∞ÈÏï") == [2, 4]
+    end
+
+    test "string multiplication" do
+        assert evaluate("5 3×") == "555"
+        assert evaluate("5 3L×") == ["5", "55", "555"]
+        assert evaluate("5L 3×") == ["111", "222", "333", "444", "555"]
+        assert evaluate("5L 3L×") == ["1", "22", "333"]
+    end
+
+    test "remove leading" do
+        assert evaluate("112233 1Û") == "2233"
+        assert evaluate("112233Sï 1Û") == [2, 2, 3, 3]
+    end
+
+    test "remove trailing" do
+        assert evaluate("112233 3Ü") == "1122"
+        assert evaluate("1122334 3Ü") == "1122334"
+        assert evaluate("112233Sï 3Ü") == [1, 1, 2, 2]
+    end
+
+    test "convert from base" do
+        assert evaluate("12342 5ö") == 972
+        assert evaluate("\"m+\" 255ö") == 12345
+        assert evaluate("\"m+\" 255ö") == 12345
+    end
+
+    test "integer division" do
+        assert evaluate("5 2÷") == 2
+        assert evaluate("10 2÷") == 5
+        assert evaluate("9.5 2÷") == 4
+        assert evaluate("9.5 2.5÷") == 3
+    end
+
+    test "prepend spaces" do
+        assert evaluate("123 2ú") == "  123"
+        assert evaluate("3L 2ú") == ["  1", "  2", "  3"]
     end
 end

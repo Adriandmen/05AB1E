@@ -195,6 +195,11 @@ defmodule Commands.ListCommands do
         Stream.zip(value, indices) |> Stream.filter(fn {element, index} -> GeneralCommands.equals(index, 1) end) |> Stream.map(fn {element, _} -> element end)
     end
 
+    def deduplicate(string) when is_bitstring(string) or is_number(string), do: Enum.join(deduplicate(String.graphemes(to_string(string))), "")
+    def deduplicate(list) do
+        list |> Stream.transform(nil, fn (x, acc) -> if GeneralCommands.equals(x, acc) do {[], acc} else {[x], x} end end) |> Stream.map(fn x -> x end)
+    end
+
     def index_in(value, element) do
         cond do
             Functions.is_iterable(value) -> 
@@ -224,6 +229,13 @@ defmodule Commands.ListCommands do
             true -> lift(String.graphemes(to_string(value)))
         end
     end
+
+    def remove_leading(value, element) when is_number(value) or is_bitstring(value), do: Enum.join(remove_leading(String.graphemes(to_string(value)), element), "")
+    def remove_leading(value, element) when Functions.is_iterable(element), do: value |> Stream.drop_while(fn x -> contains(element, x) end)
+    def remove_leading(value, element), do: value |> Stream.drop_while(fn x -> GeneralCommands.equals(x, element) end)
+
+    def remove_trailing(value, element) when is_number(value) or is_bitstring(value), do: Enum.join(remove_trailing(String.graphemes(to_string(value)), element), "")
+    def remove_trailing(value, element), do: value |> Enum.to_list |> Enum.reverse |> remove_leading(element) |> Enum.reverse
 
     @doc """
     Rotate the given value to the left or to the right depending on the given shift.

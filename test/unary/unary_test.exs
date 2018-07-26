@@ -565,6 +565,39 @@ defmodule UnaryTest do
         assert evaluate("\"/_\\\"∊") == "/_\\\n\\_/"
     end
 
+    test "divisors" do
+        assert evaluate("45Ñ") == [1, 3, 5, 9, 15, 45]
+        assert evaluate("32(Ñ") == [1, 2, 4, 8, 16, 32]
+        assert evaluate("32( 45)Ñ") == [[1, 2, 4, 8, 16, 32], [1, 3, 5, 9, 15, 45]]
+    end
+
+    test "deduplicate" do
+        assert evaluate("1122332211Ô") == "12321"
+        assert evaluate("1122332211SïÔ") == [1, 2, 3, 2, 1]
+        assert evaluate("∞€DÔ5£") == [1, 2, 3, 4, 5]
+    end
+
+    test "euler totient" do
+        assert evaluate("1Õ") == 1
+        assert evaluate("15Õ") == 8
+        assert evaluate("45Õ") == 24
+    end
+
+    test "round up" do
+        assert evaluate("0.5î") == 1
+        assert evaluate("0.1î") == 1
+        assert evaluate("0.9î") == 1
+        assert evaluate("0.0î") == 0
+        assert evaluate("1.0î") == 1
+    end
+
+    test "round to nearest integer" do
+        assert evaluate("0.5ò") == 1
+        assert evaluate("0.49ò") == 0
+        assert evaluate("0.49 0.51)ò") == [0, 1]
+        assert evaluate("0.49 1)ò") == [0, 1]
+    end
+
     test "powerset" do
         # assert evaluate("3Læ") == [[], [1], [2], [1, 2]]
     end

@@ -185,6 +185,17 @@ defmodule Commands.IntCommands do
     def prime_exponents(value, acc, index, count) when rem(value, index) == 0, do: prime_exponents(div(value, index), acc, index, count + 1)
     def prime_exponents(value, acc, index, count), do: prime_exponents(value, [count | acc], next_prime(index), 0)
 
+    def divisors(value), do: divisors(abs(value), [], trunc(:math.sqrt(abs(value))))
+    defp divisors(_, acc, 0), do: acc
+    defp divisors(value, acc, index) when rem(value, index) == 0 do
+        if div(value, index) == index do
+            divisors(value, [index], index - 1)
+        else
+            divisors(value, [index] ++ acc ++ [div(value, index)], index - 1)
+        end
+    end
+    defp divisors(value, acc, index), do: divisors(value, acc, index - 1)
+
     def n_choose_k(n, k) when k > n, do: 0
     def n_choose_k(n, k), do: div(factorial(n), factorial(k) * factorial(n - k))
 
@@ -237,4 +248,14 @@ defmodule Commands.IntCommands do
     def gcd_of(a, b) when b < 0, do: gcd_of(a, -b)
     def gcd_of(a, b) when a > b, do: gcd_of(a - b, b)
     def gcd_of(a, b) when a < b, do: gcd_of(a, b - a)
+
+    def euler_totient(value), do: euler_totient(value, value, 0)
+    def euler_totient(_, 0, acc), do: acc
+    def euler_totient(value, index, acc) do
+        if gcd_of(value, index) == 1 do
+            euler_totient(value, index - 1, acc + 1)
+        else
+            euler_totient(value, index - 1, acc)
+        end
+    end
 end
