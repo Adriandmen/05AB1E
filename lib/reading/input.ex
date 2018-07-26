@@ -1,7 +1,8 @@
 defmodule Reading.InputHandler do
     alias Interp.Environment
+    alias Interp.Globals
 
-    def read_input(%Environment{inputs: list}) do
+    def read_input do
         input = IO.read(:stdio, :line)
 
         input = cond do
@@ -12,15 +13,19 @@ defmodule Reading.InputHandler do
 
         cond do
             input == :eof -> 
-                [head | _] = list
-                {head, %Environment{inputs: list}}
+                [head | _] = Globals.get().inputs
+                head
             Regex.match?(~r/^\[.+\]/, input) ->
                 {result, _} = Code.eval_string(to_string(input)) 
                 result = result |> Stream.map(fn x -> x end)
-                {result, %Environment{inputs: list ++ [result]}}
+                global_env = Globals.get()
+                Globals.set(%{global_env | inputs: global_env.inputs ++ [result]})
+                result
             true ->
                 result = to_string(input)
-                {result, %Environment{inputs: list ++ [result]}}
+                global_env = Globals.get()
+                Globals.set(%{global_env | inputs: global_env.inputs ++ [result]})
+                result
         end
     end
 end

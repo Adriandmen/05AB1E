@@ -9,6 +9,11 @@ defmodule Interp.Functions do
     # Value conversion
     # ----------------
     def to_number(value) do
+        value = cond do
+            Regex.match?(~r/^\.\d+/, to_string(value)) -> "0" <> to_string(value)
+            true -> value
+        end
+
         case value do
             true -> 1
             false -> 0

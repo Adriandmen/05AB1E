@@ -1,21 +1,6 @@
 defmodule UnaryTest do
     use ExUnit.Case
-    alias Reading.Reader
-    alias Parsing.Parser
-    alias Interp.Interpreter
-    alias Interp.Stack
-    alias Interp.Environment
-    alias Interp.Functions
-
-    def evaluate(code) do
-        parsed_code = Parser.parse(Reader.read(code))
-        {stack, environment} = Interpreter.interp(parsed_code, %Stack{}, %Environment{})
-        {result, _, _} = Stack.pop(stack, environment)
-
-        assert is_map(result) or is_number(result) or is_bitstring(result) or is_list(result)
-
-        Functions.eval(result)
-    end
+    import TestHelper
 
     test "add one" do
         assert evaluate("5ï>") == 6
@@ -558,6 +543,22 @@ defmodule UnaryTest do
         assert evaluate("6LÁ") == [6, 1, 2, 3, 4, 5]
         assert evaluate("1ï)Á") == [1]
         assert evaluate(")Á") == []
+    end
+
+    test "join by newlines" do
+        assert evaluate("5L»") == "1\n2\n3\n4\n5"
+        assert evaluate("5LL»") == "1\n1 2\n1 2 3\n1 2 3 4\n1 2 3 4 5"
+        assert evaluate("1 2 3 4 5»") == "1\n2\n3\n4\n5"
+    end
+
+    test "set x" do
+        assert evaluate("5ïUXXX)") == [5, 5, 5]
+        assert evaluate("XXX)") == [1, 1, 1]
+    end
+
+    test "set y" do
+        assert evaluate("5ïVYYY)") == [5, 5, 5]
+        assert evaluate("YYY)") == [2, 2, 2]
     end
 
     test "powerset" do

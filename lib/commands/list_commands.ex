@@ -115,6 +115,10 @@ defmodule Commands.ListCommands do
             _ -> Enum.to_list(value) |> Enum.join(joiner)
         end
     end
+    
+    def grid_join(list) do
+        list |> Stream.map(fn x -> if Functions.is_iterable(x) do x |> Enum.to_list |> Enum.join(" ") else x end end) |> Enum.to_list |> Enum.join("\n")
+    end
 
     def contains(value, element) do
         cond do

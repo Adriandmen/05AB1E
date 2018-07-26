@@ -1,6 +1,5 @@
 defmodule Interp.Stack do
     alias Interp.Stack
-    alias Interp.Environment
     alias Reading.InputHandler
 
     defstruct elements: []
@@ -9,12 +8,11 @@ defmodule Interp.Stack do
         %{stack | elements: [element | stack.elements]}
     end
 
-    def pop(%Stack{elements: []}, environment) do
-        {element, environment} = InputHandler.read_input(environment)
-        {element, %Stack{elements: []}, environment}
+    def pop(%Stack{elements: []}) do
+        {InputHandler.read_input(), %Stack{elements: []}}
     end
 
-    def pop(%Stack{elements: [head | remaining]}, environment) do
-        {head, %Stack{elements: remaining}, environment}
+    def pop(%Stack{elements: [head | remaining]}) do
+        {head, %Stack{elements: remaining}}
     end
 end

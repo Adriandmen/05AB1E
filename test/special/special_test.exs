@@ -1,21 +1,6 @@
 defmodule SpecialOpsTest do
     use ExUnit.Case
-    alias Reading.Reader
-    alias Parsing.Parser
-    alias Interp.Interpreter
-    alias Interp.Stack
-    alias Interp.Environment
-    alias Interp.Functions
-
-    def evaluate(code) do
-        code = Parser.parse(Reader.read(code))
-        {stack, environment} = Interpreter.interp(code, %Stack{}, %Environment{})
-        {result, _, _} = Stack.pop(stack, environment)
-
-        assert is_map(result) or is_number(result) or is_bitstring(result) or is_list(result)
-
-        Functions.eval(result)
-    end
+    import TestHelper
 
     test "wrap stack into array" do
         assert evaluate("1 2 3)") == ["1", "2", "3"]
@@ -127,5 +112,23 @@ defmodule SpecialOpsTest do
         assert evaluate("1 2 3 2 1M") == 3
         assert evaluate("1 2 3 2 1M)ï") == [1, 2, 3, 2, 1, 3]
         assert evaluate("1 232S101S‚ 1M)ï") == [1, [[2, 3, 2], [1, 0, 1]], 1, 3]
+    end
+
+    test "counter variable" do
+        assert evaluate("¾") == 0
+        assert evaluate("¼¼¼¾") == 3
+        assert evaluate("1½1½0½¾") == 2
+    end
+
+    test "counter loop" do
+        assert evaluate("6µN2Öi¼}") == 10
+        assert evaluate("6µN2Ö½") == 10
+        assert evaluate("6µN2Ö") == 10
+    end
+
+    test "quit program" do
+        assert evaluate("1 2q4 5") == "2"
+        assert evaluate("1 [2 q4 5") == "2"
+        assert evaluate("1 [2 3 5F 2 i 45 ë 7 [ q 4 5") == "7"
     end
 end

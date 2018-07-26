@@ -291,4 +291,48 @@ defmodule ParserTest do
             {:if_statement, [number: "4", binary_op: "+"], [number: "1"]}
         ]
     end
+
+    test "parse counter loop with bound counter variable" do
+        assert Parser.parse(Reader.read("3µN5+i¼")) == [
+            {:number, "3"},
+            {:subprogram, "µ",
+                [
+                    {:nullary_op, "N"},
+                    {:number, "5"},
+                    {:binary_op, "+"},
+                    {:if_statement, [nullary_op: "¼"], []}
+                ]
+            }
+        ]
+    end
+
+    test "parse counter loop without bound counter variable" do
+        assert Parser.parse(Reader.read("3µN5+")) == [
+            {:number, "3"},
+            {:subprogram, "µ",
+                [
+                    {:nullary_op, "N"},
+                    {:number, "5"},
+                    {:binary_op, "+"},
+                    {:unary_op, "½"}
+                ]
+            }
+        ]
+    end
+
+    test "parse counter loop with loop and without bound counter variable" do
+        assert Parser.parse(Reader.read("3µN5+3FNP")) == [
+            {:number, "3"},
+            {:subprogram, "µ",
+                [
+                    {:nullary_op, "N"},
+                    {:number, "5"},
+                    {:binary_op, "+"},
+                    {:number, "3"},
+                    {:subprogram, "F", [nullary_op: "N", unary_op: "P"]},
+                    {:unary_op, "½"}
+                ]
+            }
+        ]
+    end
 end

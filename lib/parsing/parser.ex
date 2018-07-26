@@ -7,6 +7,9 @@ defmodule Parsing.Parser do
     defp parse_program([], parsed), do: parsed
     defp parse_program([curr_command | remaining], parsed) do
         case curr_command do
+            [:subprogram, op] when op == "µ" ->
+                {new_remaining, subcommands, _} = parse_subprogram(remaining)
+                parse_program(new_remaining, parsed ++ [{:subprogram, op, bind_counter(subcommands)}])
             [:subprogram, op] ->
                 {new_remaining, subcommands, _} = parse_subprogram(remaining)
                 parse_program(new_remaining, parsed ++ [{:subprogram, op, subcommands}])
@@ -33,6 +36,13 @@ defmodule Parsing.Parser do
             [:end_all, _] -> {remaining, if_statement, else_statement, :end_all}
             [:eof, _] -> {remaining, if_statement, else_statement, :eof}
             [:else_statement, _] -> parse_else_statement(remaining, if_statement, [])
+            [:subprogram, op] when op == "µ" ->
+                {new_remaining, subcommands, end_op} = parse_subprogram(remaining)
+                case end_op do
+                    :end -> parse_if_statement(new_remaining, if_statement ++ [{:subprogram, op, bind_counter(subcommands)}], else_statement)
+                    :else_statement -> parse_else_statement(new_remaining, if_statement ++ [{:subprogram, op, bind_counter(subcommands)}], else_statement)
+                    x -> {new_remaining, if_statement ++ [{:subprogram, op, bind_counter(subcommands)}], else_statement, x}
+                end
             [:subprogram, op] ->
                 {new_remaining, subcommands, end_op} = parse_subprogram(remaining)
                 case end_op do
@@ -66,6 +76,12 @@ defmodule Parsing.Parser do
             [:end_all, _] -> {remaining, if_statement, else_statement, :end_all}
             [:eof, _] -> {remaining, if_statement, else_statement, :eof}
             [:else_statement, _] -> {remaining, if_statement, else_statement, :else_statement}
+            [:subprogram, op] when op == "µ" ->
+                {new_remaining, subcommands, end_op} = parse_subprogram(remaining)
+                case end_op do
+                    :end -> parse_else_statement(new_remaining, if_statement, else_statement ++ [{:subprogram, op, bind_counter(subcommands)}])
+                    x -> {new_remaining, if_statement, else_statement ++ [{:subprogram, op, bind_counter(subcommands)}], x}
+                end
             [:subprogram, op] ->
                 {new_remaining, subcommands, end_op} = parse_subprogram(remaining)
                 case end_op do
@@ -100,6 +116,12 @@ defmodule Parsing.Parser do
             [:end_all, _] -> {remaining, parsed, :end_all}
             [:eof, _] -> {remaining, parsed, :eof}
             [:else_statement, _] -> {remaining, parsed, :else_statement}
+            [:subprogram, op] when op == "µ" ->
+                {new_remaining, subcommands, end_op} = parse_subprogram(remaining)
+                case end_op do
+                    :end -> parse_subprogram(new_remaining, parsed ++ [{:subprogram, op, bind_counter(subcommands)}])
+                    x -> {new_remaining, parsed ++ [{:subprogram, op, subcommands}], x}
+                end
             [:subprogram, op] ->
                 {new_remaining, subcommands, end_op} = parse_subprogram(remaining)
                 case end_op do
@@ -122,6 +144,17 @@ defmodule Parsing.Parser do
             [op_type, op] -> parse_subprogram(remaining, parsed ++ [{op_type, op}])
         end
     end
+    defp bind_counter(parsed_commands) do
+        case is_bound_by_counter?(parsed_commands) do
+            true -> parsed_commands
+            false -> parsed_commands ++ [{:unary_op, "½"}]
+        end
+    end
+    defp is_bound_by_counter?([head | remaining]) when is_list(head), do: is_bound_by_counter?(head) or is_bound_by_counter?(remaining)
+    defp is_bound_by_counter?([{:if_statement, if_statement, else_statement} | remaining]), do: is_bound_by_counter?(if_statement) or is_bound_by_counter?(else_statement) or is_bound_by_counter?(remaining)
+    defp is_bound_by_counter?([{_, op} | _]) when op in ["¼", "½"], do: true
+    defp is_bound_by_counter?([_ | remaining]), do: is_bound_by_counter?(remaining)
+    defp is_bound_by_counter?([]), do: false
 
     # ------------------------------------------------------------
     # Sub command parsing (i.e. commands like '€', 'ü', 'δ', etc.)
@@ -132,6 +165,9 @@ defmodule Parsing.Parser do
             [:end, _] -> {remaining, parsed, :end}
             [:end_all, _] -> {remaining, parsed, :end_all}
             [:eof, _] -> {remaining, parsed, :end_all}
+            [:subprogram, op] when op == "µ" ->
+                {new_remaining, subcommands, end_op} = parse_subprogram(remaining)
+                {new_remaining, parsed ++ [{:subprogram, op, bind_counter(subcommands)}], end_op}
             [:subprogram, op] ->
                 {new_remaining, subcommands, end_op} = parse_subprogram(remaining)
                 {new_remaining, parsed ++ [{:subprogram, op, subcommands}], end_op}

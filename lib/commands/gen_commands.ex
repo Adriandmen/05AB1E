@@ -3,6 +3,7 @@ defmodule Commands.GeneralCommands do
     alias Interp.Functions
     alias Interp.Interpreter
     alias Interp.Stack
+    alias Interp.Globals
     alias Commands.ListCommands
     require Interp.Functions
     
@@ -133,7 +134,7 @@ defmodule Commands.GeneralCommands do
                     If the range of the loop is a string or a list, it will iterate over each element in the given range.  
     """
     def loop(commands, stack, environment, index, range) do
-        case environment.status do
+        case Globals.get().status do
             :ok -> 
                 cond do
                     # If the range is an integer and the index is in bounds, run the commands
@@ -162,18 +163,35 @@ defmodule Commands.GeneralCommands do
                     true ->
                         {stack, environment}
                 end
-            :break -> 
-                {stack, %{environment | status: :ok}}
+            :break ->
+                Globals.set(%{Globals.get() | status: :ok})
+                {stack, environment}
             :quit -> {stack, environment}
         end
     end
 
     def run_while(prev_result, commands, environment, index) do
         {result_stack, new_env} = Interpreter.interp(commands, %Stack{elements: [prev_result]}, %{environment | range_variable: index, range_element: prev_result})
-        {result, _, new_env} = Stack.pop(result_stack, new_env)
+        {result, _} = Stack.pop(result_stack)
         cond do
             result == prev_result -> {result, new_env}
             true -> run_while(result, commands, new_env, index + 1)
+        end
+    end
+
+    def counter_loop(commands, stack, environment, index, count) do
+        case Globals.get().status do
+            :ok -> 
+                cond do
+                    Globals.get().counter_variable >= count -> {Stack.push(stack, index - 1), environment}
+                    true -> 
+                        {result_stack, new_env} = Interpreter.interp(commands, stack, %{environment | range_variable: index})
+                        counter_loop(commands, result_stack, new_env, index + 1, count)
+                end
+            :break ->
+                Globals.set(%{Globals.get() | status: :ok})
+                {stack, environment}
+            :quit -> {stack, environment}
         end
     end
 end
