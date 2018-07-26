@@ -1,5 +1,6 @@
 defmodule Commands.ListCommands do
     alias Interp.Functions
+    alias Commands.IntCommands
     alias Commands.GeneralCommands
     require Interp.Functions
     
@@ -127,13 +128,23 @@ defmodule Commands.ListCommands do
         end
     end
 
-    def remove_from(value, filter_elements, inner) do
+    def take_last(value, count) when Functions.is_iterable(value), do: value |> Stream.take(-count) |> Stream.map(fn x -> x end)
+    def take_last(value, count), do: Enum.join(take_last(String.graphemes(to_string(value)), count), "")
+
+    def surround(value, element) when Functions.is_iterable(value) and Functions.is_iterable(element), do: Stream.concat([element, value, element]) |> Stream.map(fn x -> x end)
+    def surround(value, element) when Functions.is_iterable(value), do: Stream.concat([[element], value, [element]]) |> Stream.map(fn x -> x end)
+    def surround(value, element) when Functions.is_iterable(element), do: Stream.concat([element, String.graphemes(to_string(value)), element]) |> Stream.map(fn x -> x end)
+    def surround(value, element), do: to_string(element) <> to_string(value) <> to_string(element)
+
+    def undelta(value) when Functions.is_iterable(value), do: Stream.concat([[0], value]) |> Stream.scan(fn (x, acc) -> Functions.to_number(x) + acc end)
+    def undelta(value), do: undelta(String.graphemes(to_string(value)))
+
+    def remove_from(value, filter_elements) do
         cond do
-            Functions.is_iterable(value) and Functions.is_iterable(filter_elements) -> value |> Stream.filter(fn x -> contains(filter_elements, x) end)
-            inner == true -> Enum.reduce(Functions.to_non_number(value), fn (x, acc) -> Enum.replace(acc, Functions.to_non_number(x), "") end)
-            Functions.is_iterable(filter_elements) -> remove_from(value, filter_elements, true)
-            Functions.is_iterable(value) -> filter_elements |> Stream.filter(fn x -> contains(filter_elements, x) end)
-            true -> String.replace(to_string(value), to_string(filter_elements), "")
+            Functions.is_iterable(value) and Functions.is_iterable(filter_elements) -> value |> Stream.filter(fn x -> !contains(filter_elements, x) end)
+            Functions.is_iterable(value) -> value |> Stream.filter(fn x -> !GeneralCommands.equals(filter_elements, x) end)
+            Functions.is_iterable(filter_elements) -> Enum.reduce(filter_elements, to_string(value), fn (x, acc) -> String.replace(acc, to_string(x), "") end)
+            true -> remove_from(value, [filter_elements])
         end
     end
 
@@ -227,6 +238,17 @@ defmodule Commands.ListCommands do
             Functions.is_iterable(value) -> value |> Stream.with_index(1) |> Stream.map(fn {x, index} -> Functions.call_binary(fn a, b -> 
                 Functions.to_number(a) * Functions.to_number(b) end, x, index) end)
             true -> lift(String.graphemes(to_string(value)))
+        end
+    end
+
+    def even_split(value, size) when is_number(value) or is_bitstring(value), do: even_split(String.graphemes(to_string(value)), size) |> Stream.map(fn x -> Enum.join(x, "") end)
+    def even_split(list, size) do
+        list_length = length(Enum.to_list list)
+        {final_size, remainder} = {IntCommands.divide(list_length, size), IntCommands.mod(list_length, size)}
+        if remainder == 0 do
+            split_into(list, final_size)
+        else
+            take_split(list, Stream.concat(Stream.cycle([final_size + 1]) |> Stream.take(remainder), Stream.cycle([final_size]) |> Stream.take(size - remainder))) 
         end
     end
 

@@ -36,6 +36,32 @@ defmodule Commands.StrCommands do
         List.to_string List.replace_at(String.to_charlist(a), Functions.to_number(c), Functions.to_non_number(b))
     end
 
+    def squarify(list) do
+        list = Enum.to_list(list)
+        max_length = list |> Enum.map(fn x -> String.length(to_string(x)) end) |> Enum.max
+        list |> Enum.map(fn x -> to_string(x) <> String.duplicate(" ", max_length - String.length(to_string(x))) end)
+    end
+
+    def align_center(list, focus) do
+        list = Enum.to_list(list)
+        max_length = list |> Enum.map(fn x -> String.length(to_string(x)) end) |> Enum.max
+
+        result = case focus do
+            :left -> list |> Enum.map(fn x -> String.duplicate(" ", round(Float.floor((max_length - String.length(to_string(x))) / 2))) <> to_string(x) end)
+            :right -> list |> Enum.map(fn x -> String.duplicate(" ", round(Float.ceil((max_length - String.length(to_string(x))) / 2))) <> to_string(x) end)
+        end
+
+        result |> Enum.join("\n")
+    end
+
+    def overlap(left, right) when not Functions.is_iterable(left), do: overlap(String.graphemes(to_string(left)), right)
+    def overlap(left, right) when not Functions.is_iterable(right), do: overlap(left, String.graphemes(to_string(right)))
+    def overlap(left, right), do: overlap(Enum.to_list(left), Enum.to_list(right), "")
+    defp overlap([], [], acc), do: acc
+    defp overlap([], right_remaining, acc), do: acc <> Enum.join(right_remaining, "")
+    defp overlap([head | left_remaining], [head | right_remaining], acc), do: overlap(left_remaining, right_remaining, acc <> head)
+    defp overlap([_ | left_remaining], right_remaining, acc), do: overlap(left_remaining, right_remaining, acc <> " ")
+    
     def title_case(string), do: title_case(string, "")
     defp title_case("", parsed), do: parsed
     defp title_case(string, parsed) do

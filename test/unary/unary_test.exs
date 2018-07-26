@@ -598,6 +598,87 @@ defmodule UnaryTest do
         assert evaluate("0.49 1)ò") == [0, 1]
     end
 
+    test "sort and uniquify" do
+        assert evaluate("1223221ê") == "123"
+        assert evaluate("1223221Sïê") == [1, 2, 3]
+    end
+
+    test "square root" do
+        assert evaluate("4t") == 2.0
+        assert evaluate("16t") == 4.0
+        assert evaluate("6.25t") == 2.5
+    end
+
+    test "number to letter" do
+        assert evaluate("1.b") == "A"
+        assert evaluate("4.b") == "D"
+        assert evaluate("24 25 26).b") == ["X", "Y", "Z"]
+    end
+
+    test "squarify" do
+        assert evaluate("\"ab\"\"def\").B") == ["ab ", "def"]
+        assert evaluate("\"ab\ndef\".B") == ["ab ", "def"]
+    end
+
+    test "center align left-focused" do
+        assert evaluate("\"a\" \"bcd\" \"defg\") .c") == " a\nbcd\ndefg"
+        assert evaluate("\"a\nbcd\ndefg\" .c") == " a\nbcd\ndefg"
+    end
+
+    test "center align right-focused" do
+        assert evaluate("\"a\" \"bcd\" \"defg\") .C") == "  a\n bcd\ndefg"
+        assert evaluate("\"a\nbcd\ndefg\" .C") == "  a\n bcd\ndefg"
+    end
+
+    test "is lowercase" do
+        assert evaluate("\"abc\".l") == 1
+        assert evaluate("\"abC\".l") == 0
+        assert evaluate("\"ab1\".l") == 0
+        assert evaluate("\"ab\" \"bc\" 12).l") == [1, 1, 0]
+    end
+
+    test "is uppercase" do
+        assert evaluate("\"ABC\".u") == 1
+        assert evaluate("\"ABc\".u") == 0
+        assert evaluate("\"AB1\".u") == 0
+        assert evaluate("\"AB\" \"BC\" 12).u") == [1, 1, 0]
+    end
+
+    test "random shuffle" do
+        assert evaluate("12345.r {") == "12345"
+        assert evaluate("5L.r {") == [1, 2, 3, 4, 5]
+    end
+
+    test "tan" do
+        assert_in_delta evaluate("3.1415926535.¼"), 0, 0.00000001
+    end
+
+    test "sin" do
+        assert_in_delta evaluate("3.1415926535.½"), 0, 0.00000001
+    end
+
+    test "cos" do
+        assert_in_delta evaluate("3.1415926535.¾"), -1, 0.00000001
+    end
+    
+    test "undelta" do
+        assert evaluate("5L.¥") == [0, 1, 3, 6, 10, 15]
+        assert evaluate("12345.¥") == [0, 1, 3, 6, 10, 15]
+    end
+
+    test "is integer" do
+        assert evaluate("4.ï") == 1
+        assert evaluate("4(.ï") == 1
+        assert evaluate("4.5.ï") == 0
+        assert evaluate("4.0.ï") == 1
+    end
+    
+    test "log 2" do
+        assert evaluate("16.²") == 4
+        assert evaluate("32.²") == 5
+        assert evaluate("0.5.²") == -1
+    end
+
     test "powerset" do
         # assert evaluate("3Læ") == [[], [1], [2], [1, 2]]
     end

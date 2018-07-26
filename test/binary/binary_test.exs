@@ -136,7 +136,7 @@ defmodule BinaryTest do
         assert evaluate("12344556 45K") == "123456"
         assert evaluate("12344556ï 45ïK") == "123456"
         assert evaluate("1245344556ï 45ïK") == "123456"
-        # assert evaluate("5L 3K") == [1, 2, 4, 5]
+        assert evaluate("5L 3K") == [1, 2, 4, 5]
     end
 
     test "contains" do
@@ -407,5 +407,43 @@ defmodule BinaryTest do
     test "prepend spaces" do
         assert evaluate("123 2ú") == "  123"
         assert evaluate("3L 2ú") == ["  1", "  2", "  3"]
+    end
+
+    test "split evenly" do
+        assert evaluate("5L 3ä") == [[1, 2], [3, 4], [5]]
+        assert evaluate("6L 3ä") == [[1, 2], [3, 4], [5, 6]]
+        assert evaluate("123456 3ä") == ["12", "34", "56"]
+        assert evaluate("12345 3ä") == ["12", "34", "5"]
+    end
+
+    test "sign function" do
+        assert evaluate("5 2.S") == 1
+        assert evaluate("2 5.S") == -1
+        assert evaluate("5 5.S") == 0
+        assert evaluate("543S 4.S") == [1, 0, -1]
+    end
+    
+    test "surround with" do
+        assert evaluate("456 1.ø") == "14561"
+        assert evaluate("456 12.ø") == "1245612"
+        assert evaluate("456Sï 12ï.ø") == [12, 4, 5, 6, 12]
+        assert evaluate("456Sï 12Sï.ø") == [1, 2, 4, 5, 6, 1, 2]
+    end
+
+    test "overlap" do
+        assert evaluate("12345 135.o") == "1 3 5"
+        assert evaluate("12345 1365.o") == "1 3  65"
+        assert evaluate("12345 1346.o") == "1 34 6"
+    end
+
+    test "take last" do
+        assert evaluate("12345 2.£") == "45"
+        assert evaluate("5L 2.£") == [4, 5]
+    end
+
+    test "log" do
+        assert evaluate("8 2.n") == 3
+        assert evaluate("16 2.n") == 4
+        assert evaluate("100 10.n") == 2
     end
 end

@@ -114,6 +114,7 @@ defmodule Interp.Interpreter do
             "h" -> Stack.push(stack, call_unary(fn x -> IntCommands.to_base(to_number(x), 16) end, a))
             "p" -> Stack.push(stack, call_unary(fn x -> to_number(IntCommands.is_prime?(to_number(x))) end, a))
             "z" -> Stack.push(stack, call_unary(fn x -> 1 / to_number(x) end, a))
+            "t" -> Stack.push(stack, call_unary(fn x -> :math.sqrt(to_number(x)) end, a))
             "C" -> Stack.push(stack, call_unary(fn x -> IntCommands.string_from_base(to_non_number(x), 2) end, a))
             "S" -> Stack.push(stack, call_unary(fn x -> ListCommands.split_individual(x) end, a, true))
             "H" -> Stack.push(stack, call_unary(fn x -> IntCommands.string_from_base(String.upcase(to_non_number(x)), 16) end, a))
@@ -148,6 +149,21 @@ defmodule Interp.Interpreter do
             "Ó" -> Stack.push(stack, call_unary(fn x -> IntCommands.prime_exponents(to_number(x)) end, a))
             "Ñ" -> Stack.push(stack, call_unary(fn x -> IntCommands.divisors(to_number(x)) end, a))
             "Õ" -> Stack.push(stack, call_unary(fn x -> IntCommands.euler_totient(to_number(x)) end, a))
+           ".b" -> Stack.push(stack, call_unary(fn x -> <<rem(to_number(x) - 1, 26) + 65>> end, a))
+           ".l" -> Stack.push(stack, call_unary(fn x -> to_number Regex.match?(~r/^[a-z]+$/, to_string(x)) end, a))
+           ".u" -> Stack.push(stack, call_unary(fn x -> to_number Regex.match?(~r/^[A-Z]+$/, to_string(x)) end, a))
+           ".p" -> Stack.push(stack, call_unary(fn x -> ListCommands.prefixes(x) end, a, true))
+           ".¼" -> Stack.push(stack, call_unary(fn x -> :math.tan(to_number(x)) end, a))
+           ".½" -> Stack.push(stack, call_unary(fn x -> :math.sin(to_number(x)) end, a))
+           ".¾" -> Stack.push(stack, call_unary(fn x -> :math.cos(to_number(x)) end, a))
+           ".ï" -> Stack.push(stack, call_unary(fn x -> to_number(is_integer(to_number(x))) end, a))
+           ".²" -> Stack.push(stack, call_unary(fn x -> :math.log2(to_number(x)) end, a))
+           ".B" -> Stack.push(stack, if is_iterable(a) do StrCommands.squarify(a) else StrCommands.squarify(String.split(to_string(a), "\n")) end)
+           ".c" -> Stack.push(stack, if is_iterable(a) do StrCommands.align_center(a, :left) else StrCommands.align_center(String.split(to_string(a), "\n"), :left) end)
+           ".C" -> Stack.push(stack, if is_iterable(a) do StrCommands.align_center(a, :right) else StrCommands.align_center(String.split(to_string(a), "\n"), :right) end)
+           ".R" -> Stack.push(stack, if is_iterable(a) do Enum.random(Enum.to_list(a)) else Enum.random(String.graphemes(to_string(a))) end)
+           ".r" -> Stack.push(stack, if is_iterable(a) do Enum.shuffle(Enum.to_list(a)) else Enum.join(Enum.shuffle(String.graphemes(to_string(a))), "") end)
+           ".¥" -> Stack.push(stack, ListCommands.undelta(a))
             "é" -> Stack.push(stack, a |> Enum.sort_by(fn x -> GeneralCommands.length_of(x) end))
             "í" -> Stack.push(stack, a |> Stream.map(fn x -> if is_iterable(x) do Enum.to_list(x) |> Enum.reverse else String.reverse(to_string(x)) end end))
             "Ω" -> Stack.push(stack, if is_iterable(a) do Enum.random(Enum.to_list(a)) else Enum.random(String.graphemes(to_string(a))) end)
@@ -180,6 +196,7 @@ defmodule Interp.Interpreter do
             "Ð" -> Stack.push(Stack.push(Stack.push(stack, a), a), a)
             "ć" -> Stack.push(Stack.push(stack, GeneralCommands.dehead(a)), GeneralCommands.head(a))
             "Â" -> Stack.push(Stack.push(stack, a), if is_iterable(a) do a |> Enum.reverse else to_string(a) |> String.reverse end)
+            "ê" -> Stack.push(stack, if is_iterable(a) do Enum.sort(Enum.to_list(a)) |> ListCommands.uniques else Enum.join(Enum.sort(String.graphemes(to_string(a))) |> ListCommands.uniques, "") end)
             "{" -> Stack.push(stack, if is_iterable(a) do Enum.sort(Enum.to_list(a)) else Enum.join(Enum.sort(String.graphemes(to_string(a)))) end)
             "`" -> %Stack{elements: Enum.reverse(if is_iterable(a) do Enum.to_list(a) else String.graphemes(to_string(a)) end) ++ stack.elements}
             "O" -> if is_iterable(a) do Stack.push(stack, ListCommands.sum(a)) else Stack.push(%Stack{}, ListCommands.sum(Stack.push(stack, a).elements)) end
@@ -195,7 +212,8 @@ defmodule Interp.Interpreter do
             "?" -> Output.print(a, false); stack
             "–" -> if GeneralCommands.equals(a, 1) do Output.print(environment.range_variable) end; stack
             "—" -> if GeneralCommands.equals(a, 1) do Output.print(environment.range_element) end; stack
-            "\\" -> stack
+           ".W" -> :timer.sleep(to_number(a)); stack
+           "\\" -> stack
         end
 
         {new_stack, environment}
@@ -220,7 +238,7 @@ defmodule Interp.Interpreter do
             "c" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.n_choose_k(to_number(x), to_number(y)) end, a, b))
             "e" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.n_permute_k(to_number(x), to_number(y)) end, a, b))
             "m" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.pow(to_number(x), to_number(y)) end, a, b))
-            "K" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.remove_from(x, y, false) end, a, b, true, true))
+            "K" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.remove_from(x, y) end, a, b, true, true))
             "å" -> Stack.push(stack, call_binary(fn x, y -> to_number(ListCommands.contains(to_non_number(x), y)) end, a, b, true, false))
             "è" -> Stack.push(stack, call_binary(fn x, y -> GeneralCommands.element_at(x, to_number(y)) end, a, b, true, false))
             "£" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.take_first(x, to_number(y)) end, a, b, true, true))
@@ -239,6 +257,12 @@ defmodule Interp.Interpreter do
             "ö" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.string_from_base(to_string(x), to_number(y)) end, a, b))
             "÷" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.divide(to_number(x), to_number(y)) end, a, b))
             "ú" -> Stack.push(stack, call_binary(fn x, y -> String.duplicate(" ", to_number(y)) <> to_string(x) end, a, b))
+            "ä" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.even_split(x, to_number(y)) end, a, b, true, false))
+           ".S" -> Stack.push(stack, call_binary(fn x, y -> cond do to_number(x) > to_number(y) -> 1; to_number(x) < to_number(y) -> -1; true -> 0 end end, a, b))
+           ".£" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.take_last(x, to_number(y)) end, a, b, true, false))
+           ".n" -> Stack.push(stack, call_binary(fn x, y -> :math.log(to_number(x)) / :math.log(to_number(y)) end, a, b))
+           ".o" -> Stack.push(stack, StrCommands.overlap(a, b))
+           ".ø" -> Stack.push(stack, ListCommands.surround(a, b))
             "Û" -> Stack.push(stack, ListCommands.remove_leading(a, b))
             "Ü" -> Stack.push(stack, ListCommands.remove_trailing(a, b))
             "Q" -> Stack.push(stack, to_number(if is_iterable(a) and is_iterable(b) do GeneralCommands.equals(a, b) else GeneralCommands.vectorized_equals(a, b) end))
