@@ -356,4 +356,18 @@ defmodule BinaryTest do
         assert evaluate("12345 7(в") == [6, 6, 0, 1, 4]
         assert evaluate("15 38 12345) 7в") == [[2, 1], [5, 3], [5, 0, 6, 6, 4]]
     end
+    
+    test "keep chars" do
+        assert evaluate("12345 43Ã") == "34"
+        assert evaluate("12345S 43SÃ") == ["3", "4"]
+        assert evaluate("12 34 34 45 34 12 43) 34Ãï") == [34, 34, 34]
+        assert evaluate("12 34 34 45 34 12 43) 34 45‚Ãï") == [34, 34, 45, 34]
+    end
+
+    test "keep truthy indices" do
+        assert evaluate("5L 10010SÏï") == [1, 4]
+        assert evaluate("5L 10010Ïï") == [1, 4]
+        assert evaluate("12345 10010SÏ") == "14"
+        assert evaluate("12345 10010Ï") == "14"
+    end
 end

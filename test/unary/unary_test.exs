@@ -561,6 +561,10 @@ defmodule UnaryTest do
         assert evaluate("YYY)") == [2, 2, 2]
     end
 
+    test "vertical mirror" do
+        assert evaluate("\"/_\\\"∊") == "/_\\\n\\_/"
+    end
+
     test "powerset" do
         # assert evaluate("3Læ") == [[], [1], [2], [1, 2]]
     end

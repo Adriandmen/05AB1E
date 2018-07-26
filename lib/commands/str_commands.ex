@@ -82,6 +82,15 @@ defmodule Commands.StrCommands do
         list |> Stream.filter(fn x -> Regex.match?(~r/^[0-9]+$/, to_string(x)) end)
     end
 
+    def keep_chars(string, chars) when is_bitstring(string) and is_bitstring(chars), do: keep_chars(String.graphemes(string), String.graphemes(chars)) |> Enum.join("")
+    def keep_chars(string, chars) when is_bitstring(string), do: keep_chars(String.graphemes(string), chars) |> Enum.join("")
+    def keep_chars(list, chars) when is_bitstring(chars) do
+        list |> Stream.filter(fn x -> GeneralCommands.equals(x, chars) end)
+    end
+    def keep_chars(list, chars) do
+        list |> Stream.filter(fn x -> ListCommands.contains(chars, x) end)
+    end
+
     def to_codepoints(value) when Functions.is_iterable(value), do: value |> Stream.map(
         fn x -> 
             if not Functions.is_iterable(x) and String.length(to_string(x)) == 1 do 
@@ -104,5 +113,10 @@ defmodule Commands.StrCommands do
                 {_, b} -> b
             end
         end)
+    end
+
+    def vertical_mirror(string) when is_bitstring(string), do: Enum.join(vertical_mirror(String.split(string, "\n")), "\n")
+    def vertical_mirror(list) do
+        list ++ (list |> Enum.to_list |> Enum.reverse |> Enum.map(fn x -> x |> transliterate("\\/", "/\\") end))
     end
 end

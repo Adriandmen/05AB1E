@@ -189,6 +189,12 @@ defmodule Commands.ListCommands do
         end
     end
 
+    def keep_truthy_indices(value, indices) when is_bitstring(value), do: Enum.join(keep_truthy_indices(String.graphemes(to_string(value)), indices))
+    def keep_truthy_indices(value, indices) when is_bitstring(indices), do: keep_truthy_indices(value, String.graphemes(to_string(indices)))
+    def keep_truthy_indices(value, indices) do
+        Stream.zip(value, indices) |> Stream.filter(fn {element, index} -> GeneralCommands.equals(index, 1) end) |> Stream.map(fn {element, _} -> element end)
+    end
+
     def index_in(value, element) do
         cond do
             Functions.is_iterable(value) -> 

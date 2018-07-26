@@ -58,21 +58,23 @@ defmodule Interp.Output do
     alias Interp.Functions
     require Interp.Functions
 
-    def print(element, newline \\ true) do
+    def print(element, newline \\ true, inner \\ false) do
         Globals.set(%{Globals.get() | printed: true})
         cond do
             element == :separator ->
                 IO.write(", ")
             Functions.is_iterable(element) -> 
                 IO.write("[")
-                element |> Stream.intersperse(:separator) |> Stream.each(fn x -> print(x, false) end) |> Stream.run
+                element |> Stream.intersperse(:separator) |> Stream.each(fn x -> print(x, false, true) end) |> Stream.run
                 IO.write("]")
             is_number(element) ->
                 IO.write(element)
-            true ->
+            inner ->
                 IO.write("\"")
                 IO.write(element)
                 IO.write("\"")
+            true ->
+                IO.write(element)
         end
 
         if newline, do: IO.write("\n")
