@@ -25,6 +25,9 @@ defmodule UnaryTest do
         assert evaluate("12345η") == ["1", "12", "123", "1234", "12345"]
         assert evaluate("12345ïη") == ["1", "12", "123", "1234", "12345"]
         assert evaluate("∞ηн") == [1]
+        assert evaluate("12345.p") == ["1", "12", "123", "1234", "12345"]
+        assert evaluate("12345ï.p") == ["1", "12", "123", "1234", "12345"]
+        assert evaluate("∞η.p") == [1]
     end
 
     test "head of element" do
@@ -472,6 +475,8 @@ defmodule UnaryTest do
     test "random element" do
         assert evaluate("12345Ω 12345SQO") == 1
         assert evaluate("5LΩ 12345SQO") == 1
+        assert evaluate("12345.R 12345SQO") == 1
+        assert evaluate("5L.R 12345SQO") == 1
     end
 
     test "max of without popping" do
@@ -677,6 +682,15 @@ defmodule UnaryTest do
         assert evaluate("16.²") == 4
         assert evaluate("32.²") == 5
         assert evaluate("0.5.²") == -1
+    end
+
+    test "divide by 2" do
+        assert evaluate("5;") == 2.5
+        assert evaluate("6;") == 3.0
+    end
+
+    test "triplicate" do
+        assert evaluate("5ïÐ)") == [5, 5, 5]
     end
 
     test "powerset" do
