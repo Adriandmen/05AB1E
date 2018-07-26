@@ -114,4 +114,12 @@ defmodule SpecialOpsTest do
     test "infinite loop" do
         assert evaluate("[NO N5Q#") == 15
     end
+
+    test "if/else statements" do
+        assert evaluate("1i5} 3O") == 8
+        assert evaluate("0i5} 3O") == 3
+        assert evaluate("00001i5} 3O") == 8
+        assert evaluate("00001i5ë10} 3O") == 8
+        assert evaluate("4i5ë10} 3O") == 13
+    end
 end

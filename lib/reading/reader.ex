@@ -23,14 +23,14 @@ defmodule Reading.Reader do
 
     def binary_ops, do: regexify ["α", "β", "в", "и", "м", "∍", "%", "&", "*", "+", "-", "/", "B", "K",
                                   "Q", "^", "c", "e", "k", "m", "s", "~", "‚", "†", "‰", "‹", "›", "¡", "¢",
-                                  "£", "«", "¿", "Ã", "Ê", "Ï", "Ö", "×", "Û", "Ü", "Ý", "â", "ã", "ä", "å", "è",
+                                  "£", "«", "Ã", "Ê", "Ï", "Ö", "×", "Û", "Ü", "Ý", "â", "ä", "å", "è",
                                   "ì", "ô", "ö", "÷", "ù", "ú", "ý", ".å", ".D", ".h", ".H"]
     
     def ternary_ops, do: regexify ["ǝ", "Š"]
 
-    def special_ops, do: regexify [")", "r", "©", "¹", "²", "³", "I", "$", "Î", "#", "Ÿ", "ø", "ζ", "ι"]
+    def special_ops, do: regexify [")", "r", "©", "¹", "²", "³", "I", "$", "Î", "#", "Ÿ", "ø", "ζ", "ι", "¿", "ã"]
     
-    def subprogram_ops, do: regexify ["ʒ", "ε", "Δ", "Σ", "F", "G", "v", "ƒ", "µ", "["]
+    def subprogram_ops, do: regexify ["ʒ", "ε", "Δ", "Σ", "F", "G", "v", "ƒ", "µ", "[", "i"]
     
     def subcommand_ops, do: regexify ["δ", "€", "ü", ".«", ".»"]
     
@@ -62,7 +62,7 @@ defmodule Reading.Reader do
         end
     end
 
-    @docs """
+    @doc """
     Reads a number of characters of compressed words from the given string.
 
     ## Parameters

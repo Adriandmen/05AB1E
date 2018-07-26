@@ -133,4 +133,15 @@ defmodule Commands.IntCommands do
             true -> min_of(Enum.drop(list, 1), value)
         end
     end
+
+    # GCD that also supports decimal numbers.
+    def gcd_of(a, a), do: a
+    def gcd_of(a, 0), do: a
+    def gcd_of(0, b), do: b
+    def gcd_of(a, b) when is_integer(a) and is_integer(b), do: Integer.gcd(a, b)
+    def gcd_of(a, b) when a < 0 and b < 0, do: -gcd_of(-a, -b)
+    def gcd_of(a, b) when a < 0, do: gcd_of(-a, b)
+    def gcd_of(a, b) when b < 0, do: gcd_of(a, -b)
+    def gcd_of(a, b) when a > b, do: gcd_of(a - b, b)
+    def gcd_of(a, b) when a < b, do: gcd_of(a, b - a)
 end

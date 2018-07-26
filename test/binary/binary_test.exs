@@ -325,4 +325,30 @@ defmodule BinaryTest do
         assert evaluate("1122332211 23S†") == "2233221111"
         assert evaluate("1122332211Sï 23S†") == [2, 2, 3, 3, 2, 2, 1, 1, 1, 1]
     end
+
+    test "gcd of" do
+        assert evaluate("4 8¿") == 4
+        assert evaluate("4.5 3¿") == 1.5
+        assert evaluate("4.5( 3(¿") == -1.5
+        assert evaluate("4.5( 3¿") == 1.5
+        assert evaluate("4.5 3(¿") == 1.5
+        assert evaluate("8 16 48)¿") == 8
+        assert evaluate("8 16 36)¿") == 4
+        assert evaluate("1024 32 64 128 8 256 512 24 36)¿") == 4
+        assert evaluate("1475.5 615.5¿") == 0.5
+    end
+
+    test "cartesian product" do
+        assert evaluate("3L 3L3+ â") == [[1, 4], [1, 5], [1, 6], [2, 4], [2, 5], [2, 6], [3, 4], [3, 5], [3, 6]]
+        assert evaluate("3L 456 âï") == [[1, 4], [1, 5], [1, 6], [2, 4], [2, 5], [2, 6], [3, 4], [3, 5], [3, 6]]
+        assert evaluate("123 456 âï") == [14, 15, 16, 24, 25, 26, 34, 35, 36]
+    end
+
+    test "cartesian repeat" do
+        assert evaluate("2L 3ã") == [[1, 1, 1], [1, 1, 2], [1, 2, 1], [1, 2, 2], [2, 1, 1], [2, 1, 2], [2, 2, 1], [2, 2, 2]]
+        assert evaluate("3L 2ã") == [[1, 1], [1, 2], [1, 3], [2, 1], [2, 2], [2, 3], [3, 1], [3, 2], [3, 3]]
+        assert evaluate("3Lã") == [[1, 1], [1, 2], [1, 3], [2, 1], [2, 2], [2, 3], [3, 1], [3, 2], [3, 3]]
+        assert evaluate("∞ã5£") == [[1, 1], [1, 2], [1, 3], [1, 4], [1, 5]]
+        assert evaluate("123 2ã") == ["11", "12", "13", "21", "22", "23", "31", "32", "33"]
+    end
 end

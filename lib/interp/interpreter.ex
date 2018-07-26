@@ -34,7 +34,7 @@ defmodule Interp.Interpreter do
     import Interp.Functions
     use Bitwise
 
-    defp interp_nullary(op, stack, environment) do
+    def interp_nullary(op, stack, environment) do
         new_stack = case op do
             "∞" -> Stack.push(stack, ListCommands.listify(1, :infinity))
             "т" -> Stack.push(stack, 100)
@@ -102,7 +102,7 @@ defmodule Interp.Interpreter do
         {new_stack, environment}
     end
 
-    defp interp_unary(op, stack, environment) do
+    def interp_unary(op, stack, environment) do
         {a, stack, environment} = Stack.pop(stack, environment)
         new_stack = case op do
             ">" -> Stack.push(stack, call_unary(fn x -> to_number(x) + 1 end, a))
@@ -150,8 +150,10 @@ defmodule Interp.Interpreter do
             "°" -> Stack.push(stack, call_unary(fn x -> IntCommands.pow(10, to_number(x)) end, a))
             "Ç" -> Stack.push(stack, call_unary(fn x -> StrCommands.to_codepoints(x) end, a, true))
             "ç" -> Stack.push(stack, call_unary(fn x -> List.to_string [to_number(x)] end, a))
+            "é" -> Stack.push(stack, a |> Enum.sort_by(fn x -> GeneralCommands.length_of(x) end))
             "í" -> Stack.push(stack, a |> Stream.map(fn x -> if is_iterable(x) do Enum.to_list(x) |> Enum.reverse else String.reverse(to_string(x)) end end))
             "Ω" -> Stack.push(stack, if is_iterable(a) do Enum.random(Enum.to_list(a)) else Enum.random(String.graphemes(to_string(a))) end)
+            # "æ" -> Stack.push(stack, if is_iterable(a) do ListCommands.powerset(a |> Enum.to_list) else ListCommands.powerset(String.graphemes(to_string(a))) |> Enum.map(fn x -> Enum.join(x, "") end) end)
             "œ" -> Stack.push(stack, if is_iterable(a) do ListCommands.permutations(a) else ListCommands.permutations(String.graphemes(to_string(a))) |> Enum.map(fn x -> Enum.join(x, "") end) end)
             "Ù" -> Stack.push(stack, ListCommands.uniques(a))
             "Œ" -> Stack.push(stack, ListCommands.substrings(a))
@@ -188,7 +190,7 @@ defmodule Interp.Interpreter do
         {new_stack, environment}
     end
 
-    defp interp_binary(op, stack, environment) do
+    def interp_binary(op, stack, environment) do
         {b, stack, environment} = Stack.pop(stack, environment)
         {a, stack, environment} = Stack.pop(stack, environment)
 
@@ -220,6 +222,7 @@ defmodule Interp.Interpreter do
             "ù" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.keep_with_length(x, to_number(y)) end, a, b, true, false))
             "k" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.index_in(x, y) end, a, b, true, false))
             "и" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.list_multiply(x, to_number(y)) end, a, b, true, false))
+            "â" -> Stack.push(stack, ListCommands.cartesian(a, b))
             "†" -> Stack.push(stack, ListCommands.filter_to_front(a, b))
             "¡" -> Stack.push(stack, ListCommands.split_on(a, to_non_number(b)))
             "«" -> Stack.push(stack, GeneralCommands.concat(a, b))
@@ -234,7 +237,7 @@ defmodule Interp.Interpreter do
         {new_stack, environment}
     end
 
-    defp interp_ternary(op, stack, environment) do
+    def interp_ternary(op, stack, environment) do
         {c, stack, environment} = Stack.pop(stack, environment)
         {b, stack, environment} = Stack.pop(stack, environment)
         {a, stack, environment} = Stack.pop(stack, environment)
@@ -247,7 +250,7 @@ defmodule Interp.Interpreter do
         {new_stack, environment}
     end
 
-    defp interp_special(op, stack, environment) do
+    def interp_special(op, stack, environment) do
         case op do
             ")" -> 
                 {%Stack{elements: [stream(Enum.reverse(stack.elements))]}, environment}
@@ -280,6 +283,14 @@ defmodule Interp.Interpreter do
                     is_iterable(element) or String.contains?(to_string(element), " ") -> {Stack.push(new_stack, ListCommands.split_on(element, " ")), new_env}
                     GeneralCommands.equals(to_number(element), 1) -> {new_stack, %{new_env | status: :break}}
                     true -> {new_stack, new_env}
+                end
+            "ã" -> 
+                {b, stack, environment} = Stack.pop(stack, environment)
+                if is_iterable(b) do
+                    {Stack.push(stack, ListCommands.cartesian_repeat(b, 2)), environment}
+                else
+                    {a, stack, environment} = Stack.pop(stack, environment)
+                    {Stack.push(stack, call_binary(fn x, y -> ListCommands.cartesian_repeat(x, to_number(y)) end, a, b, true, false)), environment}
                 end
             "Ÿ" -> 
                 {b, stack, environment} = Stack.pop(stack, environment)
@@ -326,10 +337,18 @@ defmodule Interp.Interpreter do
                     {a, stack, environment} = Stack.pop(stack, environment)
                     {Stack.push(stack, ListCommands.extract_every(a, to_number(b))), environment}
                 end
+            "¿" ->
+                {b, stack, environment} = Stack.pop(stack, environment)
+                if is_iterable(b) do
+                    {Stack.push(stack, Enum.reduce(to_number(b), &IntCommands.gcd_of/2)), environment}
+                else
+                    {a, stack, environment} = Stack.pop(stack, environment)
+                    {Stack.push(stack, IntCommands.gcd_of(to_number(a), to_number(b))), environment}
+                end
         end
     end
 
-    defp interp_subprogram(op, subcommands, stack, environment) do
+    def interp_subprogram(op, subcommands, stack, environment) do
         case op do
             # For N in range [0, n)
             "F" ->
@@ -450,8 +469,34 @@ defmodule Interp.Interpreter do
                 {Stack.push(stack, result), environment}
         end
     end
+    
+    def interp_if_statement(if_statement, else_statement, stack, environment) do
+        {a, stack, environment} = Stack.pop(stack, environment)
+        if GeneralCommands.equals(a, 1) do
+            interp(if_statement, stack, environment)
+        else
+            interp(else_statement, stack, environment)
+        end
+    end
 
-    defp interp_string(string, stack, environment) do
+    @doc """
+    Interprets the given string by checking whether it contains the 'ÿ' interpolation character.
+    By replacing each occurrence of 'ÿ' with the popped value from the string, we end up with the
+    interpolated string. If a value is tried to be popped from an empty stack, and there is no remaining
+    input left anymore, it cycles through the list of all popped values (i.e. [1, 2] → [1, 2, 1, 2, 1, 2, ...]).
+
+    ## Parameters
+
+     - string:      The string from which the 'ÿ' will be replaced with the values on the stack/input.
+     - stack:       The current state of the stack.
+     - environment: The current state of the environment.
+    
+    ## Returns
+
+    Returns a tuple in the following format: {stack, environment}
+
+    """
+    def interp_string(string, stack, environment) do
         dissected_string = String.split(string, "ÿ")
 
         {elements, stack, environment} = Enum.reduce(Enum.slice(dissected_string, 0..-2), {[], stack, environment}, 
@@ -487,6 +532,7 @@ defmodule Interp.Interpreter do
                     {:ternary_op, op} -> interp_ternary(op, stack, environment)
                     {:special_op, op} -> interp_special(op, stack, environment)
                     {:subprogram, op, subcommands} -> interp_subprogram(op, subcommands, stack, environment)
+                    {:if_statement, if_statement, else_statement} -> interp_if_statement(if_statement, else_statement, stack, environment)
                     {:no_op, _} -> {stack, environment}
                     {:eof, _} -> {stack, environment}
                     x -> IO.inspect x

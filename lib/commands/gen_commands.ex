@@ -103,7 +103,7 @@ defmodule Commands.GeneralCommands do
         end
     end
 
-    @docs """
+    @doc """
     Loop method. This method iteratively runs the given commands on the given index and the given range.
     After each iteration of running the code, it also gives the resulting stack and resulting environment.
 

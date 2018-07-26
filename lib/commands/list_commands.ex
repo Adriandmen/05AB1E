@@ -217,7 +217,7 @@ defmodule Commands.ListCommands do
         end
     end
 
-    @docs """
+    @doc """
     Zip with filler for a single list. Zipping is done internally within the first given argument and
     fills the remaining spaces with the given filler character. Since Elixir does not have a zip with filler
     function, this is done using a resource generator for a new stream, repeatedly taking the first element of
@@ -229,6 +229,10 @@ defmodule Commands.ListCommands do
 
      - a:       The element that will be zipped. Assuming that this element is a list of lists.
      - filler:  The filler character, which can be of any type.
+
+    ## Returns
+
+    Returns the resulting zipped list as a stream.
 
     """
     def zip_with_filler(a, filler) do
@@ -316,5 +320,34 @@ defmodule Commands.ListCommands do
     def permutations(list) do
         list = Enum.to_list list
         for element <- list, remaining <- permutations(list -- [element]), do: [element | remaining]
+    end
+    
+    def powerset([]), do: [[]]
+    def powerset([h|t]) do
+        pt = powerset(t)
+        (for x <- pt, do: [h|x]) ++ pt
+    end
+
+    def powerset(list) do
+        case list |> Stream.take(1) |> Enum.to_list |> List.first do
+            nil -> []
+        end
+    end
+
+    def cartesian(a, b) do
+        cond do
+            Functions.is_iterable(a) and Functions.is_iterable(b) -> Stream.flat_map(a, fn x -> b |> Stream.map(fn y -> [x, y] end) end) |> Stream.map(fn x -> x end)
+            Functions.is_iterable(a) -> cartesian(a, String.graphemes(to_string(b)))
+            Functions.is_iterable(b) -> cartesian(String.graphemes(to_string(a)), b)
+            true -> cartesian(String.graphemes(to_string(a)), String.graphemes(to_string(b))) |> Stream.map(fn x -> Enum.to_list(x) |> Enum.join("") end)
+        end
+    end
+    
+    def cartesian_repeat(_, 0), do: [[]]
+    def cartesian_repeat(value, n) do
+        cond do
+            Functions.is_iterable(value) -> cartesian_repeat(value, n - 1) |> Stream.flat_map(fn x -> value |> Stream.map(fn y -> x ++ [y] end) end) |> Stream.map(fn x -> x end)
+            true -> cartesian_repeat(String.graphemes(to_string(value)), n) |> Stream.map(fn x -> Enum.join(Enum.to_list(x), "") end)
+        end
     end
 end

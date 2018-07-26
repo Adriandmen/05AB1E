@@ -514,4 +514,13 @@ defmodule UnaryTest do
         assert evaluate("3Lœ") == [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]
         assert evaluate("123œ") == ["123", "132", "213", "231", "312", "321"]
     end
+
+    test "sort by length" do
+        assert evaluate("1 23 456 78 9)ïé") == [1, 9, 23, 78, 456]
+        assert evaluate("1S 23S 456S 78S 9S)ïé") == [[1], [9], [2, 3], [7, 8], [4, 5, 6]]
+    end
+
+    test "powerset" do
+        # assert evaluate("3Læ") == [[], [1], [2], [1, 2]]
+    end
 end
