@@ -83,6 +83,12 @@ defmodule SpecialOpsTest do
         assert evaluate("5LüF>") == [3, 5, 7, 9]
     end
 
+    test "pairs of length n" do
+        assert evaluate("5L ü2") == [[1, 2], [2, 3], [3, 4], [4, 5]]
+        assert evaluate("5L ü3") == [[1, 2, 3], [2, 3, 4], [3, 4, 5]]
+        assert evaluate("12345 ü3") == ["123", "234", "345"]
+    end
+
     test "for each subprogram" do
         assert evaluate("12345vyï} y N)") == [1, 2, 3, 4, 5, "", 0]
         assert evaluate("5Lvy} y N)") == [1, 2, 3, 4, 5, "", 0]

@@ -532,11 +532,23 @@ defmodule Interp.Interpreter do
             # Pairwise command
             "ü" ->
                 {a, stack} = Stack.pop(stack)
-                result = a |> Stream.chunk_every(2, 1, :discard)
-                           |> Stream.map(fn [x, y] ->        
+                result = case subcommands do
+                    [{:number, number}] -> 
+                        cond do
+                            is_iterable(a) -> 
+                                a |> Stream.chunk_every(to_number(number), 1, :discard)
+                                  |> Stream.map(fn x -> x end)
+                            true -> 
+                                String.graphemes(to_string(a)) |> Stream.chunk_every(to_number(number), 1, :discard)
+                                                               |> Stream.map(fn x -> Enum.join(Enum.to_list(x), "") end)
+                        end
+                        
+                    _ -> a |> Stream.chunk_every(2, 1, :discard)
+                           |> Stream.map(fn [x, y] ->
                                 {result_stack, _} = interp(subcommands, %Stack{elements: [x, y]}, environment)
                                 {result_elem, _} = Stack.pop(result_stack)
                                 result_elem end)
+                end
                 {Stack.push(stack, result), environment}
         end
     end
