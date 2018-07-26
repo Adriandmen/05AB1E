@@ -1,5 +1,7 @@
 defmodule Commands.StrCommands do
     alias Interp.Functions
+    alias Commands.ListCommands
+    alias Commands.GeneralCommands
     require Interp.Functions
 
     def insert_at(a, b, c) when is_map(a) and is_map(b) and is_map(c) do
@@ -89,4 +91,18 @@ defmodule Commands.StrCommands do
             end 
         end)
     def to_codepoints(value), do: String.to_charlist(to_string(value))
+
+    def transliterate(string, from_chars, to_chars) when is_bitstring(string), do: Enum.join(transliterate(String.graphemes(to_string(string)), from_chars, to_chars), "")
+    def transliterate(list, from_chars, to_chars) when is_bitstring(from_chars) and is_bitstring(to_chars), do: transliterate(list, String.graphemes(from_chars), String.graphemes(to_chars))
+    def transliterate(list, from_chars, to_chars) when is_bitstring(from_chars), do: transliterate(list, String.graphemes(from_chars), to_chars)
+    def transliterate(list, from_chars, to_chars) when is_bitstring(to_chars), do: transliterate(list, from_chars, String.graphemes(to_chars))
+    def transliterate(list, from_chars, to_chars) do
+        transliteration_pairs = Stream.zip(from_chars, to_chars)
+        list |> Stream.map(fn x ->
+            case ListCommands.first_where(transliteration_pairs, fn {a, _} -> GeneralCommands.equals(a, x) end) do
+                nil -> x
+                {_, b} -> b
+            end
+        end)
+    end
 end

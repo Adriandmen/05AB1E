@@ -304,6 +304,7 @@ defmodule BinaryTest do
         assert evaluate("1234S 14Sk") == [0, 3]
         assert evaluate("1234S 5k") == -1
         assert evaluate("1234S 54Sk") == [-1, 3]
+        assert evaluate("∞ 5k") == 4
     end
 
     test "list multiply" do
@@ -358,5 +359,16 @@ defmodule BinaryTest do
         assert evaluate("1233213Sï 2¢") == 2
         assert evaluate("1233213S 2¢") == 2
         assert evaluate("1233213S 23S¢") == [2, 3]
+    end
+
+    test "to base arbitrary" do
+        assert evaluate("15 2в") == [1, 1, 1, 1]
+        assert evaluate("38 2в") == [1, 0, 0, 1, 1, 0]
+        assert evaluate("38( 2в") == [-1, 0, 0, -1, -1, 0]
+        assert evaluate("12345 786в") == [15, 555]
+        assert evaluate("12345( 7в") == [-5, 0, -6, -6, -4]
+        assert evaluate("146 3(в") == [2, 1, 1, 0, 2]
+        assert evaluate("12345 7(в") == [6, 6, 0, 1, 4]
+        assert evaluate("15 38 12345) 7в") == [[2, 1], [5, 3], [5, 0, 6, 6, 4]]
     end
 end

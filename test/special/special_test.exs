@@ -122,4 +122,10 @@ defmodule SpecialOpsTest do
         assert evaluate("00001i5ë10} 3O") == 8
         assert evaluate("4i5ë10} 3O") == 13
     end
+    
+    test "max of stack" do
+        assert evaluate("1 2 3 2 1M") == 3
+        assert evaluate("1 2 3 2 1M)ï") == [1, 2, 3, 2, 1, 3]
+        assert evaluate("1 232S101S‚ 1M)ï") == [1, [[2, 3, 2], [1, 0, 1]], 1, 3]
+    end
 end

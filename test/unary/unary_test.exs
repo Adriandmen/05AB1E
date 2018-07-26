@@ -546,6 +546,20 @@ defmodule UnaryTest do
         assert evaluate("768 92928 2 1)Ó") == [[8, 1], [8, 1, 0, 0, 2], [1], []]
     end
 
+    test "rotate one to the left" do
+        assert evaluate("123456À") == "234561"
+        assert evaluate("6LÀ") == [2, 3, 4, 5, 6, 1]
+        assert evaluate("1ï)À") == [1]
+        assert evaluate(")À") == []
+    end
+
+    test "rotate one to the right" do
+        assert evaluate("123456Á") == "612345"
+        assert evaluate("6LÁ") == [6, 1, 2, 3, 4, 5]
+        assert evaluate("1ï)Á") == [1]
+        assert evaluate(")Á") == []
+    end
+
     test "powerset" do
         # assert evaluate("3Læ") == [[], [1], [2], [1, 2]]
     end

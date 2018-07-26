@@ -26,9 +26,9 @@ defmodule Reading.Reader do
                                   "£", "«", "Ã", "Ê", "Ï", "Ö", "×", "Û", "Ü", "Ý", "â", "ä", "å", "è",
                                   "ì", "ô", "ö", "÷", "ù", "ú", "ý", ".å", ".D", ".h", ".H"]
     
-    def ternary_ops, do: regexify ["ǝ", "Š"]
+    def ternary_ops, do: regexify ["ǝ", "Š", "‡"]
 
-    def special_ops, do: regexify [")", "r", "©", "¹", "²", "³", "I", "$", "Î", "#", "Ÿ", "ø", "ζ", "ι", "¿", "ã"]
+    def special_ops, do: regexify [")", "r", "©", "¹", "²", "³", "I", "$", "Î", "#", "Ÿ", "ø", "ζ", "ι", "¿", "ã", "M"]
     
     def subprogram_ops, do: regexify ["ʒ", "ε", "Δ", "Σ", "F", "G", "v", "ƒ", "µ", "[", "i"]
     

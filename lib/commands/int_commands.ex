@@ -128,6 +128,23 @@ defmodule Commands.IntCommands do
         result
     end
 
+    def to_base_arbitrary(value, base) when base > 0, do: Integer.digits(value, base)
+    def to_base_arbitrary(value, base) when base < 0, do: to_negative_base_arbitrary(value, base, [])
+    defp to_negative_base_arbitrary(0, _, acc), do: acc
+    defp to_negative_base_arbitrary(value, base, acc) do
+        remainder = rem(value, base)
+        cond do
+            remainder >= 0 -> to_negative_base_arbitrary(div(value, base), base, [remainder | acc])
+
+            # If the remainder is negative, we subtract the base from the remainder, resulting in a positive remainder.
+            # Since we are subtracting the base from the remainder, we must also add 1 to the divided result.
+            remainder < 0 -> to_negative_base_arbitrary(div(value, base) + 1, base, [(remainder - base) | acc])
+        end    
+    end 
+
+    @doc """
+    Checks whether the given number is a prime number.
+    """
     def is_prime?(value) when value in [2, 3], do: true
     def is_prime?(value) when value < 2, do: false
     def is_prime?(value) do
@@ -135,7 +152,11 @@ defmodule Commands.IntCommands do
         !Enum.any?(2..max_index, fn x -> rem(value, x) == 0 end)
     end
 
+    @doc """
+    Computes the next prime from the given value.
+    """
     def next_prime(2), do: 3
+    def next_prime(value) when value < 2, do: 2
     def next_prime(value) do
         next = value + 2
         cond do
@@ -144,11 +165,20 @@ defmodule Commands.IntCommands do
         end
     end
 
+    @doc """
+    Computes the prime factorization of the given value as a list of
+    prime factors with duplicates. Example, 60 → [2, 2, 3, 5]
+    """
     def prime_factors(value), do: prime_factors(value, [], 2)
     def prime_factors(value, acc, _) when value < 2, do: Enum.reverse acc
     def prime_factors(value, acc, index) when rem(value, index) == 0, do: prime_factors(div(value, index), [index | acc], index)
     def prime_factors(value, acc, index), do: prime_factors(value, acc, next_prime(index))
 
+    @doc """
+    Computes the prime exponents of the given value as a list of exponents.
+    For example, given the factorization of n, which equals [2 ** a, 3 ** b, 5 ** c, 7 ** d, ...],
+    this method returns the list [a, b, c, d, ...] with trailing zeroes removed.
+    """
     def prime_exponents(value), do: prime_exponents(value, [], 2, 0)
     def prime_exponents(value, acc, _, 0) when value < 2, do: Enum.reverse acc
     def prime_exponents(value, acc, _, count) when value < 2, do: Enum.reverse [count | acc]

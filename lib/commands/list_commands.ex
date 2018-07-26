@@ -188,11 +188,22 @@ defmodule Commands.ListCommands do
     def index_in(value, element) do
         cond do
             Functions.is_iterable(value) -> 
-                case value |> Enum.to_list |> Enum.find_index(fn x -> GeneralCommands.equals(x, element) end) do
+                case first_where(value |> Stream.with_index, fn {x, _} -> GeneralCommands.equals(x, element) end) do
                     nil -> -1
-                    x -> x
+                    {_, index} -> index
                 end
             true -> index_in(String.graphemes(to_string(value)), element)
+        end
+    end
+
+    def first_where(stream, function) do
+        stream |> Stream.filter(function) |> Stream.take(1) |> Enum.to_list |> List.first
+    end
+
+    def index_in_stream(stream, element) do
+        case stream |> Stream.with_index |> Stream.filter(fn {x, index} -> GeneralCommands.equals(x, element) end) |> Stream.take(1) |> Enum.to_list |> List.first do
+            nil -> -1
+            {_, index} -> index
         end
     end
 
@@ -203,6 +214,41 @@ defmodule Commands.ListCommands do
             true -> lift(String.graphemes(to_string(value)))
         end
     end
+
+    @doc """
+    Rotate the given value to the left or to the right depending on the given shift.
+    If the shift is larger than 0, the value is shifted that many times to the left.
+    If the shift is smaller than 0, the value is shifted by abs(shift) many times to the right.
+
+    ## Parameters
+
+     - value:   The value that will be shifted
+     - shift:   The number of times the value will be shifted.
+
+    ## Returns
+
+    The shifted result from the value.
+
+    """
+    def rotate(value, shift) when shift == 0, do: value
+    def rotate(value, shift) when not Functions.is_iterable(value), do: Enum.join(rotate(String.graphemes(to_string(value)), shift), "")
+    def rotate(value, shift) when shift > 0 do
+        case length(Enum.to_list value) do
+            0 -> []
+            x -> 
+                shift = rem(shift, x)
+                Stream.concat(value |> Stream.drop(shift), value |> Stream.take(shift)) |> Stream.map(fn x -> x end)
+        end
+    end
+    def rotate(value, shift) when shift < 0 do
+        case length(Enum.to_list value) do
+            0 -> []
+            x ->
+                shift = rem(shift, x)
+                x = Stream.concat(value |> Stream.take(shift), value |> Stream.drop(shift)) |> Stream.map(fn x -> x end)
+        end
+    end
+
 
     def zip(a) do
         Stream.zip(a) |> Stream.map(fn x -> Tuple.to_list x end)

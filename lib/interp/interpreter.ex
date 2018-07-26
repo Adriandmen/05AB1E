@@ -158,6 +158,8 @@ defmodule Interp.Interpreter do
             "Ω" -> Stack.push(stack, if is_iterable(a) do Enum.random(Enum.to_list(a)) else Enum.random(String.graphemes(to_string(a))) end)
             # "æ" -> Stack.push(stack, if is_iterable(a) do ListCommands.powerset(a |> Enum.to_list) else ListCommands.powerset(String.graphemes(to_string(a))) |> Enum.map(fn x -> Enum.join(x, "") end) end)
             "œ" -> Stack.push(stack, if is_iterable(a) do ListCommands.permutations(a) else ListCommands.permutations(String.graphemes(to_string(a))) |> Enum.map(fn x -> Enum.join(x, "") end) end)
+            "À" -> Stack.push(stack, ListCommands.rotate(a, 1))
+            "Á" -> Stack.push(stack, ListCommands.rotate(a, -1))
             "Ù" -> Stack.push(stack, ListCommands.uniques(a))
             "Œ" -> Stack.push(stack, ListCommands.substrings(a))
             "γ" -> Stack.push(stack, ListCommands.group_equal(a))
@@ -226,6 +228,7 @@ defmodule Interp.Interpreter do
             "k" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.index_in(x, y) end, a, b, true, false))
             "и" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.list_multiply(x, to_number(y)) end, a, b, true, false))
             "¢" -> Stack.push(stack, call_binary(fn x, y -> GeneralCommands.count(x, y) end, a, b, true, false))
+            "в" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.to_base_arbitrary(to_number(x), to_number(y)) end, a, b))
             "Q" -> Stack.push(stack, to_number(if is_iterable(a) and is_iterable(b) do GeneralCommands.equals(a, b) else GeneralCommands.vectorized_equals(a, b) end))
             "Ê" -> Stack.push(stack, to_number(if is_iterable(a) and is_iterable(b) do GeneralCommands.equals(a, b) == false else call_unary(fn n -> n == false end, GeneralCommands.vectorized_equals(a, b)) end))
             "â" -> Stack.push(stack, ListCommands.cartesian(a, b))
@@ -249,6 +252,7 @@ defmodule Interp.Interpreter do
         new_stack = case op do
             "ǝ" -> Stack.push(stack, call_ternary(fn x, y, z -> StrCommands.insert_at(x, y, z) end, a, b, c, true, true, true))
             "Š" -> Stack.push(Stack.push(Stack.push(stack, c), a), b)
+            "‡" -> Stack.push(stack, StrCommands.transliterate(a, b, c))
         end
 
         {new_stack, environment}
@@ -287,6 +291,13 @@ defmodule Interp.Interpreter do
                     is_iterable(element) or String.contains?(to_string(element), " ") -> {Stack.push(new_stack, ListCommands.split_on(element, " ")), new_env}
                     GeneralCommands.equals(to_number(element), 1) -> {new_stack, %{new_env | status: :break}}
                     true -> {new_stack, new_env}
+                end
+            "M" ->
+                if length(stack.elements) == 0 do
+                    {a, stack, environment} = Stack.pop(stack, environment)
+                    {Stack.push(stack, IntCommands.max_of(stack.elements)), environment}
+                else
+                    {Stack.push(stack, IntCommands.max_of(stack.elements)), environment}
                 end
             "ã" -> 
                 {b, stack, environment} = Stack.pop(stack, environment)
