@@ -5,8 +5,8 @@ elixir: '1.6.4'
 
 sudo: false
 
-install:
- - mix escript.build
-
 script:
- - mix test
+  - MIX_ENV=test mix do compile --warnings-as-errors, coveralls.json
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
