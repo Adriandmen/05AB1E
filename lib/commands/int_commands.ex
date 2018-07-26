@@ -249,6 +249,9 @@ defmodule Commands.IntCommands do
     def gcd_of(a, b) when a > b, do: gcd_of(a - b, b)
     def gcd_of(a, b) when a < b, do: gcd_of(a, b - a)
 
+    # LCM
+    def lcm_of(a, b), do: div(abs(a * b), gcd_of(a, b))
+
     def euler_totient(value), do: euler_totient(value, value, 0)
     def euler_totient(_, 0, acc), do: acc
     def euler_totient(value, index, acc) do

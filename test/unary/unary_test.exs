@@ -27,7 +27,7 @@ defmodule UnaryTest do
         assert evaluate("∞ηн") == [1]
         assert evaluate("12345.p") == ["1", "12", "123", "1234", "12345"]
         assert evaluate("12345ï.p") == ["1", "12", "123", "1234", "12345"]
-        assert evaluate("∞η.p") == [1]
+        assert evaluate("∞.pн") == [1]
     end
 
     test "head of element" do
