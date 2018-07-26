@@ -351,4 +351,12 @@ defmodule BinaryTest do
         assert evaluate("∞ã5£") == [[1, 1], [1, 2], [1, 3], [1, 4], [1, 5]]
         assert evaluate("123 2ã") == ["11", "12", "13", "21", "22", "23", "31", "32", "33"]
     end
+
+    test "count occurrences" do
+        assert evaluate("1233213 3¢") == 3
+        assert evaluate("1233213 2¢") == 2
+        assert evaluate("1233213Sï 2¢") == 2
+        assert evaluate("1233213S 2¢") == 2
+        assert evaluate("1233213S 23S¢") == [2, 3]
+    end
 end

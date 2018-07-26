@@ -60,10 +60,19 @@ defmodule Commands.GeneralCommands do
         end
     end
 
+    def vectorized_equals(a, b) do
+        cond do
+            Functions.is_iterable(a) and not Functions.is_iterable(b) -> a |> Stream.map(fn x -> vectorized_equals(x, b) end)
+            not Functions.is_iterable(a) and Functions.is_iterable(b) -> b |> Stream.map(fn x -> vectorized_equals(a, x) end)
+            Functions.is_iterable(a) and Functions.is_iterable(b) -> Stream.zip(a, b) |> Stream.map(fn {x, y} -> vectorized_equals(x, y) end)
+            true -> Functions.to_number(a) == Functions.to_number(b)
+        end
+    end
+
     def equals(a, b) do
         cond do
-            Functions.is_iterable(a) and not Functions.is_iterable(b) -> a |> Stream.map(fn x -> equals(x, b) end)
-            not Functions.is_iterable(a) and Functions.is_iterable(b) -> b |> Stream.map(fn x -> equals(a, x) end)
+            Functions.is_iterable(a) and not Functions.is_iterable(b) -> false
+            not Functions.is_iterable(a) and Functions.is_iterable(b) -> false
             true -> Functions.to_number(a) == Functions.to_number(b)
         end
     end
@@ -77,6 +86,13 @@ defmodule Commands.GeneralCommands do
                 end
             true ->
                 all_equal(String.graphemes(to_string(value)))
+        end
+    end
+
+    def count(value, element) do
+        cond do
+            Functions.is_iterable(value) -> value |> Enum.count(fn x -> equals(x, element) end)
+            true -> count(String.graphemes(to_string(value)), element)
         end
     end
 

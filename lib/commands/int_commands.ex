@@ -14,11 +14,36 @@ defmodule Commands.IntCommands do
                              "—˜™š›œćžŸā¡¢£¤¥¦§¨©ª«¬λ®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉ" <>
                              "ÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ")
     
+    @doc """
+    TODO: negative numbers and decimal.
+
+    Computes the factorial of the given number.
+
+    ## Parameters
+
+     - value: The value from which the factorial will be calculated
+    
+    ## Returns
+
+    The factorial of the given number.
+    """
     def factorial(0), do: 1
     def factorial(value), do: factorial(value, 1)
-    def factorial(1, acc), do: acc
-    def factorial(value, acc), do: factorial(value - 1, acc * value)
+    defp factorial(1, acc), do: acc
+    defp factorial(value, acc), do: factorial(value - 1, acc * value)
 
+    @doc """
+    Power function that also works for negative numbers and decimal numbers.
+
+    ## Parameters
+
+     - n: The number that will be raised to the power k
+     - k: The exponent of the power function.
+
+    ## Returns
+
+    The result of n ** k.
+    """
     def pow(n, k) do
         cond do
             k < 0 -> 1 / pow(n, -k, 1)
@@ -30,14 +55,28 @@ defmodule Commands.IntCommands do
     defp pow(n, k, acc), do: pow(n, k - 1, n * acc)
 
     # Modulo operator:
-    #  -x.(f|i) % -y.(f|i)     -->  -(x.(f|i) % y.(f|i))
-    #  -x.f % y.f              -->  (y.f - (x.f % y.f)) % y.f
-    #  x.f % -y.f              -->  -(-x.f % y.f)
-    #  x.(f|i) % y.(f|i)       -->  ((x / y) % 1) * y.(f|i)
-    #  -x.i % -y.i             -->  -(x.i % y.i) 
-    #  -x.i % y.i              -->  (y.i - (x.i % y.i)) % y.i 
-    #  x.i % -y.i              -->  -(-x.i % y.i)
-    #  x.i % y.i               -->  rem(x.i, y.i)
+    @doc """
+    Modulo operator, which also works for negative and decimal numbers.
+    Using the following set of rules, we are able to include these numbers:
+
+       -x.(f|i) % -y.(f|i)     -->  -(x.(f|i) % y.(f|i))
+       -x.f % y.f              -->  (y.f - (x.f % y.f)) % y.f
+       x.f % -y.f              -->  -(-x.f % y.f)
+       x.(f|i) % y.(f|i)       -->  ((x / y) % 1) * y.(f|i)
+       -x.i % -y.i             -->  -(x.i % y.i) 
+       -x.i % y.i              -->  (y.i - (x.i % y.i)) % y.i 
+       x.i % -y.i              -->  -(-x.i % y.i)
+       x.i % y.i               -->  rem(x.i, y.i)
+
+    ## Parameters
+
+     - dividend:    The dividend of the modulo function.
+     - divisor:     The divisor of the modulo function.
+
+    ## Returns
+
+    Returns the result of dividend % divisor.
+    """
     def mod(dividend, divisor) when dividend < 0 and divisor < 0, do: -mod(-dividend, -divisor)
     def mod(dividend, divisor) when is_float(divisor) do
         cond do
@@ -67,6 +106,10 @@ defmodule Commands.IntCommands do
         end
     end
 
+    @doc """
+    Integer division method that uses integer division when applicable or else the
+    trunc-function in order to floor the result.
+    """
     def divide(dividend, divisor) when is_float(dividend) or is_float(divisor), do: trunc(dividend / divisor)
     def divide(dividend, divisor), do: div(dividend, divisor)
 
@@ -91,6 +134,26 @@ defmodule Commands.IntCommands do
         max_index = :math.sqrt(value) |> Float.floor |> round
         !Enum.any?(2..max_index, fn x -> rem(value, x) == 0 end)
     end
+
+    def next_prime(2), do: 3
+    def next_prime(value) do
+        next = value + 2
+        cond do
+            is_prime?(next) -> next
+            true -> next_prime(value + 2)
+        end
+    end
+
+    def prime_factors(value), do: prime_factors(value, [], 2)
+    def prime_factors(value, acc, _) when value < 2, do: Enum.reverse acc
+    def prime_factors(value, acc, index) when rem(value, index) == 0, do: prime_factors(div(value, index), [index | acc], index)
+    def prime_factors(value, acc, index), do: prime_factors(value, acc, next_prime(index))
+
+    def prime_exponents(value), do: prime_exponents(value, [], 2, 0)
+    def prime_exponents(value, acc, _, 0) when value < 2, do: Enum.reverse acc
+    def prime_exponents(value, acc, _, count) when value < 2, do: Enum.reverse [count | acc]
+    def prime_exponents(value, acc, index, count) when rem(value, index) == 0, do: prime_exponents(div(value, index), acc, index, count + 1)
+    def prime_exponents(value, acc, index, count), do: prime_exponents(value, [count | acc], next_prime(index), 0)
 
     def n_choose_k(n, k) when k > n, do: 0
     def n_choose_k(n, k), do: div(factorial(n), factorial(k) * factorial(n - k))

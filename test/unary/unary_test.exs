@@ -520,6 +520,32 @@ defmodule UnaryTest do
         assert evaluate("1S 23S 456S 78S 9S)ïé") == [[1], [9], [2, 3], [7, 8], [4, 5, 6]]
     end
 
+    test "prime factors with duplicates" do
+        assert evaluate("56Ò") == [2, 2, 2, 7]
+        assert evaluate("2Ò") == [2]
+        assert evaluate("1Ò") == []
+        assert evaluate("7831135Ò") == [5, 13, 17, 19, 373]
+        assert evaluate("56 2 1 7831135)Ò") == [[2, 2, 2, 7], [2], [], [5, 13, 17, 19, 373]]
+    end
+
+    test "prime factors without duplicates" do
+        assert evaluate("56f") == [2, 7]
+        assert evaluate("2f") == [2]
+        assert evaluate("1f") == []
+        assert evaluate("5(f") == []
+        assert evaluate("7831135f") == [5, 13, 17, 19, 373]
+        assert evaluate("56 2 1 7831135)f") == [[2, 7], [2], [], [5, 13, 17, 19, 373]]
+    end
+
+    test "prime exponents" do
+        assert evaluate("768Ó") == [8, 1]
+        assert evaluate("92928Ó") == [8, 1, 0, 0, 2]
+        assert evaluate("2Ó") == [1]
+        assert evaluate("1Ó") == []
+        assert evaluate("5(Ó") == []
+        assert evaluate("768 92928 2 1)Ó") == [[8, 1], [8, 1, 0, 0, 2], [1], []]
+    end
+
     test "powerset" do
         # assert evaluate("3Læ") == [[], [1], [2], [1, 2]]
     end
