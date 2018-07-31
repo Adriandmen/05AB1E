@@ -11,6 +11,7 @@ defmodule Interp.Interpreter do
     alias Interp.Environment
     alias Interp.Globals
     alias Interp.Output
+    alias Interp.Canvas
     alias Commands.ListCommands
     alias Commands.StrCommands
     alias Commands.IntCommands
@@ -37,9 +38,11 @@ defmodule Interp.Interpreter do
             "X" -> Stack.push(stack, Globals.get().x)
             "Y" -> Stack.push(stack, Globals.get().y)
             "¾" -> Stack.push(stack, Globals.get().counter_variable)
+            "¯" -> Stack.push(stack, Globals.get().array)
             "¶" -> Stack.push(stack, "\n")
             "õ" -> Stack.push(stack, "")
             "ð" -> Stack.push(stack, " ")
+            "´" -> Globals.set(%{Globals.get() | array: []}); stack
             "q" -> Globals.set(%{Globals.get() | status: :quit}); stack
             "¼" -> global_env = Globals.get(); Globals.set(%{global_env | counter_variable: global_env.counter_variable + 1}); stack
             "w" -> :timer.sleep(1000); stack
@@ -154,6 +157,7 @@ defmodule Interp.Interpreter do
             "Ó" -> Stack.push(stack, call_unary(fn x -> IntCommands.prime_exponents(to_number(x)) end, a))
             "Ñ" -> Stack.push(stack, call_unary(fn x -> IntCommands.divisors(to_number(x)) end, a))
             "Õ" -> Stack.push(stack, call_unary(fn x -> IntCommands.euler_totient(to_number(x)) end, a))
+            "Ø" -> Stack.push(stack, call_unary(fn x -> IntCommands.nth_prime(to_number(x)) end, a))
            ".b" -> Stack.push(stack, call_unary(fn x -> <<rem(to_number(x) - 1, 26) + 65>> end, a))
            ".l" -> Stack.push(stack, call_unary(fn x -> to_number Regex.match?(~r/^[a-z]+$/, to_string(x)) end, a))
            ".u" -> Stack.push(stack, call_unary(fn x -> to_number Regex.match?(~r/^[A-Z]+$/, to_string(x)) end, a))
@@ -173,7 +177,7 @@ defmodule Interp.Interpreter do
             "é" -> Stack.push(stack, a |> Enum.sort_by(fn x -> GeneralCommands.length_of(x) end))
             "í" -> Stack.push(stack, a |> Stream.map(fn x -> if is_iterable(x) do Enum.to_list(x) |> Enum.reverse else String.reverse(to_string(x)) end end))
             "Ω" -> Stack.push(stack, if is_iterable(a) do Enum.random(Enum.to_list(a)) else Enum.random(String.graphemes(to_string(a))) end)
-            # "æ" -> Stack.push(stack, if is_iterable(a) do ListCommands.powerset(a |> Enum.to_list) else ListCommands.powerset(String.graphemes(to_string(a))) |> Enum.map(fn x -> Enum.join(x, "") end) end)
+            "æ" -> Stack.push(stack, if is_iterable(a) do ListCommands.powerset(a) else ListCommands.powerset(String.graphemes(to_string(a))) |> Enum.map(fn x -> Enum.join(x, "") end) end)
             "œ" -> Stack.push(stack, if is_iterable(a) do ListCommands.permutations(a) else ListCommands.permutations(String.graphemes(to_string(a))) |> Enum.map(fn x -> Enum.join(x, "") end) end)
             "À" -> Stack.push(stack, ListCommands.rotate(a, 1))
             "Á" -> Stack.push(stack, ListCommands.rotate(a, -1))
@@ -192,6 +196,8 @@ defmodule Interp.Interpreter do
             "¦" -> Stack.push(stack, GeneralCommands.dehead(a))
             "¨" -> Stack.push(stack, GeneralCommands.detail(a))
             "¥" -> Stack.push(stack, ListCommands.deltas(a))
+            "ß" -> Stack.push(stack, if is_iterable(a) do IntCommands.min_of(a) else IntCommands.min_of(String.graphemes(to_string(a))) end)
+            "à" -> Stack.push(stack, if is_iterable(a) do IntCommands.max_of(a) else IntCommands.max_of(String.graphemes(to_string(a))) end)
             "W" -> Stack.push(Stack.push(stack, a), IntCommands.min_of(a))
             "Z" -> Stack.push(Stack.push(stack, a), IntCommands.max_of(a))
             "x" -> Stack.push(Stack.push(stack, a), call_unary(fn x -> 2 * to_number(x) end, a))
@@ -212,6 +218,7 @@ defmodule Interp.Interpreter do
             "»" -> if is_iterable(a) do Stack.push(stack, ListCommands.grid_join(a)) else Stack.push(%Stack{}, ListCommands.grid_join(Enum.reverse(Stack.push(stack, to_string(a)).elements))) end
             "U" -> Globals.set(%{Globals.get() | x: a}); stack
             "V" -> Globals.set(%{Globals.get() | y: a}); stack
+            "ˆ" -> global_env = Globals.get(); Globals.set(%{global_env | array: global_env.array ++ [a]}); stack
             "½" -> if GeneralCommands.equals(a, 1) do global_env = Globals.get(); Globals.set(%{global_env | counter_variable: global_env.counter_variable + 1}) end; stack
             "," -> Output.print(a); stack
             "=" -> Output.print(a); Stack.push(stack, a)
@@ -268,10 +275,13 @@ defmodule Interp.Interpreter do
            ".£" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.take_last(x, to_number(y)) end, a, b, true, false))
            ".n" -> Stack.push(stack, call_binary(fn x, y -> :math.log(to_number(x)) / :math.log(to_number(y)) end, a, b))
            ".x" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.closest_to(x, y) end, a, b, true, false))
+           ".L" -> Stack.push(stack, call_binary(fn x, y -> StrCommands.levenshtein_distance(to_list(x), to_list(y)) end, a, b))
+           ".ý" -> Stack.push(stack, to_list(a) |> Stream.intersperse(b) |> Stream.map(fn x -> x end))
            ".o" -> Stack.push(stack, StrCommands.overlap(a, b))
            ".ø" -> Stack.push(stack, ListCommands.surround(a, b))
             "Û" -> Stack.push(stack, ListCommands.remove_leading(a, b))
             "Ü" -> Stack.push(stack, ListCommands.remove_trailing(a, b))
+            "∍" -> Stack.push(stack, ListCommands.shape_like(a, b))
             "Q" -> Stack.push(stack, to_number(if is_iterable(a) and is_iterable(b) do GeneralCommands.equals(a, b) else GeneralCommands.vectorized_equals(a, b) end))
             "Ê" -> Stack.push(stack, to_number(if is_iterable(a) and is_iterable(b) do GeneralCommands.equals(a, b) == false else call_unary(fn n -> n == false end, GeneralCommands.vectorized_equals(a, b)) end))
             "Ï" -> Stack.push(stack, ListCommands.keep_truthy_indices(to_non_number(a), to_non_number(b)))
@@ -299,6 +309,8 @@ defmodule Interp.Interpreter do
             "ǝ" -> Stack.push(stack, call_ternary(fn x, y, z -> StrCommands.insert_at(x, y, z) end, a, b, c, true, true, true))
             "Š" -> Stack.push(Stack.push(Stack.push(stack, c), a), b)
             "‡" -> Stack.push(stack, StrCommands.transliterate(a, b, c))
+            ":" -> Stack.push(stack, StrCommands.replace_infinite(a, b, c))
+            "Λ" -> global_env = Globals.get(); Globals.set(%{global_env | canvas: Canvas.write(global_env.canvas, to_number(a), to_non_number(b), to_non_number(c))}); stack
         end
 
         {new_stack, environment}
@@ -458,7 +470,7 @@ defmodule Interp.Interpreter do
             # Filter by
             "ʒ" ->
                 {a, stack} = Stack.pop(stack)
-                result = a 
+                result = to_list(a)
                         |> Stream.with_index 
                         |> Stream.transform(environment, fn ({x, index}, curr_env) ->
                             {result_stack, new_env} = interp(subcommands, %Stack{elements: [x]}, %{curr_env | range_variable: index, range_element: x})
@@ -469,6 +481,11 @@ defmodule Interp.Interpreter do
                             end
                         end)
                         |> Stream.map(fn x -> x end)
+
+                result = cond do
+                    is_iterable(a) -> result
+                    true -> Enum.join(Enum.to_list(result), "")
+                end
                 {Stack.push(stack, result), environment}
             
             # Map for each

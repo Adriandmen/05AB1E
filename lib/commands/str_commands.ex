@@ -3,6 +3,7 @@ defmodule Commands.StrCommands do
     alias Commands.ListCommands
     alias Commands.GeneralCommands
     require Interp.Functions
+    use Memoize
 
     def insert_at(a, b, c) when is_map(a) and is_map(b) and is_map(c) do
         pairs = Enum.to_list Stream.zip([b, c])
@@ -35,6 +36,48 @@ defmodule Commands.StrCommands do
     def insert_at(a, b, c) do
         List.to_string List.replace_at(String.to_charlist(a), Functions.to_number(c), Functions.to_non_number(b))
     end
+
+    @doc """
+    Infinite replacement method. When the first element ('a') is an iterable, it maps the replace_infinite method over each
+    element of 'a'. An alternative non-vectorizing version (although not infinitly replaced) is the transliteration method.
+
+    ## Parameters
+    
+     - a:   The value in which the replacements will happen.
+     - b:   The from value(s) for the replacement pair(s).
+     - c:   The to value(s) for the replacement pair(s).
+
+    ## Returns
+
+    Returns the element 'a' where the each replacement pair is infinitly replaced.
+    """
+    def replace_infinite(a, b, c) when Functions.is_single?(a) and Functions.is_single?(b) and Functions.is_single?(c) do
+        a = to_string(a)
+        b = to_string(b)
+        c = to_string(c)
+        replace_infinite(String.replace(a, b, c), b, c, a)
+    end
+    def replace_infinite(a, b, c) when Functions.is_single?(a) and Functions.is_iterable(b) and Functions.is_iterable(c), do: Enum.reduce(Stream.zip(b, c), a, fn ({from, to}, acc) -> replace_infinite(acc, from, to) end)
+    def replace_infinite(a, b, c) when Functions.is_single?(a) and Functions.is_iterable(b) and Functions.is_single?(c), do: Enum.reduce(b, a, fn (from, acc) -> replace_infinite(acc, from, c) end)
+    def replace_infinite(a, b, c) when Functions.is_single?(a) and Functions.is_single?(b) and Functions.is_iterable(c), do: Enum.reduce(c, a, fn (to, acc) -> replace_infinite(acc, b, to) end)
+    def replace_infinite(a, b, c) when Functions.is_iterable(a), do: a |> Stream.map(fn x -> replace_infinite(x, b, c) end)
+    defp replace_infinite(a, b, c, acc) do (case String.replace(a, b, c) do; ^acc -> acc; x -> replace_infinite(x, b, c, a) end) end 
+
+
+    @doc """
+    Computes the Levenshtein distance between two lists of characters using the following recursive formula:
+
+    lev([], b) = length(b)
+    lev(a, []) = length(a)
+    lev(a, b) = min(lev(a - 1, b) + 1, lev(a, b - 1) + 1, lev(a - 1, b - 1) + (a[0] == b[0]))
+
+    """
+    defmemo levenshtein_distance([], b), do: length(b)
+    defmemo levenshtein_distance(a, []), do: length(a)
+    defmemo levenshtein_distance([a | as], [b | bs]) do
+        min(levenshtein_distance(as, [b | bs]) + 1, min(levenshtein_distance([a | as], bs) + 1, levenshtein_distance(as, bs) + (if GeneralCommands.equals(a, b) do 0 else 1 end)))
+    end
+
 
     def squarify(list) do
         list = Enum.to_list(list)

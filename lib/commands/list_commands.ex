@@ -425,17 +425,18 @@ defmodule Commands.ListCommands do
         for element <- list, remaining <- permutations(list -- [element]), do: [element | remaining]
     end
     
-    def powerset([]), do: [[]]
-    def powerset([h|t]) do
-        pt = powerset(t)
-        (for x <- pt, do: [h|x]) ++ pt
+    # Powerset example: [1, 2, 3, 4] → [[], [1], [2], [1, 2], [3], [1, 3], [2, 3], [1, 2, 3], [4], [1, 4], [2, 4], ...]
+    def powerset(list) do
+        Stream.concat([[]], Stream.transform(list, [[]], fn (x, acc) ->
+            current_result = Enum.map(acc, fn n -> n ++ [x] end)
+            {current_result, acc ++ current_result}
+        end))
+            |> Stream.map(fn x -> x end)
     end
 
-    def powerset(list) do
-        case list |> Stream.take(1) |> Enum.to_list |> List.first do
-            nil -> []
-        end
-    end
+    def shape_like(a, b) when Functions.is_iterable(a) and Functions.is_iterable(b), do: a |> Stream.cycle |> Stream.take(length(Enum.to_list b))
+    def shape_like(a, b) when Functions.is_iterable(a), do: a |> Stream.cycle |> Stream.take(Functions.to_number(b))
+    def shape_like(a, b), do: Enum.join(shape_like(Functions.to_list(a), b), "")
 
     def cartesian(a, b) do
         cond do

@@ -37,6 +37,8 @@ defmodule SpecialOpsTest do
         assert evaluate("5LʒÈ") == [2, 4]
         assert evaluate("10Lʒ3%>") == [3, 6, 9]
         assert evaluate("∞ʒ3%>}10£") == [3, 6, 9, 12, 15, 18, 21, 24, 27, 30]
+        assert evaluate("12345ʒÈ") == "24"
+        assert evaluate("12345ïʒÈ") == "24"
     end
 
     test "for each program" do
@@ -153,5 +155,13 @@ defmodule SpecialOpsTest do
 
     test "evaluate 05AB1E code" do
         assert evaluate("\"2 3+\".V") == 5
+    end
+
+    test "global array" do
+        assert evaluate("2ˆ)") == []
+        assert evaluate("2ˆ¯ï") == [2]
+        assert evaluate("2ˆ3ˆ5ˆ¯ï") == [2, 3, 5]
+        assert evaluate("2ˆ3ˆ5ˆ´¯") == []
+        assert evaluate("2ˆ3ˆ5ˆ´7ˆ¯ï") == [7]
     end
 end

@@ -1,5 +1,6 @@
 defmodule Commands.IntCommands do
 
+    use Memoize
     alias Interp.Functions
     alias Commands.GeneralCommands
     require Interp.Functions
@@ -184,6 +185,16 @@ defmodule Commands.IntCommands do
     def prime_exponents(value, acc, _, count) when value < 2, do: Enum.reverse [count | acc]
     def prime_exponents(value, acc, index, count) when rem(value, index) == 0, do: prime_exponents(div(value, index), acc, index, count + 1)
     def prime_exponents(value, acc, index, count), do: prime_exponents(value, [count | acc], next_prime(index), 0)
+
+    @doc """
+    Computes and retrieves the nth prime where n is the given parameter.
+    Uses the defmemo in order to memoize the sequence.
+    """
+    defmemo nth_prime(0), do: 2
+    defmemo nth_prime(n) when n < 0, do: 0
+    defmemo nth_prime(n) when n > 0, do: nth_prime(n, 2)
+    defmemo nth_prime(0, last_prime), do: last_prime
+    defmemo nth_prime(n, last_prime), do: nth_prime(n - 1, next_prime(last_prime))
 
     def divisors(value), do: divisors(abs(value), [], trunc(:math.sqrt(abs(value))))
     defp divisors(_, acc, 0), do: acc

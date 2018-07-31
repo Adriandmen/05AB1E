@@ -5,6 +5,21 @@ defmodule Interp.Functions do
         quote do: is_map(unquote(value)) or is_list(unquote(value))
     end
 
+    @doc """
+    Checks whether the given value is 'single', which means that it is
+    either an integer/float/string. Since the only types allowed by 05AB1E are the following:
+
+     - integer
+     - float
+     - string
+     - iterable (enum/stream)
+
+    We only need to check whether the given value is not iterable.
+    """
+    defmacro is_single?(value) do
+        quote do: not (is_map(unquote(value)) or is_list(unquote(value)))
+    end
+
     # ----------------
     # Value conversion
     # ----------------
@@ -61,6 +76,13 @@ defmodule Interp.Functions do
             _ when is_integer(value) -> to_string(value)
             _ when is_map(value) -> Enum.map(value, &to_str/1)
             _ -> value
+        end
+    end
+
+    def to_list(value) do
+        cond do
+            is_iterable(value) -> value
+            true -> String.graphemes(to_string(value))
         end
     end
 

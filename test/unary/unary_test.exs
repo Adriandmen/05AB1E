@@ -698,7 +698,30 @@ defmodule UnaryTest do
         assert evaluate("\"3 + 4\" \"8 + 2\").E") == [7, 10]
     end
 
+    test "nth prime" do
+        assert evaluate("0Ø") == 2
+        assert evaluate("2Ø") == 5
+        assert evaluate("5ÝØ") == [2, 3, 5, 7, 11, 13]
+    end
+    
+    test "get minimum" do
+        assert evaluate("12345Sß") == 1
+        assert evaluate("12345ß") == 1
+        assert evaluate("56S21S34S)ß") == 1
+    end
+    
+    test "get maximum" do
+        assert evaluate("12345Sà") == 5
+        assert evaluate("12345à") == 5
+        assert evaluate("34S25S13S)à") == 5
+    end
+
     test "powerset" do
-        # assert evaluate("3Læ") == [[], [1], [2], [1, 2]]
+        assert evaluate(")æ") == [[]]
+        assert evaluate("1Læ") == [[], [1]]
+        assert evaluate("3Læ") == [[], [1], [2], [1, 2], [3], [1, 3], [2, 3], [1, 2, 3]]
+        assert evaluate("∞æ9£") == [[], [1], [2], [1, 2], [3], [1, 3], [2, 3], [1, 2, 3], [4]]
+        assert evaluate("123æ") == ["", "1", "2", "12", "3", "13", "23", "123"]
+        assert evaluate("\"\"æ") == [""]
     end
 end

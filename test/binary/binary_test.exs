@@ -463,4 +463,25 @@ defmodule BinaryTest do
         assert evaluate("5L 23S.x") == [2, 3]
         assert evaluate(") 2.x") == []
     end
+
+    test "levenshtein distance" do
+        assert evaluate("123456 133456.L") == 1
+        assert evaluate("13456 133456.L") == 1
+        assert evaluate("12323123211233 32112122233123.L") == 8
+    end
+
+    test "shape like" do
+        assert evaluate("5L 3∍") == [1, 2, 3]
+        assert evaluate("5L 10∍") == [1, 2, 3, 4, 5, 1, 2, 3, 4, 5]
+        assert evaluate("5L 7L∍") == [1, 2, 3, 4, 5, 1, 2]
+        assert evaluate("12345 3∍") == "123"
+        assert evaluate("12345 10∍") == "1234512345"
+        assert evaluate("12345 7L∍") == "1234512"
+    end
+
+    test "intersperse" do
+        assert evaluate("3L 0ï.ý") == [1, 0, 2, 0, 3]
+        assert evaluate("∞ 0ï.ý 8£") == [1, 0, 2, 0, 3, 0, 4, 0]
+        assert evaluate("12345 0ï.ýï") == [1, 0, 2, 0, 3, 0, 4, 0, 5]
+    end
 end

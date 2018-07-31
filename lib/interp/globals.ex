@@ -1,12 +1,15 @@
 defmodule Interp.GlobalEnvironment do
+    alias Interp.Canvas
+
     defstruct counter_variable: 0,
-              canvas: nil,              # TODO: create canvas module
+              canvas: %Canvas{},              # TODO: create canvas module
               x: 1,
               y: 2,
               z: 3,
               c: -1,
               inputs: [],
               status: :ok,
+              array: [],
               printed: false
 end
 
