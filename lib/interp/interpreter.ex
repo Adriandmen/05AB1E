@@ -538,9 +538,21 @@ defmodule Interp.Interpreter do
             # 2-arity map for each
             "δ" ->
                 {b, stack} = Stack.pop(stack)
+                b = cond do
+                    is_iterable(b) -> b
+                    is_integer(to_number(b)) -> 1..to_number(b)
+                    true -> String.graphemes(to_string(b))
+                end
+
                 {a, stack} = Stack.pop(stack)
-                result = a |> Stream.map(fn y -> Stream.map(b, fn x ->
-                    {result_stack, _} = interp(subcommands, %Stack{elements: [x, y]}, environment)
+                a = cond do
+                    is_iterable(a) -> a
+                    is_integer(to_number(a)) -> 1..to_number(a)
+                    true -> String.graphemes(to_string(a))
+                end
+
+                result = a |> Stream.with_index |> Stream.map(fn {y, y_index} -> Stream.map(b |> Stream.with_index, fn {x, x_index} ->
+                    {result_stack, _} = interp(subcommands, %Stack{elements: [x, y]}, %{environment | range_variable: [x_index, y_index], range_element: [x, y]})
                     {result_elem, _} = Stack.pop(result_stack)
                     result_elem end)
                 end)

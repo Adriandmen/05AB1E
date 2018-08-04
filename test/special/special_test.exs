@@ -75,6 +75,9 @@ defmodule SpecialOpsTest do
 
     test "2-arity map command for each" do
         assert evaluate("5L3Lδ+") == [[2, 3, 4], [3, 4, 5], [4, 5, 6], [5, 6, 7], [6, 7, 8]]
+        assert evaluate("5L3LδN") == [[[0, 0], [1, 0], [2, 0]], [[0, 1], [1, 1], [2, 1]], [[0, 2], [1, 2], [2, 2]], [[0, 3], [1, 3], [2, 3]], [[0, 4], [1, 4], [2, 4]]]
+        assert evaluate("5 3δ+") == [[2, 3, 4], [3, 4, 5], [4, 5, 6], [5, 6, 7], [6, 7, 8]]
+        assert evaluate("\"abc\" \"def\"δ«") == [["ad", "ae", "af"], ["bd", "be", "bf"], ["cd", "ce", "cf"]]
         assert evaluate("3L5Lδ+") == [[2, 3, 4, 5, 6], [3, 4, 5, 6, 7], [4, 5, 6, 7, 8]]
         assert evaluate("3L5LδF>}2+") == [[4, 5, 6, 7, 8], [5, 6, 7, 8, 9], [6, 7, 8, 9, 10]]
     end

@@ -28,6 +28,15 @@ defmodule BinaryTest do
         assert evaluate("3LL 3+") == [[4], [4, 5], [4, 5, 6]]
     end
 
+    test "absolute difference" do
+        assert evaluate("3 4α") == 1
+        assert evaluate("3 4.5α") == 1.5
+        assert evaluate("5 2.5(α") == 7.5
+        assert evaluate("4 3α") == 1
+        assert evaluate("4 3(α") == 7
+        assert evaluate("4L 3(α") == [4, 5, 6, 7]
+    end
+
     test "convert to base" do
         assert evaluate("55 2B") == "110111"
         assert evaluate("5545646 47B") == "16JMM"
@@ -43,6 +52,9 @@ defmodule BinaryTest do
 
     test "convert from base arbitrary" do
         assert evaluate("1 1 0 1 1 1) 2 β") == 55
+        assert evaluate("1 1 0 1 1 1) 23S β") == [55, 337]
+        assert evaluate("1 1 0 1 1 1) 2.5 β") == 146.46875
+        assert evaluate("1 1.5 0 1 1 1) 2.5 β") == 166
         assert evaluate("1 6 19 22 22) 47 β") == 5545646
         assert evaluate("1 6 6 7 2 1 3 3 6) 8( β") == 5545646
     end
@@ -474,6 +486,7 @@ defmodule BinaryTest do
         assert evaluate("5L 3∍") == [1, 2, 3]
         assert evaluate("5L 10∍") == [1, 2, 3, 4, 5, 1, 2, 3, 4, 5]
         assert evaluate("5L 7L∍") == [1, 2, 3, 4, 5, 1, 2]
+        assert evaluate("5L \"abcdefg\"∍") == [1, 2, 3, 4, 5, 1, 2]
         assert evaluate("12345 3∍") == "123"
         assert evaluate("12345 10∍") == "1234512345"
         assert evaluate("12345 7L∍") == "1234512"

@@ -432,6 +432,7 @@ defmodule UnaryTest do
 
     test "group equal" do
         assert evaluate("11223344γ") == ["11", "22", "33", "44"]
+        assert evaluate("11223344ïγ") == ["11", "22", "33", "44"]
         assert evaluate("11223344Sïγ") == [[1, 1], [2, 2], [3, 3], [4, 4]]
         assert evaluate("∞€Dγ4£") == [[1, 1], [2, 2], [3, 3], [4, 4]]
     end
