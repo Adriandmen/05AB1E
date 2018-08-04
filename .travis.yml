@@ -6,6 +6,7 @@ elixir: '1.6.4'
 sudo: false
 
 script:
+  - mix deps.get
   - MIX_ENV=test mix do compile, coveralls.json
 
 after_success:
