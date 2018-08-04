@@ -28,6 +28,12 @@ defmodule BinaryTest do
         assert evaluate("3LL 3+") == [[4], [4, 5], [4, 5, 6]]
     end
 
+    test "difference" do
+        assert evaluate("4 5-") == -1
+        assert evaluate("4( 5-") == -9
+        assert evaluate("4( 5(-") == 1
+    end
+
     test "absolute difference" do
         assert evaluate("3 4α") == 1
         assert evaluate("3 4.5α") == 1.5
@@ -496,5 +502,14 @@ defmodule BinaryTest do
         assert evaluate("3L 0ï.ý") == [1, 0, 2, 0, 3]
         assert evaluate("∞ 0ï.ý 8£") == [1, 0, 2, 0, 3, 0, 4, 0]
         assert evaluate("12345 0ï.ýï") == [1, 0, 2, 0, 3, 0, 4, 0, 5]
+    end
+    
+    test "non-vectorizing equals" do
+        assert evaluate("123 123.Q") == 1
+        assert evaluate("123 124.Q") == 0
+        assert evaluate("123S 1.Q") == 0
+        assert evaluate("123S 123.Q") == 0
+        assert evaluate("123S 123S.Q") == 1
+        assert evaluate("123S 123Sï.Q") == 1
     end
 end

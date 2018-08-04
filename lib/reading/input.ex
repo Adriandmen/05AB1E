@@ -12,6 +12,7 @@ defmodule Reading.InputHandler do
         end
 
         cond do
+            input == :eof and Globals.get().inputs == [] -> nil
             input == :eof -> 
                 [head | _] = Globals.get().inputs
                 head

@@ -188,4 +188,15 @@ defmodule Commands.StrCommands do
     def vertical_mirror(list) do
         list ++ (list |> Enum.to_list |> Enum.reverse |> Enum.map(fn x -> x |> transliterate("\\/", "/\\") end))
     end
+
+    def mirror(list) when Functions.is_iterable(list) do
+        list |> Stream.map(fn x -> if Functions.is_iterable(x) do x ++ (x |> Enum.to_list |> Enum.reverse |> transliterate("<>{}()[]\\/", "><}{)(][/\\")) else mirror(x) end end)
+    end
+    def mirror(string) do
+        string = to_string(string)
+        cond do
+            String.contains?(string, "\n") -> Enum.join(mirror(String.split(string, "\n")), "\n")
+            true -> string <> (string |> String.reverse |> transliterate("<>{}()[]\\/", "><}{)(][/\\"))
+        end 
+    end
 end

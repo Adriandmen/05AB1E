@@ -14,8 +14,8 @@ defmodule TestHelper do
 
     def evaluate(code) do
         parsed_code = Parser.parse(Reader.read(code))
-        {stack, _} = Interpreter.interp(parsed_code, %Stack{}, %Environment{})
-        {result, _} = Stack.pop(stack)
+        {stack, environment} = Interpreter.interp(parsed_code, %Stack{}, %Environment{})
+        {result, _, _} = Stack.pop(stack, environment)
 
         assert is_map(result) or is_number(result) or is_bitstring(result) or is_list(result)
 

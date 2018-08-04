@@ -1,8 +1,14 @@
 defmodule Interp.Environment do
-    alias Reading.InputHandler
-
     defstruct range_variable: 0,
-              range_element: ""
+              range_element: "",
+              recursive_environment: nil
+end
+
+
+defmodule Interp.RecursiveEnvironment do
+    defstruct subprogram: nil,
+              base_cases: nil,
+              popped: 0
 end
 
 
@@ -26,10 +32,10 @@ defmodule Interp.Interpreter do
         new_stack = case op do
             "∞" -> Stack.push(stack, ListCommands.listify(1, :infinity))
             "т" -> Stack.push(stack, 100)
-            "₁" -> Stack.push(stack, 256)
-            "₂" -> Stack.push(stack, 26)
-            "₃" -> Stack.push(stack, 95)
-            "₄" -> Stack.push(stack, 1000)
+            "₁" -> Stack.push(stack, if environment.recursive_environment == nil do 256 else GeneralCommands.recursive_program(environment.recursive_environment.subprogram, environment.recursive_environment.base_cases, environment.range_variable - 1) end)
+            "₂" -> Stack.push(stack, if environment.recursive_environment == nil do 26 else GeneralCommands.recursive_program(environment.recursive_environment.subprogram, environment.recursive_environment.base_cases, environment.range_variable - 2) end)
+            "₃" -> Stack.push(stack, if environment.recursive_environment == nil do 95 else GeneralCommands.recursive_program(environment.recursive_environment.subprogram, environment.recursive_environment.base_cases, environment.range_variable - 3) end)
+            "₄" -> Stack.push(stack, if environment.recursive_environment == nil do 1000 else GeneralCommands.recursive_program(environment.recursive_environment.subprogram, environment.recursive_environment.base_cases, environment.range_variable - 4) end)
             "A" -> Stack.push(stack, "abcdefghijklmnopqrstuvwxyz")
             "T" -> Stack.push(stack, 10)
             "®" -> Stack.push(stack, Globals.get().c)
@@ -102,7 +108,7 @@ defmodule Interp.Interpreter do
     end
 
     def interp_unary(op, stack, environment) do
-        {a, stack} = Stack.pop(stack)
+        {a, stack, environment} = Stack.pop(stack, environment)
         new_stack = case op do
             ">" -> Stack.push(stack, call_unary(fn x -> to_number(x) + 1 end, a))
             "<" -> Stack.push(stack, call_unary(fn x -> to_number(x) - 1 end, a))
@@ -175,6 +181,7 @@ defmodule Interp.Interpreter do
            ".r" -> Stack.push(stack, if is_iterable(a) do Enum.shuffle(Enum.to_list(a)) else Enum.join(Enum.shuffle(String.graphemes(to_string(a))), "") end)
            ".¥" -> Stack.push(stack, ListCommands.undelta(a))
             "é" -> Stack.push(stack, a |> Enum.sort_by(fn x -> GeneralCommands.length_of(x) end))
+            "º" -> Stack.push(stack, StrCommands.mirror(a))
             "í" -> Stack.push(stack, a |> Stream.map(fn x -> if is_iterable(x) do Enum.to_list(x) |> Enum.reverse else String.reverse(to_string(x)) end end))
             "Ω" -> Stack.push(stack, if is_iterable(a) do Enum.random(Enum.to_list(a)) else Enum.random(String.graphemes(to_string(a))) end)
             "æ" -> Stack.push(stack, if is_iterable(a) do ListCommands.powerset(a) else ListCommands.powerset(String.graphemes(to_string(a))) |> Enum.map(fn x -> Enum.join(x, "") end) end)
@@ -185,6 +192,7 @@ defmodule Interp.Interpreter do
             "Œ" -> Stack.push(stack, ListCommands.substrings(a))
             "γ" -> Stack.push(stack, ListCommands.group_equal(a))
            ".s" -> Stack.push(stack, ListCommands.suffixes(a))
+           ".ā" -> Stack.push(stack, ListCommands.enumerate_inner(a))
             "á" -> Stack.push(stack, StrCommands.keep_letters(to_non_number(a)))
             "þ" -> Stack.push(stack, StrCommands.keep_digits(to_non_number(a)))
             "Ô" -> Stack.push(stack, ListCommands.deduplicate(a))
@@ -233,8 +241,8 @@ defmodule Interp.Interpreter do
     end
 
     def interp_binary(op, stack, environment) do
-        {b, stack} = Stack.pop(stack)
-        {a, stack} = Stack.pop(stack)
+        {b, stack, environment} = Stack.pop(stack, environment)
+        {a, stack, environment} = Stack.pop(stack, environment)
 
         new_stack = case op do
             "α" -> Stack.push(stack, call_binary(fn x, y -> abs(to_number(x) - to_number(y)) end, a, b))
@@ -279,6 +287,7 @@ defmodule Interp.Interpreter do
            ".ý" -> Stack.push(stack, to_list(a) |> Stream.intersperse(b) |> Stream.map(fn x -> x end))
            ".o" -> Stack.push(stack, StrCommands.overlap(a, b))
            ".ø" -> Stack.push(stack, ListCommands.surround(a, b))
+           ".Q" -> Stack.push(stack, to_number(GeneralCommands.equals(a, b)))
             "Û" -> Stack.push(stack, ListCommands.remove_leading(a, b))
             "Ü" -> Stack.push(stack, ListCommands.remove_trailing(a, b))
             "∍" -> Stack.push(stack, ListCommands.shape_like(a, b))
@@ -301,9 +310,9 @@ defmodule Interp.Interpreter do
     end
 
     def interp_ternary(op, stack, environment) do
-        {c, stack} = Stack.pop(stack)
-        {b, stack} = Stack.pop(stack)
-        {a, stack} = Stack.pop(stack)
+        {c, stack, environment} = Stack.pop(stack, environment)
+        {b, stack, environment} = Stack.pop(stack, environment)
+        {a, stack, environment} = Stack.pop(stack, environment)
 
         new_stack = case op do
             "ǝ" -> Stack.push(stack, call_ternary(fn x, y, z -> StrCommands.insert_at(x, y, z) end, a, b, c, true, true, true))
@@ -323,7 +332,7 @@ defmodule Interp.Interpreter do
             "r" -> 
                 {%Stack{elements: stack.elements |> Enum.reverse}, environment}
             "©" ->
-                {a, _} = Stack.pop(stack)
+                {a, _, environment} = Stack.pop(stack, environment)
                 Globals.set(%{Globals.get() | c: a})
                 {stack, environment}
             "¹" -> 
@@ -339,7 +348,7 @@ defmodule Interp.Interpreter do
             "$" -> {Stack.push(Stack.push(stack, 1), InputHandler.read_input()), environment}
             "Î" -> {Stack.push(Stack.push(stack, 0), InputHandler.read_input()), environment}
             "#" ->
-                {element, new_stack} = Stack.pop(stack)
+                {element, new_stack, environment} = Stack.pop(stack, environment)
                 cond do
                     is_iterable(element) or String.contains?(to_string(element), " ") -> {Stack.push(new_stack, ListCommands.split_on(element, " ")), environment}
                     GeneralCommands.equals(to_number(element), 1) ->
@@ -350,48 +359,48 @@ defmodule Interp.Interpreter do
                 end
             "M" ->
                 if length(stack.elements) == 0 do
-                    {a, stack} = Stack.pop(stack)
+                    {a, stack, environment} = Stack.pop(stack, environment)
                     {Stack.push(stack, IntCommands.max_of(stack.elements)), environment}
                 else
                     {Stack.push(stack, IntCommands.max_of(stack.elements)), environment}
                 end
             "ã" -> 
-                {b, stack} = Stack.pop(stack)
+                {b, stack, environment} = Stack.pop(stack, environment)
                 if is_iterable(b) do
                     {Stack.push(stack, ListCommands.cartesian_repeat(b, 2)), environment}
                 else
-                    {a, stack} = Stack.pop(stack)
+                    {a, stack, environment} = Stack.pop(stack, environment)
                     {Stack.push(stack, call_binary(fn x, y -> ListCommands.cartesian_repeat(x, to_number(y)) end, a, b, true, false)), environment}
                 end
             "Ÿ" -> 
-                {b, stack} = Stack.pop(stack)
+                {b, stack, environment} = Stack.pop(stack, environment)
                 if is_iterable(b) do 
                     {Stack.push(stack, ListCommands.rangify(to_number(b))), environment} 
                 else 
-                    {a, stack} = Stack.pop(stack)
+                    {a, stack, environment} = Stack.pop(stack, environment)
                     {Stack.push(stack, to_number(a)..to_number(b)), environment}
                 end
             "ø" -> 
-                {b, stack} = Stack.pop(stack)
+                {b, stack, environment} = Stack.pop(stack, environment)
                 if is_iterable(b) and is_iterable(List.first(Enum.take(b, 1))) do 
                     {Stack.push(stack, ListCommands.zip(b)), environment}
                 else
-                    {a, stack} = Stack.pop(stack)
+                    {a, stack, environment} = Stack.pop(stack, environment)
                     {Stack.push(stack, ListCommands.zip(a, b)), environment}
                 end
             "ζ" ->
-                {c, stack} = Stack.pop(stack)
+                {c, stack, environment} = Stack.pop(stack, environment)
                 if is_iterable(c) and is_iterable(List.first(Enum.take(c, 1))) do
                     {Stack.push(stack, ListCommands.zip_with_filler(c, " ")), environment}
                 else
-                    {b, stack} = Stack.pop(stack)
+                    {b, stack, environment} = Stack.pop(stack, environment)
                     if is_iterable(c) and is_iterable(b) do
                         {Stack.push(stack, ListCommands.zip_with_filler(b, c, " ")), environment}
                     else 
                         if is_iterable(b) and is_iterable(List.first(Enum.take(b, 1))) do
                             {Stack.push(stack, ListCommands.zip_with_filler(b, c)), environment}
                         else
-                            {a, stack} = Stack.pop(stack)
+                            {a, stack, environment} = Stack.pop(stack, environment)
                             result = cond do
                                 not is_iterable(a) and not is_iterable(b) -> ListCommands.zip_with_filler(a, b, c) |> Stream.map(fn x -> Enum.join(Enum.to_list(x), "") end)
                                 true -> ListCommands.zip_with_filler(a, b, c)
@@ -401,32 +410,48 @@ defmodule Interp.Interpreter do
                     end
                 end
             "ι" ->
-                {b, stack} = Stack.pop(stack)
+                {b, stack, environment} = Stack.pop(stack, environment)
                 if is_iterable(b) do
                     {Stack.push(stack, ListCommands.extract_every(b, 2)), environment}
                 else
-                    {a, stack} = Stack.pop(stack)
+                    {a, stack, environment} = Stack.pop(stack, environment)
                     {Stack.push(stack, ListCommands.extract_every(a, to_number(b))), environment}
                 end
             "¿" ->
-                {b, stack} = Stack.pop(stack)
+                {b, stack, environment} = Stack.pop(stack, environment)
                 if is_iterable(b) do
                     {Stack.push(stack, Enum.reduce(to_number(b), &IntCommands.gcd_of/2)), environment}
                 else
-                    {a, stack} = Stack.pop(stack)
+                    {a, stack, environment} = Stack.pop(stack, environment)
                     {Stack.push(stack, IntCommands.gcd_of(to_number(a), to_number(b))), environment}
                 end
             ".¿" ->
-                {b, stack} = Stack.pop(stack)
+                {b, stack, environment} = Stack.pop(stack, environment)
                 if is_iterable(b) do
                     {Stack.push(stack, Enum.reduce(to_number(b), &IntCommands.lcm_of/2)), environment}
                 else
-                    {a, stack} = Stack.pop(stack)
+                    {a, stack, environment} = Stack.pop(stack, environment)
                     {Stack.push(stack, IntCommands.lcm_of(to_number(a), to_number(b))), environment}
                 end
             ".V" ->
-                {a, stack} = Stack.pop(stack)
+                {a, stack, environment} = Stack.pop(stack, environment)
                 interp(Parser.parse(Reader.read(to_string(a))), stack, environment)
+            "₅" ->
+                if environment.recursive_environment == nil do
+                    {Stack.push(stack, 255), environment}
+                else
+                    {a, stack, environment} = Stack.pop(stack, environment)
+                    result = GeneralCommands.recursive_program(environment.recursive_environment.subprogram, environment.recursive_environment.base_cases, to_number(a))
+                    {Stack.push(stack, result), environment}
+                end
+            "₆" ->
+                if environment.recursive_environment == nil do
+                    {Stack.push(stack, 36), environment}
+                else
+                    {a, stack, environment} = Stack.pop(stack, environment)
+                    result = GeneralCommands.recursive_program(environment.recursive_environment.subprogram, environment.recursive_environment.base_cases, environment.range_variable - to_number(a))
+                    {Stack.push(stack, result), environment}
+                end
         end
     end
 
@@ -434,21 +459,21 @@ defmodule Interp.Interpreter do
         case op do
             # For N in range [0, n)
             "F" ->
-                {a, stack} = Stack.pop(stack)
+                {a, stack, environment} = Stack.pop(stack, environment)
                 current_n = environment.range_variable
                 {new_stack, new_env} = GeneralCommands.loop(subcommands, stack, environment, 0, to_number(a) - 1)
                 {new_stack, %{new_env | range_variable: current_n}}
 
             # For N in range [1, n)
             "G" ->
-                {a, stack} = Stack.pop(stack)
+                {a, stack, environment} = Stack.pop(stack, environment)
                 current_n = environment.range_variable
                 {new_stack, new_env} = GeneralCommands.loop(subcommands, stack, environment, 1, to_number(a) - 1)
                 {new_stack, %{new_env | range_variable: current_n}}
 
             # For N in range [0, n]
             "ƒ" ->
-                {a, stack} = Stack.pop(stack)
+                {a, stack, environment} = Stack.pop(stack, environment)
                 current_n = environment.range_variable
                 {new_stack, new_env} = GeneralCommands.loop(subcommands, stack, environment, 0, to_number(a))
                 {new_stack, %{new_env | range_variable: current_n}}
@@ -461,7 +486,7 @@ defmodule Interp.Interpreter do
             
             # Iterate through string
             "v" ->
-                {a, stack} = Stack.pop(stack)
+                {a, stack, environment} = Stack.pop(stack, environment)
                 current_n = environment.range_variable
                 current_y = environment.range_element
                 {new_stack, new_env} = GeneralCommands.loop(subcommands, stack, environment, 0, if is_iterable(a) do a else to_non_number(a) end)
@@ -469,12 +494,12 @@ defmodule Interp.Interpreter do
 
             # Filter by
             "ʒ" ->
-                {a, stack} = Stack.pop(stack)
+                {a, stack, environment} = Stack.pop(stack, environment)
                 result = to_list(a)
                         |> Stream.with_index 
                         |> Stream.transform(environment, fn ({x, index}, curr_env) ->
                             {result_stack, new_env} = interp(subcommands, %Stack{elements: [x]}, %{curr_env | range_variable: index, range_element: x})
-                            {result, _} = Stack.pop(result_stack)
+                            {result, _, new_env} = Stack.pop(result_stack, new_env)
                             case to_number(result) do
                                 1 -> {[x], new_env}
                                 _ -> {[], new_env}
@@ -490,24 +515,24 @@ defmodule Interp.Interpreter do
             
             # Map for each
             "ε" ->
-                {a, stack} = Stack.pop(stack)
+                {a, stack, environment} = Stack.pop(stack, environment)
                 result = a
                         |> Stream.with_index
                         |> Stream.transform(environment, fn ({x, index}, curr_env) ->
                             {result_stack, new_env} = interp(subcommands, %Stack{elements: [x]}, %{curr_env | range_variable: index, range_element: x})
-                            {result, _} = Stack.pop(result_stack)
+                            {result, _, new_env} = Stack.pop(result_stack, new_env)
                             {[result], new_env} end)
                         |> Stream.map(fn x -> x end)
                 {Stack.push(stack, result), environment}
 
             # Sort by (finite lists only)
             "Σ" ->
-                {a, stack} = Stack.pop(stack)
+                {a, stack, environment} = Stack.pop(stack, environment)
                 result = a
                         |> Stream.with_index
                         |> Stream.transform(environment, fn ({x, index}, curr_env) ->
                             {result_stack, new_env} = interp(subcommands, %Stack{elements: [x]}, %{curr_env | range_variable: index, range_element: x})
-                            {result, _} = Stack.pop(result_stack)
+                            {result, _, new_env} = Stack.pop(result_stack, new_env)
                             {[{result, x}], new_env} end)
                         |> Enum.sort_by(fn {a, _} -> a end)
                         |> Stream.map(fn {_, x} -> x end)
@@ -515,18 +540,18 @@ defmodule Interp.Interpreter do
 
             # Run until a doesn't change
             "Δ" ->
-                {a, stack} = Stack.pop(stack)
+                {a, stack, environment} = Stack.pop(stack, environment)
                 {result, new_env} = GeneralCommands.run_while(a, subcommands, environment, 0)
                 {Stack.push(stack, result), new_env}
             
             # Counter variable loop
             "µ" ->
-                {a, stack} = Stack.pop(stack)
+                {a, stack, environment} = Stack.pop(stack, environment)
                 GeneralCommands.counter_loop(subcommands, stack, environment, 0, to_number(a))
             
             # Map for each
             "€" ->
-                {a, stack} = Stack.pop(stack)
+                {a, stack, environment} = Stack.pop(stack, environment)
                 result = a
                         |> Stream.with_index
                         |> Stream.transform(environment, fn ({x, index}, curr_env) ->
@@ -537,14 +562,14 @@ defmodule Interp.Interpreter do
             
             # 2-arity map for each
             "δ" ->
-                {b, stack} = Stack.pop(stack)
+                {b, stack, environment} = Stack.pop(stack, environment)
                 b = cond do
                     is_iterable(b) -> b
                     is_integer(to_number(b)) -> 1..to_number(b)
                     true -> String.graphemes(to_string(b))
                 end
 
-                {a, stack} = Stack.pop(stack)
+                {a, stack, environment} = Stack.pop(stack, environment)
                 a = cond do
                     is_iterable(a) -> a
                     is_integer(to_number(a)) -> 1..to_number(a)
@@ -553,14 +578,14 @@ defmodule Interp.Interpreter do
 
                 result = a |> Stream.with_index |> Stream.map(fn {y, y_index} -> Stream.map(b |> Stream.with_index, fn {x, x_index} ->
                     {result_stack, _} = interp(subcommands, %Stack{elements: [x, y]}, %{environment | range_variable: [x_index, y_index], range_element: [x, y]})
-                    {result_elem, _} = Stack.pop(result_stack)
+                    {result_elem, _, environment} = Stack.pop(result_stack, environment)
                     result_elem end)
                 end)
                 {Stack.push(stack, result), environment}
             
             # Pairwise command
             "ü" ->
-                {a, stack} = Stack.pop(stack)
+                {a, stack, environment} = Stack.pop(stack, environment)
                 result = case subcommands do
                     [{:number, number}] -> 
                         cond do
@@ -575,15 +600,30 @@ defmodule Interp.Interpreter do
                     _ -> a |> Stream.chunk_every(2, 1, :discard)
                            |> Stream.map(fn [x, y] ->
                                 {result_stack, _} = interp(subcommands, %Stack{elements: [x, y]}, environment)
-                                {result_elem, _} = Stack.pop(result_stack)
+                                {result_elem, _, _} = Stack.pop(result_stack, environment)
                                 result_elem end)
                 end
                 {Stack.push(stack, result), environment}
+            
+            # Recursive list generation
+            "λ" ->
+                {base_cases, stack, environment} = Stack.pop(stack, environment)
+                
+                # If there are no base cases specified, assume that a(0) = 1
+                base_cases = cond do
+                    base_cases == [] or base_cases == "" or base_cases == nil -> [1]
+                    is_iterable(base_cases) -> Enum.to_list to_number(base_cases)
+                    true -> Enum.to_list to_number(String.graphemes(to_string(base_cases)))
+                end
+                
+                result = ListCommands.listify(0, :infinity) |> Stream.map(fn x -> GeneralCommands.recursive_program(subcommands, base_cases, x) end)
+                {Stack.push(stack, result), environment}
+
         end
     end
     
     def interp_if_statement(if_statement, else_statement, stack, environment) do
-        {a, stack} = Stack.pop(stack)
+        {a, stack, environment} = Stack.pop(stack, environment)
         if GeneralCommands.equals(a, 1) do
             interp(if_statement, stack, environment)
         else
@@ -613,9 +653,9 @@ defmodule Interp.Interpreter do
 
         {elements, stack, environment} = Enum.reduce(Enum.slice(dissected_string, 0..-2), {[], stack, environment}, 
             fn (_, {acc, curr_stack, curr_env}) ->
-                case Stack.pop(curr_stack) do
+                case Stack.pop(curr_stack, curr_env) do
                     nil -> {acc, curr_stack, curr_env}
-                    {x, new_stack} -> {acc ++ [x], new_stack, curr_env}
+                    {x, new_stack, new_env} -> {acc ++ [x], new_stack, new_env}
                 end
             end)
 

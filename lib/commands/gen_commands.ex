@@ -1,9 +1,12 @@
 defmodule Commands.GeneralCommands do
 
+    use Memoize
     alias Interp.Functions
     alias Interp.Interpreter
     alias Interp.Stack
     alias Interp.Globals
+    alias Interp.Environment
+    alias Interp.RecursiveEnvironment
     alias Commands.ListCommands
     require Interp.Functions
     
@@ -74,7 +77,7 @@ defmodule Commands.GeneralCommands do
         cond do
             Functions.is_iterable(a) and not Functions.is_iterable(b) -> false
             not Functions.is_iterable(a) and Functions.is_iterable(b) -> false
-            true -> Functions.to_number(a) == Functions.to_number(b)
+            true -> Functions.eval(Functions.to_number(a)) == Functions.eval(Functions.to_number(b))
         end
     end
 
@@ -172,7 +175,7 @@ defmodule Commands.GeneralCommands do
 
     def run_while(prev_result, commands, environment, index) do
         {result_stack, new_env} = Interpreter.interp(commands, %Stack{elements: [prev_result]}, %{environment | range_variable: index, range_element: prev_result})
-        {result, _} = Stack.pop(result_stack)
+        {result, _, new_env} = Stack.pop(result_stack, new_env)
         cond do
             result == prev_result -> {result, new_env}
             true -> run_while(result, commands, new_env, index + 1)
@@ -192,6 +195,17 @@ defmodule Commands.GeneralCommands do
                 Globals.set(%{Globals.get() | status: :ok})
                 {stack, environment}
             :quit -> {stack, environment}
+        end
+    end
+
+    defmemo recursive_program(commands, base_cases, n) do
+        cond do
+            n < 0 -> 0
+            n < length(base_cases) -> Enum.at(base_cases, n)
+            true ->
+                {stack, new_env} = Interpreter.interp(commands, %Stack{elements: []}, %Environment{range_variable: n, recursive_environment: %RecursiveEnvironment{subprogram: commands, base_cases: base_cases}})
+                {head, _, _} = Stack.pop(stack, new_env)
+                head
         end
     end
 end

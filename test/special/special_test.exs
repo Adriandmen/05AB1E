@@ -167,4 +167,18 @@ defmodule SpecialOpsTest do
         assert evaluate("2ˆ3ˆ5ˆ´¯") == []
         assert evaluate("2ˆ3ˆ5ˆ´7ˆ¯ï") == [7]
     end
+
+    test "constants" do
+        assert evaluate("₁") == 256
+        assert evaluate("₂") == 26
+        assert evaluate("₃") == 95
+        assert evaluate("₄") == 1000
+    end
+
+    test "recursive list generation" do
+        assert evaluate("11λ+}5£") == [1, 1, 2, 3, 5]
+        assert evaluate("11Sλ+}5£") == [1, 1, 2, 3, 5]
+        assert evaluate("358Sλ₂₃+}5£") == [3, 5, 8, 8, 13]
+        assert evaluate("0λ₅₅Nα}10000è") == 6823
+    end
 end

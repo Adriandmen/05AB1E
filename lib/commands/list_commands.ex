@@ -25,7 +25,7 @@ defmodule Commands.ListCommands do
             a == :infinity ->
                 throw("Invalid head value for list. Value cannot be infinity.")
             b == :infinity ->
-                Stream.scan(Stream.cycle([1]), fn (_, y) -> y + 1 end)
+                Stream.scan(Stream.cycle([a]), fn (_, y) -> y + 1 end)
             true ->
                 a..b
         end
@@ -454,4 +454,7 @@ defmodule Commands.ListCommands do
             true -> cartesian_repeat(String.graphemes(to_string(value)), n) |> Stream.map(fn x -> Enum.join(Enum.to_list(x), "") end)
         end
     end
+
+    def enumerate_inner(list) when Functions.is_iterable(list), do: list |> Stream.with_index |> Stream.map(fn {element, index} -> [element, index] end)
+    def enumerate_inner(value), do: enumerate_inner(String.graphemes(to_string(value)))
 end

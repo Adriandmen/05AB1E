@@ -725,4 +725,17 @@ defmodule UnaryTest do
         assert evaluate("123æ") == ["", "1", "2", "12", "3", "13", "23", "123"]
         assert evaluate("\"\"æ") == [""]
     end
+
+    test "mirror" do
+        assert evaluate("\"((\"º") == "(())"
+        assert evaluate("\"(<[{123}]>)\"º") == "(<[{123}]>)(<[{321}]>)"
+        assert evaluate("\"(<\n{[\"º") == "(<>)\n{[]}"
+        assert evaluate("\"(< {[\"#º") == ["(<>)", "{[]}"]
+    end
+
+    test "enumerate inner" do
+        assert evaluate("123.ā") == [["1", 0], ["2", 1], ["3", 2]]
+        assert evaluate("3L.ā") == [[1, 0], [2, 1], [3, 2]]
+        assert evaluate("∞.ā3£") == [[1, 0], [2, 1], [3, 2]]
+    end
 end
