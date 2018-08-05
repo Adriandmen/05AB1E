@@ -29,4 +29,20 @@ defmodule Reading.InputHandler do
                 result
         end
     end
+
+    def read_until_newline() do
+        result = read_until_newline([]) |> Enum.reverse
+        global_env = Globals.get()
+        Globals.set(%{global_env | inputs: global_env.inputs ++ [result]})
+        result
+    end
+
+    defp read_until_newline(acc) do
+        input = IO.read(:stdio, :line)
+        cond do
+            input == :eof -> acc
+            input == "\n" -> acc
+            true -> read_until_newline([String.trim_trailing(input, "\n") | acc])
+        end
+    end
 end

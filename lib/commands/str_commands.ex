@@ -178,6 +178,20 @@ defmodule Commands.StrCommands do
         cond do
             String.contains?(string, "\n") -> Enum.join(mirror(String.split(string, "\n")), "\n")
             true -> string <> (string |> String.reverse |> transliterate("<>{}()[]\\/", "><}{)(][/\\"))
-        end 
+        end
     end
+
+    def intersected_mirror(list) when Functions.is_iterable(list) do
+        list |> Stream.map(fn x -> if Functions.is_iterable(x) do x ++ (x |> Enum.to_list |> Enum.drop(1) |> Enum.reverse |> transliterate("<>{}()[]\\/", "><}{)(][/\\")) else intersected_mirror(x) end end)
+    end
+    def intersected_mirror(string) do
+        string = to_string(string)
+        cond do
+            String.contains?(string, "\n") -> Enum.join(intersected_mirror(String.split(string, "\n")), "\n")
+            true -> string <> (string |> String.reverse |> String.slice(1..-1) |> transliterate("<>{}()[]\\/", "><}{)(][/\\"))
+        end
+    end
+
+    def leftpad_with(list, length, pad_char) when Functions.is_iterable(list), do: list |> Stream.map(fn x -> leftpad_with(x, length, pad_char) end)
+    def leftpad_with(string, length, pad_char), do: String.duplicate(pad_char, max(length - String.length(string), 0)) <> string
 end

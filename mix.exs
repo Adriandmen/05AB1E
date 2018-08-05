@@ -28,8 +28,8 @@ defmodule Osabie.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:excoveralls, "~> 0.9.1", only: :test},
-      {:memoize, "~> 1.2"}
+      {:memoize, "~> 1.2"},
+      {:excoveralls, "~> 0.9.1", only: :test}
     ]
   end
 

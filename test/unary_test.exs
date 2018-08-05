@@ -750,4 +750,14 @@ defmodule UnaryTest do
         assert evaluate("1 2 3 2 3 2 5 5).m") == "1"
         assert evaluate("433424343443.m") == "2"
     end
+
+    test "intersected mirror" do
+        assert evaluate("\"<<((:\".º") == "<<((:))>>"
+        assert evaluate("\"<<:\n((:\n:\".º") == "<<:>>\n((:))\n:"
+    end
+
+    test "cycle" do
+        assert evaluate("3LÞ10£") == [1, 2, 3, 1, 2, 3, 1, 2, 3, 1]
+        assert evaluate("123Þï10£") == [1, 2, 3, 1, 2, 3, 1, 2, 3, 1]
+    end
 end

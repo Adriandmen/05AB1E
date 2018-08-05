@@ -6,10 +6,10 @@ defmodule Reading.CodePage do
                        "±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëì" <>
                        "íîïðñòóôõö÷øùúûüýþÿ"
 
-    def code_points, do: String.codepoints(code_page())
+    def code_points, do: String.graphemes(code_page())
 
     def utf8_to_osabie(code_point) do
-        case Enum.at(code_points(), code_point) do
+        case Enum.find_index(code_points(), fn x -> x == code_point end) do
             nil -> IO.puts :stderr, "Unrecognized byte value: #{code_point}"
             val -> val
         end

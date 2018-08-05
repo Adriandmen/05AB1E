@@ -131,6 +131,9 @@ defmodule Commands.ListCommands do
     def take_last(value, count) when Functions.is_iterable(value), do: value |> Stream.take(-count) |> Stream.map(fn x -> x end)
     def take_last(value, count), do: Enum.join(take_last(String.graphemes(to_string(value)), count), "")
 
+    def drop_from(value, count) when Functions.is_iterable(value), do: value |> Stream.drop(count)
+    def drop_from(value, count), do: Enum.join(drop_from(String.graphemes(to_string(value)), count), "")
+
     def surround(value, element) when Functions.is_iterable(value) and Functions.is_iterable(element), do: Stream.concat([element, value, element]) |> Stream.map(fn x -> x end)
     def surround(value, element) when Functions.is_iterable(value), do: Stream.concat([[element], value, [element]]) |> Stream.map(fn x -> x end)
     def surround(value, element) when Functions.is_iterable(element), do: Stream.concat([element, String.graphemes(to_string(value)), element]) |> Stream.map(fn x -> x end)
@@ -170,6 +173,8 @@ defmodule Commands.ListCommands do
                 String.split(to_string(value), split_chars)
         end
     end
+
+    # def split_with(list, )
 
     def list_multiply(value, len) do
         cond do
@@ -457,4 +462,12 @@ defmodule Commands.ListCommands do
 
     def enumerate_inner(list) when Functions.is_iterable(list), do: list |> Stream.with_index |> Stream.map(fn {element, index} -> [element, index] end)
     def enumerate_inner(value), do: enumerate_inner(String.graphemes(to_string(value)))
+
+    # def divide_into(list, n) when is_number(n), do: divide_into(list, List.duplicate([], n))
+    # def divide_into([head | remaining], [head_acc]) do
+    #     [head_acc] ++ [head | remaining]
+    # end
+    # def divide_into([head | remaining], acc) do
+    #     divide_into(remaining, [head_acc ++ [head_acc] | remaining_acc]) ++ divide_into(remaining, [head_acc | ])
+    # end
 end

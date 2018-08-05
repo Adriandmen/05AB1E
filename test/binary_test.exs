@@ -518,4 +518,25 @@ defmodule BinaryTest do
         assert evaluate("0.128 2.ò") == 0.13
         assert evaluate("0.128 4.ò") == 0.128
     end
+    
+    test "pad with spaces" do
+        assert evaluate("123 5j") == "  123"
+        assert evaluate("1 23 456) 5j") == ["    1", "   23", "  456"]
+    end
+
+    test "non-vectorizing contains" do
+        assert evaluate("12345 3.å") == 1
+        assert evaluate("12345 6.å") == 0
+        assert evaluate("5L 3.å") == 1
+        assert evaluate("5L 6.å") == 0
+        assert evaluate("12S 23S 34S 45S)ï 34S.å") == 1
+        assert evaluate("12S 23S 34S 45S)ï 33S.å") == 0
+    end
+
+    test "drop from" do
+        assert evaluate("7L2.$") == [3, 4, 5, 6, 7]
+        assert evaluate("7L23S.$") == [[3, 4, 5, 6, 7], [4, 5, 6, 7]]
+        assert evaluate("1234567 2.$") == "34567"
+        assert evaluate("1234567 23S.$") == ["34567", "4567"]
+    end
 end

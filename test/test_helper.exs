@@ -17,8 +17,6 @@ defmodule TestHelper do
         {stack, environment} = Interpreter.interp(parsed_code, %Stack{}, %Environment{})
         {result, _, _} = Stack.pop(stack, environment)
 
-        assert is_map(result) or is_number(result) or is_bitstring(result) or is_list(result)
-
         final = Functions.eval(result)
         Globals.set(%GlobalEnvironment{})
         final
@@ -31,5 +29,15 @@ defmodule TestHelper do
         final = Canvas.canvas_to_string(Globals.get().canvas)
         Globals.set(%GlobalEnvironment{})
         final
+    end
+
+    def temporary_file, do: "test-file.abe"
+    def clean_up_file, do: (if File.exists?(temporary_file()) do File.rm(temporary_file()) end)
+    def file_test(test_function) do
+        try do
+            test_function.(temporary_file())
+        after
+            clean_up_file()
+        end
     end
 end

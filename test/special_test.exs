@@ -181,4 +181,16 @@ defmodule SpecialOpsTest do
         assert evaluate("358Sλ₂₃+}5£") == [3, 5, 8, 8, 13]
         assert evaluate("0λ₅₅Nα}10000è") == 6823
     end
+
+    test "group by function" do
+        assert evaluate("5L.γ4‹") == [[1, 2, 3], [4, 5]]
+        assert evaluate("12345.γ4‹") == ["123", "45"]
+        assert evaluate("∞.γ4÷}3£") == [[1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11]]
+    end
+
+    test "split with function" do
+        assert evaluate("5L.¡È") == [[1, 3, 5], [2, 4]]
+        assert evaluate("10L.¡3%") == [[1, 4, 7, 10], [2, 5, 8], [3, 6, 9]]
+        assert evaluate("∞.¡3%}0è4£") == [1, 4, 7, 10]
+    end
 end

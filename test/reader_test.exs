@@ -1,6 +1,30 @@
 defmodule ReaderTest do
     use ExUnit.Case
     alias Reading.Reader
+    alias Reading.CodePage
+
+    import ExUnit.CaptureIO
+    import TestHelper
+
+    test "utf8 to osabie encoding" do
+        assert CodePage.utf8_to_osabie("Γ") == 16
+        assert CodePage.utf8_to_osabie("λ") == 173
+        assert capture_io(:stderr, fn -> CodePage.utf8_to_osabie("物") end) == "Unrecognized byte value: 物\n"
+    end
+
+    test "osabie to utf8 encoding" do
+        assert CodePage.osabie_to_utf8(16) == "Γ"
+        assert CodePage.osabie_to_utf8(173) == "λ"
+        assert capture_io(:stderr, fn -> CodePage.osabie_to_utf8(399) end) == "Invalid osabie byte found: 399\n"
+    end
+
+    test "read utf8 encoded file" do
+        assert file_test(fn file -> File.write!(file, "5L€È3+"); Reader.read_file(file, :utf_8) end) == ["5", "L", "€", "È", "3", "+"]
+    end
+
+    test "read osabie encoded file" do
+        assert file_test(fn file -> File.write!(file, <<53, 76, 128, 200, 51, 43>>); Reader.read_file(file, :osabie) end) == ["5", "L", "€", "È", "3", "+"]
+    end
 
     test "read number from code" do
         assert Reader.read_step("123abc") == {:number, "123", "abc"}
@@ -171,8 +195,11 @@ defmodule ReaderTest do
         assert Reader.read_step("Ƶa") == {:number, 137, ""}
     end
 
-    @tag :wip
     test "read compressed alphabetic string" do
         assert Reader.read_step(".•Uÿ/õDÀтÂñ‚Δθñ8=öwÁβPb•") == {:string, "i want this string to be compressed", ""}
+    end
+
+    test "read compressed alphabetic string without end delimiter" do
+        assert Reader.read_step(".•Uÿ/õDÀтÂñ‚Δθñ8=öwÁβPb") == {:string, "i want this string to be compressed", ""}
     end
 end

@@ -24,20 +24,20 @@ defmodule Reading.Reader do
                                  ".e", ".E", ".j", ".J", ".l", ".M", ".m", ".N", ".p", ".R", ".r", ".s", ".u", 
                                  ".w", ".W", ".²", ".ï", ".ˆ", ".^", ".¼", ".½", ".¾", ".∞", ".¥", ".ǝ", ".∊", 
                                  ".Ø", "\\", "ā", "¤", "¥", "¬", "O", "P", "Z", "W", "»", "½", "=", "Ð", "ß", 
-                                 "à", "º", ".ā"]
+                                 "à", "º", ".ā", ".º"]
 
     def binary_ops, do: regexify ["α", "β", "в", "и", "м", "∍", "%", "&", "*", "+", "-", "/", "B", "K",
                                   "Q", "^", "c", "e", "k", "m", "s", "~", "‚", "†", "‰", "‹", "›", "¡", "¢",
                                   "£", "«", "Ã", "Ê", "Ï", "Ö", "×", "Û", "Ü", "Ý", "â", "ä", "å", "è",
                                   "ì", "ô", "ö", "÷", "ù", "ú", "ý", ".å", ".D", ".h", ".H", ".S", ".ø", ".o",
-                                  ".£", ".n", ".x", ".L", ".ý", ".Q", ".ò"]
+                                  ".£", ".n", ".x", ".L", ".ý", ".Q", ".ò", "j", ".$"]
     
     def ternary_ops, do: regexify ["ǝ", "Š", "‡", ":", "Λ"]
 
     def special_ops, do: regexify [")", "r", "©", "¹", "²", "³", "I", "$", "Î", "#", "Ÿ", "ø", "ζ", "ι", "¿", 
-                                   "ã", "M", ".¿", ".V", "₅", "₆"]
+                                   "ã", "M", ".¿", ".V", "₅", "₆", "|"]
     
-    def subprogram_ops, do: regexify ["ʒ", "ε", "Δ", "Σ", "F", "G", "v", "ƒ", "µ", "[", "i", "λ"]
+    def subprogram_ops, do: regexify ["ʒ", "ε", "Δ", "Σ", "F", "G", "v", "ƒ", "µ", "[", "i", "λ", ".γ", ".¡"]
     
     def subcommand_ops, do: regexify ["δ", "€", "ü", ".«", ".»"]
     
@@ -59,13 +59,12 @@ defmodule Reading.Reader do
     def any_osabie_char, do: regexify String.graphemes(CodePage.code_page)
     
     def read_file(file_path, encoding) do
-
         case encoding do
             :utf_8 -> 
                 String.codepoints(File.read!(file_path))
             :osabie -> 
                 {_, file} = :file.open(file_path, [:read, :binary])
-                Stream.map(IO.binread(file, :all), fn x -> CodePage.osabie_to_utf8(x) end)
+                IO.binread(file, :all) |> :binary.bin_to_list |> Enum.map(fn x -> CodePage.osabie_to_utf8(x) end)
         end
     end
 

@@ -272,4 +272,25 @@ defmodule Commands.IntCommands do
             euler_totient(value, index - 1, acc)
         end
     end
+
+    def continued_fraction(a, b) do
+        Stream.resource(
+            fn -> {1, a.(0), 1, a.(1) * a.(0) + b.(1), a.(1)} end,
+            fn {k, p0, q0, p1, q1} ->
+                {current_digit, k_new, p0_new, q0_new, p1_new, q1_new} = next_fraction_digit(a, b, k, p0, q0, p1, q1)
+                {[current_digit], {k_new, p0_new, q0_new, p1_new, q1_new}} end,
+            fn _ -> nil end)
+            |> Stream.map(fn x -> x end)
+    end
+    
+    defp next_fraction_digit(a, b, k, p0, q0, p1, q1) do
+        case {{div(p0, q0), mod(p0, q0)}, {div(p1, q1), mod(p1, q1)}} do
+            {{x, r0}, {x, r1}} -> {x, k, 10 * r0, q0, 10 * r1, q1}
+            _ ->
+                k = k + 1
+                x = a.(k)
+                y = b.(k)
+                next_fraction_digit(a, b, k, p1, q1, x * p1 + y * p0, x * q1 + y * q0)
+        end
+    end
 end
