@@ -170,4 +170,9 @@ defmodule ReaderTest do
     test "read compressed number char without remaining code" do
         assert Reader.read_step("Ƶa") == {:number, 137, ""}
     end
+
+    @tag :wip
+    test "read compressed alphabetic string" do
+        assert Reader.read_step(".•Uÿ/õDÀтÂñ‚Δθñ8=öwÁβPb•") == {:string, "i want this string to be compressed", ""}
+    end
 end

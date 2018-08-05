@@ -25,4 +25,15 @@ defmodule TernaryTest do
         assert evaluate("12 32) 2 3:ï") == [13, 33]
         assert evaluate("12 32) 2 3‚ 4 5‚:ï") == [14, 54]
     end
+
+    test "replace at index" do
+        assert evaluate("5L 10ï 2ǝ") == [1, 2, 10, 4, 5]
+        assert evaluate("5L 10ï 23Sǝ") == [1, 2, 10, 10, 5]
+        assert evaluate("10L \"80 90\"#ï 27Sǝ") == [1, 2, 80, 4, 5, 6, 7, 90, 9, 10]
+        assert evaluate("∞ \"80 90\"#ï 27Sǝ 10£") == [1, 2, 80, 4, 5, 6, 7, 90, 9, 10]
+        assert evaluate("5L 3L 2ǝ") == [1, 2, [1, 2, 3], 4, 5]
+        assert evaluate("123456 \"x\" 2ǝ") == "12x456"
+        assert evaluate("123456 \"x\" 23Sǝ") == "12xx56"
+        assert evaluate("123456 \"xy\"S 23Sǝ") == "12xy56"
+    end
 end

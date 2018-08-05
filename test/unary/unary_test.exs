@@ -738,4 +738,16 @@ defmodule UnaryTest do
         assert evaluate("3L.ā") == [[1, 0], [2, 1], [3, 2]]
         assert evaluate("∞.ā3£") == [[1, 0], [2, 1], [3, 2]]
     end
+
+    test "most frequent element" do
+        assert evaluate("1 2 3 2 3 2 5)ï.M") == 2
+        assert evaluate("1 2 3 2ï 3 2 5).M") == "2"
+        assert evaluate("32332112111112.M") == "1"
+    end
+
+    test "least frequent element" do
+        assert evaluate("1 2 3 2 3 2 5 5)ï.m") == 1
+        assert evaluate("1 2 3 2 3 2 5 5).m") == "1"
+        assert evaluate("433424343443.m") == "2"
+    end
 end

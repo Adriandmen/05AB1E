@@ -335,4 +335,16 @@ defmodule ParserTest do
             }
         ]
     end
+
+    test "recursive subprogram with self-reference" do
+        assert Parser.parse(Reader.read("12λ+λN£")) == [
+            {:number, "12"},
+            {:subprogram, "λ", [
+                {:binary_op, "+"},
+                {:nullary_op, "λ"}, 
+                {:nullary_op, "N"}, 
+                {:binary_op, "£"}
+            ]}
+        ]
+    end
 end

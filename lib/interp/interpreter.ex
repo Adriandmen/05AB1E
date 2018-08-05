@@ -233,6 +233,8 @@ defmodule Interp.Interpreter do
             "?" -> Output.print(a, false); stack
             "–" -> if GeneralCommands.equals(a, 1) do Output.print(environment.range_variable) end; stack
             "—" -> if GeneralCommands.equals(a, 1) do Output.print(environment.range_element) end; stack
+           ".M" -> a = to_list(a); Stack.push(stack, Enum.max_by(a, fn x -> Enum.count(a, fn y -> GeneralCommands.equals(x, y) end) end))
+           ".m" -> a = to_list(a); Stack.push(stack, Enum.min_by(a, fn x -> Enum.count(a, fn y -> GeneralCommands.equals(x, y) end) end))
            ".W" -> :timer.sleep(to_number(a)); stack
            "\\" -> stack
         end
@@ -284,6 +286,7 @@ defmodule Interp.Interpreter do
            ".n" -> Stack.push(stack, call_binary(fn x, y -> :math.log(to_number(x)) / :math.log(to_number(y)) end, a, b))
            ".x" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.closest_to(x, y) end, a, b, true, false))
            ".L" -> Stack.push(stack, call_binary(fn x, y -> StrCommands.levenshtein_distance(to_list(x), to_list(y)) end, a, b))
+           ".ò" -> Stack.push(stack, call_binary(fn x, y -> Float.round(to_number(x), to_number(y)) end, a, b))
            ".ý" -> Stack.push(stack, to_list(a) |> Stream.intersperse(b) |> Stream.map(fn x -> x end))
            ".o" -> Stack.push(stack, StrCommands.overlap(a, b))
            ".ø" -> Stack.push(stack, ListCommands.surround(a, b))
@@ -315,7 +318,7 @@ defmodule Interp.Interpreter do
         {a, stack, environment} = Stack.pop(stack, environment)
 
         new_stack = case op do
-            "ǝ" -> Stack.push(stack, call_ternary(fn x, y, z -> StrCommands.insert_at(x, y, z) end, a, b, c, true, true, true))
+            "ǝ" -> Stack.push(stack, StrCommands.replace_at(a, b, to_number(c)))
             "Š" -> Stack.push(Stack.push(Stack.push(stack, c), a), b)
             "‡" -> Stack.push(stack, StrCommands.transliterate(a, b, c))
             ":" -> Stack.push(stack, StrCommands.replace_infinite(a, b, c))
@@ -441,7 +444,7 @@ defmodule Interp.Interpreter do
                     {Stack.push(stack, 255), environment}
                 else
                     {a, stack, environment} = Stack.pop(stack, environment)
-                    result = GeneralCommands.recursive_program(environment.recursive_environment.subprogram, environment.recursive_environment.base_cases, to_number(a))
+                    result = call_unary(fn x -> GeneralCommands.recursive_program(environment.recursive_environment.subprogram, environment.recursive_environment.base_cases, to_number(x)) end, a)
                     {Stack.push(stack, result), environment}
                 end
             "₆" ->
@@ -449,7 +452,7 @@ defmodule Interp.Interpreter do
                     {Stack.push(stack, 36), environment}
                 else
                     {a, stack, environment} = Stack.pop(stack, environment)
-                    result = GeneralCommands.recursive_program(environment.recursive_environment.subprogram, environment.recursive_environment.base_cases, environment.range_variable - to_number(a))
+                    result = call_unary(fn x -> GeneralCommands.recursive_program(environment.recursive_environment.subprogram, environment.recursive_environment.base_cases, environment.range_variable - to_number(x)) end, a)
                     {Stack.push(stack, result), environment}
                 end
         end

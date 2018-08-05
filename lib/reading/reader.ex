@@ -3,10 +3,13 @@ defmodule Reading.Reader do
     alias Reading.CodePage
     alias Reading.Dictionary
     alias Commands.IntCommands
+
+    def remaining, do: "(?<remaining>.*)"
     
-    defp regexify(list) do
-        "(" <> Enum.join(Enum.map(list, fn x -> Regex.escape(x) end), "|") <> ")"
+    defp regexify(map) when is_map(map) do
+        map |> Map.to_list |> Enum.map(fn {open, close} -> ~r/((?<delimiter>#{Regex.escape(open)})(?<string>.*?)(#{Regex.escape(close)}|\z)#{remaining()})/s end)
     end
+    defp regexify(list) when is_list(list), do: "(" <> Enum.join(Enum.map(list, fn x -> Regex.escape(x) end), "|") <> ")"
     
     def nullary_ops, do: regexify ["∞", "т", "₁", "₂", "₃", "₄", "A", "®", "N", "y", "w", "¶", "õ", "X", "Y", 
                                    "¼", "¾", "q", "ð", ".À", ".Á", ".g", "¯", "´"]
@@ -27,7 +30,7 @@ defmodule Reading.Reader do
                                   "Q", "^", "c", "e", "k", "m", "s", "~", "‚", "†", "‰", "‹", "›", "¡", "¢",
                                   "£", "«", "Ã", "Ê", "Ï", "Ö", "×", "Û", "Ü", "Ý", "â", "ä", "å", "è",
                                   "ì", "ô", "ö", "÷", "ù", "ú", "ý", ".å", ".D", ".h", ".H", ".S", ".ø", ".o",
-                                  ".£", ".n", ".x", ".L", ".ý", ".Q"]
+                                  ".£", ".n", ".x", ".L", ".ý", ".Q", ".ò"]
     
     def ternary_ops, do: regexify ["ǝ", "Š", "‡", ":", "Λ"]
 
@@ -42,6 +45,8 @@ defmodule Reading.Reader do
     
     def string_delimiters, do: regexify ["\"", "•", "‘", "’", "“", "”"]
 
+    def two_char_strings, do: regexify %{".•" => "•"}
+
     def char_indicators, do: regexify ["'", "„", "…", "Ƶ"]
     
     def compressed_chars, do: regexify ["€", "‚", "ƒ", "„", "…", "†", "‡", "ˆ", "‰", "Š", "‹", "Œ", "Ž", "í", "î", "•", "–", "—", 
@@ -52,8 +57,6 @@ defmodule Reading.Reader do
                                         "ã", "ä", "å", "æ", "ç", "è", "é", "ê", "ë", "ì"]
     
     def any_osabie_char, do: regexify String.graphemes(CodePage.code_page)
-
-    def remaining, do: "(?<remaining>.*)"
     
     def read_file(file_path, encoding) do
 
@@ -117,6 +120,14 @@ defmodule Reading.Reader do
                     "’" -> {:string, Dictionary.decompress(matches["string"], :no_space), matches["remaining"]}
                     "“" -> {:string, Dictionary.decompress(matches["string"], :normal), matches["remaining"]}
                     "”" -> {:string, Dictionary.decompress(matches["string"], :title), matches["remaining"]}
+                end
+
+            Enum.any?(two_char_strings(), fn regex -> Regex.match?(regex, raw_code) end) ->
+                regex = Enum.find(two_char_strings(), fn regex -> Regex.match?(regex, raw_code) end)
+                matches = Regex.named_captures(regex, raw_code)
+                case matches["delimiter"] do
+                    ".•" -> {:string, IntCommands.to_base_arbitrary(IntCommands.string_from_base(matches["string"], 255), 27) 
+                                        |> Enum.map(fn x -> if x > 0 do <<x + 96>> else " " end end) |> Enum.join(""), matches["remaining"]}
                 end
             
             # If/else statements

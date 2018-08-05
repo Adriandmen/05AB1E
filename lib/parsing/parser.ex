@@ -11,7 +11,7 @@ defmodule Parsing.Parser do
                 {new_remaining, subcommands, _} = parse_subprogram(remaining)
                 parse_program(new_remaining, parsed ++ [{:subprogram, op, bind_counter(subcommands)}])
             [:subprogram, op] ->
-                {new_remaining, subcommands, _} = parse_subprogram(remaining)
+                {new_remaining, subcommands, _} = parse_subprogram(remaining, op == "λ")
                 parse_program(new_remaining, parsed ++ [{:subprogram, op, subcommands}])
             [:subcommand, op] ->
                 {new_remaining, subcommand, _} = parse_subcommand(remaining)
@@ -108,40 +108,41 @@ defmodule Parsing.Parser do
     # ------------------------------------------------------------
     # Sub program parsing (i.e. commands like 'F', 'G', 'v', etc.)
     # ------------------------------------------------------------
-    defp parse_subprogram(commands), do: parse_subprogram(commands, [])
-    defp parse_subprogram([], parsed), do: {[], parsed, :eof}
-    defp parse_subprogram([curr_command | remaining], parsed) do
+    defp parse_subprogram(commands, recursive \\ false), do: parse_subprogram(commands, [], recursive)
+    defp parse_subprogram([], parsed, _), do: {[], parsed, :eof}
+    defp parse_subprogram([curr_command | remaining], parsed, recursive) do
         case curr_command do
             [:end, _] -> {remaining, parsed, :end}
             [:end_all, _] -> {remaining, parsed, :end_all}
             [:eof, _] -> {remaining, parsed, :eof}
             [:else_statement, _] -> {remaining, parsed, :else_statement}
+            [:subprogram, op] when op == "λ" and recursive == true -> parse_subprogram(remaining, parsed ++ [{:nullary_op, op}], recursive)
             [:subprogram, op] when op == "µ" ->
                 {new_remaining, subcommands, end_op} = parse_subprogram(remaining)
                 case end_op do
-                    :end -> parse_subprogram(new_remaining, parsed ++ [{:subprogram, op, bind_counter(subcommands)}])
+                    :end -> parse_subprogram(new_remaining, parsed ++ [{:subprogram, op, bind_counter(subcommands)}], recursive)
                     x -> {new_remaining, parsed ++ [{:subprogram, op, subcommands}], x}
                 end
             [:subprogram, op] ->
                 {new_remaining, subcommands, end_op} = parse_subprogram(remaining)
                 case end_op do
-                    :end -> parse_subprogram(new_remaining, parsed ++ [{:subprogram, op, subcommands}])
+                    :end -> parse_subprogram(new_remaining, parsed ++ [{:subprogram, op, subcommands}], op == "λ")
                     x -> {new_remaining, parsed ++ [{:subprogram, op, subcommands}], x}
                 end
             [:subcommand, op] ->
                 {new_remaining, subcommand, end_op} = parse_subcommand(remaining)
                 case end_op do
-                    :end -> parse_subprogram(new_remaining, parsed ++ [{:subprogram, op, subcommand}])
+                    :end -> parse_subprogram(new_remaining, parsed ++ [{:subprogram, op, subcommand}], recursive)
                     x -> {new_remaining, parsed ++ [{:subprogram, op, subcommand}], x}
                 end
             [:if_statement, op] ->
                 {new_remaining, inner_if, inner_else, end_op} = parse_if_statement(remaining)
                 case end_op do
-                    :end -> parse_subprogram(new_remaining, parsed ++ [{:if_statement, inner_if, inner_else}])
+                    :end -> parse_subprogram(new_remaining, parsed ++ [{:if_statement, inner_if, inner_else}], recursive)
                     x -> {new_remaining, parsed ++ [{:if_statement, inner_if, inner_else}], x}
                 end
-            [:no_op, _] -> parse_subprogram(remaining, parsed)
-            [op_type, op] -> parse_subprogram(remaining, parsed ++ [{op_type, op}])
+            [:no_op, _] -> parse_subprogram(remaining, parsed, recursive)
+            [op_type, op] -> parse_subprogram(remaining, parsed ++ [{op_type, op}], recursive)
         end
     end
     defp bind_counter(parsed_commands) do

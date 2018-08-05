@@ -5,37 +5,18 @@ defmodule Commands.StrCommands do
     require Interp.Functions
     use Memoize
 
-    def insert_at(a, b, c) when is_map(a) and is_map(b) and is_map(c) do
-        pairs = Enum.to_list Stream.zip([b, c])
-        Enum.each(pairs, fn {element, location} -> Stream.concat([Stream.take(a, Functions.to_number(location)), [element], Stream.drop(a, Functions.to_number(location) + 1)]) end)
-        a
+    @doc """
+    Replace at the given index. Replaces the element found in a at index c and replaces it with b.
+    """
+    def replace_at(a, b, c) when Functions.is_iterable(a) and Functions.is_iterable(b) and Functions.is_iterable(c) do
+        Enum.reduce(Enum.to_list(Stream.zip([b, c])), a, 
+            fn ({new, index}, acc) -> acc |> Stream.with_index |> Stream.map(fn {element, curr_index} -> if curr_index == index do new else element end end)
+        end)
     end
-
-    def insert_at(a, b, c) when is_map(a) and is_map(c) do
-        args = Enum.to_list(c)
-        Enum.each(args, fn location -> Stream.concat([Stream.take(a, Functions.to_number(location)), [b], Stream.drop(a, Functions.to_number(location) + 1)]) end)
-        a
-    end
-
-    def insert_at(a, b, c) when is_map(a) do
-        Stream.concat([Stream.take(a, Functions.to_number(c)), [b], Stream.drop(a, Functions.to_number(c) + 1)])
-    end
-
-    def insert_at(a, b, c) when is_map(b) and is_map(c) do
-        curr_element = String.to_charlist(a)
-        pairs = Enum.to_list Stream.zip([b, c])
-        List.to_string Enum.reduce(pairs, curr_element, fn ({element, location}, acc) -> List.replace_at(acc, Functions.to_number(location), Functions.to_non_number(element)) end)
-    end
-
-    def insert_at(a, b, c) when is_map(c) do
-        args = Enum.to_list(c)
-        curr_element = String.to_charlist(a)
-        List.to_string Enum.reduce(args, curr_element, fn (location, acc) -> List.replace_at(acc, Functions.to_number(location), Functions.to_non_number(b)) end)
-    end
-
-    def insert_at(a, b, c) do
-        List.to_string List.replace_at(String.to_charlist(a), Functions.to_number(c), Functions.to_non_number(b))
-    end
+    def replace_at(a, b, c) when Functions.is_iterable(a) and Functions.is_iterable(b), do: a |> Stream.with_index |> Stream.map(fn {element, curr_index} -> if curr_index == c do b else element end end)
+    def replace_at(a, b, c) when Functions.is_iterable(a) and Functions.is_iterable(c), do: Enum.reduce(c, a, fn (index, acc) -> replace_at(acc, b, index) end)
+    def replace_at(a, b, c) when Functions.is_iterable(a), do: a |> Stream.with_index |> Stream.map(fn {element, curr_index} -> if GeneralCommands.equals(curr_index, c) do b else element end end)
+    def replace_at(a, b, c), do: String.graphemes(to_string(a)) |> replace_at(b, c) |> Enum.join("") 
 
     @doc """
     Infinite replacement method. When the first element ('a') is an iterable, it maps the replace_infinite method over each

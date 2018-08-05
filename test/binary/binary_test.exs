@@ -512,4 +512,10 @@ defmodule BinaryTest do
         assert evaluate("123S 123S.Q") == 1
         assert evaluate("123S 123Sï.Q") == 1
     end
+
+    test "round to precision" do
+        assert evaluate("0.124 2.ò") == 0.12
+        assert evaluate("0.128 2.ò") == 0.13
+        assert evaluate("0.128 4.ò") == 0.128
+    end
 end
