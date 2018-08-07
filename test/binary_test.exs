@@ -34,6 +34,23 @@ defmodule BinaryTest do
         assert evaluate("4( 5(-") == 1
     end
 
+    test "multiplication" do
+        assert evaluate("4 5*") == 20
+        assert evaluate("456S 5*") == [20, 25, 30]
+    end
+
+    test "division" do
+        assert evaluate("8 4/") == 2.0
+        assert evaluate("7 2/") == 3.5
+        assert evaluate("8 7) 2/") == [4.0, 3.5]
+    end
+
+    test "bitwise or" do
+        assert evaluate("4 3~") == 7
+        assert evaluate("9 3~") == 11
+        assert evaluate("4 9) 3~") == [7, 11]
+    end
+
     test "absolute difference" do
         assert evaluate("3 4α") == 1
         assert evaluate("3 4.5α") == 1.5

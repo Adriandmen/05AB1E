@@ -781,5 +781,6 @@ defmodule UnaryTest do
     test "number from prime exponents" do
         assert evaluate("0 0 3).Ó") == 125
         assert evaluate("3L.Ó") == 2250
+        assert evaluate(").Ó") == 1
     end
 end
