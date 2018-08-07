@@ -176,11 +176,13 @@ defmodule Interp.Interpreter do
            ".ï" -> Stack.push(stack, call_unary(fn x -> to_number(is_integer(to_number(x))) end, a))
            ".²" -> Stack.push(stack, call_unary(fn x -> :math.log2(to_number(x)) end, a))
            ".E" -> Stack.push(stack, call_unary(fn x -> {result, _} = Code.eval_string(to_string(x)); result end, a))
+           ".Ø" -> Stack.push(stack, call_unary(fn x -> IntCommands.get_prime_index(to_number(x)) end, a))
            ".B" -> Stack.push(stack, if is_iterable(a) do StrCommands.squarify(a) else StrCommands.squarify(String.split(to_string(a), "\n")) end)
            ".c" -> Stack.push(stack, if is_iterable(a) do StrCommands.align_center(a, :left) else StrCommands.align_center(String.split(to_string(a), "\n"), :left) end)
            ".C" -> Stack.push(stack, if is_iterable(a) do StrCommands.align_center(a, :right) else StrCommands.align_center(String.split(to_string(a), "\n"), :right) end)
            ".R" -> Stack.push(stack, if is_iterable(a) do Enum.random(Enum.to_list(a)) else Enum.random(String.graphemes(to_string(a))) end)
            ".r" -> Stack.push(stack, if is_iterable(a) do Enum.shuffle(Enum.to_list(a)) else Enum.join(Enum.shuffle(String.graphemes(to_string(a))), "") end)
+           ".œ" -> Stack.push(stack, if is_iterable(a) do ListCommands.partitions(Enum.to_list(a)) else ListCommands.partitions(to_list(a)) |> Enum.map(fn x -> x |> Enum.map(fn y -> y |> Enum.join("") end) end) end)
            ".¥" -> Stack.push(stack, ListCommands.undelta(a))
             "é" -> Stack.push(stack, a |> Enum.sort_by(fn x -> GeneralCommands.length_of(x) end))
             "º" -> Stack.push(stack, StrCommands.mirror(a))
@@ -197,6 +199,7 @@ defmodule Interp.Interpreter do
            ".s" -> Stack.push(stack, ListCommands.suffixes(a))
            ".ā" -> Stack.push(stack, ListCommands.enumerate_inner(a))
            ".º" -> Stack.push(stack, StrCommands.intersected_mirror(a))
+           ".Ó" -> Stack.push(stack, IntCommands.number_from_prime_exponents(to_number(to_list(a))))
             "á" -> Stack.push(stack, StrCommands.keep_letters(to_non_number(a)))
             "þ" -> Stack.push(stack, StrCommands.keep_digits(to_non_number(a)))
             "Ô" -> Stack.push(stack, ListCommands.deduplicate(a))
@@ -293,6 +296,7 @@ defmodule Interp.Interpreter do
            ".x" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.closest_to(x, y) end, a, b, true, false))
            ".L" -> Stack.push(stack, call_binary(fn x, y -> StrCommands.levenshtein_distance(to_list(x), to_list(y)) end, a, b))
            ".ò" -> Stack.push(stack, call_binary(fn x, y -> Float.round(to_number(x), to_number(y)) end, a, b))
+           ".Œ" -> Stack.push(stack, call_binary(fn x, y -> normalize_inner(ListCommands.divide_into(Enum.to_list(to_list(x)), to_number(y)), a) end, a, b, true, false))
            ".ý" -> Stack.push(stack, to_list(a) |> Stream.intersperse(b) |> Stream.map(fn x -> x end))
            ".o" -> Stack.push(stack, StrCommands.overlap(a, b))
            ".ø" -> Stack.push(stack, ListCommands.surround(a, b))
@@ -382,6 +386,14 @@ defmodule Interp.Interpreter do
                 else
                     {a, stack, environment} = Stack.pop(stack, environment)
                     {Stack.push(stack, call_binary(fn x, y -> ListCommands.cartesian_repeat(x, to_number(y)) end, a, b, true, false)), environment}
+                end
+            ".Æ" -> 
+                {b, stack, environment} = Stack.pop(stack, environment)
+                if is_iterable(b) do
+                    {Stack.push(stack, ListCommands.combinations(Enum.to_list(to_list(b)), 2)), environment}
+                else
+                    {a, stack, environment} = Stack.pop(stack, environment)
+                    {Stack.push(stack, call_binary(fn x, y -> ListCommands.combinations(Enum.to_list(to_list(x)), to_number(y)) end, a, b, true, false)), environment}
                 end
             "Ÿ" -> 
                 {b, stack, environment} = Stack.pop(stack, environment)
@@ -574,24 +586,15 @@ defmodule Interp.Interpreter do
             # 2-arity map for each
             "δ" ->
                 {b, stack, environment} = Stack.pop(stack, environment)
-                b = cond do
-                    is_iterable(b) -> b
-                    is_integer(to_number(b)) -> 1..to_number(b)
-                    true -> String.graphemes(to_string(b))
-                end
-
                 {a, stack, environment} = Stack.pop(stack, environment)
-                a = cond do
-                    is_iterable(a) -> a
-                    is_integer(to_number(a)) -> 1..to_number(a)
-                    true -> String.graphemes(to_string(a))
-                end
 
-                result = a |> Stream.with_index |> Stream.map(fn {y, y_index} -> Stream.map(b |> Stream.with_index, fn {x, x_index} ->
-                    {result_stack, _} = interp(subcommands, %Stack{elements: [x, y]}, %{environment | range_variable: [x_index, y_index], range_element: [x, y]})
-                    {result_elem, _, environment} = Stack.pop(result_stack, environment)
-                    result_elem end)
-                end)
+                result = cond do
+                    is_iterable(a) and is_iterable(b) -> a |> Stream.with_index |> Stream.map(fn {x, x_index} -> Stream.map(b |> Stream.with_index, fn {y, y_index} ->
+                        flat_interp(subcommands, [x, y], %{environment | range_variable: [y_index, x_index], range_element: [x, y]}) end) end)
+                    is_iterable(a) -> a |> Stream.with_index |> Stream.map(fn {x, x_index} -> flat_interp(subcommands, [x, b], %{environment | range_variable: x_index, range_element: x}) end)
+                    is_iterable(b) -> b |> Stream.with_index |> Stream.map(fn {y, y_index} -> flat_interp(subcommands, [a, y], %{environment | range_variable: y_index, range_element: y}) end)
+                    true -> flat_interp(subcommands, [a, b], environment)
+                end
                 {Stack.push(stack, result), environment}
             
             # Pairwise command
@@ -724,7 +727,7 @@ defmodule Interp.Interpreter do
     end
 
     def flat_interp(commands, elements, environment) do
-        {result_stack, _} = interp(commands, %Stack{elements: elements}, environment)
+        {result_stack, _} = interp(commands, %Stack{elements: elements |> Enum.reverse}, environment)
         {result_elem, _, _} = Stack.pop(result_stack, environment)
         result_elem
     end

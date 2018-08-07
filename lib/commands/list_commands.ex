@@ -463,11 +463,29 @@ defmodule Commands.ListCommands do
     def enumerate_inner(list) when Functions.is_iterable(list), do: list |> Stream.with_index |> Stream.map(fn {element, index} -> [element, index] end)
     def enumerate_inner(value), do: enumerate_inner(String.graphemes(to_string(value)))
 
-    # def divide_into(list, n) when is_number(n), do: divide_into(list, List.duplicate([], n))
-    # def divide_into([head | remaining], [head_acc]) do
-    #     [head_acc] ++ [head | remaining]
-    # end
-    # def divide_into([head | remaining], acc) do
-    #     divide_into(remaining, [head_acc ++ [head_acc] | remaining_acc]) ++ divide_into(remaining, [head_acc | ])
-    # end
+    def divide_into(list, n) when is_number(n), do: divide_into(list, [List.duplicate([], n)])
+    def divide_into([], containers), do: containers
+    def divide_into(_, []), do: []
+    def divide_into([head | remaining], acc) do
+        acc |> Enum.flat_map(fn x -> divide_into(remaining, insert_anywhere([head], x)) end)
+    end
+
+    defp insert_anywhere(element, containers), do: insert_anywhere(element, containers, [])
+    defp insert_anywhere(_, [], _), do: [] 
+    defp insert_anywhere(element, [head_container | remaining], parsed) do
+        [parsed ++ [(head_container ++ element) | remaining] | insert_anywhere(element, remaining, parsed ++ [head_container])]
+    end
+
+    def combinations(_, 0), do: [[]]
+    def combinations([], _), do: []
+    def combinations(list, n) when length(list) == n, do: [list]
+    def combinations(list, n) when length(list) < n, do: []
+    def combinations([head | remaining], n), do: (for element <- combinations(remaining, n - 1), do: [head | element]) ++ combinations(remaining, n)
+
+    def partitions(list), do: partitions(list, [])
+    defp partitions([], acc), do: [acc |> Enum.reverse]
+    defp partitions([head | remaining], []), do: partitions(remaining, [[head]])
+    defp partitions([head | remaining], [head_acc | remaining_acc]) do
+        partitions(remaining, [[head]] ++ [head_acc | remaining_acc]) ++ partitions(remaining, [head_acc ++ [head] | remaining_acc])
+    end
 end

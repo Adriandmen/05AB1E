@@ -339,6 +339,8 @@ defmodule UnaryTest do
         assert evaluate("123ïd") == 1
         assert evaluate("\"123a\"d") == 0
         assert evaluate("\"123a\" 123 004)d") == [0, 1, 1]
+        assert evaluate("123(d") == 0
+        assert evaluate("123.5d") == 0
     end
 
     test "lift" do
@@ -759,5 +761,25 @@ defmodule UnaryTest do
     test "cycle" do
         assert evaluate("3LÞ10£") == [1, 2, 3, 1, 2, 3, 1, 2, 3, 1]
         assert evaluate("123Þï10£") == [1, 2, 3, 1, 2, 3, 1, 2, 3, 1]
+    end
+
+    test "partitions" do
+        assert evaluate("2L.œ") == [[[1], [2]], [[1, 2]]]
+        assert evaluate("3L.œ") == [[[1], [2], [3]], [[1], [2, 3]], [[1, 2], [3]], [[1, 2, 3]]]
+        assert evaluate("4L.œ") == [[[1], [2], [3], [4]], [[1], [2], [3, 4]], [[1], [2, 3], [4]], [[1], [2, 3, 4]], [[1, 2], [3], [4]], [[1, 2], [3, 4]], [[1, 2, 3], [4]], [[1, 2, 3, 4]]]
+        assert evaluate("123.œ") == [["1", "2", "3"], ["1", "23"], ["12", "3"], ["123"]]
+        assert evaluate("1L.œ") == [[[1]]]
+        assert evaluate(").œ") == [[]]
+    end
+
+    test "get prime index" do
+        assert evaluate("0.Ø") == -1
+        assert evaluate("5.Ø") == 2
+        assert evaluate("5L.Ø") == [-1, 0, 1, 1, 2]
+    end
+
+    test "number from prime exponents" do
+        assert evaluate("0 0 3).Ó") == 125
+        assert evaluate("3L.Ó") == 2250
     end
 end

@@ -114,10 +114,17 @@ defmodule Commands.IntCommands do
     def divide(dividend, divisor) when is_float(dividend) or is_float(divisor), do: trunc(dividend / divisor)
     def divide(dividend, divisor), do: div(dividend, divisor)
 
+    @doc """
+    Converts the given number to the given base and returns it as a string using the characters
+    from the 05AB1E code page, except for '•', which is used to decompress base-255 strings.
+    """
     def to_base(value, base) do
         Integer.digits(value, base) |> Enum.map(fn x -> Enum.at(digits(), x) end) |> List.to_string
     end
 
+    @doc """
+    Converts the given number as a number from the given base and converts it to decimal.
+    """
     def string_from_base(value, base) do
         list = to_charlist(value) |> Enum.map(fn x -> Enum.find_index(digits(), fn y -> x == y end) end)
         list_from_base(list, base)
@@ -146,11 +153,16 @@ defmodule Commands.IntCommands do
     @doc """
     Checks whether the given number is a prime number.
     """
-    def is_prime?(value) when value in [2, 3], do: true
-    def is_prime?(value) when value < 2, do: false
-    def is_prime?(value) do
-        max_index = :math.sqrt(value) |> Float.floor |> round
-        !Enum.any?(2..max_index, fn x -> rem(value, x) == 0 end)
+    def is_prime?(value) when value in [2, 3, 5, 7], do: true
+    def is_prime?(value) when value < 2 or rem(value, 2) == 0 or rem(value, 3) == 0, do: false
+    def is_prime?(value), do: is_prime?(value, :math.sqrt(value) |> Float.floor |> round, 5)
+    def is_prime?(value, current_prime, upper_bound) when current_prime > upper_bound, do: true
+    def is_prime?(value, current_prime, upper_bound) do
+        cond do
+            rem(value, current_prime) == 0 -> false
+            rem(value, current_prime + 2) == 0 -> false
+            true -> is_prime?(value, current_prime + 6, upper_bound)
+        end
     end
 
     @doc """
@@ -165,6 +177,16 @@ defmodule Commands.IntCommands do
             true -> next_prime(value + 2)
         end
     end
+
+    @doc """
+    Retrieves the index of the nearest prime number to the given value that is smaller than
+    the given value. The returned index is 0-indexed. 
+    """
+    def get_prime_index(value) when value < 2, do: -1
+    def get_prime_index(value), do: get_prime_index(value, 2, 0)
+    def get_prime_index(value, current_prime, index) when value < current_prime, do: index - 1
+    def get_prime_index(value, current_prime, index) when value == current_prime, do: index
+    def get_prime_index(value, current_prime, index), do: get_prime_index(value, next_prime(current_prime), index + 1)
 
     @doc """
     Computes the prime factorization of the given value as a list of
@@ -185,6 +207,11 @@ defmodule Commands.IntCommands do
     def prime_exponents(value, acc, _, count) when value < 2, do: Enum.reverse [count | acc]
     def prime_exponents(value, acc, index, count) when rem(value, index) == 0, do: prime_exponents(div(value, index), acc, index, count + 1)
     def prime_exponents(value, acc, index, count), do: prime_exponents(value, [count | acc], next_prime(index), 0)
+
+    def number_from_prime_exponents(value) do
+        {result, _} = Enum.reduce(value, {1, 2}, fn (element, {product, prime}) -> {product * pow(prime, element), next_prime(prime)} end)
+        result
+    end
 
     @doc """
     Computes and retrieves the nth prime where n is the given parameter.
