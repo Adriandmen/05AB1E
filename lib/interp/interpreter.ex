@@ -213,6 +213,7 @@ defmodule Interp.Interpreter do
             "¥" -> Stack.push(stack, ListCommands.deltas(a))
             "ß" -> Stack.push(stack, if is_iterable(a) do IntCommands.min_of(a) else IntCommands.min_of(String.graphemes(to_string(a))) end)
             "à" -> Stack.push(stack, if is_iterable(a) do IntCommands.max_of(a) else IntCommands.max_of(String.graphemes(to_string(a))) end)
+            "û" -> Stack.push(stack, normalize_to(Stream.concat(to_list(a), to_list(a) |> Enum.reverse |> Enum.drop(1)) |> Stream.map(fn x -> x end), a))
             "W" -> Stack.push(Stack.push(stack, a), IntCommands.min_of(a))
             "Z" -> Stack.push(Stack.push(stack, a), IntCommands.max_of(a))
             "x" -> Stack.push(Stack.push(stack, a), call_unary(fn x -> 2 * to_number(x) end, a))
@@ -333,7 +334,7 @@ defmodule Interp.Interpreter do
             "Š" -> Stack.push(Stack.push(Stack.push(stack, c), a), b)
             "‡" -> Stack.push(stack, StrCommands.transliterate(a, b, c))
             ":" -> Stack.push(stack, StrCommands.replace_infinite(a, b, c))
-            "Λ" -> global_env = Globals.get(); Globals.set(%{global_env | canvas: Canvas.write(global_env.canvas, to_integer(a), to_non_number(b), to_non_number(c))}); stack
+            "Λ" -> global_env = Globals.get(); Globals.set(%{global_env | canvas: Canvas.write(global_env.canvas, to_number(a), to_non_number(b), to_non_number(c), environment)}); stack
         end
 
         {new_stack, environment}
@@ -458,7 +459,12 @@ defmodule Interp.Interpreter do
                 end
             ".V" ->
                 {a, stack, environment} = Stack.pop(stack, environment)
-                interp(Parser.parse(Reader.read(to_string(a))), stack, environment)
+                a = to_string(a)
+                if String.contains?(a, "ÿ") and not String.starts_with?(a, "\"") do
+                    interp(Parser.parse(Reader.read("\"" <> to_string(a) <> "\"")), stack, environment)
+                else
+                    interp(Parser.parse(Reader.read(to_string(a))), stack, environment) 
+                end
             "₅" ->
                 if environment.recursive_environment == nil do
                     {Stack.push(stack, 255), environment}
@@ -705,6 +711,7 @@ defmodule Interp.Interpreter do
     Returns a tuple in the following format: {stack, environment}
 
     """
+    def interp_string("ÿ", stack, environment), do: {Stack.push(stack, "ÿ"), environment}
     def interp_string(string, stack, environment) do
         dissected_string = String.split(string, "ÿ")
 
@@ -741,7 +748,12 @@ defmodule Interp.Interpreter do
         # Debugging
         if Globals.get().debug.enabled do
             IO.puts "----------------------------------\n"
-            IO.puts "Current Command: '#{{_, op} = current_command; op}'"
+            curr_op = case current_command do
+                {_, op} -> op
+                {_, op, _} -> op
+                {_, op, _, _} -> op
+            end
+            IO.puts "Current Command: '#{curr_op}'"
 
             if Globals.get().debug.stack do
                 IO.write "Current Stack: "

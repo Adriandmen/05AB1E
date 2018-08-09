@@ -783,4 +783,9 @@ defmodule UnaryTest do
         assert evaluate("3L.Ó") == 2250
         assert evaluate(").Ó") == 1
     end
+
+    test "palindromize" do
+        assert evaluate("123û") == "12321"
+        assert evaluate("3Lû") == [1, 2, 3, 2, 1]
+    end
 end

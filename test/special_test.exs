@@ -160,6 +160,7 @@ defmodule SpecialOpsTest do
 
     test "evaluate 05AB1E code" do
         assert evaluate("\"2 3+\".V") == 5
+        assert evaluate("2'ÿ\"1ÿ3\".V") == "123"
     end
 
     test "global array" do

@@ -77,9 +77,10 @@ defmodule Osabie.CLI do
         {stack, environment} = Interpreter.interp(commands, %Stack{}, %Environment{})
         {last, _, _} = Stack.pop(stack, environment)
 
-        if length(Map.keys(Globals.get().canvas)) != 0 do
+        if Globals.get().canvas.canvas != %{} do
             Output.print(Canvas.canvas_to_string(Globals.get().canvas))
         end
+        
         case Globals.get().printed do
             true -> nil
             false -> Output.print(last)

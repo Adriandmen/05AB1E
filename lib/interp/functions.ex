@@ -108,7 +108,7 @@ defmodule Interp.Functions do
         end
     end
 
-    def normalize_to(value, initial) when is_iterable(value) and not is_iterable(initial), do: value |> Stream.map(fn x -> Enum.join(x) end)
+    def normalize_to(value, initial) when is_iterable(value) and not is_iterable(initial), do: value |> Enum.join("")
     def normalize_to(value, initial), do: value
 
     def normalize_inner(value, initial) when is_iterable(value) and not is_iterable(initial), do: value |> Stream.map(fn x -> x |> Stream.map(fn y -> Enum.join(y, "") end) end)
@@ -163,6 +163,10 @@ defmodule Interp.Functions do
     end
 
     def call_binary(func, a, b, _, _) do
-        func.(a, b)
+        try do
+            func.(a, b)
+        rescue
+            _ -> func.(b, a) 
+        end
     end
 end

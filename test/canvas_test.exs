@@ -292,4 +292,51 @@ defmodule CanvasTest do
             "bbbc"
         ])
     end
+
+    test "canvas + template" do
+        assert evaluate_canvas("3'a'+Λ") == canvas([
+            "  a  ",
+            "  a  ",
+            "aaaaa",
+            "  a  ",
+            "  a  "
+        ])
+    end
+
+    test "canvas × template" do
+        assert evaluate_canvas("3'a'×Λ") == canvas([
+            "a   a",
+            " a a ",
+            "  a  ",
+            " a a ",
+            "a   a"
+        ])
+    end
+
+    test "code in canvas directions" do
+        assert evaluate_canvas("4'A\"13;7·6\"Λ") == canvas([
+            "   A   ",
+            "  A A  ",
+            " AAAAA ",
+            "A     A"
+        ])
+    end
+
+    test "code with multiple characters in canvas directions" do
+        assert evaluate_canvas("3'a\"1>>3\"Λ") == canvas([
+            "  a    ",
+            " a a   ",
+            "a   a  ",
+            "     a ",
+            "      a",
+        ])
+    end
+
+    test "return to origin special op" do
+        assert evaluate_canvas("3'a13860Λ") == canvas([
+            "a   a  ",
+            "a  a a ",
+            "aaa   a"
+        ])
+    end
 end

@@ -2,6 +2,9 @@ defmodule Interp.Canvas do
 
     alias Interp.Functions
     alias Interp.Canvas
+    alias Interp.Interpreter
+    alias Reading.Reader
+    alias Parsing.Parser
     alias Commands.ListCommands
     require Interp.Functions
 
@@ -16,11 +19,23 @@ defmodule Interp.Canvas do
         end
     end
 
+    defp pattern_templates, do: %{
+        "+" => "04402662",
+        "×" => "15513773"
+    }
+
+    defp special_ops, do: %{
+        "8" => :return_to_origin
+    }
+
+    defp map_to_regex(map), do: "(" <> (Map.keys(map) |> Enum.map(&Regex.escape/1) |> Enum.join("|")) <> ")"
+    defp pattern_regex, do: map_to_regex pattern_templates()
+    defp special_regex, do: map_to_regex special_ops()
+    
     defp parse_directions(list) when Functions.is_iterable(list), do: list |> Enum.map(fn x -> parse_directions(x) end)
     defp parse_directions(string), do: parse_directions(string, [])
     defp parse_directions("", parsed), do: parsed
     defp parse_directions(string, parsed) do
-
         cond do
             Regex.match?(~r/^[0-7]/, string) ->
                 captures = Regex.named_captures(~r/^(?<direction>[0-7])(?<remaining>.*)/, string)
@@ -34,115 +49,130 @@ defmodule Interp.Canvas do
                     "6" -> parse_directions(captures["remaining"], parsed ++ [[:direction, :left]])
                     "7" -> parse_directions(captures["remaining"], parsed ++ [[:direction, :up_left]])
                 end
-            true -> parsed
+
+            Regex.match?(~r/^#{special_regex()}/, string) ->
+                captures = Regex.named_captures(~r/^(?<op>#{special_regex()})(?<remaining>.*)/, string)
+                parse_directions(captures["remaining"], parsed ++ [[:special_op, Map.get(special_ops(), captures["op"])]])
+
+            Regex.match?(~r/^#{pattern_regex()}/, string) ->
+                captures = Regex.named_captures(~r/^(?<pattern>#{pattern_regex()})(?<remaining>.*)/, string)
+                parse_directions(Map.get(pattern_templates(), captures["pattern"]) <> captures["remaining"], parsed) 
+
+            true -> 
+                case List.last(parsed) do
+                    [:code, prev_op] -> parse_directions(String.slice(string, 1..-1), Enum.slice(parsed, 0..-2) ++ [[:code, prev_op <> String.first(string)]])
+                    _ -> parse_directions(String.slice(string, 1..-1), parsed ++ [[:code, String.first(string)]])
+                end
         end
     end
     
-    def write(canvas, len, characters, direction) do
+    def write(canvas, len, characters, direction, environment) do
         directions = parse_directions(direction)
-        {new_canvas, _, _} = write_canvas(canvas, len, characters, directions)
+        {new_canvas, _, _} = write_canvas(canvas, len, characters, directions, environment)
         new_canvas
     end
 
-    defp write_canvas(canvas, 0, characters, directions), do: {canvas, characters, directions}
-    defp write_canvas(canvas, 1, characters, directions) do
+    # Normalizes the length of the given canvas environment. This means that if the returned environment
+    # denotes the length as 'nil', it will be reassigned to the given curr_length. Otherwise it will return
+    # the given environment untouched.
+    defp normalize_length({canvas, characters, nil}, curr_length), do: {canvas, characters, curr_length}
+    defp normalize_length({canvas, characters, length}, _), do: {canvas, characters, length}
+
+    # If the head of directions is not a direction, but a code snippet, run the code snippet on a stack
+    # which contains the length as an element and reassign the length to the result of running that code snippet.
+    defp write_canvas(canvas, len, characters, [[:code, op] | remaining], environment) do
+        list = [[:code, op] | remaining]
+        code = list |> Enum.take_while(fn [type, value] -> type == :code end) |> Enum.map(fn [_, op] -> op end) |> Enum.join("")
+        result = Functions.to_number Interpreter.flat_interp(Parser.parse(Reader.read(code)), [len], environment)
+        normalize_length(write_canvas(canvas, result, characters, remaining, environment), result)
+    end
+
+    # Interpretation of the special op.
+    defp write_canvas(canvas, len, characters, [[:special_op, op] | remaining], environment) do
+        case op do
+            :return_to_origin -> write_canvas(%{canvas | cursor: [0, 0]}, len, characters, remaining, environment)
+        end
+    end
+    
+    # When the rounded version of the length is <= 0 or <= 1. We cannot round the length since we
+    # need to keep the unrounded version in memory in case commands will be run against them.
+    defp write_canvas(canvas, length, characters, directions, _) when length < 0.5, do: {canvas, characters, nil}
+    defp write_canvas(canvas, length, characters, directions, _) when length < 1.5 do
         new_canvas = cond do
             Functions.is_iterable(characters) -> write_char(canvas, List.first Enum.to_list(characters))
             String.length(characters) > 1 -> write_char(canvas, List.first String.graphemes(characters))
             true -> write_char(canvas, characters)
         end
 
-        {new_canvas, characters, directions}
+        {new_canvas, characters, nil}
     end
-    defp write_canvas(canvas, len, characters, direction) do
+
+    # Main case for writing to the canvas.
+    defp write_canvas(canvas, len, characters, direction, environment) do
         cond do
             # var - var - var
             Functions.is_single?(len) and Functions.is_single?(characters) and String.length(characters) == 1 and is_single_direction_list?(direction) and length(direction) == 1 ->
-                write_canvas(move_cursor(write_char(canvas, characters), List.first direction), len - 1, characters, [List.first direction])
+                write_canvas(move_cursor(write_char(canvas, characters), List.first direction), len - 1, characters, [List.first direction], environment)
 
             # var - var - vars
             Functions.is_single?(len) and Functions.is_single?(characters) and String.length(characters) == 1 and is_single_direction_list?(direction) ->
-                direction |> Enum.reduce({canvas, nil, nil}, fn (dir, {canvas_acc, _, _}) -> write_canvas(canvas_acc, len, characters, [dir]) end)
+                direction |> Enum.reduce({canvas, nil, len}, fn (dir, {canvas_acc, _, curr_length}) -> 
+                    normalize_length(write_canvas(canvas_acc, curr_length, characters, [dir], environment), curr_length) end)
 
             # var - vars - var
             Functions.is_single?(len) and Functions.is_single?(characters) and is_single_direction_list?(direction) and length(direction) == 1 ->
-                write_canvas(canvas, len, String.graphemes(characters), direction)
+                normalize_length(write_canvas(canvas, len, String.graphemes(characters), direction, environment), len)
 
             # var - vars - vars
             Functions.is_single?(len) and Functions.is_single?(characters) and is_single_direction_list?(direction) ->
-                direction |> Enum.reduce({canvas, characters, nil}, fn (dir, {canvas_acc, chars, _}) -> write_canvas(canvas_acc, len, chars, [dir]) end)
+                direction |> Enum.reduce({canvas, characters, len}, fn (dir, {canvas_acc, chars, curr_length}) -> 
+                    normalize_length(write_canvas(canvas_acc, curr_length, chars, [dir], environment), curr_length) end)
 
             # var - var - list
             Functions.is_single?(len) and Functions.is_single?(characters) and String.length(characters) == 1 and not is_single_direction_list?(direction) ->
-                direction |> Enum.reduce({canvas, nil, nil}, fn (dir, {canvas_acc, _, _}) -> write_canvas(canvas_acc, len, characters, dir) end)
+                direction |> Enum.reduce({canvas, nil, len}, fn (dir, {canvas_acc, _, curr_length}) -> 
+                    normalize_length(write_canvas(canvas_acc, curr_length, characters, dir, environment), curr_length) end)
 
             # var - vars - list
             Functions.is_single?(len) and Functions.is_single?(characters) and not is_single_direction_list?(direction) ->
-                direction |> Enum.reduce({canvas, String.graphemes(characters), nil}, fn (dir, {canvas_acc, chars, _}) -> write_canvas(canvas_acc, len, chars, dir) end)
+                direction |> Enum.reduce({canvas, String.graphemes(characters), len}, fn (dir, {canvas_acc, chars, curr_length}) -> 
+                    normalize_length(write_canvas(canvas_acc, curr_length, chars, dir, environment), curr_length) end)
 
             # var - list - var
             Functions.is_single?(len) and Functions.is_iterable(characters) and is_single_direction_list?(direction) and length(direction) == 1 ->
                 [head | remaining] = Enum.to_list characters
-                write_canvas(move_cursor(write_char(canvas, head), List.first direction), len - 1, remaining ++ [head], [List.first direction])
+                write_canvas(move_cursor(write_char(canvas, head), List.first direction), len - 1, remaining ++ [head], [List.first direction], environment)
             
             # var - list - vars
             Functions.is_single?(len) and Functions.is_iterable(characters) and is_single_direction_list?(direction) ->
-                direction |> Enum.reduce({canvas, characters, nil}, fn (dir, {canvas_acc, chars, _}) -> write_canvas(canvas_acc, len, chars, [dir]) end)
+                direction |> Enum.reduce({canvas, characters, len}, fn (dir, {canvas_acc, chars, curr_length}) -> 
+                    normalize_length(write_canvas(canvas_acc, curr_length, chars, [dir], environment), curr_length) end)
 
             # var - list - list
             Functions.is_single?(len) and Functions.is_iterable(characters) and not is_single_direction_list?(direction) ->
-                direction |> Enum.reduce({canvas, characters, nil}, fn (dir, {canvas_acc, chars, _}) -> write_canvas(canvas_acc, len, chars, dir) end)
+                direction |> Enum.reduce({canvas, characters, len}, fn (dir, {canvas_acc, chars, curr_length}) -> 
+                    normalize_length(write_canvas(canvas_acc, curr_length, chars, dir, environment), curr_length) end)
 
             # list - var - var(s)
             Functions.is_iterable(len) and Functions.is_single?(characters) and String.length(characters) == 1 and is_single_direction_list?(direction) ->
-                len |> Enum.reduce({canvas, characters, nil}, fn (curr_len, {canvas_acc, chars, _}) -> write_canvas(canvas_acc, curr_len, chars, direction) end)
+                len |> Enum.reduce({canvas, characters, nil}, fn (curr_len, {canvas_acc, chars, _}) -> write_canvas(canvas_acc, curr_len, chars, direction, environment) end)
 
             # list - vars - var(s)
             Functions.is_iterable(len) and Functions.is_single?(characters) and is_single_direction_list?(direction) ->
-                len |> Enum.reduce({canvas, String.graphemes(characters), nil}, fn (curr_len, {canvas_acc, chars, _}) -> write_canvas(canvas_acc, curr_len, chars, direction) end)
+                len |> Enum.reduce({canvas, String.graphemes(characters), nil}, fn (curr_len, {canvas_acc, chars, _}) -> write_canvas(canvas_acc, curr_len, chars, direction, environment) end)
 
             # list - var - list
             Functions.is_iterable(len) and Functions.is_single?(characters) and not is_single_direction_list?(direction) ->
-                Stream.zip(len, direction) |> Enum.to_list |> Enum.reduce({canvas, characters, nil}, fn ({curr_len, curr_dir}, {canvas_acc, chars, _}) -> write_canvas(canvas_acc, curr_len, chars, curr_dir) end)
+                Stream.zip(len, direction) |> Enum.to_list |> Enum.reduce({canvas, characters, nil}, fn ({curr_len, curr_dir}, {canvas_acc, chars, _}) -> write_canvas(canvas_acc, curr_len, chars, curr_dir, environment) end)
             
             # list - list - var(s)
             Functions.is_iterable(len) and Functions.is_iterable(characters) and is_single_direction_list?(direction) ->
-                characters |> Enum.reduce({canvas, direction, nil}, fn (curr_char, {canvas_acc, chars, _}) -> write_canvas(canvas_acc, len, curr_char, direction) end)
+                characters |> Enum.reduce({canvas, direction, nil}, fn (curr_char, {canvas_acc, chars, _}) -> write_canvas(canvas_acc, len, curr_char, direction, environment) end)
             
             # list - list - list
             Functions.is_iterable(len) and Functions.is_iterable(characters) and not is_single_direction_list?(direction) ->
                 Stream.zip([len, characters, direction]) |> Enum.to_list |> Enum.reduce({canvas, characters, nil}, fn ({curr_len, curr_char, curr_dir}, {canvas_acc, chars, _}) ->
-                    write_canvas(canvas_acc, curr_len, curr_char, curr_dir) end)
-        end
-    end
-
-    defp write_to_canvas(canvas, 0, _, _), do: canvas
-    defp write_to_canvas(canvas, 1, characters, _) do
-        cond do
-            Functions.is_iterable(characters) -> write_char(canvas, List.first Enum.to_list(characters))
-            String.length(characters) > 1 -> write_char(canvas, List.first String.graphemes(characters))
-            true -> write_char(canvas, characters)
-        end
-    end
-
-    # var - list - any
-    defp write_to_canvas(canvas, len, characters, direction) when Functions.is_single?(len) and Functions.is_iterable(characters) do
-        [head | tail] = Enum.to_list characters
-        cond do
-            length(direction) > 1 -> 
-                {new_canvas, _} = direction |> Enum.reduce({canvas, characters}, fn (dir, {acc, chars}) -> {write_to_canvas(acc, len, chars, [dir]), ListCommands.rotate(chars, len - 1)} end)
-                new_canvas
-            true -> write_to_canvas(move_cursor(write_char(canvas, head), List.first direction), len - 1, tail ++ [head], [List.first direction])
-        end
-    end
-
-    # var - var - any
-    defp write_to_canvas(canvas, len, characters, direction) when Functions.is_single?(len) and Functions.is_single?(characters) do
-
-        cond do
-            String.length(characters) > 1 -> write_to_canvas(canvas, len, String.graphemes(characters), direction)
-            length(direction) > 1 -> direction |> Enum.reduce(canvas, fn (dir, acc) -> write_to_canvas(acc, len, characters, [dir]) end)
-            true -> write_to_canvas(move_cursor(write_char(canvas, characters), List.first direction), len - 1, characters, [List.first direction])
+                    write_canvas(canvas_acc, curr_len, curr_char, curr_dir, environment) end)
         end
     end
 
