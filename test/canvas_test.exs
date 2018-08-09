@@ -177,4 +177,119 @@ defmodule CanvasTest do
             "    a"
         ])
     end
+
+    test "canvas with chars as list" do
+        assert evaluate_canvas("5 \"abc\"S 3Λ") == canvas([
+            "a    ",
+            " b   ",
+            "  c  ",
+            "   a ",
+            "    b"
+        ])
+
+        assert evaluate_canvas("5 \"abc\"S 34Λ") == canvas([
+            "a    ",
+            " b   ",
+            "  c  ",
+            "   a ",
+            "    b",
+            "    c",
+            "    a",
+            "    b",
+            "    c"
+        ])
+    end
+
+    test "canvas with chars and directions as list" do
+        assert evaluate_canvas("4 \"abc\"S 34SΛ") == canvas([
+            "a   ",
+            " b  ",
+            "  c ",
+            "   a",
+            "   b",
+            "   c",
+            "   a"
+        ])
+    end
+
+    test "canvas with length as list" do
+        assert evaluate_canvas("34S \"a\" 3Λ") == canvas([
+            "a     ",
+            " a    ",
+            "  a   ",
+            "   a  ",
+            "    a ",
+            "     a"
+        ])
+    end
+
+    test "canvas with length as list and multiple characters" do
+        assert evaluate_canvas("34S \"abc\" 3Λ") == canvas([
+            "a     ",
+            " b    ",
+            "  c   ",
+            "   a  ",
+            "    b ",
+            "     c"
+        ])
+    end
+
+    test "canvas with length as list and multiple directions" do
+        assert evaluate_canvas("34S \"abc\" 34Λ") == canvas([
+            "a     ",
+            " b    ",
+            "  c   ",
+            "  a   ",
+            "  b   ",
+            "   c  ",
+            "    a ",
+            "     b",
+            "     c",
+            "     a",
+            "     b"
+        ])
+    end
+
+    test "canvas with length and directions as list" do
+        assert evaluate_canvas("4424S'A1376SΛ") == canvas([
+            "   A   ",
+            "  A A  ",
+            " AAAAA ",
+            "A     A"
+        ])
+    end
+
+    test "canvas with length and characters as list" do
+        assert evaluate_canvas("234S\"abc\"S42Λ") == canvas([
+            "a                  ",
+            "aa                 ",
+            " a                 ",
+            " aaa               ",
+            "   a               ",
+            "   a               ",
+            "   aaab            ",
+            "      bb           ",
+            "       b           ",
+            "       bbb         ",
+            "         b         ",
+            "         b         ",
+            "         bbbc      ",
+            "            cc     ",
+            "             c     ",
+            "             ccc   ",
+            "               c   ",
+            "               c   ",
+            "               cccc"
+        ])
+    end
+    
+    test "canvas with length, characters and directions as list" do
+        assert evaluate_canvas("345S\"abc\"S420SΛ") == canvas([
+            "   c",
+            "   c",
+            "a  c",
+            "a  c",
+            "bbbc"
+        ])
+    end
 end

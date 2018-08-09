@@ -333,7 +333,7 @@ defmodule Interp.Interpreter do
             "Š" -> Stack.push(Stack.push(Stack.push(stack, c), a), b)
             "‡" -> Stack.push(stack, StrCommands.transliterate(a, b, c))
             ":" -> Stack.push(stack, StrCommands.replace_infinite(a, b, c))
-            "Λ" -> global_env = Globals.get(); Globals.set(%{global_env | canvas: Canvas.write(global_env.canvas, to_number(a), to_non_number(b), to_non_number(c))}); stack
+            "Λ" -> global_env = Globals.get(); Globals.set(%{global_env | canvas: Canvas.write(global_env.canvas, to_integer(a), to_non_number(b), to_non_number(c))}); stack
         end
 
         {new_stack, environment}
@@ -737,6 +737,30 @@ defmodule Interp.Interpreter do
         Globals.initialize()
         
         [current_command | remaining] = commands
+
+        # Debugging
+        if Globals.get().debug.enabled do
+            IO.puts "----------------------------------\n"
+            IO.puts "Current Command: '#{{_, op} = current_command; op}'"
+
+            if Globals.get().debug.stack do
+                IO.write "Current Stack: "
+                IO.inspect(stack.elements |> Enum.reverse)    
+                IO.write "\n"
+            end
+
+            if Globals.get().debug.local_env do
+                IO.write "Local Environment: "
+                IO.inspect(environment)
+                IO.write "\n"
+            end
+
+            if Globals.get().debug.global_env do
+                IO.write "Global Environment: "
+                IO.inspect(Globals.get())
+                IO.write "\n"
+            end
+        end
 
         case Globals.get().status do
             :ok -> 

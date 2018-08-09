@@ -56,6 +56,19 @@ defmodule Interp.Functions do
         end
     end
 
+    def to_integer(value) do
+        cond do
+            value == true -> 1
+            value == false -> 0
+            is_integer(value) -> value
+            is_float(value) -> round(Float.floor(value))
+            is_iterable(value) -> value |> Stream.map(&to_integer/1)
+            true ->
+                {int, _} = Integer.parse(to_string(value))
+                int 
+        end
+    end
+
     def to_non_number(value) do
         case value do
             _ when is_integer(value) ->

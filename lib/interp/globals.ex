@@ -10,7 +10,8 @@ defmodule Interp.GlobalEnvironment do
               inputs: [],
               status: :ok,
               array: [],
-              printed: false
+              printed: false,
+              debug: %{:stack => false, :local_env => false, :global_env => false, :enabled => false}
 end
 
 defmodule Interp.Globals do
