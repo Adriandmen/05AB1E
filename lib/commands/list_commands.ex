@@ -420,7 +420,7 @@ defmodule Commands.ListCommands do
     def group_equal(list) do
         cond do
             Functions.is_iterable(list) -> Stream.chunk_while(list, {[], nil}, 
-                                            fn (x, {acc, last}) -> if GeneralCommands.equals(x, last) do {:cont, [x | acc], {[], nil}} else {:cont, {[x | acc], x}} end end,
+                                            fn (x, {acc, last}) -> if last == nil or GeneralCommands.equals(x, last) do {:cont, {[x | acc], x}} else {:cont, acc, {[x], x}} end end,
                                             fn ({acc, _}) -> case acc do [] -> {:cont, []}; acc -> {:cont, acc, []} end end)
             true -> String.graphemes(to_string(list)) |> group_equal |> Stream.map(fn x -> x |> Enum.join("") end)
         end

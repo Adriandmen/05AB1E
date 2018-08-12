@@ -3,7 +3,7 @@ defmodule ArgParseTest do
     alias Osabie.CLI
     alias OsabieProgramArguments
 
-    def debug_params, do: %{:stack => false, :local_env => false, :global_env => false, :enabled => false}
+    def debug_params, do: %{:stack => false, :local_env => false, :global_env => false, :enabled => false, :test => false}
 
     test "normalize arguments" do
         assert CLI.normalize_args([{:debug, nil}]) == %OsabieProgramArguments{debug: %{debug_params() | enabled: true}}

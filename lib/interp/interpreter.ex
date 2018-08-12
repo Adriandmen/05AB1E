@@ -818,7 +818,7 @@ defmodule Interp.Interpreter do
 
             if Globals.get().debug.stack do
                 IO.write "Current Stack: "
-                IO.inspect(stack.elements |> Enum.reverse)    
+                IO.inspect(stack.elements |> Enum.reverse |> eval)    
                 IO.write "\n"
             end
 

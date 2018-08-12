@@ -23,7 +23,7 @@ defmodule OsabieProgramArguments do
     arguments that the interpreter will need while running.
     """
     defstruct path: "",
-              debug: %{:stack => false, :local_env => false, :global_env => false, :enabled => false},
+              debug: %{:stack => false, :local_env => false, :global_env => false, :enabled => false, :test => false},
               osabie_encoded: false,
               safe_mode: false,
               timer: false
