@@ -163,7 +163,7 @@ defmodule Interp.Canvas do
 
             # list - var - list
             Functions.is_iterable(len) and Functions.is_single?(characters) and not is_single_direction_list?(direction) ->
-                Stream.zip(len, direction) |> Enum.to_list |> Enum.reduce({canvas, characters, nil}, fn ({curr_len, curr_dir}, {canvas_acc, chars, _}) -> write_canvas(canvas_acc, curr_len, chars, curr_dir, environment) end)
+                Stream.zip(len, Stream.cycle(direction)) |> Enum.to_list |> Enum.reduce({canvas, characters, nil}, fn ({curr_len, curr_dir}, {canvas_acc, chars, _}) -> write_canvas(canvas_acc, curr_len, chars, curr_dir, environment) end)
             
             # list - list - var(s)
             Functions.is_iterable(len) and Functions.is_iterable(characters) and is_single_direction_list?(direction) ->
@@ -171,7 +171,7 @@ defmodule Interp.Canvas do
             
             # list - list - list
             Functions.is_iterable(len) and Functions.is_iterable(characters) and not is_single_direction_list?(direction) ->
-                Stream.zip([len, characters, direction]) |> Enum.to_list |> Enum.reduce({canvas, characters, nil}, fn ({curr_len, curr_char, curr_dir}, {canvas_acc, chars, _}) ->
+                Stream.zip([len, characters, Stream.cycle(direction)]) |> Enum.to_list |> Enum.reduce({canvas, characters, nil}, fn ({curr_len, curr_char, curr_dir}, {canvas_acc, chars, _}) ->
                     write_canvas(canvas_acc, curr_len, curr_char, curr_dir, environment) end)
         end
     end

@@ -48,7 +48,7 @@ defmodule Commands.GeneralCommands do
 
     def element_at(value, index) do
         cond do
-            is_map(value) -> Stream.cycle(value) |> Stream.drop(index) |> Stream.take(1) |> Enum.to_list |> hd
+            Functions.is_iterable(value) -> Stream.cycle(value) |> Stream.drop(index) |> Stream.take(1) |> Enum.to_list |> hd
             is_integer(value) -> element_at(Functions.to_non_number(value), index)
             true -> String.at(value, rem(index, String.length(value)))
         end
@@ -59,7 +59,7 @@ defmodule Commands.GeneralCommands do
         value = Functions.to_str(value)
 
         cond do
-            is_map(value) or is_list(value) -> value |> Stream.map(fn x -> remove_from(x, filter_chars) end)
+            Functions.is_iterable(value) -> value |> Stream.map(fn x -> remove_from(x, filter_chars) end)
             true -> Enum.reduce(Enum.filter(String.graphemes(value), fn x -> not Enum.member?(filter_chars, Functions.to_str x) end), "", fn (element, acc) -> acc <> element end)
         end
     end
@@ -142,7 +142,7 @@ defmodule Commands.GeneralCommands do
                 cond do
                     # If the range is an integer and the index is in bounds, run the commands
                     # and increment the index by 1 on the next iteration.
-                    is_integer(range) and index <= range or range == -1 ->
+                    (is_integer(range) and index <= range) or range == :infinity ->
                         {new_stack, new_env} = Interpreter.interp(commands, stack, %{environment | range_variable: index})
                         loop(commands, new_stack, new_env, index + 1, range)
                     
@@ -186,7 +186,7 @@ defmodule Commands.GeneralCommands do
         case Globals.get().status do
             :ok -> 
                 cond do
-                    Globals.get().counter_variable >= count -> {Stack.push(stack, index - 1), environment}
+                    Globals.get().counter_variable >= count -> {stack, environment}
                     true -> 
                         {result_stack, new_env} = Interpreter.interp(commands, stack, %{environment | range_variable: index})
                         counter_loop(commands, result_stack, new_env, index + 1, count)

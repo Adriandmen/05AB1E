@@ -24,7 +24,7 @@ osabie-*.tar
 
 # User specific ignores
 inputs
-run.*
+run*.*
 *.abe
 
 # Ignore the compiled file for now

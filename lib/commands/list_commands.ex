@@ -1,5 +1,6 @@
 defmodule Commands.ListCommands do
     alias Interp.Functions
+    alias Interp.Interpreter
     alias Commands.IntCommands
     alias Commands.GeneralCommands
     require Interp.Functions
@@ -50,8 +51,15 @@ defmodule Commands.ListCommands do
     def split_individual(value) do
         cond do
             is_integer(value) -> split_individual(to_string(value))
-            is_map(value) or is_list(value) -> value |> Stream.flat_map(&split_individual/1) |> Stream.map(fn x -> x end)
+            Functions.is_iterable(value) -> value |> Stream.flat_map(&split_individual/1) |> Stream.map(fn x -> x end)
             true -> String.graphemes(value)
+        end
+    end
+
+    def permute_by_function([], _, _), do: [[]]
+    def permute_by_function([head | remaining], commands, environment) do
+        for sub <- permute_by_function(remaining, commands, environment), curr <- [head, Interpreter.flat_interp(commands, [head], environment)] do
+            [curr] ++ sub
         end
     end
 
@@ -264,7 +272,7 @@ defmodule Commands.ListCommands do
         cond do
             Functions.is_iterable(value) -> value |> Stream.with_index(1) |> Stream.map(fn {x, index} -> Functions.call_binary(fn a, b -> 
                 Functions.to_number(a) * Functions.to_number(b) end, x, index) end)
-            true -> lift(String.graphemes(to_string(value)))
+            true -> String.graphemes(to_string(value)) |> Stream.with_index(1) |> Stream.map(fn {x, index} -> String.duplicate(x, index) end)
         end
     end
 
@@ -506,5 +514,26 @@ defmodule Commands.ListCommands do
             head == value -> true
             head > value -> false
         end
+    end
+
+    def unfold_up_to(start, function, limit) do
+        Stream.unfold(start, 
+            fn index -> 
+                result = function.(index)
+                cond do 
+                    result > limit -> nil
+                    true -> {result, index + 1}
+                end 
+            end) |> Stream.map(fn x -> x end)
+    end
+
+    def generate_n(start, function, n) do
+        Stream.unfold({start, n},
+            fn 
+                {_, 0} -> nil
+                {acc, size} -> 
+                    result = function.(acc)
+                    {acc, {result, size - 1}}
+            end) |> Stream.map(fn x -> x end)
     end
 end

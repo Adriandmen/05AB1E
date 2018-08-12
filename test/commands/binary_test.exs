@@ -612,4 +612,9 @@ defmodule BinaryTest do
         assert evaluate("4 4.0@") == 1
         assert evaluate("3 4 5 6 7) 4.0@") == [0, 1, 1, 1, 1]
     end
+
+    test "limit by" do
+        assert evaluate("4 8ÅL") == 4
+        assert evaluate("456789S 6ÅL") == [4, 5, 6, 6, 6, 6]
+    end
 end

@@ -347,7 +347,7 @@ defmodule UnaryTest do
 
     test "lift" do
         assert evaluate("3Lƶ") == [1, 4, 9]
-        assert evaluate("123ƶ") == [1, 4, 9]
+        assert evaluate("123ƶ") == ["1", "22", "333"]
         assert evaluate("3LLƶ") == [[1], [2, 4], [3, 6, 9]]
         assert evaluate("∞ƶ5£") == [1, 4, 9, 16, 25]
     end
@@ -813,14 +813,109 @@ defmodule UnaryTest do
     end
 
     test "upper triangular matrix" do
-        assert evaluate("123S456S789S)ïÅU") == [[1, 2, 3], [5, 6], [9]]
-        assert evaluate("1234S4567S7890S)ïÅU") == [[1, 2, 3, 4], [5, 6, 7], [9, 0]]
-        assert evaluate("123S456S789S012S)ïÅU") == [[1, 2, 3], [5, 6], [9]]
+        assert evaluate("123S456S789S)ïÅu") == [[1, 2, 3], [5, 6], [9]]
+        assert evaluate("1234S4567S7890S)ïÅu") == [[1, 2, 3, 4], [5, 6, 7], [9, 0]]
+        assert evaluate("123S456S789S012S)ïÅu") == [[1, 2, 3], [5, 6], [9]]
     end
 
     test "lower triangular matrix" do
-        assert evaluate("123S456S789S)ïÅL") == [[1], [4, 5], [7, 8, 9]]
-        assert evaluate("1234S4567S7890S)ïÅL") == [[1, 2], [4, 5, 6], [7, 8, 9, 0]]
-        assert evaluate("123S456S789S012S)ïÅL") == [[4], [7, 8], [0, 1, 2]]
+        assert evaluate("123S456S789S)ïÅl") == [[1], [4, 5], [7, 8, 9]]
+        assert evaluate("1234S4567S7890S)ïÅl") == [[1, 2], [4, 5, 6], [7, 8, 9, 0]]
+        assert evaluate("123S456S789S012S)ïÅl") == [[4], [7, 8], [0, 1, 2]]
+    end
+
+    test "vertical intersected mirror" do
+        assert evaluate("\"/-\\\"\" | \").∊") == "/-\\\n | \n\\-/"
+        assert evaluate("\"/-\\\n | \".∊") == "/-\\\n | \n\\-/"
+    end
+
+    test "list of factorials" do
+        assert evaluate("120Å!") == [1, 1, 2, 6, 24, 120]
+        assert evaluate("1Å!") == [1, 1]
+        assert evaluate("0Å!") == []
+    end
+
+    test "list of numbers" do
+        assert evaluate("5Å0") == [0, 0, 0, 0, 0]
+        assert evaluate("0Å0") == []
+        assert evaluate("4Å1") == [1, 1, 1, 1]
+        assert evaluate("4Å2") == [2, 2, 2, 2]
+        assert evaluate("4Å3") == [3, 3, 3, 3]
+        assert evaluate("4Å4") == [4, 4, 4, 4]
+        assert evaluate("4Å5") == [5, 5, 5, 5]
+        assert evaluate("4Å6") == [6, 6, 6, 6]
+        assert evaluate("4Å7") == [7, 7, 7, 7]
+        assert evaluate("4Å8") == [8, 8, 8, 8]
+        assert evaluate("4Å9") == [9, 9, 9, 9]
+    end
+
+    test "arithmetic mean" do
+        assert evaluate("1 2 3 4 5)ÅA") == 3.0
+        assert evaluate("1 2 3 4 5 6)ÅA") == 3.5
+        assert evaluate("123S456S)ÅA") == [2, 5]
+    end
+
+    test "fibonacci numbers" do
+        assert evaluate("144ÅF") == [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144]
+        assert evaluate("1ÅF") == [0, 1, 1]
+        assert evaluate("0ÅF") == [0]
+    end
+
+    test "lucas numbers" do
+        assert evaluate("18ÅG") == [2, 1, 3, 4, 7, 11, 18]
+        assert evaluate("2ÅG") == [2, 1]
+        assert evaluate("1ÅG") == []
+    end
+
+    test "prime numbers" do
+        assert evaluate("15ÅP") == [2, 3, 5, 7, 11, 13]
+        assert evaluate("1ÅP") == []
+    end
+
+    test "triangle numbers" do
+        assert evaluate("15ÅT") == [0, 1, 3, 6, 10, 15]
+        assert evaluate("0ÅT") == [0]
+    end
+
+    test "get nth fibonacci number" do
+        assert evaluate("0Åf") == 0
+        assert evaluate("1Åf") == 1
+        assert evaluate("2Åf") == 1
+        assert evaluate("3Åf") == 2
+        assert evaluate("4Åf") == 3
+        assert evaluate("5Åf") == 5
+        assert evaluate("6Åf") == 8
+        assert evaluate("7Åf") == 13
+    end
+
+    test "get nth lucas number" do
+        assert evaluate("0Åg") == 2
+        assert evaluate("1Åg") == 1
+        assert evaluate("10Åg") == 123
+    end
+
+    test "get n prime numbers" do
+        assert evaluate("5Åp") == [2, 3, 5, 7, 11]
+        assert evaluate("1Åp") == [2]
+        assert evaluate("0Åp") == []
+    end
+    
+    test "is square" do
+        assert evaluate("4Å²") == 1
+        assert evaluate("16Å²") == 1
+        assert evaluate("15Å²") == 0
+        assert evaluate("53522106920846801808219431931984825981463774466487129Å²") == 1
+        assert evaluate("53522106920846801808219431931984825981463774466487130Å²") == 0
+        assert evaluate("53522106920846801808219431931984825981463774466487128Å²") == 0
+    end
+
+    test "even numbers" do
+        assert evaluate("5ÅÈ") == [0, 2, 4]
+        assert evaluate("8ÅÈ") == [0, 2, 4, 6, 8]
+    end
+
+    test "odd numbers" do
+        assert evaluate("5ÅÉ") == [1, 3, 5]
+        assert evaluate("8ÅÉ") == [1, 3, 5, 7]
     end
 end

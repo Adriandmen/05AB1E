@@ -69,7 +69,7 @@ defmodule Interp.Output do
                 IO.write(", ")
             Functions.is_iterable(element) -> 
                 IO.write("[")
-                element |> Stream.intersperse(:separator) |> Stream.each(fn x -> print(x, false, true) end) |> Stream.run
+                element |> Stream.intersperse(:separator) |> Stream.each(fn x -> print(x, false, true) end) |> Functions.eval
                 IO.write("]")
             is_number(element) ->
                 IO.write(element)

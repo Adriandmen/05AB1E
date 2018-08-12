@@ -7,7 +7,7 @@ defmodule Reading.Reader do
     def remaining, do: "(?<remaining>.*)"
     
     defp regexify(map) when is_map(map) do
-        map |> Map.to_list |> Enum.map(fn {open, close} -> ~r/((?<delimiter>#{Regex.escape(open)})(?<string>.*?)(#{Regex.escape(close)}|\z)#{remaining()})/s end)
+        map |> Map.to_list |> Enum.map(fn {open, close} -> ~r/^((?<delimiter>#{Regex.escape(open)})(?<string>.*?)(#{Regex.escape(close)}|\z)#{remaining()})/s end)
     end
     defp regexify(list) when is_list(list), do: "(" <> Enum.join(Enum.map(list, fn x -> Regex.escape(x) end), "|") <> ")"
     
@@ -24,21 +24,24 @@ defmodule Reading.Reader do
                                  ".e", ".E", ".j", ".J", ".l", ".M", ".m", ".N", ".p", ".R", ".r", ".s", ".u", 
                                  ".w", ".W", ".²", ".ï", ".ˆ", ".^", ".¼", ".½", ".¾", ".∞", ".¥", ".ǝ", ".∊", 
                                  ".Ø", "\\", "ā", "¤", "¥", "¬", "O", "P", "Z", "W", "»", "½", "=", "Ð", "ß", 
-                                 "à", "º", ".ā", ".º", ".œ", ".Ó", ".±", "Å/", "ÅU", "ÅL"]
+                                 "à", "º", ".ā", ".º", ".œ", ".Ó", ".±", "Å/", "Åu", "Ål", "Å!", "Å0", "Å1",
+                                 "Å2", "Å3", "Å4", "Å5", "Å6", "Å7", "Å8", "Å9", "ÅA", "ÅF", "ÅG", "ÅP", "ÅT",
+                                 "Åf", "Åg", "Åp", "Å²", "ÅÈ", "ÅÉ"]
 
     def binary_ops, do: regexify ["α", "β", "в", "и", "м", "∍", "%", "&", "*", "+", "-", "/", "B", "K",
                                   "Q", "^", "c", "e", "k", "m", "s", "~", "‚", "†", "‰", "‹", "›", "¡", "¢",
                                   "£", "«", "Ã", "Ê", "Ï", "Ö", "×", "Û", "Ü", "Ý", "â", "ä", "å", "è", "@",
                                   "ì", "ô", "ö", "÷", "ù", "ú", "ý", ".å", ".D", ".h", ".H", ".S", ".ø", ".o",
-                                  ".£", ".n", ".x", ".L", ".ý", ".Q", ".ò", "j", ".$", ".Œ", "._", ".i", ".k"]
+                                  ".£", ".n", ".x", ".L", ".ý", ".Q", ".ò", "j", ".$", ".Œ", "._", ".i", ".k",
+                                  "ÅL", "ÅU"]
     
-    def ternary_ops, do: regexify ["ǝ", "Š", "‡", ":", "Λ", ".Λ"]
+    def ternary_ops, do: regexify ["ǝ", "Š", "‡", ":", "Λ", ".Λ", ".:", ".;"]
 
     def special_ops, do: regexify [")", "r", "©", "¹", "²", "³", "I", "$", "Î", "#", "Ÿ", "ø", "ζ", "ι", "¿", 
                                    "ã", "M", ".¿", ".V", "₅", "₆", "|", ".Æ"]
     
     def subprogram_ops, do: regexify ["ʒ", "ε", "Δ", "Σ", "F", "G", "v", "ƒ", "µ", "[", "i", "λ", ".γ", ".¡", ".Δ",
-                                      "ÅΔ", "E"]
+                                      "ÅΔ", "E", ".æ"]
     
     def subcommand_ops, do: regexify ["δ", "€", "ü", ".«", ".»"]
     
@@ -62,7 +65,7 @@ defmodule Reading.Reader do
     def read_file(file_path, encoding) do
         case encoding do
             :utf_8 -> 
-                String.codepoints(File.read!(file_path))
+                String.graphemes(File.read!(file_path))
             :osabie -> 
                 {_, file} = :file.open(file_path, [:read, :binary])
                 IO.binread(file, :all) |> :binary.bin_to_list |> Enum.map(fn x -> CodePage.osabie_to_utf8(x) end)

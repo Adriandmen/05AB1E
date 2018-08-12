@@ -14,8 +14,7 @@ defmodule Reading.InputHandler do
         cond do
             input == :eof and Globals.get().inputs == [] -> nil
             input == :eof -> 
-                [head | _] = Globals.get().inputs
-                head
+                List.last Globals.get().inputs
             Regex.match?(~r/^\[.+\]/, input) ->
                 {result, _} = Code.eval_string(to_string(input)) 
                 result = result |> Stream.map(fn x -> x end)

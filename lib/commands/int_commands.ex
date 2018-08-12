@@ -240,6 +240,30 @@ defmodule Commands.IntCommands do
     def n_permute_k(n, k) when k > n, do: 0
     def n_permute_k(n, k), do: div(factorial(n), factorial(n - k))
 
+    @doc """
+    Is square method. Checks whether the given number is a square.
+    Handles arbitrary position.
+    """
+    def is_square?(0), do: true
+    def is_square?(1), do: true
+    def is_square?(value) when not is_integer(value), do: false
+    def is_square?(value) do
+        if not is_integer(value) do
+            false
+        else
+            x = div(value, 2)
+            is_square?(value, MapSet.new([x]), x)
+        end
+    end
+    defp is_square?(value, _, x) when x * x == value, do: true
+    defp is_square?(value, history, x) do
+        x = div(x + div(value, x), 2)
+        cond do
+            MapSet.member?(history, x) -> false
+            true -> is_square?(value, MapSet.put(history, x), x)
+        end
+    end
+
     def max_of(list) do
         cond do
             Functions.is_iterable(list) -> max_of(Enum.to_list(list), nil)
@@ -320,4 +344,27 @@ defmodule Commands.IntCommands do
                 next_fraction_digit(a, b, k, p1, q1, x * p1 + y * p0, x * q1 + y * q0)
         end
     end
+
+    def arithmetic_mean(list), do: arithmetic_mean(Enum.to_list(list), 0, 0)
+    def arithmetic_mean([], sum, index), do: sum / index
+    def arithmetic_mean([head | remaining], sum, index) when Functions.is_iterable(head), do: [head | remaining] |> Stream.map(&arithmetic_mean/1)
+    def arithmetic_mean([head | remaining], sum, index), do: arithmetic_mean(remaining, sum + Functions.to_number(head), index + 1)
+    
+    @doc """
+    Tail call optimized version of the Fibonacci sequence
+    """
+    def fibonacci(0), do: 0
+    def fibonacci(1), do: 1
+    def fibonacci(index) when index > 1, do: fibonacci(index, 0, 1)
+    defp fibonacci(0, a, _), do: a
+    defp fibonacci(index, a, b), do: fibonacci(index - 1, b, a + b)
+
+    @doc """
+    Tail call optimized version of the Lucas sequence.
+    """
+    def lucas(0), do: 2
+    def lucas(1), do: 1
+    def lucas(index) when index > 1, do: lucas(index, 2, 1)
+    defp lucas(0, a, _), do: a
+    defp lucas(index, a, b), do: lucas(index - 1, b, a + b)
 end

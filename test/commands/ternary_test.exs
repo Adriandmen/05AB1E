@@ -36,4 +36,14 @@ defmodule TernaryTest do
         assert evaluate("123456 \"x\" 23Sǝ") == "12xx56"
         assert evaluate("123456 \"xy\"S 23Sǝ") == "12xy56"
     end
+
+    test "replace all" do
+        assert evaluate("1243321 43 4.:") == "124321"
+        assert evaluate("1243321 83S 4.:") == "1244421"
+    end
+
+    test "replace first" do
+        assert evaluate("11223344333221 22 5.;") == "1153344333221"
+        assert evaluate("123434Sï 3 5ï.;") == [1, 2, 5, 4, 3, 4]
+    end
 end

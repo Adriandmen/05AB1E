@@ -138,9 +138,9 @@ defmodule SpecialOpsTest do
     end
 
     test "counter loop" do
-        assert evaluate("6µN2Öi¼}") == 10
-        assert evaluate("6µN2Ö½") == 10
-        assert evaluate("6µN2Ö") == 10
+        assert evaluate("6µND2Öi¼}") == 12
+        assert evaluate("6µND2Ö½") == 12
+        assert evaluate("6µND2Ö") == 12
     end
 
     test "quit program" do
@@ -173,6 +173,7 @@ defmodule SpecialOpsTest do
         assert evaluate("2ˆ3ˆ5ˆ¯ï") == [2, 3, 5]
         assert evaluate("2ˆ3ˆ5ˆ´¯") == []
         assert evaluate("2ˆ3ˆ5ˆ´7ˆ¯ï") == [7]
+        assert evaluate("42 17 43 43)ï`ˆ)") == [42, 17, 43]
     end
 
     test "constants" do
@@ -217,5 +218,20 @@ defmodule SpecialOpsTest do
     test "find first index" do
         assert evaluate("\"a b c d ab cd ef\"#ÅΔg2Q") == 4
         assert evaluate("∞ÅΔg2Q") == 9
+    end
+
+    test "left reduce" do
+        assert evaluate("1234S.»-") == -8
+        assert evaluate("1234.»-") == -8
+    end
+
+    test "right reduce" do
+        assert evaluate("1234S.«-") == -2
+        assert evaluate("1234.«-") == -2
+    end
+
+    test "permute by function" do
+        assert evaluate("123Sï.æ>") == [[1, 2, 3], [2, 2, 3], [1, 3, 3], [2, 3, 3], [1, 2, 4], [2, 2, 4], [1, 3, 4], [2, 3, 4]]
+        assert evaluate("123.æ>}ï") == [[1, 2, 3], [2, 2, 3], [1, 3, 3], [2, 3, 3], [1, 2, 4], [2, 2, 4], [1, 3, 4], [2, 3, 4]]
     end
 end

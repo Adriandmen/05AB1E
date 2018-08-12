@@ -75,15 +75,17 @@ defmodule Osabie.CLI do
         # Run the code and retrieve the last element of the stack
         commands = Parser.parse(Reader.read(Enum.join(Reader.read_file(file_name, encoding), "")))
         {stack, environment} = Interpreter.interp(commands, %Stack{}, %Environment{})
-        {last, _, _} = Stack.pop(stack, environment)
 
         if Globals.get().canvas.canvas != %{} do
             Output.print(Canvas.canvas_to_string(Globals.get().canvas))
         end
         
+        {last, stack, _} = Stack.pop(stack, environment)
+        last = Functions.eval last
         case Globals.get().printed do
             true -> nil
-            false -> Output.print(last)
+            false -> 
+                Output.print(last)
         end
     end
 

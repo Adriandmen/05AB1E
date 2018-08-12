@@ -24,7 +24,7 @@ defmodule Reading.Dictionary do
             first_index = compressed_chars() |> Enum.find_index(fn x -> x == first end)
             second_index = compressed_chars() |> Enum.find_index(fn x -> x == second end)
             index = 100 * first_index + second_index
-            word = Enum.at(dictionary(), index - 1)
+            word = Enum.at(dictionary(), index)
             
             # Adjust to the given mode.
             word = case mode do

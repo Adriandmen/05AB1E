@@ -25,42 +25,40 @@ defmodule Interp.Functions do
     # ----------------
     # Value conversion
     # ----------------
+    def to_number(true), do: 1
+    def to_number(false), do: 0
+    def to_number(value) when is_iterable(value), do: value |> Stream.map(&to_number/1)
+    def to_number(value) when is_number(value), do: value
     def to_number(value) do
         value = cond do
-            is_iterable(value) -> value
             Regex.match?(~r/^\.\d+/, to_string(value)) -> "0" <> to_string(value)
             true -> value
         end
 
-        cond do
-            value == true -> 1
-            value == false -> 0
-            is_integer(value) or is_float(value) -> value
-            is_iterable(value) -> value |> Stream.map(&to_number/1)
-            is_bitstring(value) and String.starts_with?(value, "-") ->
-                try do
-                    new_val = String.slice(value, 1..-1)
-                    -to_number(new_val)
-                rescue
-                    _ -> value 
+        if is_bitstring(value) and String.starts_with?(value, "-") do
+            try do
+                new_val = String.slice(value, 1..-1)
+                -to_number(new_val)
+            rescue
+                _ -> value 
+            end
+        else
+            try do
+                {int_part, remaining} = Integer.parse(value)
+                case remaining do
+                    "" -> int_part
+                    _ ->
+                        {float_part, remaining} = Float.parse("0" <> remaining)
+                        cond do
+                            remaining != "" -> value
+                            float_part == 0.0 -> int_part
+                            remaining == "" -> int_part + float_part
+                            true -> value
+                        end
                 end
-            true ->
-                try do
-                    {int_part, remaining} = Integer.parse(value)
-                    case remaining do
-                        "" -> int_part
-                        _ ->
-                            {float_part, remaining} = Float.parse("0" <> remaining)
-                            cond do
-                                remaining != "" -> value
-                                float_part == 0.0 -> int_part
-                                remaining == "" -> int_part + float_part
-                                true -> value
-                            end
-                    end
-                rescue
-                    _ -> value
-                end
+            rescue
+                _ -> value
+            end
         end
     end
 
@@ -136,8 +134,7 @@ defmodule Interp.Functions do
     # Force evaluation on lazy objects
     # --------------------------------
     def eval(value) when is_iterable(value) do
-        Enum.to_list(value)
-        Enum.map(value, &eval/1)
+        Enum.map(Enum.to_list(value), &eval/1)
     end
 
     def eval(value) do
@@ -148,56 +145,35 @@ defmodule Interp.Functions do
     # --------------------
     # Unary method calling
     # --------------------
-    def call_unary(func, a) do 
-        call_unary(func, a, false)
-    end
-
-    def call_unary(func, a, false) when is_iterable(a) do
-        a |> Stream.map(fn x -> call_unary(func, x, false) end)
-    end
-
+    def call_unary(func, a), do: call_unary(func, a, false)
+    def call_unary(func, a, false) when is_iterable(a), do: a |> Stream.map(fn x -> call_unary(func, x, false) end)
     def call_unary(func, a, _) do
-        try do
-            func.(a)
-        rescue
-            _ -> a
-        end
+        try_default(fn -> func.(a) end, fn exception -> throw_test_or_return(exception, a) end)
     end
 
     
     # ---------------------
     # Binary method calling
     # ---------------------
-    def call_binary(func, a, b) do
-        call_binary(func, a, b, false, false)
-    end
-
-    def call_binary(func, a, b, false, false) when is_iterable(a) and is_iterable(b) do
-        Stream.zip([a, b]) |> Stream.map(fn {x, y} -> call_binary(func, x, y, false, false) end)
-    end
-
-    def call_binary(func, a, b, _, false) when is_iterable(b) do
-        b |> Stream.map(fn x -> call_binary(func, a, x, true, false) end)
-    end
-
-    def call_binary(func, a, b, false, _) when is_iterable(a) do
-        a |> Stream.map(fn x -> call_binary(func, x, b, false, true) end)
-    end
-
+    def call_binary(func, a, b), do: call_binary(func, a, b, false, false)
+    def call_binary(func, a, b, false, false) when is_iterable(a) and is_iterable(b), do: Stream.zip([a, b]) |> Stream.map(fn {x, y} -> call_binary(func, x, y, false, false) end)
+    def call_binary(func, a, b, _, false) when is_iterable(b), do: b |> Stream.map(fn x -> call_binary(func, a, x, true, false) end)
+    def call_binary(func, a, b, false, _) when is_iterable(a), do: a |> Stream.map(fn x -> call_binary(func, x, b, false, true) end)
     def call_binary(func, a, b, _, _) do
-        try do
-            func.(a, b)
-        rescue
-            _ -> 
-                try do
-                    func.(b, a)
-                rescue
-                    x ->
-                        case Globals.get().debug.test do
-                            true -> raise(x)
-                            false -> a
-                        end
-                end
+        try_default([
+            fn -> func.(a, b) end, 
+            fn -> func.(b, a) end
+        ], fn exception -> throw_test_or_return(exception, a) end)
+    end
+
+    def try_default([function], exception_function), do: try_default(function, exception_function)
+    def try_default([function | remaining], exception_function), do: (try do function.() rescue _ -> try_default(remaining, exception_function) end)
+    def try_default(function, exception_function), do: (try do function.() rescue x -> exception_function.(x) end)
+
+    defp throw_test_or_return(exception, value) do
+        case Globals.get().debug.test do
+            true -> raise(exception)
+            false -> value
         end
     end
 end
