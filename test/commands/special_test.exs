@@ -21,6 +21,10 @@ defmodule SpecialOpsTest do
         assert evaluate("3F3FN} N})") == [0, 1, 2, 0, 0, 1, 2, 1, 0, 1, 2, 2]
     end
 
+    test "for loop [0, x]" do
+        assert evaluate("5EN})") == [0, 1, 2, 3, 4, 5]
+    end
+
     test "for loop [1, N)" do
         assert evaluate("5GN} N)") == [1, 2, 3, 4, 0]
         assert evaluate("3G3GN} N})") == [1, 2, 1, 1, 2, 2]
@@ -176,13 +180,21 @@ defmodule SpecialOpsTest do
         assert evaluate("₂") == 26
         assert evaluate("₃") == 95
         assert evaluate("₄") == 1000
+        assert evaluate("₅") == 255
+        assert evaluate("₆") == 36
     end
 
     test "recursive list generation" do
-        assert evaluate("11λ+}5£") == [1, 1, 2, 3, 5]
+        assert evaluate("1λ+}5£") == [1, 1, 2, 3, 5]
         assert evaluate("11Sλ+}5£") == [1, 1, 2, 3, 5]
         assert evaluate("358Sλ₂₃+}5£") == [3, 5, 8, 8, 13]
         assert evaluate("0λ₅₅Nα}10000è") == 6823
+        assert evaluate("1λ1₆2₆+}5£") == [1, 1, 2, 3, 5]
+    end
+
+    test "recursive list with contains flag" do
+        assert evaluate("34 1λj+") == 1
+        assert evaluate("37 1λj+") == 0
     end
 
     test "group by function" do
@@ -195,5 +207,15 @@ defmodule SpecialOpsTest do
         assert evaluate("5L.¡È") == [[1, 3, 5], [2, 4]]
         assert evaluate("10L.¡3%") == [[1, 4, 7, 10], [2, 5, 8], [3, 6, 9]]
         assert evaluate("∞.¡3%}0è4£") == [1, 4, 7, 10]
+    end
+
+    test "find first" do
+        assert evaluate("10L.Δ4›") == 5
+        assert evaluate("∞.Δ50›") == 51
+    end
+
+    test "find first index" do
+        assert evaluate("\"a b c d ab cd ef\"#ÅΔg2Q") == 4
+        assert evaluate("∞ÅΔg2Q") == 9
     end
 end

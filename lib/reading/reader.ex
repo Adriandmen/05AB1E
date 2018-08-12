@@ -11,11 +11,11 @@ defmodule Reading.Reader do
     end
     defp regexify(list) when is_list(list), do: "(" <> Enum.join(Enum.map(list, fn x -> Regex.escape(x) end), "|") <> ")"
     
-    def nullary_ops, do: regexify ["∞", "т", "₁", "₂", "₃", "₄", "A", "®", "N", "y", "w", "¶", "õ", "X", "Y", 
+    def nullary_ops, do: regexify ["∞", "т", "₁", "₂", "₃", "₄", "A", "®", "N", "y", ".Z", "¶", "õ", "X", "Y", 
                                    "¼", "¾", "q", "ð", ".À", ".Á", ".g", "¯", "´", "T"]
 
     def unary_ops, do: regexify ["γ", "η", "θ", "н", "Θ", "Ω", "≠", "∊", "∞", "!", "(", ",", ";", "<", ">", 
-                                 "?", "@", "C", "D", "H", "J", "L", "R", "S", "U", "V", "_", "`", "a", "b", 
+                                 "?", "C", "D", "H", "J", "L", "R", "S", "U", "V", "_", "`", "a", "b", "Å\\",
                                  "d", "f", "g", "h", "l", "n", "o", "p", "t", "u", "x", "z", "{", "ˆ", "Œ", 
                                  "Ć", "ƶ", "Ā", "–", "—", "˜", "™", "š", "œ", "ć", "¥", "¦", "§", "¨", "ª", 
                                  "°", "±", "·", "¸", "À", "Á", "Â", "Ä", "Æ", "Ç", "È", "É", "Ë", "Ì", "Í", 
@@ -24,20 +24,21 @@ defmodule Reading.Reader do
                                  ".e", ".E", ".j", ".J", ".l", ".M", ".m", ".N", ".p", ".R", ".r", ".s", ".u", 
                                  ".w", ".W", ".²", ".ï", ".ˆ", ".^", ".¼", ".½", ".¾", ".∞", ".¥", ".ǝ", ".∊", 
                                  ".Ø", "\\", "ā", "¤", "¥", "¬", "O", "P", "Z", "W", "»", "½", "=", "Ð", "ß", 
-                                 "à", "º", ".ā", ".º", ".œ", ".Ó"]
+                                 "à", "º", ".ā", ".º", ".œ", ".Ó", ".±", "Å/", "ÅU", "ÅL"]
 
     def binary_ops, do: regexify ["α", "β", "в", "и", "м", "∍", "%", "&", "*", "+", "-", "/", "B", "K",
                                   "Q", "^", "c", "e", "k", "m", "s", "~", "‚", "†", "‰", "‹", "›", "¡", "¢",
-                                  "£", "«", "Ã", "Ê", "Ï", "Ö", "×", "Û", "Ü", "Ý", "â", "ä", "å", "è",
+                                  "£", "«", "Ã", "Ê", "Ï", "Ö", "×", "Û", "Ü", "Ý", "â", "ä", "å", "è", "@",
                                   "ì", "ô", "ö", "÷", "ù", "ú", "ý", ".å", ".D", ".h", ".H", ".S", ".ø", ".o",
-                                  ".£", ".n", ".x", ".L", ".ý", ".Q", ".ò", "j", ".$", ".Œ"]
+                                  ".£", ".n", ".x", ".L", ".ý", ".Q", ".ò", "j", ".$", ".Œ", "._", ".i", ".k"]
     
-    def ternary_ops, do: regexify ["ǝ", "Š", "‡", ":", "Λ"]
+    def ternary_ops, do: regexify ["ǝ", "Š", "‡", ":", "Λ", ".Λ"]
 
     def special_ops, do: regexify [")", "r", "©", "¹", "²", "³", "I", "$", "Î", "#", "Ÿ", "ø", "ζ", "ι", "¿", 
                                    "ã", "M", ".¿", ".V", "₅", "₆", "|", ".Æ"]
     
-    def subprogram_ops, do: regexify ["ʒ", "ε", "Δ", "Σ", "F", "G", "v", "ƒ", "µ", "[", "i", "λ", ".γ", ".¡"]
+    def subprogram_ops, do: regexify ["ʒ", "ε", "Δ", "Σ", "F", "G", "v", "ƒ", "µ", "[", "i", "λ", ".γ", ".¡", ".Δ",
+                                      "ÅΔ", "E"]
     
     def subcommand_ops, do: regexify ["δ", "€", "ü", ".«", ".»"]
     
@@ -47,7 +48,7 @@ defmodule Reading.Reader do
 
     def two_char_strings, do: regexify %{".•" => "•"}
 
-    def char_indicators, do: regexify ["'", "„", "…", "Ƶ"]
+    def char_indicators, do: regexify ["'", "„", "…", "Ƶ", "Ž"]
     
     def compressed_chars, do: regexify ["€", "‚", "ƒ", "„", "…", "†", "‡", "ˆ", "‰", "Š", "‹", "Œ", "Ž", "í", "î", "•", "–", "—", 
                                         "ï", "™", "š", "›", "œ", "ž", "Ÿ", "¡", "¢", "£", "¤", "¥", "¦", "§", "¨", "©", "ª", "«", 
@@ -147,6 +148,9 @@ defmodule Reading.Reader do
                     "Ƶ" -> 
                         new_matches = Regex.named_captures(~r/(?<char>#{any_osabie_char()})#{remaining()}/s, matches["remaining"])
                         {:number, IntCommands.string_from_base(new_matches["char"], 255) + 101, new_matches["remaining"]}
+                    "Ž" ->
+                        new_matches = Regex.named_captures(~r/(?<chars>#{any_osabie_char()}{2})#{remaining()}/s, matches["remaining"])
+                        {:number, IntCommands.string_from_base(new_matches["chars"], 255), new_matches["remaining"]}
                 end
 
             # Nullary functions

@@ -58,4 +58,17 @@ defmodule ConstantsTest do
         assert evaluate("žV") == ["qwertyuiop", "asdfghjkl", "zxcvbnm"]
         assert evaluate("žW") == "qwertyuiopasdfghjklzxcvbnm"
     end
+
+    test "time based constants" do
+        {{year, month, day}, {hour, minute, second}} = :calendar.local_time()
+        assert evaluate("ža") == hour
+        assert evaluate("žb") == minute
+        assert evaluate("žc") == second
+        assert evaluate("že") == day
+        assert evaluate("žf") == month
+        assert evaluate("žg") == year
+
+        curr_milliseconds = div(rem(:os.system_time(), 100000000), 100)
+        assert_in_delta evaluate("žd"), curr_milliseconds, 100
+    end
 end

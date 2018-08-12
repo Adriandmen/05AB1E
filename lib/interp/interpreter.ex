@@ -22,6 +22,7 @@ defmodule Interp.Interpreter do
     alias Commands.StrCommands
     alias Commands.IntCommands
     alias Commands.GeneralCommands
+    alias Commands.MatrixCommands
     alias Reading.InputHandler
     alias Reading.Reader
     alias Parsing.Parser
@@ -51,7 +52,7 @@ defmodule Interp.Interpreter do
             "´" -> Globals.set(%{Globals.get() | array: []}); stack
             "q" -> Globals.set(%{Globals.get() | status: :quit}); stack
             "¼" -> global_env = Globals.get(); Globals.set(%{global_env | counter_variable: global_env.counter_variable + 1}); stack
-            "w" -> :timer.sleep(1000); stack
+            ".Z" -> :timer.sleep(1000); stack
             "ža" -> {_, {hour, _, _}} = :calendar.local_time(); Stack.push(stack, hour)
             "žb" -> {_, {_, minute, _}} = :calendar.local_time(); Stack.push(stack, minute)
             "žc" -> {_, {_, _, second}} = :calendar.local_time(); Stack.push(stack, second)
@@ -125,7 +126,7 @@ defmodule Interp.Interpreter do
             "_" -> Stack.push(stack, call_unary(fn x -> to_number(to_number(x) == 0) end, a))
             "(" -> Stack.push(stack, call_unary(fn x -> to_number(x) * -1 end, a))
             "a" -> Stack.push(stack, call_unary(fn x -> to_number(Regex.match?(~r/^[a-zA-Z]+$/, to_string(x))) end, a))
-            "d" -> Stack.push(stack, call_unary(fn x -> to_number(Regex.match?(~r/^\d+$/, to_string(x))) end, a))
+            "d" -> Stack.push(stack, call_unary(fn x -> to_number(is_number(to_number(x)) and to_number(x) >= 0) end, a))
             "b" -> Stack.push(stack, call_unary(fn x -> IntCommands.to_base(to_number(x), 2) end, a))
             "h" -> Stack.push(stack, call_unary(fn x -> IntCommands.to_base(to_number(x), 16) end, a))
             "p" -> Stack.push(stack, call_unary(fn x -> to_number(IntCommands.is_prime?(to_number(x))) end, a))
@@ -177,6 +178,7 @@ defmodule Interp.Interpreter do
            ".²" -> Stack.push(stack, call_unary(fn x -> :math.log2(to_number(x)) end, a))
            ".E" -> Stack.push(stack, call_unary(fn x -> {result, _} = Code.eval_string(to_string(x)); result end, a))
            ".Ø" -> Stack.push(stack, call_unary(fn x -> IntCommands.get_prime_index(to_number(x)) end, a))
+           ".±" -> Stack.push(stack, call_unary(fn x -> cond do to_number(x) > 0 -> 1; to_number(x) < 0 -> -1; true -> 0 end end, a))
            ".B" -> Stack.push(stack, if is_iterable(a) do StrCommands.squarify(a) else StrCommands.squarify(String.split(to_string(a), "\n")) end)
            ".c" -> Stack.push(stack, if is_iterable(a) do StrCommands.align_center(a, :left) else StrCommands.align_center(String.split(to_string(a), "\n"), :left) end)
            ".C" -> Stack.push(stack, if is_iterable(a) do StrCommands.align_center(a, :right) else StrCommands.align_center(String.split(to_string(a), "\n"), :right) end)
@@ -184,6 +186,10 @@ defmodule Interp.Interpreter do
            ".r" -> Stack.push(stack, if is_iterable(a) do Enum.shuffle(Enum.to_list(a)) else Enum.join(Enum.shuffle(String.graphemes(to_string(a))), "") end)
            ".œ" -> Stack.push(stack, if is_iterable(a) do ListCommands.partitions(Enum.to_list(a)) else ListCommands.partitions(to_list(a)) |> Enum.map(fn x -> x |> Enum.map(fn y -> y |> Enum.join("") end) end) end)
            ".¥" -> Stack.push(stack, ListCommands.undelta(a))
+          "Å\\" -> Stack.push(stack, MatrixCommands.left_diagonal(a))
+           "Å/" -> Stack.push(stack, MatrixCommands.right_diagonal(a))
+           "ÅU" -> Stack.push(stack, MatrixCommands.upper_triangular_matrix(a))
+           "ÅL" -> Stack.push(stack, MatrixCommands.lower_triangular_matrix(a))
             "é" -> Stack.push(stack, a |> Enum.sort_by(fn x -> GeneralCommands.length_of(x) end))
             "º" -> Stack.push(stack, StrCommands.mirror(a))
             "í" -> Stack.push(stack, a |> Stream.map(fn x -> if is_iterable(x) do Enum.to_list(x) |> Enum.reverse else String.reverse(to_string(x)) end end))
@@ -277,6 +283,7 @@ defmodule Interp.Interpreter do
             "‰" -> Stack.push(stack, call_binary(fn x, y -> [IntCommands.divide(to_number(x), to_number(y)), IntCommands.mod(to_number(x), to_number(y))] end, a, b))
             "‹" -> Stack.push(stack, call_binary(fn x, y -> to_number(to_number(x) < to_number(y)) end, a, b))
             "›" -> Stack.push(stack, call_binary(fn x, y -> to_number(to_number(x) > to_number(y)) end, a, b))
+            "@" -> Stack.push(stack, call_binary(fn x, y -> to_number!(to_number!(x) >= to_number!(y)) end, a, b))
             "ô" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.split_into(x, to_number(y)) end, a, b, true, false))
             "Ö" -> Stack.push(stack, call_binary(fn x, y -> to_number(IntCommands.mod(to_number(x), to_number(y)) == 0) end, a, b))
             "ù" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.keep_with_length(x, to_number(y)) end, a, b, true, false))
@@ -298,6 +305,9 @@ defmodule Interp.Interpreter do
            ".L" -> Stack.push(stack, call_binary(fn x, y -> StrCommands.levenshtein_distance(to_list(x), to_list(y)) end, a, b))
            ".ò" -> Stack.push(stack, call_binary(fn x, y -> Float.round(to_number(x), to_number(y)) end, a, b))
            ".Œ" -> Stack.push(stack, call_binary(fn x, y -> normalize_inner(ListCommands.divide_into(Enum.to_list(to_list(x)), to_number(y)), a) end, a, b, true, false))
+           "._" -> Stack.push(stack, call_binary(fn x, y -> normalize_to(ListCommands.rotate(to_list(x), to_integer(y)), x) end, a, b, true, false))
+           ".i" -> Stack.push(stack, to_number(ListCommands.increasing_contains(to_list(a), to_number(b))))
+           ".k" -> Stack.push(stack, ListCommands.flat_index_in_list(a, b))
            ".ý" -> Stack.push(stack, to_list(a) |> Stream.intersperse(b) |> Stream.map(fn x -> x end))
            ".o" -> Stack.push(stack, StrCommands.overlap(a, b))
            ".ø" -> Stack.push(stack, ListCommands.surround(a, b))
@@ -335,6 +345,10 @@ defmodule Interp.Interpreter do
             "‡" -> Stack.push(stack, StrCommands.transliterate(a, b, c))
             ":" -> Stack.push(stack, StrCommands.replace_infinite(a, b, c))
             "Λ" -> global_env = Globals.get(); Globals.set(%{global_env | canvas: Canvas.write(global_env.canvas, to_number(a), to_non_number(b), to_non_number(c), environment)}); stack
+           ".Λ" -> 
+                global_env = Globals.get()
+                new_canvas = Canvas.write(global_env.canvas, to_number(a), to_non_number(b), to_non_number(c), environment)
+                Globals.set(%{global_env | canvas: new_canvas}); Stack.push(stack, Canvas.canvas_to_string(new_canvas))
         end
 
         {new_stack, environment}
@@ -493,6 +507,13 @@ defmodule Interp.Interpreter do
                 {new_stack, new_env} = GeneralCommands.loop(subcommands, stack, environment, 0, to_number(a) - 1)
                 {new_stack, %{new_env | range_variable: current_n}}
 
+            # For N in range [0, n]
+            "E" ->
+                {a, stack, environment} = Stack.pop(stack, environment)
+                current_n = environment.range_variable
+                {new_stack, new_env} = GeneralCommands.loop(subcommands, stack, environment, 0, to_number(a))
+                {new_stack, %{new_env | range_variable: current_n}}
+
             # For N in range [1, n)
             "G" ->
                 {a, stack, environment} = Stack.pop(stack, environment)
@@ -542,6 +563,10 @@ defmodule Interp.Interpreter do
                 end
                 {Stack.push(stack, result), environment}
             
+            # Filter by command
+            "w" ->
+                interp_subprogram("ʒ", subcommands, stack, environment)
+            
             # Map for each
             "ε" ->
                 {a, stack, environment} = Stack.pop(stack, environment)
@@ -572,6 +597,31 @@ defmodule Interp.Interpreter do
                 {a, stack, environment} = Stack.pop(stack, environment)
                 {result, new_env} = GeneralCommands.run_while(a, subcommands, environment, 0)
                 {Stack.push(stack, result), new_env}
+
+            # Find first
+            ".Δ" ->
+                {a, stack, environment} = Stack.pop(stack, environment)
+                {result, _} = to_list(a)
+                    |> Stream.with_index
+                    |> Enum.find(-1, fn {x, index} -> 
+                        result = flat_interp(subcommands, [x], %{environment | range_variable: index, range_element: x})
+                        GeneralCommands.equals(result, 1) end)
+                {Stack.push(stack, result), environment}
+            
+            # Find first index
+            "ÅΔ" ->
+                {a, stack, environment} = Stack.pop(stack, environment)
+                result = to_list(a)
+                    |> Stream.with_index
+                    |> Enum.find_index(fn {x, index} -> 
+                        result = flat_interp(subcommands, [x], %{environment | range_variable: index, range_element: x})
+                        GeneralCommands.equals(result, 1) end)
+
+                result = case result do
+                    nil -> -1
+                    _ -> result
+                end
+                {Stack.push(stack, result), environment}
             
             # Counter variable loop
             "µ" ->
@@ -633,11 +683,22 @@ defmodule Interp.Interpreter do
                 base_cases = cond do
                     base_cases == [] or base_cases == "" or base_cases == nil -> [1]
                     is_iterable(base_cases) -> Enum.to_list to_number(base_cases)
-                    true -> Enum.to_list to_number(String.graphemes(to_string(base_cases)))
+                    true -> [to_number(base_cases)]
+                end
+
+                {flag, subcommands} = case subcommands do
+                    [{_, "j"} | remaining] -> {:contains, remaining}
+                    _ -> {:normal, subcommands}
                 end
                 
                 result = ListCommands.listify(0, :infinity) |> Stream.map(fn x -> GeneralCommands.recursive_program(subcommands, base_cases, x) end)
-                {Stack.push(stack, result), environment}
+
+                case flag do
+                    :normal -> {Stack.push(stack, result), environment}
+                    :contains -> 
+                        {b, stack, environment} = Stack.pop(stack, environment)
+                        {Stack.push(stack, to_number(ListCommands.increasing_contains(result, to_number(b)))), environment}
+                end
 
             # Group by function
             ".γ" ->

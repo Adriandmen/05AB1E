@@ -340,7 +340,9 @@ defmodule UnaryTest do
         assert evaluate("\"123a\"d") == 0
         assert evaluate("\"123a\" 123 004)d") == [0, 1, 1]
         assert evaluate("123(d") == 0
-        assert evaluate("123.5d") == 0
+        assert evaluate("123.5d") == 1
+        assert evaluate("0.5(d") == 0
+        assert evaluate("0.5d") == 1
     end
 
     test "lift" do
@@ -577,6 +579,7 @@ defmodule UnaryTest do
         assert evaluate("45Ñ") == [1, 3, 5, 9, 15, 45]
         assert evaluate("32(Ñ") == [1, 2, 4, 8, 16, 32]
         assert evaluate("32( 45)Ñ") == [[1, 2, 4, 8, 16, 32], [1, 3, 5, 9, 15, 45]]
+        assert evaluate("25Ñ") == [1, 5, 25]
     end
 
     test "deduplicate" do
@@ -787,5 +790,36 @@ defmodule UnaryTest do
     test "palindromize" do
         assert evaluate("123û") == "12321"
         assert evaluate("3Lû") == [1, 2, 3, 2, 1]
+    end
+
+    test "sign of number" do
+        assert evaluate("4.±") == 1
+        assert evaluate("4(.±") == -1
+        assert evaluate("0.±") == 0
+        assert evaluate("0 1 2 1( 0.5 0.5().±") == [0, 1, 1, -1, 1, -1]
+    end
+
+    test "left diagonal of matrix" do
+        assert evaluate("123S456S789S)ïÅ\\") == [1, 5, 9]
+        assert evaluate("123S456S789S159S)ïÅ\\") == [1, 5, 9]
+        assert evaluate("1234S4567S7890S)ïÅ\\") == [1, 5, 9]
+    end
+
+    test "right diagonal of matrix" do
+        assert evaluate("123S456S789S)ïÅ/") == [3, 5, 7]
+        assert evaluate("123S456S789S012S)ïÅ/") == [3, 5, 7]
+        assert evaluate("1234S4567S7890S)ïÅ/") == [4, 6, 8]
+    end
+
+    test "upper triangular matrix" do
+        assert evaluate("123S456S789S)ïÅU") == [[1, 2, 3], [5, 6], [9]]
+        assert evaluate("1234S4567S7890S)ïÅU") == [[1, 2, 3, 4], [5, 6, 7], [9, 0]]
+        assert evaluate("123S456S789S012S)ïÅU") == [[1, 2, 3], [5, 6], [9]]
+    end
+
+    test "lower triangular matrix" do
+        assert evaluate("123S456S789S)ïÅL") == [[1], [4, 5], [7, 8, 9]]
+        assert evaluate("1234S4567S7890S)ïÅL") == [[1, 2], [4, 5, 6], [7, 8, 9, 0]]
+        assert evaluate("123S456S789S012S)ïÅL") == [[4], [7, 8], [0, 1, 2]]
     end
 end

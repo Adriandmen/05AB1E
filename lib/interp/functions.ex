@@ -1,5 +1,7 @@
 defmodule Interp.Functions do
 
+    alias Interp.Globals
+
 
     defmacro is_iterable(value) do
         quote do: is_map(unquote(value)) or is_list(unquote(value))
@@ -30,29 +32,45 @@ defmodule Interp.Functions do
             true -> value
         end
 
-        case value do
-            true -> 1
-            false -> 0
-            _ when is_integer(value) or is_float(value) ->
-                value
-            _ when is_iterable(value) ->
-                value |> Stream.map(&to_number/1)
-            _ ->
+        cond do
+            value == true -> 1
+            value == false -> 0
+            is_integer(value) or is_float(value) -> value
+            is_iterable(value) -> value |> Stream.map(&to_number/1)
+            is_bitstring(value) and String.starts_with?(value, "-") ->
                 try do
-                    {value, remaining} = Integer.parse(value)
-                    if Regex.match?(~r/\.\d*/, remaining) do
-                        {float_value, _} = Float.parse("0" <> remaining)
-                        if float_value == 0.0 do
-                            value
-                        else
-                            value + float_value
-                        end
-                    else
-                        value
+                    new_val = String.slice(value, 1..-1)
+                    -to_number(new_val)
+                rescue
+                    _ -> value 
+                end
+            true ->
+                try do
+                    {int_part, remaining} = Integer.parse(value)
+                    case remaining do
+                        "" -> int_part
+                        _ ->
+                            {float_part, remaining} = Float.parse("0" <> remaining)
+                            cond do
+                                remaining != "" -> value
+                                float_part == 0.0 -> int_part
+                                remaining == "" -> int_part + float_part
+                                true -> value
+                            end
                     end
                 rescue
                     _ -> value
                 end
+        end
+    end
+
+    def to_number!(value) do
+        cond do
+            is_iterable(value) -> value |> Stream.map(&to_number!/1)
+            true -> case to_number(value) do
+                x when is_number(x) -> x
+                _ -> raise("Could not convert #{value} to number.")
+            end
         end
     end
 
@@ -139,7 +157,11 @@ defmodule Interp.Functions do
     end
 
     def call_unary(func, a, _) do
-        func.(a)
+        try do
+            func.(a)
+        rescue
+            _ -> a
+        end
     end
 
     
@@ -166,7 +188,16 @@ defmodule Interp.Functions do
         try do
             func.(a, b)
         rescue
-            _ -> func.(b, a) 
+            _ -> 
+                try do
+                    func.(b, a)
+                rescue
+                    x ->
+                        case Globals.get().debug.test do
+                            true -> raise(x)
+                            false -> a
+                        end
+                end
         end
     end
 end

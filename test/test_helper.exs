@@ -13,6 +13,9 @@ defmodule TestHelper do
     alias Interp.Canvas
 
     def evaluate(code) do
+        Globals.initialize()
+        Globals.set(%{Globals.get() | debug: %{Globals.get().debug | test: true}})
+        
         parsed_code = Parser.parse(Reader.read(code))
         {stack, environment} = Interpreter.interp(parsed_code, %Stack{}, %Environment{})
         {result, _, _} = Stack.pop(stack, environment)
@@ -23,6 +26,9 @@ defmodule TestHelper do
     end
 
     def evaluate_canvas(code) do
+        Globals.initialize()
+        Globals.set(%{Globals.get() | debug: %{Globals.get().debug | test: true}})
+        
         parsed_code = Parser.parse(Reader.read(code))
         Interpreter.interp(parsed_code, %Stack{}, %Environment{})
         

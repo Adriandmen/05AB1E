@@ -195,6 +195,14 @@ defmodule ReaderTest do
         assert Reader.read_step("Ƶa") == {:number, 137, ""}
     end
 
+    test "read two-char compressed number" do
+        assert Reader.read_step("Ž4çabc") == {:number, 1250, "abc"}
+    end
+
+    test "read two-char compressed number without remaining code" do
+        assert Reader.read_step("Ž4ç") == {:number, 1250, ""}
+    end
+
     test "read compressed alphabetic string" do
         assert Reader.read_step(".•Uÿ/õDÀтÂñ‚Δθñ8=öwÁβPb•") == {:string, "i want this string to be compressed", ""}
     end

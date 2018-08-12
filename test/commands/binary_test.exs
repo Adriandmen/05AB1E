@@ -353,6 +353,8 @@ defmodule BinaryTest do
         assert evaluate("4.5( 3(¿") == -1.5
         assert evaluate("4.5( 3¿") == 1.5
         assert evaluate("4.5 3(¿") == 1.5
+        assert evaluate("4 0¿") == 4
+        assert evaluate("0 4¿") == 4
         assert evaluate("8 16 48)¿") == 8
         assert evaluate("8 16 36)¿") == 4
         assert evaluate("1024 32 64 128 8 256 512 24 36)¿") == 4
@@ -397,6 +399,7 @@ defmodule BinaryTest do
         assert evaluate("12345S 43SÃ") == ["3", "4"]
         assert evaluate("12 34 34 45 34 12 43) 34Ãï") == [34, 34, 34]
         assert evaluate("12 34 34 45 34 12 43) 34 45‚Ãï") == [34, 34, 45, 34]
+        assert evaluate("12345 43SÃ") == "34"
     end
 
     test "keep truthy indices" do
@@ -413,11 +416,14 @@ defmodule BinaryTest do
         assert evaluate("5 3L×") == ["5", "55", "555"]
         assert evaluate("5L 3×") == ["111", "222", "333", "444", "555"]
         assert evaluate("5L 3L×") == ["1", "22", "333"]
+        assert evaluate("4 'a ×") == "aaaa"
+        assert evaluate("'a 4 ×") == "aaaa"
     end
 
     test "remove leading" do
         assert evaluate("112233 1Û") == "2233"
         assert evaluate("112233Sï 1Û") == [2, 2, 3, 3]
+        assert evaluate("121233331212 12SÛ") == "33331212"
     end
 
     test "remove trailing" do
@@ -463,6 +469,7 @@ defmodule BinaryTest do
         assert evaluate("456 12.ø") == "1245612"
         assert evaluate("456Sï 12ï.ø") == [12, 4, 5, 6, 12]
         assert evaluate("456Sï 12Sï.ø") == [1, 2, 4, 5, 6, 1, 2]
+        assert evaluate("456ï 12Sï.øï") == [1, 2, 4, 5, 6, 1, 2]
     end
 
     test "overlap" do
@@ -496,6 +503,7 @@ defmodule BinaryTest do
         assert evaluate("5L 2.8.x") == 3
         assert evaluate("5L 3.x") == 3
         assert evaluate("5L 23S.x") == [2, 3]
+        assert evaluate("13489 7.x") == 8
         assert evaluate(") 2.x") == []
     end
 
@@ -571,5 +579,37 @@ defmodule BinaryTest do
         assert evaluate("3L2.Œ") == [[[1, 2, 3], []], [[1, 2], [3]], [[1, 3], [2]], [[1], [2, 3]], [[2, 3], [1]], [[2], [1, 3]], [[3], [1, 2]], [[], [1, 2, 3]]]
         assert evaluate("123 2.Œ") == [["123", ""], ["12", "3"], ["13", "2"], ["1", "23"], ["23", "1"], ["2", "13"], ["3", "12"], ["", "123"]]
         assert evaluate("3L0.Œ") == []
+    end
+
+    test "rotate n" do
+        assert evaluate("5L2._") == [3, 4, 5, 1, 2]
+        assert evaluate("5L2(._") == [4, 5, 1, 2, 3]
+        assert evaluate("12345ï2._") == "34512"
+        assert evaluate("12345ï2(._") == "45123"
+        assert evaluate("12345 0._") == "12345"
+    end
+
+    test "increasing list contains" do
+        assert evaluate("5L3.i") == 1
+        assert evaluate("5L6.i") == 0
+        assert evaluate("1 2 3 4 6 7 5)5.i") == 0
+        assert evaluate("1 2 3 4 3 5)4.i") == 1
+        assert evaluate("∞2*4.i") == 1
+        assert evaluate("∞2*9.i") == 0
+    end
+
+    test "flat index in list" do
+        assert evaluate("10L345.k") == 2
+        assert evaluate("10L345S.k") == 2
+        assert evaluate("10L346S.k") == -1
+        assert evaluate("∞345S.k") == 2
+    end
+
+    test "greater or equal to" do
+        assert evaluate("4 5@") == 0
+        assert evaluate("4 3@") == 1
+        assert evaluate("4 4@") == 1
+        assert evaluate("4 4.0@") == 1
+        assert evaluate("3 4 5 6 7) 4.0@") == [0, 1, 1, 1, 1]
     end
 end

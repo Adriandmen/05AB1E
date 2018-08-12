@@ -11,7 +11,7 @@ defmodule Interp.GlobalEnvironment do
               status: :ok,
               array: [],
               printed: false,
-              debug: %{:stack => false, :local_env => false, :global_env => false, :enabled => false}
+              debug: %{:stack => false, :local_env => false, :global_env => false, :enabled => false, :test => false}
 end
 
 defmodule Interp.Globals do
@@ -34,7 +34,7 @@ defmodule Interp.Globals do
                 send(self(), {:env, global_env})
                 global_env
         after
-            0 -> throw("Could not retrieve global environment.")
+            0 -> raise("Could not retrieve global environment.")
         end
     end
 
@@ -42,7 +42,7 @@ defmodule Interp.Globals do
         receive do
             _ -> send(self(), {:env, new_env})
         after
-            0 -> throw("Could not retrieve global environment.")
+            0 -> raise("Could not retrieve global environment.")
         end
     end
 

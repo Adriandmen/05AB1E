@@ -174,7 +174,17 @@ defmodule Commands.ListCommands do
         end
     end
 
-    # def split_with(list, )
+    def flat_index_in_list(list, element) when not Functions.is_iterable(element), do: flat_index_in_list(list, String.graphemes(to_string(element)))
+    def flat_index_in_list(list, element) when not Functions.is_iterable(list), do: flat_index_in_list(String.graphemes(to_string(list)), element)
+    def flat_index_in_list(list, element), do: flat_index_in_list(list, Enum.to_list(element), 0)
+    defp flat_index_in_list(list, element, index) do
+        curr_head = Stream.take(list, length(element)) |> Enum.to_list
+        cond do
+            length(curr_head) < length(element) -> -1
+            GeneralCommands.equals(curr_head, element) -> index
+            true -> flat_index_in_list(Stream.drop(list, 1), element, index + 1)
+        end
+    end
 
     def list_multiply(value, len) do
         cond do
@@ -184,7 +194,6 @@ defmodule Commands.ListCommands do
     end
 
     def closest_to(value, element) when Functions.is_iterable(value), do: closest_to(Functions.to_number(value), Functions.to_number(element), nil, nil)
-    def closest_to(value, element), do: closest_to(Functions.to_number(String.graphemes(to_string(value))), Functions.to_number(element), nil, nil)
     def closest_to(value, element), do: closest_to(Functions.to_number(String.graphemes(to_string(value))), Functions.to_number(element), nil, nil)
     def closest_to(value, element, acc, min_distance) do
         head = Enum.take(value, 1) |> Enum.to_list |> List.first
@@ -487,5 +496,15 @@ defmodule Commands.ListCommands do
     defp partitions([head | remaining], []), do: partitions(remaining, [[head]])
     defp partitions([head | remaining], [head_acc | remaining_acc]) do
         partitions(remaining, [[head]] ++ [head_acc | remaining_acc]) ++ partitions(remaining, [head_acc ++ [head] | remaining_acc])
+    end
+
+    def increasing_contains([], _), do: false
+    def increasing_contains(list, value) do
+        head = Functions.to_number List.first Enum.to_list Stream.take(list, 1)
+        cond do
+            head < value -> increasing_contains(list |> Stream.drop(1), value)
+            head == value -> true
+            head > value -> false
+        end
     end
 end

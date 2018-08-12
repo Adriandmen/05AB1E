@@ -339,4 +339,12 @@ defmodule CanvasTest do
             "aaa   a"
         ])
     end
+
+    test "canvas to stack" do
+        assert evaluate("3'a13860.Λ") == "a   a  \na  a a \naaa   a"
+    end
+
+    test "canvas with length 0" do
+        assert evaluate_canvas("0'a1Λ") == canvas([])
+    end
 end
