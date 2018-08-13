@@ -177,10 +177,3 @@ defmodule Interp.Functions do
         end
     end
 end
-
-defmodule X do
-    def f(list) do
-        Enum.
-        Enum.to_list(1..Enum.max(list))--list
-    end
-end
