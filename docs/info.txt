@@ -369,29 +369,28 @@ z       = pop a      push 1 / a
 .œ      = pop a      push partitions(a)
 
 
-Å!	    = pop a      push a list of all factorials <= a
-Å0	    = pop a      push a list of zeros with length a
-Å1	    = pop a      push a list of ones with length a
-Å2	    = pop a      push a list of twos with length a
-Å3	    = pop a      push a list of threes with length a
-Å4	    = pop a      push a list of fours with length a
-Å5	    = pop a      push a list of fives with length a
-Å6	    = pop a      push a list of sixes with length a
-Å7	    = pop a      push a list of sevens with length a
-Å8	    = pop a      push a list of eights with length a
-Å9	    = pop a      push a list of nines with length a
+Å!      = pop a      push a list of all factorials <= a
+Å0      = pop a      push a list of zeros with length a
+Å1      = pop a      push a list of ones with length a
+Å2      = pop a      push a list of twos with length a
+Å3      = pop a      push a list of threes with length a
+Å4      = pop a      push a list of fours with length a
+Å5      = pop a      push a list of fives with length a
+Å6      = pop a      push a list of sixes with length a
+Å7      = pop a      push a list of sevens with length a
+Å8      = pop a      push a list of eights with length a
+Å9      = pop a      push a list of nines with length a
 ÅΔ      = pop a      find the index for the first element such that <func> evaluates to 1, usage: ÅΔ<func>}
-ÅA	    = pop a      push arithmetic mean of a
-ÅF	    = pop a      push a list of all Fibonacci numbers <= a
-ÅG	    = pop a      push a list of all Lucas numbers <= a
-ÅL	    = pop a      push a limited by b (a if a < b else b)
-ÅP	    = pop a      push a list of primes <= a
-ÅT	    = pop a      push a list of triangle numbers <= a
-ÅU	    = pop a,b    push the ath polygonal number with b number of sides
-Åf	    = pop a      push the nth fibonacci term (0: 1, 1: 1)
-Åg	    = pop a      push the nth lucas term (0: 2, 1: 1)
-Åp	    = pop a      push a list of the first a primes
+ÅA      = pop a      push arithmetic mean of a
+ÅF      = pop a      push a list of all Fibonacci numbers <= a
+ÅG      = pop a      push a list of all Lucas numbers <= a
+ÅL      = pop a      push a limited by b (a if a < b else b)
+ÅP      = pop a      push a list of primes <= a
+ÅT      = pop a      push a list of triangle numbers <= a
+ÅU      = pop a,b    push the ath polygonal number with b number of sides
+Åf      = pop a      push the nth fibonacci term (0: 1, 1: 1)
+Åg      = pop a      push the nth lucas term (0: 2, 1: 1)
+Åp      = pop a      push a list of the first a primes
 Å²      = pop a      push is square(a)
-ÅÈ 	    = pop a      push a list of even numbers <= a
-ÅÉ 	    = pop a      push a list of uneven numbers <= a
-
+ÅÈ      = pop a      push a list of even numbers <= a
+ÅÉ      = pop a      push a list of uneven numbers <= a
