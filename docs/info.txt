@@ -380,6 +380,8 @@ z       = pop a      push 1 / a
 Å7      = pop a      push a list of sevens with length a
 Å8      = pop a      push a list of eights with length a
 Å9      = pop a      push a list of nines with length a
+Å\      = pop a      push left diagonal of the matrix a
+Å/      = pop a      push right diagonal of the matrix a
 ÅΔ      = pop a      find the index for the first element such that <func> evaluates to 1, usage: ÅΔ<func>}
 ÅA      = pop a      push arithmetic mean of a
 ÅF      = pop a      push a list of all Fibonacci numbers <= a
@@ -391,6 +393,8 @@ z       = pop a      push 1 / a
 Åf      = pop a      push the nth fibonacci term (0: 1, 1: 1)
 Åg      = pop a      push the nth lucas term (0: 2, 1: 1)
 Åp      = pop a      push a list of the first a primes
+Ål      = pop a      push lower triangular matrix from a
+Åu      = pop a      push upper triangular matrix from a
 Å²      = pop a      push is square(a)
 ÅÈ      = pop a      push a list of even numbers <= a
 ÅÉ      = pop a      push a list of uneven numbers <= a
