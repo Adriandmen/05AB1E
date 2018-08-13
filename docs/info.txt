@@ -16,7 +16,7 @@
 Γ       =
 Δ       = pop a      repeat CODE until a doesn't change: usage ΔCODE}
 Θ       = pop a      push 05AB1E truthified a (a == 1)
-ι       = pop (a),b  push [a[0::b], a[1::b], …, a[b - 1::b]]
+ι       = pop (a),b  push [a[0::b], a[1::b], ..., a[b - 1::b]]
 Σ       = pop a      sort a by the result of code: usage ΣCODE}
 Ω       = pop a      push random_pick(a)
 ≠       = pop a      push 05AB1E falsified a (a != 1)
