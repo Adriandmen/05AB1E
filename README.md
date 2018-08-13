@@ -55,7 +55,7 @@ If run without the inputs file, the 05AB1E program reads the input from the comm
 
 In addition, you can append the following arguments before running the 05AB1E file:
 
-|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Argument&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|Information|
+|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Argument&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|Information|
 |--------|-----------|
 |`-d` or `--debug`|Activates the **debug** flag. After each command is run, an update will be shown to _STDIN_ with the current command. |
 |`--debug-stack` | Activates the **debug** flag and will print the current stack as well after each iteration. |
