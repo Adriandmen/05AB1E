@@ -7,7 +7,6 @@ defmodule Commands.GeneralCommands do
     alias Interp.Globals
     alias Interp.Environment
     alias Interp.RecursiveEnvironment
-    alias Commands.ListCommands
     require Interp.Functions
     
     def head(value) do

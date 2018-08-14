@@ -1,5 +1,5 @@
 defmodule Reading.InputHandler do
-    alias Interp.Environment
+    
     alias Interp.Globals
 
     def read_input do

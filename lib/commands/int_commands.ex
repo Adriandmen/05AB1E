@@ -2,13 +2,12 @@ defmodule Commands.IntCommands do
 
     use Memoize
     alias Interp.Functions
-    alias Commands.GeneralCommands
     require Interp.Functions
 
     # All characters available from the 05AB1E code page, where the
     # alphanumeric digits come first and the remaining characters
     # ranging from 0x00 to 0xff that do not occur yet in the list are appended.
-    def digits, do: digits = String.to_charlist(
+    def digits, do: String.to_charlist(
                              "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmno" <>
                              "pqrstuvwxyzǝʒαβγδεζηθвимнт\nΓΔΘιΣΩ≠∊∍∞₁₂₃₄₅₆ !\"#$%" <>
                              "&'()*+,-./:;<=>?@[\\]^_`{|}~Ƶ€Λ‚ƒ„…†‡ˆ‰Š‹ŒĆŽƶĀ‘’“”–" <>
@@ -156,7 +155,7 @@ defmodule Commands.IntCommands do
     def is_prime?(value) when value in [2, 3, 5, 7], do: true
     def is_prime?(value) when value < 2 or rem(value, 2) == 0 or rem(value, 3) == 0, do: false
     def is_prime?(value), do: is_prime?(value, :math.sqrt(value) |> Float.floor |> round, 5)
-    def is_prime?(value, current_prime, upper_bound) when current_prime > upper_bound, do: true
+    def is_prime?(_, current_prime, upper_bound) when current_prime > upper_bound, do: true
     def is_prime?(value, current_prime, upper_bound) do
         cond do
             rem(value, current_prime) == 0 -> false
@@ -347,7 +346,7 @@ defmodule Commands.IntCommands do
 
     def arithmetic_mean(list), do: arithmetic_mean(Enum.to_list(list), 0, 0)
     def arithmetic_mean([], sum, index), do: sum / index
-    def arithmetic_mean([head | remaining], sum, index) when Functions.is_iterable(head), do: [head | remaining] |> Stream.map(&arithmetic_mean/1)
+    def arithmetic_mean([head | remaining], _, _) when Functions.is_iterable(head), do: [head | remaining] |> Stream.map(&arithmetic_mean/1)
     def arithmetic_mean([head | remaining], sum, index), do: arithmetic_mean(remaining, sum + Functions.to_number(head), index + 1)
     
     @doc """

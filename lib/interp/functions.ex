@@ -125,21 +125,16 @@ defmodule Interp.Functions do
     end
 
     def normalize_to(value, initial) when is_iterable(value) and not is_iterable(initial), do: value |> Enum.join("")
-    def normalize_to(value, initial), do: value
+    def normalize_to(value, _), do: value
 
     def normalize_inner(value, initial) when is_iterable(value) and not is_iterable(initial), do: value |> Stream.map(fn x -> x |> Stream.map(fn y -> Enum.join(y, "") end) end)
-    def normalize_inner(value, initial), do: value
+    def normalize_inner(value, _), do: value
 
     # --------------------------------
     # Force evaluation on lazy objects
     # --------------------------------
-    def eval(value) when is_iterable(value) do
-        Enum.map(Enum.to_list(value), &eval/1)
-    end
-
-    def eval(value) do
-        value
-    end
+    def eval(value) when is_iterable(value), do: Enum.map(Enum.to_list(value), &eval/1)
+    def eval(value), do: value
 
 
     # --------------------

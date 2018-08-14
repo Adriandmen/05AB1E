@@ -1,7 +1,5 @@
 defmodule Commands.MatrixCommands do
-    alias Interp.Functions
-    alias Commands.IntCommands
-    alias Commands.GeneralCommands
+    
     require Interp.Functions
 
     def left_diagonal(matrix), do: left_diagonal(matrix, 0, [])

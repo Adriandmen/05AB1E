@@ -1,22 +1,3 @@
-defmodule Osabie do
-    @moduledoc """
-    Documentation for Osabie.
-    """
-
-    @doc """
-    Hello world.
-
-    ## Examples
-
-        iex> Osabie.hello
-        :world
-
-    """
-    def hello do
-        :world
-    end
-end
-
 defmodule OsabieProgramArguments do
     @moduledoc """
     The argument module that keeps track of all necessary
@@ -68,7 +49,6 @@ defmodule Osabie.CLI do
 
         # Set the debug parameters to the global environment
         if parsed_args.debug.enabled do
-            debug = Globals.get().debug
             Globals.set(%{Globals.get() | debug: parsed_args.debug})            
         end
 
@@ -80,7 +60,7 @@ defmodule Osabie.CLI do
             Output.print(Canvas.canvas_to_string(Globals.get().canvas))
         end
         
-        {last, stack, _} = Stack.pop(stack, environment)
+        {last, _, _} = Stack.pop(stack, environment)
         last = Functions.eval last
         case Globals.get().printed do
             true -> nil

@@ -16,7 +16,7 @@ defmodule Parsing.Parser do
             [:subcommand, op] ->
                 {new_remaining, subcommand, _} = parse_subcommand(remaining)
                 parse_program(new_remaining, parsed ++ [{:subprogram, op, subcommand}])
-            [:if_statement, op] ->
+            [:if_statement, _] ->
                 {new_remaining, if_statement, else_statement, _} = parse_if_statement(remaining)
                 parse_program(new_remaining, parsed ++ [{:if_statement, if_statement, else_statement}])
             [:no_op, _] -> parse_program(remaining, parsed)
@@ -94,7 +94,7 @@ defmodule Parsing.Parser do
                     :end -> parse_else_statement(new_remaining, if_statement, else_statement ++ [{:subprogram, op, subcommand}])
                     x -> {new_remaining, if_statement, else_statement ++ [{:subprogram, op, subcommand}], x}
                 end
-            [:if_statement, op] ->
+            [:if_statement, _] ->
                 {new_remaining, inner_if, inner_else, end_op} = parse_if_statement(remaining)
                 case end_op do
                     :end -> parse_else_statement(new_remaining, if_statement, else_statement ++ [{:if_statement, inner_if, inner_else}])
@@ -135,7 +135,7 @@ defmodule Parsing.Parser do
                     :end -> parse_subprogram(new_remaining, parsed ++ [{:subprogram, op, subcommand}], recursive)
                     x -> {new_remaining, parsed ++ [{:subprogram, op, subcommand}], x}
                 end
-            [:if_statement, op] ->
+            [:if_statement, _] ->
                 {new_remaining, inner_if, inner_else, end_op} = parse_if_statement(remaining)
                 case end_op do
                     :end -> parse_subprogram(new_remaining, parsed ++ [{:if_statement, inner_if, inner_else}], recursive)

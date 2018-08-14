@@ -35,7 +35,7 @@ defmodule Commands.ListCommands do
     def rangify(a) do
         case Stream.take(a, 1) |> Enum.to_list |> List.first do
             nil -> []
-            first -> 
+            _ -> 
                 a |> Stream.transform(nil, fn (element, acc) -> 
                     case acc do
                         nil -> {[element], element}
@@ -238,7 +238,7 @@ defmodule Commands.ListCommands do
     def keep_truthy_indices(value, indices) when is_bitstring(value), do: Enum.join(keep_truthy_indices(String.graphemes(to_string(value)), indices))
     def keep_truthy_indices(value, indices) when is_bitstring(indices), do: keep_truthy_indices(value, String.graphemes(to_string(indices)))
     def keep_truthy_indices(value, indices) do
-        Stream.zip(value, indices) |> Stream.filter(fn {element, index} -> GeneralCommands.equals(index, 1) end) |> Stream.map(fn {element, _} -> element end)
+        Stream.zip(value, indices) |> Stream.filter(fn {_, index} -> GeneralCommands.equals(index, 1) end) |> Stream.map(fn {element, _} -> element end)
     end
 
     def deduplicate(string) when is_bitstring(string) or is_number(string), do: Enum.join(deduplicate(String.graphemes(to_string(string))), "")
@@ -262,7 +262,7 @@ defmodule Commands.ListCommands do
     end
 
     def index_in_stream(stream, element) do
-        case stream |> Stream.with_index |> Stream.filter(fn {x, index} -> GeneralCommands.equals(x, element) end) |> Stream.take(1) |> Enum.to_list |> List.first do
+        case stream |> Stream.with_index |> Stream.filter(fn {x, _} -> GeneralCommands.equals(x, element) end) |> Stream.take(1) |> Enum.to_list |> List.first do
             nil -> -1
             {_, index} -> index
         end
@@ -324,7 +324,7 @@ defmodule Commands.ListCommands do
             0 -> []
             x ->
                 shift = rem(shift, x)
-                x = Stream.concat(value |> Stream.take(shift), value |> Stream.drop(shift)) |> Stream.map(fn x -> x end)
+                Stream.concat(value |> Stream.take(shift), value |> Stream.drop(shift)) |> Stream.map(fn x -> x end)
         end
     end
 
@@ -379,7 +379,7 @@ defmodule Commands.ListCommands do
                     {:halt, nil}
                 end
             end,
-            fn acc -> nil end)
+            fn _ -> nil end)
             |> Stream.map(fn x -> x end)
     end
 
@@ -412,7 +412,7 @@ defmodule Commands.ListCommands do
                     {:halt, nil}
                 end
             end,
-            fn acc -> nil end)
+            fn _ -> nil end)
             |> Stream.map(fn x -> x end)
     end
 

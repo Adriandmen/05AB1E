@@ -1,11 +1,9 @@
 defmodule Interp.Canvas do
 
     alias Interp.Functions
-    alias Interp.Canvas
     alias Interp.Interpreter
     alias Reading.Reader
     alias Parsing.Parser
-    alias Commands.ListCommands
     require Interp.Functions
 
     defstruct canvas: %{},
@@ -82,7 +80,7 @@ defmodule Interp.Canvas do
     # which contains the length as an element and reassign the length to the result of running that code snippet.
     defp write_canvas(canvas, len, characters, [[:code, op] | remaining], environment) do
         list = [[:code, op] | remaining]
-        code = list |> Enum.take_while(fn [type, value] -> type == :code end) |> Enum.map(fn [_, op] -> op end) |> Enum.join("")
+        code = list |> Enum.take_while(fn [type, _] -> type == :code end) |> Enum.map(fn [_, op] -> op end) |> Enum.join("")
         result = Functions.to_number Interpreter.flat_interp(Parser.parse(Reader.read(code)), [len], environment)
         normalize_length(write_canvas(canvas, result, characters, remaining, environment), result)
     end
@@ -96,8 +94,8 @@ defmodule Interp.Canvas do
     
     # When the rounded version of the length is <= 0 or <= 1. We cannot round the length since we
     # need to keep the unrounded version in memory in case commands will be run against them.
-    defp write_canvas(canvas, length, characters, directions, _) when length < 0.5, do: {canvas, characters, nil}
-    defp write_canvas(canvas, length, characters, directions, _) when length < 1.5 do
+    defp write_canvas(canvas, length, characters, _, _) when length < 0.5, do: {canvas, characters, nil}
+    defp write_canvas(canvas, length, characters, _, _) when length < 1.5 do
         new_canvas = cond do
             Functions.is_iterable(characters) -> write_char(canvas, List.first Enum.to_list(characters))
             String.length(characters) > 1 -> write_char(canvas, List.first String.graphemes(characters))
@@ -167,11 +165,11 @@ defmodule Interp.Canvas do
             
             # list - list - var(s)
             Functions.is_iterable(len) and Functions.is_iterable(characters) and is_single_direction_list?(direction) ->
-                characters |> Enum.reduce({canvas, direction, nil}, fn (curr_char, {canvas_acc, chars, _}) -> write_canvas(canvas_acc, len, curr_char, direction, environment) end)
+                characters |> Enum.reduce({canvas, direction, nil}, fn (curr_char, {canvas_acc, _, _}) -> write_canvas(canvas_acc, len, curr_char, direction, environment) end)
             
             # list - list - list
             Functions.is_iterable(len) and Functions.is_iterable(characters) and not is_single_direction_list?(direction) ->
-                Stream.zip([len, characters, Stream.cycle(direction)]) |> Enum.to_list |> Enum.reduce({canvas, characters, nil}, fn ({curr_len, curr_char, curr_dir}, {canvas_acc, chars, _}) ->
+                Stream.zip([len, characters, Stream.cycle(direction)]) |> Enum.to_list |> Enum.reduce({canvas, characters, nil}, fn ({curr_len, curr_char, curr_dir}, {canvas_acc, _, _}) ->
                     write_canvas(canvas_acc, curr_len, curr_char, curr_dir, environment) end)
         end
     end
