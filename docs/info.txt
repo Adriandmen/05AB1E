@@ -1,4 +1,4 @@
-ǝ       = pop a,b,c  insert b into a on location c
+ǝ       = pop a,b,c  replace the element in a at index c with b
 ʒ       = pop a      filter a when the result of code == 1: usage ʒCODE}
 α       = pop a,b    push absolute difference of a and b
 β       = pop a,b    push a converted from base b (arbitrary)
@@ -16,19 +16,19 @@
 Γ       =
 Δ       = pop a      repeat CODE until a doesn't change: usage ΔCODE}
 Θ       = pop a      push 05AB1E truthified a (a == 1)
-ι       = pop (a),b  push [a[0::b], a[1::b], ..., a[b - 1::b]]
+ι       = pop (a),b  push [a[0::b], a[1::b], ..., a[(b - 1)::b]] (uninterleave)
 Σ       = pop a      sort a by the result of code: usage ΣCODE}
 Ω       = pop a      push random_pick(a)
 ≠       = pop a      push 05AB1E falsified a (a != 1)
 ∊       = pop a      push vertically mirrored a
 ∍       = pop a,b    push a extended/shortened to length b
-∞       = pop a      push mirrored a
-₁       =            push 256
-₂       =            push 26
-₃       =            push 95
-₄       =            push 1000
-₅       =
-₆       =
+∞       =            push infinite list ([1, 2, …, ∞])
+₁       =            push 256, or in recursive environment, push a(n - 1)
+₂       =            push 26, or in recursive environment, push a(n - 2)
+₃       =            push 95, or in recursive environment, push a(n - 3)
+₄       =            push 1000, or in recursive environment, push a(n - 4)
+₅       =            push 255, or in recursive environment, pop x and push a(x)
+₆       =            push 36, or in recursive environment, pop x and push a(n - x)
 
                 
 !       = pop a,     push factorial(a)
@@ -63,12 +63,12 @@ $       =            push 1 and input (used for sequences)
 =       =            print last item
 >       = pop a      push a + 1
 ?       = pop a      print a no newline
-@       = pop a      pop and push the element at index a in the stack (leftmost element = index 0)
+@       = pop a,b    push a >= b
 A       =            push 'abcdefghijklmnopqrstuvwxyz'
 B       = pop a,b    push base(a, b)
 C       = pop a      push int(a, 2)
 D       = pop a      push a, a
-E       =            push eval(input())
+E       = pop a      for N in range(0, a + 1). Usage E<func>}
 F       = pop a      for N in range(0, a) { }: F(commands)} / N = variable
 G       = pop a      for N in range(1, a) { }: F(commands)} / N = variable
 H       = pop a      push int(a, 16)
@@ -99,7 +99,7 @@ _       = pop a      push negative bool
 a       = pop a      push is_alpha(a)
 b       = pop a      push bin(a)
 c       = pop a,b    push a nCr b
-d       = pop a      push is_number(a)
+d       = pop a      push is_positive(a) (a >= 0), returns false for non-numbers
 e       = pop a,b    push a nPr b
 f       = pop a      push list of prime factors (no duplicates)
 g       = pop a      push length of a
@@ -118,12 +118,12 @@ s       = pop a,b    push b,a
 t       = pop a      push sqrt(a)
 u       = pop a      push upper_case(a)
 v       = pop a      range loop: for y in a (y = string, N = index)
-w       =            wait one second
+w       = 
 x       = pop a      push a, a * 2
 y       =            push string variable (used in mapping loops)
 z       = pop a      push 1 / a
 {       = pop a      push sorted a
-|       =            push the rest of input as an array with strings
+|       =            push inputs as strings and places them in an array until an empty newline or eof is found
 }       =            close a single if statement, loop, etc.
 ~       = pop a,b    push a OR b
 
@@ -143,7 +143,7 @@ z       = pop a      push 1 / a
 ‹ 10    = pop a,b    push a < b
 Œ 11    = pop a      push substrings(a)
 Ć       = pop a      push enclosed a: a + a[0]
-Ž 12    =            break/end if stack is empty
+Ž 12    =            two-char compressed number
 ƶ       = pop a      push lifted a, each element is multiplied by its index (1-indexed)
 Ā       = pop a      push truthified a
 ‘ -     =            for compressed strings (upper)
@@ -153,7 +153,7 @@ z       = pop a      push 1 / a
 • 15    =            start/end a 1-9 char compressed string
 – 16    = pop a      if 1, print N (used in loops)
 — 17    = pop a      if 1, print y (used in loops)
-˜        = pop a      push deep flattened a
+˜       = pop a      push deep flattened a
 ™ 19    = pop a      push title_cased(a)
 š 20    = pop a      push switch_cased(a)
 › 21    = pop a,b    push a > b
@@ -179,8 +179,8 @@ z       = pop a      push 1 / a
         žp           push [Z-A]
         žq           push pi
         žr           push e
-        žs           pop a, push pi to a digits (max. 100000)
-        žt           pop a, push e to a digits (max. 10000)
+        žs           push digits of pi
+        žt           pop digits of e
         žu           push ()<>[]{}
         žv           push 16
         žw           push 32
@@ -221,7 +221,7 @@ z       = pop a      push 1 / a
 ª 34    = pop a      push sentence_cased(a)
 « 35    = pop a,b    push merged(a,b) if both are lists, else push concatenated(a, b)
 ¬ 36    = get a      push head(a)
-λ       =
+λ       = pop a      recursive list generation with base case(s) a, usage: λ<flag?><func>} --> f(n) = <func>
 ® 37    =            push the last item from register_c
 ¯ 38    =            push global array
 ° 39    = pop a      push 10 ** a
@@ -234,7 +234,7 @@ z       = pop a      push 1 / a
 · 46    = pop a      push 2 * a
 ¸ 47    = pop a      push [a]
 ¹ 48    =            push the first item from the input history
-º 49    =            push len(stack) > 0
+º 49    = pop a      push mirrored a
 » 50    = pop (a)    if list, join list by newlines, else join stack by newlines
 ¼ 51    =            counter_variable += 1
 ½ 52    = pop a,     if 1, then counter_variable += 1
@@ -266,11 +266,11 @@ z       = pop a      push 1 / a
 × 78    = pop a,b    push a × b (strings)
 Ø 79    = pop a      push ath prime (zero-indexed)
 Ù 80    = pop a      push uniquified a
-Ú 81    = pop a      push reverse uniquified a
+Ú 81    =
 Û 82    = pop a,b    push a with leading b's trimmed off
 Ü 83    = pop a,b    push a with trailing b's trimmed off
 Ý 84    = pop a      push [0 .. a]
-Þ 85    = pop a      push stringified float(a)
+Þ 85    = pop a      push cycled a (e.g. [1, 2, 3] → [1, 2, 3, 1, 2, ...)
 ß 86    = get a      extract smallest element of list
 à 87    = get a      extract greatest element of list
 á 88    = pop a      push only letters of a
@@ -289,9 +289,9 @@ z       = pop a      push 1 / a
 î 14    = pop a      push round_up(a)
 ï 18    = pop a      push int(a)
 ð       =            push a space character
-ñ       = pop a,b,c  push a + b merged with c as merge character
+ñ       =
 ò       = pop a      push round to nearest integer(a) (bankers rounding)
-ó       = pop a      push round_down(a)
+ó       =
 ô       = pop a,b    push a split in pieces of b
 õ       =            push empty string
 ö       = pop a,b    push int(a, b)
@@ -306,32 +306,23 @@ z       = pop a      push 1 / a
 ÿ       =            used for string interpolation, pop a and replace ÿ with str(a)
 
 
-.€      = pop a      debug printer (default encoding, fallbacks on cp1252)
-.ä      = pop a      debug printer (cp1252)
-.å      = pop a,b    push b in a (vectorized results)
-.0      =            throw a division by zero error
-.A      = pop a      push acronymified a
+.å      = pop a,b    push b in a (non-vectorizing results)
 .b      = pop a      push letterified(a)
 .B      = pop a      push squarified(a)
 .c      = pop a      push centralized(a) focused to the left
 .C      = pop a      push centralized(a) focused to the right
 .D      = pop a,b    push b copies of a if b is int, else push len(b) copies of a
-.e      = pop a      run with experimental python evaluation (does not work in safe mode)
 .E      = pop a      push(eval(a)) (does not work in safe mode)
 .g      =            push length of stack
-.h      = pop a,b    bijectively convert a from base 10 to base b
-.H      = pop a,b    bijectively convert a from base b to base 10
-.j      = pop a      0-indexed max_spaces.join(stack) grid (deprecated)
-.J      = pop a      1-indexed max_spaces.join(stack) grid (deprecated)
+.k      = pop a,b    push flat index of b in a
 .l      = pop a      push is_lower(a)
 .L      = pop a,b    push levenshtein(a, b)
 .M      = pop a      push most frequent in a
 .m      = pop a      push least frequent in a
 .n      = pop a,b    push log_b(a)
-.N      = pop a      push hashed(a)
-.o      = pop a,b    push overlap(b) (deprecated)
-.O      = pop a,b    push connected_overlap(b) (deprecated)
+.o      = pop a,b    push overlap(b)
 .p      = pop a      push prefixes(a)
+.Q      = pop a,b    push a == b (non-vectorizing)
 .R      = pop a      push random_pick(a)
 .r      = pop a      push random_shuffle(a)
 .s      = pop a      push suffixes(a)
@@ -341,27 +332,35 @@ z       = pop a      push 1 / a
 .w      = pop a      push a.readall() (internet access, doesn't work in safe mode) (returns 0 on error)
 .W      = pop a      wait a milliseconds
 .x      = pop a,b    push the element in a closest to b (abs_difference if possible else string distance)
+.Z      =            wait one second
+.$      = pop a,b    push a with b elements dropped (a[b:])
+._      = pop a,b    push a rotated b to the left
 .:      = pop a,b,c  push a.replace(b, c)
 .;      = pop a,b,c  push a.replace_first(b, c)
+.¡      = pop a      push a split by function, usage: .¡<func>}
 .²      = pop a      push log_2(a)
+.Ó      = pop a      push the number from prime exponents a
 .ï      = pop a      push is int(a)
+.±      = pop a      push sign(a) (1 if a > 0, -1 if a < 0, 0 if a == 0)
 .¿      = pop (a),b  push lcm(b) if b is list, else push lcm(b, a)
-.æ      = pop a      compute permutations by function, usage: .æ<FUNC>}
-.ˆ      = pop a      insert a into global array and after quit, print array[input_1]
-.^      = pop a      insert a into global array with immediate sorting and after quit, print array[input_1]
+.æ      = pop a      compute permutations by function, usage: .æ<func>}
+.γ      = pop a      push a grouped by <func>, usage: .γ<func>}
 .ø      = pop a,b    surround a with b
-.«      = foldr      folds a dyadic command between each element in a list from right to left
-.»      = foldl      folds a dyadic command between each element in a list from right to left with opposite right/left operands
+.«      = pop a      push reduce right with command, usage: .«<command>
+.»      = pop a      push reduce left with command, usage: .»<command>
 .¼      = pop a      tan(a)
 .½      = pop a      sin(a)
 .¾      = pop a      cos(a)
+.ι      = pop a,b    push interleaved(a, b)
+.Δ      = pop a      find first in a such that <func> evaluates to 1, usage: .Δ<func>}
+.ā      = pop a      push enumerated(a), e.g. [a, b, c] --> [[a, 1], [b, 2], [c, 3]]
 .À      =            rotate stack 1 left
 .Á      =            rotate stack 1 right
-.×      = pop a,b    push the list a repeated b times
+.Æ      = pop a,b    push combinations from a with b elements
+.ý      = pop a,b    push a interspersed with b, e.g. [1, 2, 3] 0 .ý --> [1, 0, 2, 0, 3]
 .•      =            decompress a base 255 alphabet based string
-.∞      = pop a      push intersected mirror a
+.º      = pop a      push intersected mirror a
 .¥      = pop a      push undelta a
-.ǝ      = pop a      print a to STDERR
 .∊      = pop a      push intersected vertical mirror a
 .Λ      = pop a,b,c  store a canvas with {a: num, b: filler, c: pattern} and push the string to the stack
 .Ø      = pop a      push 0-indexed number of the greatest prime ≤ a
@@ -369,3 +368,37 @@ z       = pop a      push 1 / a
 .Œ      = pop a,b    push all possible ways to divide a into b pieces
 .£      = pop a,b    push a[:-b]
 .œ      = pop a      push partitions(a)
+
+
+Å!      = pop a      push a list of all factorials <= a
+Å0      = pop a      push a list of zeros with length a
+Å1      = pop a      push a list of ones with length a
+Å2      = pop a      push a list of twos with length a
+Å3      = pop a      push a list of threes with length a
+Å4      = pop a      push a list of fours with length a
+Å5      = pop a      push a list of fives with length a
+Å6      = pop a      push a list of sixes with length a
+Å7      = pop a      push a list of sevens with length a
+Å8      = pop a      push a list of eights with length a
+Å9      = pop a      push a list of nines with length a
+Å\      = pop a      push left diagonal of the matrix a
+Å/      = pop a      push right diagonal of the matrix a
+Å|      = pop a      push columns of a
+ÅΔ      = pop a      find the index for the first element such that <func> evaluates to 1, usage: ÅΔ<func>}
+ÅA      = pop a      push arithmetic mean of a
+ÅF      = pop a      push a list of all Fibonacci numbers <= a
+ÅG      = pop a      push a list of all Lucas numbers <= a
+ÅL      = pop a      push a limited by b (a if a < b else b)
+ÅP      = pop a      push a list of primes <= a
+ÅT      = pop a      push a list of triangle numbers <= a
+ÅU      = pop a,b    push the ath polygonal number with b number of sides
+Åf      = pop a      push the nth fibonacci term (0: 1, 1: 1)
+Åg      = pop a      push the nth lucas term (0: 2, 1: 1)
+Åp      = pop a      push a list of the first a primes
+Ål      = pop a      push lower triangular matrix from a
+Åu      = pop a      push upper triangular matrix from a
+Åβ      = pop a,b    push a converted from custom base b
+Åв      = pop a,b    push a converted to custom base b
+Å²      = pop a      push is square(a)
+ÅÈ      = pop a      push a list of even numbers <= a
+ÅÉ      = pop a      push a list of uneven numbers <= a

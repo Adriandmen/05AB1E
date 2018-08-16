@@ -1,11 +1,17 @@
 # language
-language: python
- 
-# version numbers
-python:
-    - "3.5"
+language: elixir
+
+elixir: 
+  - '1.6.4'
+
+otp_release:
+  - '20.0'
 
 sudo: false
-    
+
 script:
- - python test.py
+  - mix deps.get
+  - MIX_ENV=test mix do compile, coveralls.json
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
