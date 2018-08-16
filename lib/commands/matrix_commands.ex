@@ -26,4 +26,16 @@ defmodule Commands.MatrixCommands do
         end
     end
     def lower_triangular_matrix(matrix), do: upper_triangular_matrix(matrix |> Stream.map(fn x -> x |> Enum.reverse end) |> Enum.reverse) |> Enum.reverse |> Stream.map(&Enum.reverse/1)
+
+    def columns_of(matrix) do
+        Stream.unfold(matrix, fn
+            [] -> nil
+            matrix ->
+                heads = matrix |> Stream.map(fn x -> x |> Stream.take(1) |> Enum.to_list |> List.first end) |> Stream.filter(fn x -> x != nil end)
+                case heads |> Stream.take(1) |> Enum.to_list do
+                    [] -> nil
+                    _ -> {heads, matrix |> Stream.map(fn x -> x |> Stream.drop(1) end)}
+                end
+            end) |> Stream.map(fn x -> x end)
+    end
 end

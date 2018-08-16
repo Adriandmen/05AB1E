@@ -918,4 +918,10 @@ defmodule UnaryTest do
         assert evaluate("5ÅÉ") == [1, 3, 5]
         assert evaluate("8ÅÉ") == [1, 3, 5, 7]
     end
+
+    test "columns of" do
+        assert evaluate("123S456S789S)ïÅ|") == [[1, 4, 7], [2, 5, 8], [3, 6, 9]]
+        assert evaluate("123S456S78S)ïÅ|") == [[1, 4, 7], [2, 5, 8], [3, 6]]
+        assert evaluate("∞3ôÅ|0è3£") == [1, 4, 7]
+    end
 end

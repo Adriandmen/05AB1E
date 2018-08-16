@@ -2,6 +2,7 @@ defmodule Commands.IntCommands do
 
     use Memoize
     alias Interp.Functions
+    alias Commands.GeneralCommands
     require Interp.Functions
 
     # All characters available from the 05AB1E code page, where the
@@ -148,6 +149,19 @@ defmodule Commands.IntCommands do
             remainder < 0 -> to_negative_base_arbitrary(div(value, base) + 1, base, [(remainder - base) | acc])
         end    
     end 
+
+    def from_custom_base(value, base) when not Functions.is_iterable(base), do: from_custom_base(value, String.graphemes(to_string(base)))
+    def from_custom_base(value, base) when not Functions.is_iterable(value), do: from_custom_base(String.graphemes(to_string(value)), base)
+    def from_custom_base(value, base) do
+        base = Enum.to_list(base)
+        value |> Enum.map(fn x -> Enum.find_index(base, fn y -> GeneralCommands.equals(x, y) end) end) |> list_from_base(length(base))
+    end
+
+    def to_custom_base(value, base) when not Functions.is_iterable(base), do: to_custom_base(value, String.graphemes(to_string(base)))
+    def to_custom_base(value, base) do
+        base = Enum.to_list(base)
+        value |> to_base_arbitrary(length(base)) |> Enum.map(fn x -> Enum.at(base, x) end)
+    end
 
     @doc """
     Checks whether the given number is a prime number.

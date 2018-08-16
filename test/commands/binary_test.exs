@@ -617,4 +617,28 @@ defmodule BinaryTest do
         assert evaluate("4 8ÅL") == 4
         assert evaluate("456789S 6ÅL") == [4, 5, 6, 6, 6, 6]
     end
+
+    test "from custom base" do
+        assert evaluate("123 123456Åβ") == 8
+        assert evaluate("123S 123456Åβ") == 8
+        assert evaluate("\"ab\"\"cd\"\"ef\") \"aa ab ac cd ce ef eg\"#Åβ") == 75
+    end
+
+    test "to custom base" do
+        assert evaluate("8 123456 Åв") == ["2", "3"]
+        assert evaluate("75 \"aa ab ac cd ce ef eg\"# Åв") == ["ab", "cd", "ef"]
+    end
+
+    test "list subtraction" do
+        assert evaluate("123423Sï 32S.м") == [1, 4, 2, 3]
+        assert evaluate("123423 32S.мï") == [1, 4, 2, 3]
+        assert evaluate("123423 32.мï") == [1, 4, 2, 3]
+    end
+
+    test "interleave" do
+        assert evaluate("123S 456S.ιï") == [1, 4, 2, 5, 3, 6]
+        assert evaluate("123S 4567S.ιï") == [1, 4, 2, 5, 3, 6, 7]
+        assert evaluate("1234S 567S.ιï") == [1, 5, 2, 6, 3, 7, 4]
+        assert evaluate("∞ ∞(.ι10£") == [1, -1, 2, -2, 3, -3, 4, -4, 5, -5]
+    end
 end

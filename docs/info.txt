@@ -16,7 +16,7 @@
 Γ       =
 Δ       = pop a      repeat CODE until a doesn't change: usage ΔCODE}
 Θ       = pop a      push 05AB1E truthified a (a == 1)
-ι       = pop (a),b  push [a[0::b], a[1::b], ..., a[b - 1::b]]
+ι       = pop (a),b  push [a[0::b], a[1::b], ..., a[(b - 1)::b]] (uninterleave)
 Σ       = pop a      sort a by the result of code: usage ΣCODE}
 Ω       = pop a      push random_pick(a)
 ≠       = pop a      push 05AB1E falsified a (a != 1)
@@ -351,6 +351,7 @@ z       = pop a      push 1 / a
 .¼      = pop a      tan(a)
 .½      = pop a      sin(a)
 .¾      = pop a      cos(a)
+.ι      = pop a,b    push interleaved(a, b)
 .Δ      = pop a      find first in a such that <func> evaluates to 1, usage: .Δ<func>}
 .ā      = pop a      push enumerated(a), e.g. [a, b, c] --> [[a, 1], [b, 2], [c, 3]]
 .À      =            rotate stack 1 left
@@ -382,6 +383,7 @@ z       = pop a      push 1 / a
 Å9      = pop a      push a list of nines with length a
 Å\      = pop a      push left diagonal of the matrix a
 Å/      = pop a      push right diagonal of the matrix a
+Å|      = pop a      push columns of a
 ÅΔ      = pop a      find the index for the first element such that <func> evaluates to 1, usage: ÅΔ<func>}
 ÅA      = pop a      push arithmetic mean of a
 ÅF      = pop a      push a list of all Fibonacci numbers <= a
@@ -395,6 +397,8 @@ z       = pop a      push 1 / a
 Åp      = pop a      push a list of the first a primes
 Ål      = pop a      push lower triangular matrix from a
 Åu      = pop a      push upper triangular matrix from a
+Åβ      = pop a,b    push a converted from custom base b
+Åв      = pop a,b    push a converted to custom base b
 Å²      = pop a      push is square(a)
 ÅÈ      = pop a      push a list of even numbers <= a
 ÅÉ      = pop a      push a list of uneven numbers <= a

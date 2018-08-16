@@ -536,4 +536,31 @@ defmodule Commands.ListCommands do
                     {acc, {result, size - 1}}
             end) |> Stream.map(fn x -> x end)
     end
+
+    def list_subtraction(left, []), do: left
+    def list_subtraction(left, [curr | remaining]) do
+        case left |> Enum.find_index(fn x -> GeneralCommands.equals(x, curr) end) do
+            nil -> left |> list_subtraction(remaining)
+            index -> ((left |> Enum.take(index)) ++ (left |> Enum.drop(index + 1))) |> list_subtraction(remaining)
+        end
+    end
+
+    def interleave(left, right) do
+        Stream.unfold({left, right}, fn
+            {left, right} -> 
+                case Stream.take(left, 1) |> Enum.to_list do
+                    [] ->
+                        case Stream.take(right, 1) |> Enum.to_list do
+                            [] -> nil
+                            [element] -> {element, right |> Stream.drop(1)}
+                        end
+                    [element] -> {element, {right, left |> Stream.drop(1)}}
+                end
+            acc ->
+                case Stream.take(acc, 1) |> Enum.to_list do
+                    [] -> nil
+                    [element] -> {element, acc |> Stream.drop(1)}
+                end
+            end) |> Stream.map(fn x -> x end)
+    end
 end
