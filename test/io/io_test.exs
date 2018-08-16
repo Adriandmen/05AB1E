@@ -1,6 +1,7 @@
 defmodule IOTest do
     use ExUnit.Case
     alias Interp.Globals
+    alias Reading.InputHandler
     import ExUnit.CaptureIO
     import TestHelper
 
@@ -100,5 +101,33 @@ defmodule IOTest do
         # Enabled global environment debugging
         Globals.set(%{Globals.get | debug: %{:stack => true, :local_env => false, :global_env => true, :enabled => true, :test => false}})
         assert String.contains?(capture_io(fn -> evaluate("2©®+") end), "Global Environment")
+    end
+
+    test "input parse list with numbers" do
+        assert InputHandler.parse_list("[1, 2, 3]" |> String.graphemes) == [1, 2, 3]
+    end
+
+    test "input parse list with strings with double quotes" do
+        assert InputHandler.parse_list("[\"abc\", \"def\", \"ghi\"]" |> String.graphemes) == ["abc", "def", "ghi"]
+    end
+
+    test "input parse list with strings with single quotes" do
+        assert InputHandler.parse_list("['abc', 'def', 'ghi']" |> String.graphemes) == ["abc", "def", "ghi"] 
+    end
+
+    test "input parse list with lists" do
+        assert InputHandler.parse_list("[1, 2, [3, 4, [5,6,7],8], 9]" |> String.graphemes) == [1, 2, [3, 4, [5, 6, 7], 8], 9]
+    end
+
+    test "input parse list with spaced out separators" do
+        assert InputHandler.parse_list("[1  , 2   , [3 , 4 ,  [5, 6 , 7] , 8 ] ,  9 ]" |> String.graphemes) == [1, 2, [3, 4, [5, 6, 7], 8], 9]
+    end
+
+    test "input parse list with lists as input" do
+        assert capture_io([input: "[1, 2, [3, 4, [5,6,7],8], 9]"], fn -> evaluate("I1 2¹?") end) == "[1, 2, [3, 4, [5, 6, 7], 8], 9]"
+    end
+
+    test "input parse multiline input" do
+        assert capture_io([input: "\"\"\"123\n456\n789\"\"\""], fn -> evaluate("I1 2¹?") end) == "123\n456\n789"
     end
 end

@@ -1,7 +1,5 @@
 defmodule Commands.MatrixCommands do
     
-    require Interp.Functions
-
     def left_diagonal(matrix), do: left_diagonal(matrix, 0, [])
     def left_diagonal(matrix, index, parsed_diagonal) do
         case matrix |> Stream.take(1) |> Enum.to_list |> List.first do
