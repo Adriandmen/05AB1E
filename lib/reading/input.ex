@@ -4,43 +4,6 @@ defmodule Reading.InputHandler do
     alias Interp.Functions
     require Interp.Functions
 
-    def parse_string(string, delimiter), do: parse_string(string, delimiter, "")
-    defp parse_string([], _, parsed), do: :eof
-    defp parse_string(["\\", "\\" | remaining], delimiter, parsed), do: parse_string(remaining, delimiter, parsed <> "\\")
-    defp parse_string(["\\", delimiter | remaining], delimiter, parsed), do: parse_string(remaining, delimiter, parsed <> delimiter)
-    defp parse_string([delimiter | remaining], delimiter, parsed), do: {parsed, remaining}
-    defp parse_string([head | remaining], delimiter, parsed), do: parse_string(remaining, delimiter, parsed <> head)
-
-    def parse_number(chars), do: parse_number(chars, "")
-    defp parse_number([num | remaining], parsed) when num in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"], do: parse_number(remaining, parsed <> num)
-    defp parse_number(remaining, parsed), do: {Integer.parse(parsed), remaining}
-
-    def parse_separator([" " | remaining]), do: parse_separator(remaining)
-    def parse_separator(["," | remaining]), do: {:cont, remaining}
-    def parse_separator(["]" | remaining]), do: {:done, remaining}
-
-    def parse_list(["[" | remaining]) do
-        {list, _} = parse_list(remaining, [])
-        list
-    end
-    defp parse_list(chars, parsed) do
-        case chars do
-            {:cont, remaining} -> parse_list(remaining, parsed)
-            {:done, remaining} -> {parsed |> Enum.reverse, remaining}
-            [delimiter | remaining] when delimiter in ["\"", "'"] ->
-                {new, remaining} = parse_string(remaining, delimiter)
-                parse_list(parse_separator(remaining), [new | parsed])
-            [number | remaining] when number in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"] ->
-                {{new, _}, remaining} = parse_number(chars)
-                parse_list(parse_separator(remaining), [new | parsed])
-            ["[" | remaining] ->
-                {new, remaining} = parse_list(remaining, [])
-                parse_list(parse_separator(remaining), [new | parsed])
-            [" " | remaining] ->
-                parse_list(remaining, parsed)
-        end
-    end
-
     defp parse_multiline_string(chars) do
         cond do
             String.ends_with?(chars, "\"\"\"") -> String.slice(chars, 0..-4)
@@ -60,7 +23,7 @@ defmodule Reading.InputHandler do
             input == :eof -> 
                 List.last Globals.get().inputs
             String.starts_with?(input, "[") and String.ends_with?(input, "]") ->
-                result = parse_list(String.graphemes(input))
+                {result, _} = Code.eval_string(input)
                 global_env = Globals.get()
                 Globals.set(%{global_env | inputs: global_env.inputs ++ [result]})
                 result
