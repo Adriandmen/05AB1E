@@ -331,7 +331,7 @@ defmodule Interp.Interpreter do
             "k" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.index_in(x, y) end, a, b, true, false))
             "и" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.list_multiply(x, to_number(y)) end, a, b, true, false))
             "¢" -> Stack.push(stack, call_binary(fn x, y -> GeneralCommands.count(x, y) end, a, b, true, false))
-            "×" -> Stack.push(stack, call_binary(fn x, y -> String.duplicate(to_string(x), to_number(y)) end, a, b))
+            "×" -> Stack.push(stack, call_binary(fn x, y -> String.duplicate(to_string(x), to_integer!(y)) end, a, b))
             "в" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.to_base_arbitrary(to_number(x), to_number(y)) end, a, b))
             "ö" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.string_from_base(to_string(x), to_number(y)) end, a, b))
             "÷" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.divide(to_number(x), to_number(y)) end, a, b))
@@ -628,7 +628,7 @@ defmodule Interp.Interpreter do
             # Map for each
             "ε" ->
                 {a, stack, environment} = Stack.pop(stack, environment)
-                result = a
+                result = to_list(a)
                         |> Stream.with_index
                         |> Stream.transform(environment, fn ({x, index}, curr_env) ->
                             {result_stack, new_env} = interp(subcommands, %Stack{elements: [x]}, %{curr_env | range_variable: index, range_element: x})
@@ -640,7 +640,7 @@ defmodule Interp.Interpreter do
             # Sort by (finite lists only)
             "Σ" ->
                 {a, stack, environment} = Stack.pop(stack, environment)
-                result = a
+                result = to_list(a)
                         |> Stream.with_index
                         |> Stream.transform(environment, fn ({x, index}, curr_env) ->
                             {result_stack, new_env} = interp(subcommands, %Stack{elements: [x]}, %{curr_env | range_variable: index, range_element: x})
@@ -696,12 +696,8 @@ defmodule Interp.Interpreter do
             # Map for each
             "€" ->
                 {a, stack, environment} = Stack.pop(stack, environment)
-                a = cond do
-                    is_iterable(a) -> a
-                    true -> String.graphemes(to_string(a))
-                end
 
-                result = a
+                result = to_list(a)
                         |> Stream.with_index
                         |> Stream.transform(environment, fn ({x, index}, curr_env) ->
                             {result_stack, new_env} = interp(subcommands, %Stack{elements: [x]}, %{curr_env | range_variable: index, range_element: x})
@@ -737,11 +733,11 @@ defmodule Interp.Interpreter do
                                                                |> Stream.map(fn x -> Enum.join(Enum.to_list(x), "") end)
                         end
                         
-                    _ -> a |> Stream.chunk_every(2, 1, :discard)
-                           |> Stream.map(fn [x, y] ->
-                                {result_stack, _} = interp(subcommands, %Stack{elements: [x, y]}, environment)
-                                {result_elem, _, _} = Stack.pop(result_stack, environment)
-                                result_elem end)
+                    _ -> to_list(a) |> Stream.chunk_every(2, 1, :discard)
+                                    |> Stream.map(fn [x, y] ->
+                                        {result_stack, _} = interp(subcommands, %Stack{elements: [x, y]}, environment)
+                                        {result_elem, _, _} = Stack.pop(result_stack, environment)
+                                        result_elem end)
                 end
                 {Stack.push(stack, result), environment}
             

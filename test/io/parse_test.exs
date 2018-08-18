@@ -347,4 +347,45 @@ defmodule ParserTest do
             ]}
         ]
     end
+
+    test "if statement with eof" do
+        assert Parser.parse(Reader.read("5i123ë456")) == [
+            {:number, "5"},
+            {:if_statement, [
+                {:number, "123"}
+            ], [
+                {:number, "456"}
+            ]}
+        ]
+    end
+
+    test "if statement with end all" do
+        assert Parser.parse(Reader.read("5i123ë45i789]10")) == [
+            {:number, "5"},
+            {:if_statement, [
+                {:number, "123"}
+            ], [
+                {:number, "45"},
+                {:if_statement, [
+                    {:number, "789"}
+                ], []}
+            ]},
+            {:number, "10"}
+        ]
+    end
+
+    test "if statement with counter loop" do
+        assert Parser.parse(Reader.read("5i3 4µ2 3+}5}6")) == [
+            {:number, "5"},
+            {:if_statement,
+             [
+               {:number, "3"},
+               {:number, "4"},
+               {:subprogram, "µ",
+                [number: "2", number: "3", binary_op: "+", unary_op: "½"]},
+               {:number, "5"}
+             ], []},
+            {:number, "6"}
+          ]
+    end
 end
