@@ -381,6 +381,13 @@ defmodule BinaryTest do
         assert evaluate("1233213Sï 2¢") == 2
         assert evaluate("1233213S 2¢") == 2
         assert evaluate("1233213S 23S¢") == [2, 3]
+        assert evaluate("1232334 23¢") == 2
+    end
+    
+    test "count strict occurrences" do
+        assert evaluate("1122332233S 3.¢") == 4
+        assert evaluate("1122332233S 3ï.¢") == 4
+        assert evaluate("12S 23S 34S 32S 23S) 23Sï.¢") == 2
     end
 
     test "to base arbitrary" do
@@ -640,5 +647,50 @@ defmodule BinaryTest do
         assert evaluate("123S 4567S.ιï") == [1, 4, 2, 5, 3, 6, 7]
         assert evaluate("1234S 567S.ιï") == [1, 5, 2, 6, 3, 7, 4]
         assert evaluate("∞ ∞(.ι10£") == [1, -1, 2, -2, 3, -3, 4, -4, 5, -5]
+    end
+
+    test "append to list" do
+        assert evaluate("3L 0ïª") == [1, 2, 3, 0]
+        assert evaluate("123 0ªï") == [1, 2, 3, 0]
+        assert evaluate("345 12Sªï") == [3, 4, 5, [1, 2]]
+    end
+    
+    test "prepend to list" do
+        assert evaluate("3L 0ïš") == [0, 1, 2, 3]
+        assert evaluate("123 0šï") == [0, 1, 2, 3]
+        assert evaluate("345 12Sšï") == [[1, 2], 3, 4, 5]
+    end
+
+    test "run length decode" do
+        assert evaluate("12323S 22221SÅΓ") == ["1", "1", "2", "2", "3", "3", "2", "2", "3"]
+        assert evaluate("12323Sï 22221SÅΓ") == [1, 1, 2, 2, 3, 3, 2, 2, 3]
+        assert evaluate("12323 22221ÅΓ") == ["1", "1", "2", "2", "3", "3", "2", "2", "3"]
+    end
+
+    test "starts with" do
+        assert evaluate("123456 123Å?") == 1
+        assert evaluate("123456 124Å?") == 0
+        assert evaluate("123456 \"\"Å?") == 1
+        assert evaluate("123 124 234 334) 12Å?") == [1, 1, 0, 0]
+        assert evaluate("123456 \"1 12 124\"#Å?") == [1, 1, 0]
+        assert evaluate("12 23 34 45) \"12 23\"#Å?") == 1
+        assert evaluate("12 23 34 45) \"12 33\"#Å?") == 0
+    end
+
+    test "ends with" do
+        assert evaluate("123456 456Å¿") == 1
+        assert evaluate("123456 457Å¿") == 0
+        assert evaluate("123456 \"\"Å¿") == 1
+        assert evaluate("123 223 234 345) 23Å¿") == [1, 1, 0, 0]
+        assert evaluate("123456 \"6 56 356\"# Å¿") == [1, 1, 0]
+        assert evaluate("12 34 56 78) \"56 78\"# Å¿") == 1
+        assert evaluate("12 34 56 78) \"66 78\"# Å¿") == 0
+    end
+
+    test "nth permutation of" do
+        assert evaluate("5L10.I") == [1, 3, 5, 2, 4]
+        assert evaluate("5L95.I") == [4, 5, 3, 2, 1]
+        assert evaluate("5L0.I") == [1, 2, 3, 4, 5]
+        assert evaluate("5L119.I") == [5, 4, 3, 2, 1]
     end
 end

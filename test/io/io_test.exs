@@ -1,7 +1,6 @@
 defmodule IOTest do
     use ExUnit.Case
     alias Interp.Globals
-    alias Reading.InputHandler
     import ExUnit.CaptureIO
     import TestHelper
 

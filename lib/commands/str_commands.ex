@@ -226,4 +226,15 @@ defmodule Commands.StrCommands do
 
     def leftpad_with(list, length, pad_char) when Functions.is_iterable(list), do: list |> Stream.map(fn x -> leftpad_with(x, length, pad_char) end)
     def leftpad_with(string, length, pad_char), do: String.duplicate(pad_char, max(length - String.length(string), 0)) <> string
+
+    def run_length_encode(string) when not Functions.is_iterable(string), do: run_length_encode(Functions.to_list(string))
+    def run_length_encode(list) do
+        chars = list |> ListCommands.deduplicate
+        lengths = list |> ListCommands.group_equal |> Stream.map(fn x -> length(Enum.to_list(x)) end)
+        {chars, lengths}
+    end
+
+    def run_length_decode(elements, lengths) do
+        Stream.zip(elements, lengths) |> Stream.flat_map(fn {element, len} -> List.duplicate(element, Functions.to_number(len)) end) |> Functions.as_stream
+    end
 end

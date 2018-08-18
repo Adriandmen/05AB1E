@@ -29,7 +29,9 @@ defmodule Osabie.MixProject do
   defp deps do
     [
       {:memoize, "~> 1.2"},
-      {:excoveralls, "~> 0.9.1", only: :test}
+      {:httpoison, "~> 1.2"},
+      {:excoveralls, "~> 0.9.1", only: :test},
+      {:mock, "~> 0.3.0", only: :test}
     ]
   end
 

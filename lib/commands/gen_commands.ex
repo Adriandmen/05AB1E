@@ -7,6 +7,8 @@ defmodule Commands.GeneralCommands do
     alias Interp.Globals
     alias Interp.Environment
     alias Interp.RecursiveEnvironment
+    alias HTTPoison
+    alias Commands.ListCommands
     require Interp.Functions
     
     def head(value) do
@@ -92,12 +94,14 @@ defmodule Commands.GeneralCommands do
         end
     end
 
-    def count(value, element) do
-        cond do
-            Functions.is_iterable(value) -> value |> Enum.count(fn x -> equals(x, element) end)
-            true -> count(String.graphemes(to_string(value)), element)
-        end
-    end
+    def count(value, element) when Functions.is_iterable(value), do: value |> Enum.count(fn x -> equals(x, element) end)
+    def count(value, element), do: count(value, element, 0)
+    defp count("", _, count), do: count
+    defp count(value, element, count), do: count(value |> String.slice(1..-1), element, count + Functions.to_number(value |> String.starts_with?(element)))
+
+    def strict_count(value, element) when not Functions.is_iterable(value) and not Functions.is_iterable(element), do: element |> Stream.map(fn x -> count(value, x) end)
+    def strict_count(value, element) when not Functions.is_iterable(value), do: count(value, element)
+    def strict_count(value, element) when Functions.is_iterable(value), do: value |> Enum.count(fn x -> equals(x, element) end)
 
     def enclose(value) do
         cond do
@@ -172,12 +176,14 @@ defmodule Commands.GeneralCommands do
         end
     end
 
-    def run_while(prev_result, commands, environment, index) do
+    def run_while(prev_result, commands, environment, index, prev_results \\ nil) do
         {result_stack, new_env} = Interpreter.interp(commands, %Stack{elements: [prev_result]}, %{environment | range_variable: index, range_element: prev_result})
         {result, _, new_env} = Stack.pop(result_stack, new_env)
         cond do
-            result == prev_result -> {result, new_env}
-            true -> run_while(result, commands, new_env, index + 1)
+            result == prev_result and prev_results == nil -> {result, new_env}
+            result == prev_result -> {prev_results |> Enum.reverse, new_env}
+            prev_results == nil -> run_while(result, commands, new_env, index + 1)
+            true -> run_while(result, commands, new_env, index + 1, [result | prev_results])
         end
     end
 
@@ -207,4 +213,44 @@ defmodule Commands.GeneralCommands do
                 head
         end
     end
+
+    def map_every(commands, environment, list, nth) do
+        cond do
+            Functions.is_iterable(nth) -> 
+                list
+                |> Stream.with_index(nth |> Stream.take(1) |> Enum.to_list |> List.first)
+                |> Stream.transform({nth |> Stream.cycle, 0}, fn ({x, index}, {nth, offset}) ->
+                    head = nth |> Stream.take(1) |> Enum.to_list |> List.first
+                    cond do
+                        head == 0 -> {[x], {nth, offset}}
+                        index - offset == head -> {[Interpreter.flat_interp(commands, [x], environment)], {nth |> Stream.drop(1), index}}
+                        true -> {[x], {nth, offset}}
+                    end
+                end) |> Stream.map(fn x -> x end)
+            true ->
+                list |> Stream.map_every(nth, fn x -> Interpreter.flat_interp(commands, [x], environment) end)
+        end
+    end
+
+    def get_url(url) do
+        cond do
+            url |> String.starts_with?("http") -> HTTPoison.get!(url).body
+            true -> HTTPoison.get!("http://" <> url).body
+        end
+    end
+
+    def starts_with(left, right) when Functions.is_iterable(left) and Functions.is_iterable(right) do
+        cond do
+            equals(left |> Stream.take(length(Enum.to_list(right))) |> Enum.to_list, right) -> true
+            true -> false
+        end
+    end
+    def starts_with(left, right) when Functions.is_iterable(left), do: left |> Stream.map(fn x -> x |> starts_with(right) end)
+    def starts_with(left, right) when Functions.is_iterable(right), do: right |> Stream.map(fn x -> left |> starts_with(x) end)
+    def starts_with(left, right), do: String.starts_with?(to_string(left), to_string(right))
+
+    def ends_with(left, right) when Functions.is_iterable(left) and Functions.is_iterable(right), do: starts_with(left |> ListCommands.reverse, right |> ListCommands.reverse)
+    def ends_with(left, right) when Functions.is_iterable(left), do: starts_with(left |> Stream.map(&ListCommands.reverse/1), right |> ListCommands.reverse)
+    def ends_with(left, right) when Functions.is_iterable(right), do: starts_with(left |> ListCommands.reverse, right |> Stream.map(&ListCommands.reverse/1))
+    def ends_with(left, right), do: starts_with(left |> ListCommands.reverse, right |> ListCommands.reverse)
 end

@@ -59,6 +59,10 @@ defmodule SpecialOpsTest do
         assert evaluate("3LLLΔO") == 15
     end
 
+    test "run until no change with intermediate results" do
+        assert evaluate("5.Γ>12)ß") == [6, 7, 8, 9, 10, 11, 12]
+    end
+
     test "break out of loop" do
         assert evaluate("10FN N3Q#})") == [0, 1, 2, 3]
         assert evaluate("10FN2Q# 10FN N3Q#} 1ï})") == [0, 1, 2, 3, 1, 0, 1, 2, 3, 1]
@@ -233,5 +237,21 @@ defmodule SpecialOpsTest do
     test "permute by function" do
         assert evaluate("123Sï.æ>") == [[1, 2, 3], [2, 2, 3], [1, 3, 3], [2, 3, 3], [1, 2, 4], [2, 2, 4], [1, 3, 4], [2, 3, 4]]
         assert evaluate("123.æ>}ï") == [[1, 2, 3], [2, 2, 3], [1, 3, 3], [2, 3, 3], [1, 2, 4], [2, 2, 4], [1, 3, 4], [2, 3, 4]]
+    end
+
+    test "cumulative reduce left" do
+        assert evaluate("5LÅ»+") == [1, 3, 6, 10, 15]
+        assert evaluate("5LÅ»-") == [1, -1, -4, -8, -13]
+    end
+
+    test "cumulative reduce right" do
+        assert evaluate("5LÅ«+") == [15, 14, 12, 9, 5]
+        assert evaluate("5LÅ«-") == [3, -2, 4, -1, 5]
+    end
+
+    test "map every nth element" do
+        assert evaluate("6L2Å€2+") == [3, 2, 5, 4, 7, 6]
+        assert evaluate("10L21SÅ€0}ï") == [0, 0, 3, 0, 0, 6, 0, 0, 9, 0]
+        assert evaluate("10L320SÅ€0}ï") == [0, 2, 0, 4, 5, 6, 7, 8, 9, 10]
     end
 end

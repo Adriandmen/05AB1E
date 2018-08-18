@@ -57,6 +57,10 @@ defmodule ConstantsTest do
         assert evaluate("žU") == "zxcvbnm"
         assert evaluate("žV") == ["qwertyuiop", "asdfghjkl", "zxcvbnm"]
         assert evaluate("žW") == "qwertyuiopasdfghjklzxcvbnm"
+        assert evaluate("žX") == "http://"
+        assert evaluate("žY") == "https://"
+        assert evaluate("žZ") == "http://www."
+        assert evaluate("žƵ") == "https://www."
     end
 
     test "time based constants" do

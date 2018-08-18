@@ -191,6 +191,39 @@ defmodule Commands.IntCommands do
         end
     end
 
+    def next_prime_from_arbitrary(number) when number < 2, do: 2
+    def next_prime_from_arbitrary(number) do
+        next = number + 1
+        cond do
+            is_prime?(next) -> next
+            true -> next_prime_from_arbitrary(next)
+        end
+    end
+
+    def prev_prime_from_arbitrary(number) when is_float(number), do: prev_prime_from_arbitrary(Float.ceil(number) |> round)
+    def prev_prime_from_arbitrary(number) do
+        prev = number - 1
+        cond do
+            is_prime?(prev) -> prev
+            true -> prev_prime_from_arbitrary(prev)
+        end
+    end
+
+    def nearest_prime_from_arbitrary(number), do: nearest_prime_from_arbitrary(round(number), 0, number)
+    def nearest_prime_from_arbitrary(number, offset, initial) do
+        cond do
+            is_prime?(number + offset) ->
+                cond do
+                    offset == 0 -> number
+                    is_prime?(number - offset) and abs(initial - (number - offset)) < abs(initial - (number + offset)) -> number - offset
+                    true -> number + offset
+                end
+            is_prime?(number - offset) ->
+                number - offset
+            true -> nearest_prime_from_arbitrary(number, offset + 1, initial)
+        end
+    end
+    
     @doc """
     Retrieves the index of the nearest prime number to the given value that is smaller than
     the given value. The returned index is 0-indexed. 
@@ -380,4 +413,33 @@ defmodule Commands.IntCommands do
     def lucas(index) when index > 1, do: lucas(index, 2, 1)
     defp lucas(0, a, _), do: a
     defp lucas(index, a, b), do: lucas(index - 1, b, a + b)
+
+    @roman_number_list [
+        [1000, "M"],
+        [900, "CM"],
+        [500, "D"],
+        [400, "CD"],
+        [100, "C"],
+        [90, "XC"],
+        [50, "L"],
+        [40, "XL"],
+        [10, "X"],
+        [9, "IX"],
+        [5, "V"],
+        [4, "IV"],
+        [1, "I"]
+    ]
+    def to_roman_numeral(number), do: to_roman_numeral(number, "")
+    defp to_roman_numeral(0, parsed), do: parsed
+    defp to_roman_numeral(number, parsed) do
+        [curr_number, roman] = Enum.find(@roman_number_list, fn [x, _] -> number >= x end)
+        to_roman_numeral(number - curr_number, parsed <> roman)
+    end
+
+    def from_roman_numeral(roman), do: from_roman_numeral(roman, 0)
+    defp from_roman_numeral("", number), do: number
+    defp from_roman_numeral(roman, number) do
+        [curr_number, curr_roman] = Enum.find(@roman_number_list, fn [_, y] -> String.starts_with?(roman, y) end)
+        from_roman_numeral(roman |> String.slice(String.length(curr_roman)..-1), number + curr_number)
+    end
 end

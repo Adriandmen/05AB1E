@@ -1,6 +1,8 @@
 defmodule UnaryTest do
     use ExUnit.Case
+    alias HTTPoison
     import TestHelper
+    import Mock
 
     test "add one" do
         assert evaluate("5ï>") == 6
@@ -311,6 +313,9 @@ defmodule UnaryTest do
         assert evaluate("3LLJ") == ["1", "12", "123"]
         assert evaluate("1 2 3J") == "123"
         assert evaluate("1 32ï 3J") == "1323"
+        assert evaluate("32 33‚ 34 35‚ 36 37‚)ïJ") == ["3233", "3435", "3637"]
+        assert evaluate("33 33‚ 33‚ 34 35‚ 36 37‚)ïJ") == [["3333", "33"], "3435", "3637"]
+        assert evaluate("33 34 35‚ 36)ïJ") == ["33", "3435", "36"]
     end
 
     test "ten to the power of n" do
@@ -385,9 +390,9 @@ defmodule UnaryTest do
     end
 
     test "switch case" do
-        assert evaluate("\"aBc\"š") == "AbC"
-        assert evaluate("\"aBc Def 123\"š") == "AbC dEF 123"
-        assert evaluate("\"aBc Def\" \"a12\")š") == ["AbC dEF", "A12"]
+        assert evaluate("\"aBc\".š") == "AbC"
+        assert evaluate("\"aBc Def 123\".š") == "AbC dEF 123"
+        assert evaluate("\"aBc Def\" \"a12\").š") == ["AbC dEF", "A12"]
     end
 
     test "deep flatten" do
@@ -397,8 +402,8 @@ defmodule UnaryTest do
     end
 
     test "sentence case" do
-        assert evaluate("\"abc\"ª") == "Abc"
-        assert evaluate("\"abc. def? ghi! jkl mnop.\"ª") == "Abc. Def? Ghi! Jkl mnop."
+        assert evaluate("\"abc\".ª") == "Abc"
+        assert evaluate("\"abc. def? ghi! jkl mnop.\".ª") == "Abc. Def? Ghi! Jkl mnop."
     end
 
     test "reduced subtraction" do
@@ -560,6 +565,8 @@ defmodule UnaryTest do
         assert evaluate("5L»") == "1\n2\n3\n4\n5"
         assert evaluate("5LL»") == "1\n1 2\n1 2 3\n1 2 3 4\n1 2 3 4 5"
         assert evaluate("1 2 3 4 5»") == "1\n2\n3\n4\n5"
+        assert evaluate("33 33‚ 33‚ 34 35‚ 36 37‚)ï»") == "[33, 33] 33\n34 35\n36 37"
+        assert evaluate("33 33‚ 33)ï»") == "33 33\n33"
     end
 
     test "set x" do
@@ -727,6 +734,7 @@ defmodule UnaryTest do
         assert evaluate(")æ") == [[]]
         assert evaluate("1Læ") == [[], [1]]
         assert evaluate("3Læ") == [[], [1], [2], [1, 2], [3], [1, 3], [2, 3], [1, 2, 3]]
+        assert evaluate("4Læ") == [[], [1], [2], [1, 2], [3], [1, 3], [2, 3], [1, 2, 3], [4], [1, 4], [2, 4], [1, 2, 4], [3, 4], [1, 3, 4], [2, 3, 4], [1, 2, 3, 4]]
         assert evaluate("∞æ9£") == [[], [1], [2], [1, 2], [3], [1, 3], [2, 3], [1, 2, 3], [4]]
         assert evaluate("123æ") == ["", "1", "2", "12", "3", "13", "23", "123"]
         assert evaluate("\"\"æ") == [""]
@@ -923,5 +931,77 @@ defmodule UnaryTest do
         assert evaluate("123S456S789S)ïÅ|") == [[1, 4, 7], [2, 5, 8], [3, 6, 9]]
         assert evaluate("123S456S78S)ïÅ|") == [[1, 4, 7], [2, 5, 8], [3, 6]]
         assert evaluate("∞3ôÅ|0è3£") == [1, 4, 7]
+    end
+
+    test "to roman numbers" do
+        assert evaluate("36.X") == "XXXVI"
+        assert evaluate("2012.X") == "MMXII"
+        assert evaluate("1996.X") == "MCMXCVI"
+    end
+
+    test "from roman numbers" do
+        assert evaluate("\"XXXVI\".v") == 36
+        assert evaluate("\"MMXII\".v") == 2012
+        assert evaluate("\"MCMXCVI\".v") == 1996
+    end
+
+    test "integer partitions" do
+        assert evaluate("5Åœ") == [[1, 1, 1, 1, 1], [1, 1, 1, 2], [1, 1, 3], [1, 2, 2], [1, 4], [2, 3], [5]]
+        assert evaluate("0Åœ") == [[]]
+    end
+
+    test "continue list" do
+        assert evaluate("3L.Þ10£") == [1, 2, 3, 3, 3, 3, 3, 3, 3, 3]
+        assert evaluate("123.Þ10£ï") == [1, 2, 3, 3, 3, 3, 3, 3, 3, 3]
+    end
+
+    test "next prime number" do
+        assert evaluate("2ÅN") == 3
+        assert evaluate("3ÅN") == 5
+        assert evaluate("5ÅN") == 7
+        assert evaluate("7ÅN") == 11
+        assert evaluate("6.8ÅN") == 7
+        assert evaluate("5(ÅN") == 2
+    end
+
+    test "prev prime number" do
+        assert evaluate("19.5ÅM") == 19
+        assert evaluate("5ÅM") == 3
+        assert evaluate("3ÅM") == 2
+    end
+    
+    test "nearest prime number" do
+        assert evaluate("5Ån") == 5
+        assert evaluate("6Ån") == 7
+        assert evaluate("5.9Ån") == 5
+    end
+
+    test "run length encoding" do
+        assert evaluate("112233223Åγ)") == [["1", "2", "3", "2", "3"], [2, 2, 2, 2, 1]]
+        assert evaluate("112233223ïÅγ)") == [["1", "2", "3", "2", "3"], [2, 2, 2, 2, 1]]
+        assert evaluate("112233223SÅγ)") == [["1", "2", "3", "2", "3"], [2, 2, 2, 2, 1]]
+        assert evaluate("112233223SïÅγ)") == [[1, 2, 3, 2, 3], [2, 2, 2, 2, 1]]
+    end
+
+    test "retrieve web page" do
+        with_mock HTTPoison, [get!: fn "https://codegolf.stackexchange.com/" -> %{:body => "<example body>"} end] do
+            assert evaluate("\"https://codegolf.stackexchange.com/\".w") == "<example body>"
+        end
+    end
+
+    test "deck shuffle" do
+        assert evaluate("123456SïÅ=") == [1, 4, 2, 5, 3, 6]
+        assert evaluate("1234567890SïÅ=") == [1, 6, 2, 7, 3, 8, 4, 9, 5, 0]
+        assert evaluate("1234567SïÅ=") == [1, 5, 2, 6, 3, 7, 4]
+        assert evaluate("123456Å=ï") == [1, 4, 2, 5, 3, 6]
+        assert evaluate("1234567Å=ï") == [1, 5, 2, 6, 3, 7, 4]
+    end
+
+    test "deck unshuffle" do
+        assert evaluate("142536SïÅ≠") == [1, 2, 3, 4, 5, 6]
+        assert evaluate("1627384950SïÅ≠") == [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+        assert evaluate("1526374SïÅ≠") == [1, 2, 3, 4, 5, 6, 7]
+        assert evaluate("142536Å≠ï") == [1, 2, 3, 4, 5, 6]
+        assert evaluate("1526374Å≠ï") == [1, 2, 3, 4, 5, 6, 7]
     end
 end

@@ -85,6 +85,16 @@ defmodule Interp.Functions do
         end
     end
 
+    def to_integer!(value) do
+        cond do
+            is_iterable(value) -> value |> Stream.map(&to_integer!/1)
+            true -> case to_integer(value) do
+                x when is_integer(x) -> x
+                _ -> raise("Could not convert #{value} to integer.")
+            end
+        end
+    end
+
     def to_non_number(value) do
         case value do
             _ when is_integer(value) ->
@@ -102,8 +112,18 @@ defmodule Interp.Functions do
         case value do
             true -> "1"
             false -> "0"
-            _ when is_integer(value) -> to_string(value)
-            _ when is_map(value) -> Enum.map(value, &to_str/1)
+            _ when is_number(value) -> to_string(value)
+            _ when is_iterable(value) -> Enum.map(value, &to_str/1)
+            _ -> value
+        end
+    end
+
+    def flat_string(value) do
+        case value do
+            true -> "1"
+            false -> "0"
+            _ when is_number(value) -> to_string(value)
+            _ when is_iterable(value) -> "[" <> (value |> Enum.to_list |> Enum.map(&flat_string/1) |> Enum.join(", ")) <> "]"
             _ -> value
         end
     end
@@ -122,6 +142,10 @@ defmodule Interp.Functions do
             is_integer(value) -> stream(to_string(value))
             true -> String.graphemes(value)
         end
+    end
+
+    def as_stream(stream) do
+        stream |> Stream.map(fn x -> x end)
     end
 
     def normalize_to(value, initial) when is_iterable(value) and not is_iterable(initial), do: value |> Enum.join("")

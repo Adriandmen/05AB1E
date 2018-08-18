@@ -3,6 +3,7 @@ defmodule Commands.ListCommands do
     alias Interp.Interpreter
     alias Commands.IntCommands
     alias Commands.GeneralCommands
+    alias Commands.MatrixCommands
     require Interp.Functions
     
     def prefixes(a) do
@@ -117,16 +118,23 @@ defmodule Commands.ListCommands do
         end
     end
 
+    def join(value, _) when not Functions.is_iterable(value), do: to_string(value)
     def join(value, joiner) do
-        case Enum.take(value, 1) do
-            [] -> ""
-            x when Functions.is_iterable(hd(x)) -> value |> Stream.map(fn x -> join(x, joiner) end)
-            _ -> Enum.to_list(value) |> Enum.join(joiner)
+        cond do
+            Enum.take(value, 1) == [] -> ""
+            value |> Enum.any?(fn x -> Functions.is_iterable(x) end) -> value |> Stream.map(fn x -> x |> join(joiner) end)
+            true -> value |> Enum.to_list |> Enum.map(&Functions.flat_string/1) |> Enum.join(joiner)
         end
     end
     
     def grid_join(list) do
-        list |> Stream.map(fn x -> if Functions.is_iterable(x) do x |> Enum.to_list |> Enum.join(" ") else x end end) |> Enum.to_list |> Enum.join("\n")
+        list |> Stream.map(fn x -> 
+            if Functions.is_iterable(x) do 
+                x |> Enum.to_list |> Enum.map(&Functions.flat_string/1) |> Enum.join(" ") 
+            else 
+                x 
+            end 
+        end) |> Enum.to_list |> Enum.join("\n")
     end
 
     def contains(value, element) do
@@ -347,7 +355,7 @@ defmodule Commands.ListCommands do
     fills the remaining spaces with the given filler character. Since Elixir does not have a zip with filler
     function, this is done using a resource generator for a new stream, repeatedly taking the first element of
     the given list of lists and dropping one element for the next iteration. It checks each iteration whether
-    at least one element of the intermediate results is not equal to [] and replaces any occurence of [] with
+    at least one element of the intermediate results is not equal to [] and replaces any occurrence of [] with
     the filler element. If all elements of the intermediate result equals [], it halts the stream generation.
 
     ## Parameters
@@ -424,6 +432,9 @@ defmodule Commands.ListCommands do
     def substrings(list) do
         list |> suffixes |> Enum.reverse |> Stream.flat_map(fn y -> prefixes(y) end) |> Stream.map(fn x -> x end)
     end
+
+    def reverse(list) when Functions.is_iterable(list), do: list |> Enum.to_list |> Enum.reverse
+    def reverse(string), do: String.reverse(to_string(string))
 
     def group_equal(list) do
         cond do
@@ -506,6 +517,12 @@ defmodule Commands.ListCommands do
         partitions(remaining, [[head]] ++ [head_acc | remaining_acc]) ++ partitions(remaining, [head_acc ++ [head] | remaining_acc])
     end
 
+    def integer_partitions(number), do: integer_partitions(number, [], 1)
+    defp integer_partitions(0, acc, _), do: [acc |> Enum.reverse]
+    defp integer_partitions(x, acc, _) when x < 0, do: []
+    defp integer_partitions(x, acc, min_index) when min_index > x, do: []
+    defp integer_partitions(number, acc, min_index), do: min_index..number |> Enum.flat_map(fn index -> integer_partitions(number - index, [index | acc], index) end)
+
     def increasing_contains([], _), do: false
     def increasing_contains(list, value) do
         head = Functions.to_number List.first Enum.to_list Stream.take(list, 1)
@@ -562,5 +579,24 @@ defmodule Commands.ListCommands do
                     [element] -> {element, acc |> Stream.drop(1)}
                 end
             end) |> Stream.map(fn x -> x end)
+    end
+    
+    def continue(list), do: Stream.concat(list, Stream.cycle([List.last(Enum.to_list(list))])) |> Functions.as_stream
+
+    def deck_shuffle(list) do
+        [left, right] = list |> even_split(2) |> Enum.to_list
+        interleave(left, right)
+    end
+
+    def deck_unshuffle(list) do
+        list |> split_into(2) |> MatrixCommands.columns_of |> Stream.concat |> Functions.as_stream
+    end
+
+    def permutation_index(range, index) when Functions.is_single?(range), do: permutation_index(1..Functions.to_integer(range), index)
+    def permutation_index(range, index), do: permutation_index(Enum.to_list(range), index, [])
+    defp permutation_index([], _, parsed), do: parsed |> Enum.reverse
+    defp permutation_index(range, index, parsed) do
+        curr_index = Enum.at(range, div(index, IntCommands.factorial(length(range) - 1)))
+        permutation_index(range -- [curr_index], rem(index, IntCommands.factorial(length(range) - 1)), [curr_index | parsed])
     end
 end

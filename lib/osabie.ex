@@ -61,11 +61,9 @@ defmodule Osabie.CLI do
         end
         
         {last, _, _} = Stack.pop(stack, environment)
-        last = Functions.eval last
         case Globals.get().printed do
             true -> nil
-            false -> 
-                Output.print(last)
+            false -> Output.print(last)
         end
     end
 
