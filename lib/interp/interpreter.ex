@@ -49,6 +49,7 @@ defmodule Interp.Interpreter do
             "¶" -> Stack.push(stack, "\n")
             "õ" -> Stack.push(stack, "")
             "ð" -> Stack.push(stack, " ")
+            "λ" -> Stack.push(stack, 0..(environment.range_variable - 1) |> Stream.map(fn x -> GeneralCommands.recursive_program(environment.recursive_environment.subprogram, environment.recursive_environment.base_cases, x) end))
             "´" -> Globals.set(%{Globals.get() | array: []}); stack
             "q" -> Globals.set(%{Globals.get() | status: :quit}); stack
             "¼" -> global_env = Globals.get(); Globals.set(%{global_env | counter_variable: global_env.counter_variable + 1}); stack
