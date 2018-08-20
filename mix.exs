@@ -4,8 +4,8 @@ defmodule Osabie.MixProject do
   def project do
     [
       app: :osabie,
-      version: "0.1.0",
-      elixir: "~> 1.6.0",
+      version: "1.0.1",
+      elixir: ">= 1.6.0",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       escript: escript(),

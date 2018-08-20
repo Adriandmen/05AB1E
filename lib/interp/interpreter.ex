@@ -147,7 +147,7 @@ defmodule Interp.Interpreter do
             "l" -> Stack.push(stack, call_unary(fn x -> String.downcase(to_string(x)) end, a))
             "g" -> Stack.push(stack, call_unary(fn x -> cond do (is_iterable(x) -> length(Enum.to_list(x)); true -> String.length(to_string(x))) end end, a, true))
             ";" -> Stack.push(stack, call_unary(fn x -> to_number(x) / 2 end, a))
-            "ï" -> Stack.push(stack, call_unary(fn x -> to_number(x) end, a))
+            "ï" -> Stack.push(stack, call_unary(fn x -> to_integer(x) end, a))
             "§" -> Stack.push(stack, call_unary(fn x -> to_non_number(x) end, a))
             "±" -> Stack.push(stack, call_unary(fn x -> ~~~to_number(x) end, a))
             "Ā" -> Stack.push(stack, call_unary(fn x -> to_number(not(to_number(x) == 0 or x == "")) end, a))
