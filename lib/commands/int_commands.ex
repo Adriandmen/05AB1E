@@ -168,7 +168,7 @@ defmodule Commands.IntCommands do
     """
     def is_prime?(value) when value in [2, 3, 5, 7], do: true
     def is_prime?(value) when value < 2 or rem(value, 2) == 0 or rem(value, 3) == 0 or rem(value, 5) == 0 or rem(value, 7) == 0, do: false
-    def is_prime?(value), do: is_prime?(value, :math.sqrt(value) |> Float.floor |> round, 5)
+    def is_prime?(value), do: is_prime?(value, 5, :math.sqrt(value) |> Float.floor |> round)
     def is_prime?(_, current_prime, upper_bound) when current_prime > upper_bound, do: true
     def is_prime?(value, current_prime, upper_bound) do
         cond do

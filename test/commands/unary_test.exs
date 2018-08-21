@@ -338,6 +338,8 @@ defmodule UnaryTest do
         assert evaluate("4p") == 0
         assert evaluate("5p") == 1
         assert evaluate("10Lp") == [0, 1, 1, 0, 1, 0, 1, 0, 0, 0]
+        assert evaluate("143p") == 0
+        assert evaluate("1000ÅPO") == 76127
     end
 
     test "is numeric" do
