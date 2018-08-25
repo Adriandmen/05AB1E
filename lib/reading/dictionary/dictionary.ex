@@ -1,18 +1,14 @@
 defmodule Reading.Dictionary do
 
+    alias Reading.DictionaryWords
+
     def compressed_chars, do: ["€", "‚", "ƒ", "„", "…", "†", "‡", "ˆ", "‰", "Š", "‹", "Œ", "Ž", "í", "î", "•", "–", "—", 
                                "ï", "™", "š", "›", "œ", "ž", "Ÿ", "¡", "¢", "£", "¤", "¥", "¦", "§", "¨", "©", "ª", "«", 
                                "¬", "®", "¯", "°", "±", "²", "³", "´", "µ", "¶", "·", "¸", "¹", "º", "»", "¼", "½", "¾", 
                                "¿", "À", "Á", "Â", "Ã", "Ä", "Å", "Æ", "Ç", "È", "É", "Ê", "Ë", "Ì", "Í", "Î", "Ï", "Ð", 
                                "Ñ", "Ò", "Ó", "Ô", "Õ", "Ö", "×", "Ø", "Ù", "Ú", "Û", "Ü", "Ý", "Þ", "ß", "à", "á", "â", 
                                "ã", "ä", "å", "æ", "ç", "è", "é", "ê", "ë", "ì"]
-    
-    defp dictionary do
-        case File.read("lib/reading/dictionary/words") do
-            {:ok, body} -> String.split(body, "\n") |> Enum.map(&String.trim/1)
-        end
-    end
-    
+
     # --------------------------------
     # Decompressing dictionary strings
     # --------------------------------
@@ -24,7 +20,7 @@ defmodule Reading.Dictionary do
             first_index = compressed_chars() |> Enum.find_index(fn x -> x == first end)
             second_index = compressed_chars() |> Enum.find_index(fn x -> x == second end)
             index = 100 * first_index + second_index
-            word = Enum.at(dictionary(), index)
+            word = DictionaryWords.at_index(index)  
             
             # Adjust to the given mode.
             word = case mode do
