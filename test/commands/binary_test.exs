@@ -599,7 +599,9 @@ defmodule BinaryTest do
     test "increasing list contains" do
         assert evaluate("5L3.i") == 1
         assert evaluate("5L6.i") == 0
-        assert evaluate("1 2 3 4 6 7 5)5.i") == 0
+        assert evaluate("1 2 3 4 6 7 5)5.i") == 1
+        assert evaluate("1 2 3 4 6 7 8 9 5)5.i") == 1
+        assert evaluate("1 2 3 4 6 7 8 9 10 5)5.i") == 0
         assert evaluate("1 2 3 4 3 5)4.i") == 1
         assert evaluate("∞2*4.i") == 1
         assert evaluate("∞2*9.i") == 0

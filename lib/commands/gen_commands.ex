@@ -13,7 +13,7 @@ defmodule Commands.GeneralCommands do
     
     def head(value) do
         cond do
-            Functions.is_iterable(value) -> hd(Enum.to_list(Stream.take(value, 1)))
+            Functions.is_iterable(value) -> List.first Enum.to_list(Stream.take(value, 1))
             is_integer(value) -> head(Functions.to_non_number(value))
             true -> String.slice(value, 0..0)
         end

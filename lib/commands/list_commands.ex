@@ -524,12 +524,15 @@ defmodule Commands.ListCommands do
     defp integer_partitions(number, acc, min_index), do: min_index..number |> Enum.flat_map(fn index -> integer_partitions(number - index, [index | acc], index) end)
 
     def increasing_contains([], _), do: false
-    def increasing_contains(list, value) do
-        head = Functions.to_number List.first Enum.to_list Stream.take(list, 1)
+    def increasing_contains(list, value, certainty \\ 5), do: increasing_contains(list, value, certainty, certainty)
+    def increasing_contains(_, _, _, 0), do: false
+    def increasing_contains(list, value, certainty, allowance) do
+        head = Functions.to_number GeneralCommands.head(list)
         cond do
-            head < value -> increasing_contains(list |> Stream.drop(1), value)
+            head == nil -> false
+            head < value -> increasing_contains(list |> Stream.drop(1), value, certainty, certainty)
             head == value -> true
-            head > value -> false
+            head > value -> increasing_contains(list |> Stream.drop(1), value, certainty, allowance - 1)
         end
     end
 

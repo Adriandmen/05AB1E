@@ -322,7 +322,7 @@ z       = pop a      push 1 / a
 .D      = pop a,b    push b copies of a if b is int, else push len(b) copies of a
 .E      = pop a      push(eval(a)) (does not work in safe mode)
 .g      =            push length of stack
-.i      = pop a,b    push b in a (for infinite lists that are guaranteed to be non-decreasing)
+.i      = pop a,b    push b in a (for infinite lists that are guaranteed to be non-decreasing (allowance = 5))
 .I      = pop a,b    push the bth permutation of a
 .k      = pop a,b    push flat index of b in a
 .l      = pop a      push is_lower(a)
