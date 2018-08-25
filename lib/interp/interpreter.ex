@@ -114,9 +114,12 @@ defmodule Interp.Interpreter do
 
         {new_stack, environment}
     end
-
+    
     def interp_unary(op, stack, environment) do
         {a, stack, environment} = Stack.pop(stack, environment)
+        try_default(fn -> interp_unary(op, stack, environment, a) end, fn _ -> {Stack.push(stack, a), environment} end)
+    end
+    defp interp_unary(op, stack, environment, a) do
         new_stack = case op do
             ">" -> Stack.push(stack, call_unary(fn x -> to_number(x) + 1 end, a))
             "<" -> Stack.push(stack, call_unary(fn x -> to_number(x) - 1 end, a))
@@ -303,7 +306,9 @@ defmodule Interp.Interpreter do
     def interp_binary(op, stack, environment) do
         {b, stack, environment} = Stack.pop(stack, environment)
         {a, stack, environment} = Stack.pop(stack, environment)
-
+        try_default(fn -> interp_binary(op, stack, environment, a, b) end, fn _ -> {Stack.push(stack, a), environment} end)
+    end
+    defp interp_binary(op, stack, environment, a, b) do
         new_stack = case op do
             "α" -> Stack.push(stack, call_binary(fn x, y -> abs(to_number(x) - to_number(y)) end, a, b))
             "β" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.list_from_base(to_number(x), to_number(y)) end, a, b, true, false))
@@ -359,8 +364,8 @@ defmodule Interp.Interpreter do
            "Åв" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.to_custom_base(to_integer(x), y) end, a, b, false, true))
            ".м" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.list_subtraction(to_list(x), Enum.to_list(to_list(y))) end, a, b, true, true))
            ".I" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.permutation_index(x, to_integer(y)) end, a, b, true, false))
+           ".i" -> Stack.push(stack, call_binary(fn x, y -> to_number(ListCommands.increasing_contains(to_list(x), to_number(y))) end, a, b, true, false))
            ".ι" -> Stack.push(stack, ListCommands.interleave(to_list(a), to_list(b)))
-           ".i" -> Stack.push(stack, to_number(ListCommands.increasing_contains(to_list(a), to_number(b))))
            ".k" -> Stack.push(stack, ListCommands.flat_index_in_list(a, b))
            ".ý" -> Stack.push(stack, to_list(a) |> Stream.intersperse(b) |> Stream.map(fn x -> x end))
            ".o" -> Stack.push(stack, StrCommands.overlap(a, b))
@@ -397,6 +402,9 @@ defmodule Interp.Interpreter do
         {c, stack, environment} = Stack.pop(stack, environment)
         {b, stack, environment} = Stack.pop(stack, environment)
         {a, stack, environment} = Stack.pop(stack, environment)
+        try_default(fn -> interp_ternary(op, stack, environment, a, b, c) end, fn _ -> {Stack.push(stack, a), environment} end)
+    end
+    defp interp_ternary(op, stack, environment, a, b, c) do
 
         new_stack = case op do
             "ǝ" -> Stack.push(stack, StrCommands.replace_at(a, b, to_number(c)))
