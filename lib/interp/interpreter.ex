@@ -735,10 +735,7 @@ defmodule Interp.Interpreter do
                         end
                         
                     _ -> to_list(a) |> Stream.chunk_every(2, 1, :discard)
-                                    |> Stream.map(fn [x, y] ->
-                                        {result_stack, _} = interp(subcommands, %Stack{elements: [x, y]}, environment)
-                                        {result_elem, _, _} = Stack.pop(result_stack, environment)
-                                        result_elem end)
+                                    |> Stream.map(fn [x, y] -> flat_interp(subcommands, [x, y], environment) end)
                 end
                 {Stack.push(stack, result), environment}
             

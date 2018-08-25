@@ -96,6 +96,7 @@ defmodule SpecialOpsTest do
         assert evaluate("5Lü+") == [3, 5, 7, 9]
         assert evaluate("5LüF>") == [3, 5, 7, 9]
         assert evaluate("5LüF>") == [3, 5, 7, 9]
+        assert evaluate("5Lü)") == [[1, 2], [2, 3], [3, 4], [4, 5]]
     end
 
     test "pairs of length n" do
