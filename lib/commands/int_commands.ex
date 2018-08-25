@@ -442,4 +442,15 @@ defmodule Commands.IntCommands do
         [curr_number, curr_roman] = Enum.find(@roman_number_list, fn [_, y] -> String.starts_with?(roman, y) end)
         from_roman_numeral(roman |> String.slice(String.length(curr_roman)..-1), number + curr_number)
     end
+
+    def median([]), do: []
+    def median(list) do
+        len = length(list)
+        mid = div(len, 2)
+        sorted = Enum.sort(Functions.to_number(list))
+        cond do
+            rem(len, 2) == 0 -> (Enum.at(sorted, mid - 1) + Enum.at(sorted, mid)) / 2
+            true -> Enum.at(sorted, mid)
+        end
+    end
 end

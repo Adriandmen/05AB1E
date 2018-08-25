@@ -599,4 +599,21 @@ defmodule Commands.ListCommands do
         curr_index = Enum.at(range, div(index, IntCommands.factorial(length(range) - 1)))
         permutation_index(range -- [curr_index], rem(index, IntCommands.factorial(length(range) - 1)), [curr_index | parsed])
     end
+
+    def middle_of(string) when Functions.is_single?(string) do
+        case middle_of(Functions.to_list(string)) do
+            [left, right] -> left <> right
+            middle -> middle
+        end
+    end
+    def middle_of(list) do
+        list = Enum.to_list(list)
+        len = length(list)
+        mid = div(len, 2)
+        cond do
+            len == 0 -> []
+            rem(len, 2) == 0 -> [Enum.at(list, mid - 1), Enum.at(list, mid)]
+            true -> Enum.at(list, mid)
+        end
+    end
 end

@@ -1008,4 +1008,22 @@ defmodule UnaryTest do
         assert evaluate("142536Å≠ï") == [1, 2, 3, 4, 5, 6]
         assert evaluate("1526374Å≠ï") == [1, 2, 3, 4, 5, 6, 7]
     end
+
+    test "median of list" do
+        assert evaluate("5LÅm") == 3
+        assert evaluate("1 1 2 3 4 4)Åm") == 2.5
+        assert evaluate("1 4 2 4 1 3)Åm") == 2.5
+        assert evaluate("12345Åm") == 3
+        assert evaluate("142413Åm") == 2.5
+    end
+
+    test "middle of" do
+        assert evaluate("5LÅs") == 3
+        assert evaluate("'a 'b 'c 'd 'e)Ås") == "c"
+        assert evaluate("\"abcde\"Ås") == "c"
+        assert evaluate("\"abfde\"Ås") == "f"
+        assert evaluate("\"\"Ås") == []
+        assert evaluate("1 9 2 8 3 7)Åsï") == [2, 8]
+        assert evaluate("192837Ås") == "28"
+    end
 end

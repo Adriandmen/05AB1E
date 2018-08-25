@@ -288,6 +288,8 @@ defmodule Interp.Interpreter do
            "Ån" -> Stack.push(stack, call_unary(fn x -> IntCommands.nearest_prime_from_arbitrary(to_number(x)) end, a))
            "Å=" -> Stack.push(stack, call_unary(fn x -> ListCommands.deck_shuffle(to_list(x)) end, a, true))
            "Å≠" -> Stack.push(stack, call_unary(fn x -> ListCommands.deck_unshuffle(to_list(x)) end, a, true))
+           "Åm" -> Stack.push(stack, call_unary(fn x -> IntCommands.median(Enum.to_list(to_number(to_list(x)))) end, a, true))
+           "Ås" -> Stack.push(stack, call_unary(fn x -> ListCommands.middle_of(x) end, a, true))
           "Å\\" -> Stack.push(stack, MatrixCommands.left_diagonal(a))
            "Å/" -> Stack.push(stack, MatrixCommands.right_diagonal(a))
            "Åu" -> Stack.push(stack, MatrixCommands.upper_triangular_matrix(a))
