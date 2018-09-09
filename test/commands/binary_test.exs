@@ -700,5 +700,7 @@ defmodule BinaryTest do
         assert evaluate("\"abcd\"\"QrsT\".Ï") == "AbcD"
         assert evaluate("\"abcdefg\"\"QrsT\".Ï") == "AbcDefg"
         assert evaluate("\"abcd\"\"QrsTuVW\".Ï") == "AbcD"
+        assert evaluate("\"abcde\"\"Q1sTY\".Ï") == "AbcDE"
+        assert evaluate("\"aBc1e\"\"Q1sTY\".Ï") == "ABc1E"
     end
 end
