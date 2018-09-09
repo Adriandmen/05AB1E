@@ -695,4 +695,10 @@ defmodule BinaryTest do
         assert evaluate("5L0.I") == [1, 2, 3, 4, 5]
         assert evaluate("5L119.I") == [5, 4, 3, 2, 1]
     end
+
+    test "exchange capitalization" do
+        assert evaluate("\"abcd\"\"QrsT\".Ï") == "AbcD"
+        assert evaluate("\"abcdefg\"\"QrsT\".Ï") == "AbcDefg"
+        assert evaluate("\"abcd\"\"QrsTuVW\".Ï") == "AbcD"
+    end
 end
