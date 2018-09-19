@@ -90,6 +90,10 @@ defmodule UnaryTest do
         assert evaluate("4!") == 24
         assert evaluate("4ï!") == 24
         assert evaluate("4L!") == [1, 2, 6, 24]
+        assert_in_delta evaluate("1.333333!"), 1.1906391, 0.00001
+        assert_in_delta evaluate("6.4!"), 1541.33619, 0.00001
+        assert_in_delta evaluate("4.5!"), 52.3427778, 0.00001
+        assert_in_delta evaluate("4.5(!"), 0.270088206, 0.00001
     end
 
     test "convert to binary" do

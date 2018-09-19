@@ -99,6 +99,7 @@ defmodule BinaryTest do
         assert evaluate("45 7‰") == [6, 3]
         assert evaluate("45 75S‰") == [[6, 3], [9, 0]]
         assert evaluate("45S 75S‰") == [[0, 4], [1, 0]]
+        assert evaluate("13.6 1.75‰ 3 .ò") == [7, 1.35]
     end
 
     test "smaller than" do
@@ -125,6 +126,8 @@ defmodule BinaryTest do
         assert evaluate("4 2(m") == 0.0625
         assert evaluate("4( 2m") == 16
         assert evaluate("1 2 3)2m") == [1, 4, 9]
+        assert evaluate("2.5 3.5m") == 24.705294220065465
+        assert evaluate("11.0 4.0m") == 14641
     end
 
     test "take first" do
@@ -463,6 +466,7 @@ defmodule BinaryTest do
         assert evaluate("6L 3ä") == [[1, 2], [3, 4], [5, 6]]
         assert evaluate("123456 3ä") == ["12", "34", "56"]
         assert evaluate("12345 3ä") == ["12", "34", "5"]
+        assert evaluate("12345 3.5ä") == ["12", "34", "5"]
     end
 
     test "sign function" do
@@ -552,6 +556,7 @@ defmodule BinaryTest do
         assert evaluate("0.124 2.ò") == 0.12
         assert evaluate("0.128 2.ò") == 0.13
         assert evaluate("0.128 4.ò") == 0.128
+        assert evaluate("0.1 0.12 0.123 0.1234) 2.ò") == [0.1, 0.12, 0.12, 0.12]
     end
     
     test "pad with spaces" do

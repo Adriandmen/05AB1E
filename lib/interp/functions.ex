@@ -103,7 +103,8 @@ defmodule Interp.Functions do
         end
     end
 
-    def is_integer?(value), do: is_integer(to_integer(value))
+    def is_integer?(value), do: is_integer(to_number(value))
+    def is_number?(value), do: is_number(to_number(value))
 
     def to_non_number(value) do
         case value do

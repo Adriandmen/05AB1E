@@ -29,9 +29,35 @@ defmodule Commands.IntCommands do
     The factorial of the given number.
     """
     def factorial(0), do: 1
+    def factorial(value) when is_float(value), do: gamma_function(value + 1)
     def factorial(value), do: factorial(value, 1)
     defp factorial(1, acc), do: acc
     defp factorial(value, acc), do: factorial(value - 1, acc * value)
+
+    @pi 3.141592653589793238462643383279502884197
+    @e  2.718281828459045235360287471352662497757
+    @gamma_coefficients [676.5203681218851, -1259.1392167224028, 771.32342877765313, -176.61502916214059, 12.507343278686905, -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7]
+    defp gamma_function(value) do
+        cond do
+            # For computing Γ(0.5 + n) or Γ(0.5 - n), a separate rule needs to be applied
+            mod(Functions.to_number(value - 0.5), 1) == 0 ->
+                n = Functions.to_integer(value - 0.5)
+                cond do
+                    n >= 0 -> factorial(2 * n) / (pow(4, n) * factorial(n)) * pow(@pi, 0.5)
+                    true -> 
+                        n = -n
+                        pow(-4, n) * factorial(n) / factorial(2 * n) * pow(@pi, 0.5)
+                end
+            
+            # When n < 0.5
+            value < 0.5 -> @pi / (:math.sin(@pi * value) * gamma_function(1 - value))
+
+            # Remaining cases
+            true ->
+                series = (@gamma_coefficients |> Enum.with_index |> Enum.map(fn {x, index} -> x / (value + index) end) |> Enum.sum) + 0.99999999999980993
+                pow(2 * @pi, 0.5) * pow(value + 6.5, (value - 0.5)) * pow(@e, -(value + 6.5)) * series
+        end
+    end
 
     @doc """
     Power function that also works for negative numbers and decimal numbers.
@@ -191,6 +217,7 @@ defmodule Commands.IntCommands do
         end
     end
 
+    def next_prime_from_arbitrary(number) when is_float(number), do: next_prime_from_arbitrary(Float.floor(number) |> round)
     def next_prime_from_arbitrary(number) when number < 2, do: 2
     def next_prime_from_arbitrary(number) do
         next = number + 1
