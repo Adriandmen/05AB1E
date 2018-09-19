@@ -61,6 +61,8 @@ defmodule ConstantsTest do
         assert evaluate("žY") == "https://"
         assert evaluate("žZ") == "http://www."
         assert evaluate("žƵ") == "https://www."
+        assert evaluate("žÀ") == "aeiouAEIOU"
+        assert evaluate("žÁ") == "aeiouyAEIOUY"
     end
 
     test "time based constants" do

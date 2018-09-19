@@ -257,4 +257,15 @@ defmodule Commands.StrCommands do
     def run_length_decode(elements, lengths) do
         Stream.zip(elements, lengths) |> Stream.flat_map(fn {element, len} -> List.duplicate(element, Functions.to_number(len)) end) |> Functions.as_stream
     end
+
+    defp exchange_capitalization(left, [], acc), do: acc <> Enum.join(left, "")
+    defp exchange_capitalization([], _, acc), do: acc
+    defp exchange_capitalization([a | as], [b | bs], acc) do
+        cond do
+            Regex.match?(~r/^[A-Z]/, b) -> exchange_capitalization(as, bs, acc <> String.upcase(a))
+            Regex.match?(~r/^[a-z]/, b) -> exchange_capitalization(as, bs, acc <> String.downcase(a))
+            true -> exchange_capitalization(as, bs, acc <> a)
+        end
+    end
+    def exchange_capitalization(left, right), do: exchange_capitalization(Functions.to_list(left), Functions.to_list(right), "")
 end
