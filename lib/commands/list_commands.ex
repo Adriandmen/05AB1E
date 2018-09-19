@@ -254,14 +254,16 @@ defmodule Commands.ListCommands do
         list |> Stream.transform(nil, fn (x, acc) -> if GeneralCommands.equals(x, acc) do {[], acc} else {[x], x} end end) |> Stream.map(fn x -> x end)
     end
 
-    def index_in(value, element) do
-        cond do
-            Functions.is_iterable(value) -> 
-                case first_where(value |> Stream.with_index, fn {x, _} -> GeneralCommands.equals(x, element) end) do
-                    nil -> -1
-                    {_, index} -> index
-                end
-            true -> index_in(String.graphemes(to_string(value)), element)
+    def index_in(value, element) when Functions.is_single?(value) do
+        case :binary.match(to_string(value), to_string(element)) do
+            :nomatch -> -1
+            {index, _} -> index
+        end
+    end
+    def index_in(value, element) when Functions.is_iterable(value) do
+        case first_where(value |> Stream.with_index, fn {x, _} -> GeneralCommands.equals(x, element) end) do
+            nil -> -1
+            {_, index} -> index
         end
     end
 
@@ -468,7 +470,7 @@ defmodule Commands.ListCommands do
     end
 
     def shape_like(a, b) when Functions.is_iterable(a) and Functions.is_iterable(b), do: a |> Stream.cycle |> Stream.take(length(Enum.to_list b))
-    def shape_like(a, b) when Functions.is_iterable(a), do: a |> Stream.cycle |> Stream.take(if is_integer(Functions.to_number(b)) do Functions.to_number(b) else String.length(b) end)
+    def shape_like(a, b) when Functions.is_iterable(a), do: a |> Stream.cycle |> Stream.take(if Functions.is_number?(b) do Functions.to_integer(b) else String.length(to_string(b)) end)
     def shape_like(a, b), do: Enum.join(shape_like(Functions.to_list(a), b), "")
 
     def cartesian(a, b) do
