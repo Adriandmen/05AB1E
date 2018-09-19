@@ -254,14 +254,16 @@ defmodule Commands.ListCommands do
         list |> Stream.transform(nil, fn (x, acc) -> if GeneralCommands.equals(x, acc) do {[], acc} else {[x], x} end end) |> Stream.map(fn x -> x end)
     end
 
-    def index_in(value, element) do
-        cond do
-            Functions.is_iterable(value) -> 
-                case first_where(value |> Stream.with_index, fn {x, _} -> GeneralCommands.equals(x, element) end) do
-                    nil -> -1
-                    {_, index} -> index
-                end
-            true -> index_in(String.graphemes(to_string(value)), element)
+    def index_in(value, element) when Functions.is_single?(value) do
+        case :binary.match(to_string(value), to_string(element)) do
+            :nomatch -> -1
+            {index, _} -> index
+        end
+    end
+    def index_in(value, element) when Functions.is_iterable(value) do
+        case first_where(value |> Stream.with_index, fn {x, _} -> GeneralCommands.equals(x, element) end) do
+            nil -> -1
+            {_, index} -> index
         end
     end
 
