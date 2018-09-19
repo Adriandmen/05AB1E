@@ -56,6 +56,7 @@ defmodule UnaryTest do
         assert evaluate("123ï") == 123
         assert evaluate("5L§ï") == [1, 2, 3, 4, 5]
         assert evaluate("1.5ï") == 1
+        assert evaluate("\"123abc\"ï") == "123abc"
     end
 
     test "convert to string" do

@@ -194,6 +194,7 @@ defmodule BinaryTest do
         assert evaluate("123456 2ô") == ["12", "34", "56"]
         assert evaluate("5L23Sô") == [[[1, 2], [3, 4], [5]], [[1, 2, 3], [4, 5]]]
         assert evaluate("∞2ôO3£") == [3, 7, 11]
+        assert evaluate("A8;ô") == ["abcd", "efgh", "ijkl", "mnop", "qrst", "uvwx", "yz"]
     end
 
     test "a nCr b" do
@@ -526,6 +527,8 @@ defmodule BinaryTest do
         assert evaluate("5L 7L∍") == [1, 2, 3, 4, 5, 1, 2]
         assert evaluate("5L \"abcdefg\"∍") == [1, 2, 3, 4, 5, 1, 2]
         assert evaluate("12345 3∍") == "123"
+        assert evaluate("12345 3.5∍") == "123"
+        assert evaluate("12345 7.5∍") == "1234512"
         assert evaluate("12345 10∍") == "1234512345"
         assert evaluate("12345 7L∍") == "1234512"
     end

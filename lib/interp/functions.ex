@@ -80,20 +80,30 @@ defmodule Interp.Functions do
             is_float(value) -> round(Float.floor(value))
             is_iterable(value) -> value |> Stream.map(&to_integer/1)
             true ->
-                {int, _} = Integer.parse(to_string(value))
-                int 
+                case Integer.parse(to_string(value)) do
+                    :error -> value
+                    {int, string} -> 
+                        cond do
+                            string == "" -> int
+                            Regex.match?(~r/^\.\d+$/, string) -> int
+                            true -> value
+                        end
+                end 
         end
     end
 
     def to_integer!(value) do
         cond do
             is_iterable(value) -> value |> Stream.map(&to_integer!/1)
-            true -> case to_integer(value) do
-                x when is_integer(x) -> x
-                _ -> raise("Could not convert #{value} to integer.")
-            end
+            true -> 
+                case to_integer(value) do
+                    x when is_integer(x) -> x
+                    _ -> raise("Could not convert #{value} to integer.")
+                end
         end
     end
+
+    def is_integer?(value), do: is_integer(to_integer(value))
 
     def to_non_number(value) do
         case value do

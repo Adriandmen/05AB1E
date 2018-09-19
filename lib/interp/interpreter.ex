@@ -333,7 +333,7 @@ defmodule Interp.Interpreter do
             "‹" -> Stack.push(stack, call_binary(fn x, y -> to_number(to_number(x) < to_number(y)) end, a, b))
             "›" -> Stack.push(stack, call_binary(fn x, y -> to_number(to_number(x) > to_number(y)) end, a, b))
             "@" -> Stack.push(stack, call_binary(fn x, y -> to_number!(to_number!(x) >= to_number!(y)) end, a, b))
-            "ô" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.split_into(x, to_number(y)) end, a, b, true, false))
+            "ô" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.split_into(x, to_integer!(y)) end, a, b, true, false))
             "Ö" -> Stack.push(stack, call_binary(fn x, y -> to_number(IntCommands.mod(to_number(x), to_number(y)) == 0) end, a, b))
             "ù" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.keep_with_length(x, to_number(y)) end, a, b, true, false))
             "k" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.index_in(x, y) end, a, b, true, false))
