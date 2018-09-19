@@ -321,6 +321,8 @@ defmodule BinaryTest do
     test "index in" do
         assert evaluate("1234 1k") == 0
         assert evaluate("1234 4k") == 3
+        assert evaluate("1234 23k") == 1
+        assert evaluate("1234 2345k") == -1
         assert evaluate("1234 14Sk") == [0, 3]
         assert evaluate("1234Sï 14Sïk") == [0, 3]
         assert evaluate("1234S 14Sïk") == [0, 3]
