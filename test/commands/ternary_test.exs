@@ -23,6 +23,10 @@ defmodule TernaryTest do
     test "replace infinite" do
         assert evaluate("\"abc\" \"c\" \"d\":") == "abd"
         assert evaluate("\"abbbc\" \"bb\" \"b\":") == "abc"
+        assert evaluate("1232 23 5:") == "152"
+        assert evaluate("1232ï 23 5:") == "152"
+        assert evaluate("1232 23ï 5:") == "152"
+        assert evaluate("1232 23 5ï:") == "152"
         assert evaluate("1232 23S 4:") == "1444"
         assert evaluate("1232 23S 34S:") == "1444"
         assert evaluate("12 32) 2 3:ï") == [13, 33]

@@ -123,8 +123,8 @@ defmodule Interp.Interpreter do
         new_stack = case op do
             ">" -> Stack.push(stack, call_unary(fn x -> to_number(x) + 1 end, a))
             "<" -> Stack.push(stack, call_unary(fn x -> to_number(x) - 1 end, a))
-            "L" -> Stack.push(stack, call_unary(fn x -> ListCommands.listify(1, to_number(x)) end, a))
-            "Ý" -> Stack.push(stack, call_unary(fn x -> ListCommands.listify(0, to_number(x)) end, a))
+            "L" -> Stack.push(stack, call_unary(fn x -> ListCommands.listify(1, to_integer!(x)) end, a))
+            "Ý" -> Stack.push(stack, call_unary(fn x -> ListCommands.listify(0, to_integer!(x)) end, a))
             "!" -> Stack.push(stack, call_unary(fn x -> IntCommands.factorial(to_number(x)) end, a))
             "η" -> Stack.push(stack, call_unary(fn x -> ListCommands.prefixes(x) end, a, true))
             "н" -> Stack.push(stack, call_unary(fn x -> GeneralCommands.head(x) end, a, true))
@@ -135,8 +135,8 @@ defmodule Interp.Interpreter do
             "(" -> Stack.push(stack, call_unary(fn x -> to_number(x) * -1 end, a))
             "a" -> Stack.push(stack, call_unary(fn x -> to_number(Regex.match?(~r/^[a-zA-Z]+$/, to_string(x))) end, a))
             "d" -> Stack.push(stack, call_unary(fn x -> to_number(is_number(to_number(x)) and to_number(x) >= 0) end, a))
-            "b" -> Stack.push(stack, call_unary(fn x -> IntCommands.to_base(to_number(x), 2) end, a))
-            "h" -> Stack.push(stack, call_unary(fn x -> IntCommands.to_base(to_number(x), 16) end, a))
+            "b" -> Stack.push(stack, call_unary(fn x -> IntCommands.to_base(to_integer!(x), 2) end, a))
+            "h" -> Stack.push(stack, call_unary(fn x -> IntCommands.to_base(to_integer!(x), 16) end, a))
             "p" -> Stack.push(stack, call_unary(fn x -> to_number(IntCommands.is_prime?(to_number(x))) end, a))
             "z" -> Stack.push(stack, call_unary(fn x -> 1 / to_number(x) end, a))
             "t" -> Stack.push(stack, call_unary(fn x -> :math.sqrt(to_number(x)) end, a))
@@ -152,7 +152,7 @@ defmodule Interp.Interpreter do
             ";" -> Stack.push(stack, call_unary(fn x -> to_number(x) / 2 end, a))
             "ï" -> Stack.push(stack, call_unary(fn x -> to_integer(x) end, a))
             "§" -> Stack.push(stack, call_unary(fn x -> to_non_number(x) end, a))
-            "±" -> Stack.push(stack, call_unary(fn x -> ~~~to_number(x) end, a))
+            "±" -> Stack.push(stack, call_unary(fn x -> ~~~to_integer!(x) end, a))
             "Ā" -> Stack.push(stack, call_unary(fn x -> to_number(not(to_number(x) == 0 or x == "")) end, a))
             "Ć" -> Stack.push(stack, call_unary(fn x -> GeneralCommands.enclose(x) end, a, true))
             "Ì" -> Stack.push(stack, call_unary(fn x -> to_number(x) + 2 end, a))
@@ -166,16 +166,16 @@ defmodule Interp.Interpreter do
             "É" -> Stack.push(stack, call_unary(fn x -> to_number(is_integer(to_number(x)) and IntCommands.mod(to_number(x), 2) == 1) end, a))
             "°" -> Stack.push(stack, call_unary(fn x -> IntCommands.pow(10, to_number(x)) end, a))
             "Ç" -> Stack.push(stack, call_unary(fn x -> StrCommands.to_codepoints(x) end, a, true))
-            "ç" -> Stack.push(stack, call_unary(fn x -> List.to_string [to_number(x)] end, a))
-            "f" -> Stack.push(stack, call_unary(fn x -> IntCommands.prime_factors(to_number(x)) |> Stream.dedup end, a))
-            "Ò" -> Stack.push(stack, call_unary(fn x -> IntCommands.prime_factors(to_number(x)) end, a))
-            "Ó" -> Stack.push(stack, call_unary(fn x -> IntCommands.prime_exponents(to_number(x)) end, a))
-            "Ñ" -> Stack.push(stack, call_unary(fn x -> IntCommands.divisors(to_number(x)) end, a))
-            "Õ" -> Stack.push(stack, call_unary(fn x -> IntCommands.euler_totient(to_number(x)) end, a))
-            "Ø" -> Stack.push(stack, call_unary(fn x -> IntCommands.nth_prime(to_number(x)) end, a))
+            "ç" -> Stack.push(stack, call_unary(fn x -> List.to_string [to_integer!(x)] end, a))
+            "f" -> Stack.push(stack, call_unary(fn x -> IntCommands.prime_factors(to_integer!(x)) |> Stream.dedup end, a))
+            "Ò" -> Stack.push(stack, call_unary(fn x -> IntCommands.prime_factors(to_integer!(x)) end, a))
+            "Ó" -> Stack.push(stack, call_unary(fn x -> IntCommands.prime_exponents(to_integer!(x)) end, a))
+            "Ñ" -> Stack.push(stack, call_unary(fn x -> IntCommands.divisors(to_integer!(x)) end, a))
+            "Õ" -> Stack.push(stack, call_unary(fn x -> IntCommands.euler_totient(to_integer!(x)) end, a))
+            "Ø" -> Stack.push(stack, call_unary(fn x -> IntCommands.nth_prime(to_integer!(x)) end, a))
            ".š" -> Stack.push(stack, call_unary(fn x -> StrCommands.switch_case(to_string(x)) end, a))
            ".ª" -> Stack.push(stack, call_unary(fn x -> StrCommands.sentence_case(to_string(x)) end, a))
-           ".b" -> Stack.push(stack, call_unary(fn x -> <<rem(to_number(x) - 1, 26) + 65>> end, a))
+           ".b" -> Stack.push(stack, call_unary(fn x -> <<rem(to_integer!(x) - 1, 26) + 65>> end, a))
            ".l" -> Stack.push(stack, call_unary(fn x -> to_number Regex.match?(~r/^[a-z]+$/, to_string(x)) end, a))
            ".u" -> Stack.push(stack, call_unary(fn x -> to_number Regex.match?(~r/^[A-Z]+$/, to_string(x)) end, a))
            ".p" -> Stack.push(stack, call_unary(fn x -> ListCommands.prefixes(x) end, a, true))
@@ -187,7 +187,7 @@ defmodule Interp.Interpreter do
            ".E" -> Stack.push(stack, call_unary(fn x -> {result, _} = Code.eval_string(to_string(x)); result end, a))
            ".Ø" -> Stack.push(stack, call_unary(fn x -> IntCommands.get_prime_index(to_number(x)) end, a))
            ".±" -> Stack.push(stack, call_unary(fn x -> cond do to_number(x) > 0 -> 1; to_number(x) < 0 -> -1; true -> 0 end end, a))
-           ".X" -> Stack.push(stack, call_unary(fn x -> IntCommands.to_roman_numeral(to_integer(x)) end, a))
+           ".X" -> Stack.push(stack, call_unary(fn x -> IntCommands.to_roman_numeral(to_integer!(x)) end, a))
            ".v" -> Stack.push(stack, call_unary(fn x -> IntCommands.from_roman_numeral(to_string(x)) end, a))
            ".Þ" -> Stack.push(stack, call_unary(fn x -> ListCommands.continue(to_list(x)) end, a, true))
            ".w" -> Stack.push(stack, call_unary(fn x -> GeneralCommands.get_url(to_string(x)) end, a))
@@ -272,22 +272,22 @@ defmodule Interp.Interpreter do
            "ÅÈ" -> Stack.push(stack, call_unary(fn x -> ListCommands.unfold_up_to(0, fn n -> 2 * n end, to_integer(x)) end, a))
            "ÅÉ" -> Stack.push(stack, call_unary(fn x -> ListCommands.unfold_up_to(0, fn n -> 2 * n + 1 end, to_integer(x)) end, a))
            "Å|" -> Stack.push(stack, call_unary(fn x -> MatrixCommands.columns_of(x) end, a, true))
-           "Å0" -> Stack.push(stack, call_unary(fn x -> List.duplicate(0, to_number(x)) end, a))
-           "Å1" -> Stack.push(stack, call_unary(fn x -> List.duplicate(1, to_number(x)) end, a))
-           "Å2" -> Stack.push(stack, call_unary(fn x -> List.duplicate(2, to_number(x)) end, a))
-           "Å3" -> Stack.push(stack, call_unary(fn x -> List.duplicate(3, to_number(x)) end, a))
-           "Å4" -> Stack.push(stack, call_unary(fn x -> List.duplicate(4, to_number(x)) end, a))
-           "Å5" -> Stack.push(stack, call_unary(fn x -> List.duplicate(5, to_number(x)) end, a))
-           "Å6" -> Stack.push(stack, call_unary(fn x -> List.duplicate(6, to_number(x)) end, a))
-           "Å7" -> Stack.push(stack, call_unary(fn x -> List.duplicate(7, to_number(x)) end, a))
-           "Å8" -> Stack.push(stack, call_unary(fn x -> List.duplicate(8, to_number(x)) end, a))
-           "Å9" -> Stack.push(stack, call_unary(fn x -> List.duplicate(9, to_number(x)) end, a))
-           "Åœ" -> Stack.push(stack, call_unary(fn x -> ListCommands.integer_partitions(to_integer(x)) end, a))
+           "Å0" -> Stack.push(stack, call_unary(fn x -> List.duplicate(0, to_integer!(x)) end, a))
+           "Å1" -> Stack.push(stack, call_unary(fn x -> List.duplicate(1, to_integer!(x)) end, a))
+           "Å2" -> Stack.push(stack, call_unary(fn x -> List.duplicate(2, to_integer!(x)) end, a))
+           "Å3" -> Stack.push(stack, call_unary(fn x -> List.duplicate(3, to_integer!(x)) end, a))
+           "Å4" -> Stack.push(stack, call_unary(fn x -> List.duplicate(4, to_integer!(x)) end, a))
+           "Å5" -> Stack.push(stack, call_unary(fn x -> List.duplicate(5, to_integer!(x)) end, a))
+           "Å6" -> Stack.push(stack, call_unary(fn x -> List.duplicate(6, to_integer!(x)) end, a))
+           "Å7" -> Stack.push(stack, call_unary(fn x -> List.duplicate(7, to_integer!(x)) end, a))
+           "Å8" -> Stack.push(stack, call_unary(fn x -> List.duplicate(8, to_integer!(x)) end, a))
+           "Å9" -> Stack.push(stack, call_unary(fn x -> List.duplicate(9, to_integer!(x)) end, a))
+           "Åœ" -> Stack.push(stack, call_unary(fn x -> ListCommands.integer_partitions(to_integer!(x)) end, a))
            "Åf" -> Stack.push(stack, call_unary(fn x -> IntCommands.fibonacci(to_number!(x)) end, a))
            "Åg" -> Stack.push(stack, call_unary(fn x -> IntCommands.lucas(to_number!(x)) end, a))
            "Å²" -> Stack.push(stack, call_unary(fn x -> to_number!(IntCommands.is_square?(to_number!(x))) end, a))
            "ÅM" -> Stack.push(stack, call_unary(fn x -> IntCommands.prev_prime_from_arbitrary(to_number!(x)) end, a))
-           "ÅN" -> Stack.push(stack, call_unary(fn x -> IntCommands.next_prime_from_arbitrary(to_integer(x)) end, a))
+           "ÅN" -> Stack.push(stack, call_unary(fn x -> IntCommands.next_prime_from_arbitrary(to_number!(x)) end, a))
            "Ån" -> Stack.push(stack, call_unary(fn x -> IntCommands.nearest_prime_from_arbitrary(to_number(x)) end, a))
            "Å=" -> Stack.push(stack, call_unary(fn x -> ListCommands.deck_shuffle(to_list(x)) end, a, true))
            "Å≠" -> Stack.push(stack, call_unary(fn x -> ListCommands.deck_unshuffle(to_list(x)) end, a, true))
@@ -317,53 +317,53 @@ defmodule Interp.Interpreter do
             "/" -> Stack.push(stack, call_binary(fn x, y -> to_number(x) / to_number(y) end, a, b))
             "*" -> Stack.push(stack, call_binary(fn x, y -> to_number(x) * to_number(y) end, a, b))
             "%" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.mod(to_number(x), to_number(y)) end, a, b))
-            "&" -> Stack.push(stack, call_binary(fn x, y -> to_number(x) &&& to_number(y) end, a, b))
-            "^" -> Stack.push(stack, call_binary(fn x, y -> to_number(x) ^^^ to_number(y) end, a, b))
-            "~" -> Stack.push(stack, call_binary(fn x, y -> to_number(x) ||| to_number(y) end, a, b))
-            "B" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.to_base(to_number(x), to_number(y)) end, a, b))
-            "c" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.n_choose_k(to_number(x), to_number(y)) end, a, b))
-            "e" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.n_permute_k(to_number(x), to_number(y)) end, a, b))
+            "&" -> Stack.push(stack, call_binary(fn x, y -> to_integer!(x) &&& to_integer!(y) end, a, b))
+            "^" -> Stack.push(stack, call_binary(fn x, y -> to_integer!(x) ^^^ to_integer!(y) end, a, b))
+            "~" -> Stack.push(stack, call_binary(fn x, y -> to_integer!(x) ||| to_integer!(y) end, a, b))
+            "B" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.to_base(to_integer!(x), to_integer!(y)) end, a, b))
+            "c" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.n_choose_k(to_integer!(x), to_integer!(y)) end, a, b))
+            "e" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.n_permute_k(to_integer!(x), to_integer!(y)) end, a, b))
             "m" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.pow(to_number(x), to_number(y)) end, a, b))
             "K" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.remove_from(x, y) end, a, b, true, true))
             "å" -> Stack.push(stack, call_binary(fn x, y -> to_number(ListCommands.contains(to_non_number(x), y)) end, a, b, true, false))
-            "è" -> Stack.push(stack, call_binary(fn x, y -> GeneralCommands.element_at(x, to_number(y)) end, a, b, true, false))
-            "£" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.take_first(x, to_number(y)) end, a, b, true, true))
+            "è" -> Stack.push(stack, call_binary(fn x, y -> GeneralCommands.element_at(x, to_integer!(y)) end, a, b, true, false))
+            "£" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.take_first(x, to_integer!(y)) end, a, b, true, true))
             "м" -> Stack.push(stack, call_binary(fn x, y -> GeneralCommands.remove_from(x, y) end, a, b, true, true))
             "‰" -> Stack.push(stack, call_binary(fn x, y -> [IntCommands.divide(to_number(x), to_number(y)), IntCommands.mod(to_number(x), to_number(y))] end, a, b))
             "‹" -> Stack.push(stack, call_binary(fn x, y -> to_number(to_number(x) < to_number(y)) end, a, b))
             "›" -> Stack.push(stack, call_binary(fn x, y -> to_number(to_number(x) > to_number(y)) end, a, b))
             "@" -> Stack.push(stack, call_binary(fn x, y -> to_number!(to_number!(x) >= to_number!(y)) end, a, b))
-            "ô" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.split_into(x, to_number(y)) end, a, b, true, false))
+            "ô" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.split_into(x, to_integer!(y)) end, a, b, true, false))
             "Ö" -> Stack.push(stack, call_binary(fn x, y -> to_number(IntCommands.mod(to_number(x), to_number(y)) == 0) end, a, b))
-            "ù" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.keep_with_length(x, to_number(y)) end, a, b, true, false))
+            "ù" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.keep_with_length(x, to_integer!(y)) end, a, b, true, false))
             "k" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.index_in(x, y) end, a, b, true, false))
             "и" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.list_multiply(x, to_number(y)) end, a, b, true, false))
             "¢" -> Stack.push(stack, call_binary(fn x, y -> GeneralCommands.count(x, y) end, a, b, true, false))
             "×" -> Stack.push(stack, call_binary(fn x, y -> String.duplicate(to_string(x), to_integer!(y)) end, a, b))
-            "в" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.to_base_arbitrary(to_number(x), to_number(y)) end, a, b))
-            "ö" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.string_from_base(to_string(x), to_number(y)) end, a, b))
+            "в" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.to_base_arbitrary(to_integer!(x), to_integer!(y)) end, a, b))
+            "ö" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.string_from_base(to_string(x), to_integer!(y)) end, a, b))
             "÷" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.divide(to_number(x), to_number(y)) end, a, b))
-            "ú" -> Stack.push(stack, call_binary(fn x, y -> String.duplicate(" ", to_number(y)) <> to_string(x) end, a, b))
-            "ä" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.even_split(x, to_number(y)) end, a, b, true, false))
-            "j" -> Stack.push(stack, call_binary(fn x, y -> StrCommands.leftpad_with(x, to_number(y), " ") end, a, b, true, false))
+            "ú" -> Stack.push(stack, call_binary(fn x, y -> String.duplicate(" ", to_integer!(y)) <> to_string(x) end, a, b))
+            "ä" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.even_split(x, to_integer!(y)) end, a, b, true, false))
+            "j" -> Stack.push(stack, call_binary(fn x, y -> StrCommands.leftpad_with(x, to_integer!(y), " ") end, a, b, true, false))
             "ª" -> Stack.push(stack, call_binary(fn x, y -> Stream.concat(to_list(x), [y]) |> as_stream end, a, b, true, true))
             "š" -> Stack.push(stack, call_binary(fn x, y -> Stream.concat([y], to_list(x)) |> as_stream end, a, b, true, true))
            ".¢" -> Stack.push(stack, call_binary(fn x, y -> GeneralCommands.strict_count(x, y) end, a, b, true, true))
            ".S" -> Stack.push(stack, call_binary(fn x, y -> cond do to_number(x) > to_number(y) -> 1; to_number(x) < to_number(y) -> -1; true -> 0 end end, a, b))
-           ".£" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.take_last(x, to_number(y)) end, a, b, true, false))
-           ".$" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.drop_from(x, to_number(y)) end, a, b, true, false))
+           ".£" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.take_last(x, to_integer!(y)) end, a, b, true, false))
+           ".$" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.drop_from(x, to_integer!(y)) end, a, b, true, false))
            ".n" -> Stack.push(stack, call_binary(fn x, y -> :math.log(to_number(x)) / :math.log(to_number(y)) end, a, b))
            ".x" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.closest_to(x, y) end, a, b, true, false))
            ".L" -> Stack.push(stack, call_binary(fn x, y -> StrCommands.levenshtein_distance(to_list(x), to_list(y)) end, a, b))
-           ".ò" -> Stack.push(stack, call_binary(fn x, y -> Float.round(to_number(x), to_number(y)) end, a, b))
-           ".Œ" -> Stack.push(stack, call_binary(fn x, y -> normalize_inner(ListCommands.divide_into(Enum.to_list(to_list(x)), to_number(y)), a) end, a, b, true, false))
-           "._" -> Stack.push(stack, call_binary(fn x, y -> normalize_to(ListCommands.rotate(to_list(x), to_integer(y)), x) end, a, b, true, false))
+           ".ò" -> Stack.push(stack, call_binary(fn x, y -> if is_integer?(x) do x else Float.round(to_number(x), to_integer!(y)) end end, a, b))
+           ".Œ" -> Stack.push(stack, call_binary(fn x, y -> normalize_inner(ListCommands.divide_into(Enum.to_list(to_list(x)), to_integer!(y)), a) end, a, b, true, false))
+           "._" -> Stack.push(stack, call_binary(fn x, y -> normalize_to(ListCommands.rotate(to_list(x), to_integer!(y)), x) end, a, b, true, false))
            "ÅL" -> Stack.push(stack, call_binary(fn x, y -> if to_number!(x) < to_number!(y) do to_number!(x) else to_number!(y) end end, a, b))
            "ÅU" -> Stack.push(stack, call_binary(fn x, y -> (fn n, sides -> div(n * n * (sides - 2) - n * (sides - 4), 2) end).(to_number!(x), to_number!(y)) end, a, b))
            "Åβ" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.from_custom_base(x, y) end, a, b, true, true))
            "Åв" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.to_custom_base(to_integer(x), y) end, a, b, false, true))
            ".м" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.list_subtraction(to_list(x), Enum.to_list(to_list(y))) end, a, b, true, true))
-           ".I" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.permutation_index(x, to_integer(y)) end, a, b, true, false))
+           ".I" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.permutation_index(x, to_integer!(y)) end, a, b, true, false))
            ".i" -> Stack.push(stack, call_binary(fn x, y -> to_number(ListCommands.increasing_contains(to_list(x), to_number(y))) end, a, b, true, false))
            ".ι" -> Stack.push(stack, ListCommands.interleave(to_list(a), to_list(b)))
            ".k" -> Stack.push(stack, ListCommands.flat_index_in_list(a, b))
@@ -387,10 +387,10 @@ defmodule Interp.Interpreter do
             "‚" -> Stack.push(stack, [a, b])
             "s" -> Stack.push(Stack.push(stack, b), a)
             "ý" -> if is_iterable(a) do Stack.push(stack, ListCommands.join(a, to_string(b))) else Stack.push(%Stack{}, ListCommands.join(Enum.reverse(Stack.push(stack, a).elements), to_string(b))) end
-           ".D" -> if is_number(to_number(b)) do %Stack{elements: (Stream.cycle([a]) |> Enum.take(to_number(b))) ++ stack.elements} else %Stack{elements: (Stream.cycle([a]) |> Enum.take(GeneralCommands.length_of(b))) ++ stack.elements} end
+           ".D" -> if is_number?(b) do %Stack{elements: (Stream.cycle([a]) |> Enum.take(to_integer!(b))) ++ stack.elements} else %Stack{elements: (Stream.cycle([a]) |> Enum.take(GeneralCommands.length_of(b))) ++ stack.elements} end
 
            # Extended commands
-           "ÅΓ" -> Stack.push(stack, call_binary(fn x, y -> StrCommands.run_length_decode(to_list(x), to_integer(to_list(y))) end, a, b, true, true))
+           "ÅΓ" -> Stack.push(stack, call_binary(fn x, y -> StrCommands.run_length_decode(to_list(x), to_integer!(to_list(y))) end, a, b, true, true))
            "Å?" -> Stack.push(stack, call_binary(fn x, y -> to_number(GeneralCommands.starts_with(x, y)) end, a, b, true, true))
            "Å¿" -> Stack.push(stack, call_binary(fn x, y -> to_number(GeneralCommands.ends_with(x, y)) end, a, b, true, true))
         end
@@ -407,14 +407,14 @@ defmodule Interp.Interpreter do
     defp interp_ternary(op, stack, environment, a, b, c) do
 
         new_stack = case op do
-            "ǝ" -> Stack.push(stack, StrCommands.replace_at(a, b, to_number(c)))
+            "ǝ" -> Stack.push(stack, StrCommands.replace_at(a, b, to_integer!(c)))
             "Š" -> Stack.push(Stack.push(Stack.push(stack, c), a), b)
             "‡" -> Stack.push(stack, StrCommands.transliterate(a, b, c))
             ":" -> Stack.push(stack, StrCommands.replace_infinite(a, b, c))
-            "Λ" -> global_env = Globals.get(); Globals.set(%{global_env | canvas: Canvas.write(global_env.canvas, to_number(a), to_non_number(b), to_non_number(c), environment)}); stack
+            "Λ" -> global_env = Globals.get(); Globals.set(%{global_env | canvas: Canvas.write(global_env.canvas, to_integer!(a), to_non_number(b), to_non_number(c), environment)}); stack
            ".Λ" -> 
                 global_env = Globals.get()
-                new_canvas = Canvas.write(global_env.canvas, to_number(a), to_non_number(b), to_non_number(c), environment)
+                new_canvas = Canvas.write(global_env.canvas, to_integer!(a), to_non_number(b), to_non_number(c), environment)
                 Globals.set(%{global_env | canvas: new_canvas}); Stack.push(stack, Canvas.canvas_to_string(new_canvas))
            ".:" -> Stack.push(stack, StrCommands.replace_all(a, b, c))
            ".;" -> Stack.push(stack, StrCommands.replace_first(a, b, c))
@@ -469,7 +469,7 @@ defmodule Interp.Interpreter do
                     {Stack.push(stack, ListCommands.cartesian_repeat(b, 2)), environment}
                 else
                     {a, stack, environment} = Stack.pop(stack, environment)
-                    {Stack.push(stack, call_binary(fn x, y -> ListCommands.cartesian_repeat(x, to_number(y)) end, a, b, true, false)), environment}
+                    {Stack.push(stack, call_binary(fn x, y -> ListCommands.cartesian_repeat(x, to_integer!(y)) end, a, b, true, false)), environment}
                 end
             ".Æ" -> 
                 {b, stack, environment} = Stack.pop(stack, environment)
@@ -477,15 +477,15 @@ defmodule Interp.Interpreter do
                     {Stack.push(stack, ListCommands.combinations(Enum.to_list(to_list(b)), 2)), environment}
                 else
                     {a, stack, environment} = Stack.pop(stack, environment)
-                    {Stack.push(stack, call_binary(fn x, y -> ListCommands.combinations(Enum.to_list(to_list(x)), to_number(y)) end, a, b, true, false)), environment}
+                    {Stack.push(stack, call_binary(fn x, y -> ListCommands.combinations(Enum.to_list(to_list(x)), to_integer!(y)) end, a, b, true, false)), environment}
                 end
             "Ÿ" -> 
                 {b, stack, environment} = Stack.pop(stack, environment)
                 if is_iterable(b) do 
-                    {Stack.push(stack, ListCommands.rangify(to_number(b))), environment} 
+                    {Stack.push(stack, ListCommands.rangify(to_integer!(b))), environment} 
                 else 
                     {a, stack, environment} = Stack.pop(stack, environment)
-                    {Stack.push(stack, to_number(a)..to_number(b)), environment}
+                    {Stack.push(stack, to_integer!(a)..to_integer!(b)), environment}
                 end
             "ø" -> 
                 {b, stack, environment} = Stack.pop(stack, environment)
@@ -522,7 +522,7 @@ defmodule Interp.Interpreter do
                     {Stack.push(stack, ListCommands.extract_every(b, 2)), environment}
                 else
                     {a, stack, environment} = Stack.pop(stack, environment)
-                    {Stack.push(stack, ListCommands.extract_every(a, to_number(b))), environment}
+                    {Stack.push(stack, ListCommands.extract_every(a, to_integer!(b))), environment}
                 end
             "¿" ->
                 {b, stack, environment} = Stack.pop(stack, environment)
