@@ -178,10 +178,30 @@ defmodule Commands.StrCommands do
         end)
     def to_codepoints(value), do: String.to_charlist(to_string(value))
 
-    def transliterate(string, from_chars, to_chars) when is_bitstring(string), do: Enum.join(transliterate(String.graphemes(to_string(string)), from_chars, to_chars), "")
-    def transliterate(list, from_chars, to_chars) when is_bitstring(from_chars) and is_bitstring(to_chars), do: transliterate(list, String.graphemes(from_chars), String.graphemes(to_chars))
-    def transliterate(list, from_chars, to_chars) when is_bitstring(from_chars), do: transliterate(list, String.graphemes(from_chars), to_chars)
-    def transliterate(list, from_chars, to_chars) when is_bitstring(to_chars), do: transliterate(list, from_chars, String.graphemes(to_chars))
+    @doc """
+    Transliterates the given string with the given transliteration set. For example, transliterating "abcd" with "bdg" → "qrs" would
+    transliterate the following in the initial string:
+
+     "b" → "q"
+     "d" → "r"
+     "g" → "s"
+
+    The first match in the transliteration set is the transliteration that is executed. Therefore "abcd" results in "aqcr" after transliteration.
+
+    ## Parameters
+
+     - string/list:     The string or list that needs to be transliterated.
+     - from_chars:      The from characters either as a single element or as a list.
+     - to_chars:        The characters to which the initial characters will be mapped to, either as a single element or a list.
+
+    ## Returns
+
+    The transliterated string or list depending on the initial type of the first parameter.
+    
+    """
+    def transliterate(string, from_chars, to_chars) when Functions.is_single?(string), do: Enum.join(transliterate(String.graphemes(to_string(string)), from_chars, to_chars), "")
+    def transliterate(list, from_chars, to_chars) when Functions.is_single?(from_chars), do: transliterate(list, String.graphemes(to_string(from_chars)), to_chars)
+    def transliterate(list, from_chars, to_chars) when Functions.is_single?(to_chars), do: transliterate(list, from_chars, String.graphemes(to_string(to_chars)))
     def transliterate(list, from_chars, to_chars) do
         transliteration_pairs = Stream.zip(from_chars, to_chars)
         list |> Stream.map(fn x ->
