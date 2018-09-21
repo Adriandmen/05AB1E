@@ -579,11 +579,11 @@ defmodule Interp.Interpreter do
                 {new_stack, new_env} = GeneralCommands.loop(subcommands, stack, environment, 0, to_integer!(a) - 1)
                 {new_stack, %{new_env | range_variable: current_n}}
 
-            # For N in range [0, n]
+            # For N in range [1, n]
             "E" ->
                 {a, stack, environment} = Stack.pop(stack, environment)
                 current_n = environment.range_variable
-                {new_stack, new_env} = GeneralCommands.loop(subcommands, stack, environment, 0, to_integer!(a))
+                {new_stack, new_env} = GeneralCommands.loop(subcommands, stack, environment, 1, to_integer!(a))
                 {new_stack, %{new_env | range_variable: current_n}}
 
             # For N in range [1, n)
