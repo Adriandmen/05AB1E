@@ -118,10 +118,10 @@ defmodule Commands.StrCommands do
     defp title_case(string, parsed) do
         cond do
             Regex.match?(~r/^[a-zA-Z]/, string) ->
-                matches = Regex.named_captures(~r/^(?<string>[a-zA-Z]+)(?<remaining>.*)/, string)
+                matches = Regex.named_captures(~r/^(?<string>[a-zA-Z]+)(?<remaining>.*)/s, string)
                 title_case(matches["remaining"], parsed <> String.capitalize(matches["string"]))
             true ->
-                matches = Regex.named_captures(~r/^(?<string>[^a-zA-Z]+)(?<remaining>.*)/, string)
+                matches = Regex.named_captures(~r/^(?<string>[^a-zA-Z]+)(?<remaining>.*)/s, string)
                 title_case(matches["remaining"], parsed <> matches["string"])
         end
     end
@@ -141,10 +141,10 @@ defmodule Commands.StrCommands do
     defp sentence_case(string, parsed) do
         cond do
             Regex.match?(~r/^[a-zA-Z]/, string) ->
-                matches = Regex.named_captures(~r/^(?<string>[a-zA-Z].+?)(?<remaining>(\.|!|\?|$).*)/, string)
+                matches = Regex.named_captures(~r/^(?<string>[a-zA-Z].+?)(?<remaining>(\.|!|\?|$).*)/s, string)
                 sentence_case(matches["remaining"], parsed <> String.capitalize(String.slice(matches["string"], 0..0)) <> String.slice(matches["string"], 1..-1))
             true ->
-                matches = Regex.named_captures(~r/^(?<string>.)(?<remaining>.*)/, string)
+                matches = Regex.named_captures(~r/^(?<string>.)(?<remaining>.*)/s, string)
                 sentence_case(matches["remaining"], parsed <> matches["string"])
         end
     end

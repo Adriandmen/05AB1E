@@ -396,6 +396,7 @@ defmodule UnaryTest do
         assert evaluate("\"abc\"™") == "Abc"
         assert evaluate("\"abc def\"™") == "Abc Def"
         assert evaluate("\"abc def\" \"ghi\")™") == ["Abc Def", "Ghi"]
+        assert evaluate("\"abc\ndef\nghi\"™") == "Abc\nDef\nGhi"
     end
 
     test "switch case" do
@@ -413,6 +414,7 @@ defmodule UnaryTest do
     test "sentence case" do
         assert evaluate("\"abc\".ª") == "Abc"
         assert evaluate("\"abc. def? ghi! jkl mnop.\".ª") == "Abc. Def? Ghi! Jkl mnop."
+        assert evaluate("\"abc. def?\nghi! jkl mnop.\".ª") == "Abc. Def?\nGhi! Jkl mnop."
     end
 
     test "reduced subtraction" do
