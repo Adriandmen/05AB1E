@@ -321,6 +321,8 @@ defmodule BinaryTest do
     test "index in" do
         assert evaluate("1234 1k") == 0
         assert evaluate("1234 4k") == 3
+        assert evaluate("1234 23k") == 1
+        assert evaluate("1234 2345k") == -1
         assert evaluate("1234 14Sk") == [0, 3]
         assert evaluate("1234Sï 14Sïk") == [0, 3]
         assert evaluate("1234S 14Sïk") == [0, 3]
@@ -702,5 +704,13 @@ defmodule BinaryTest do
         assert evaluate("5L95.I") == [4, 5, 3, 2, 1]
         assert evaluate("5L0.I") == [1, 2, 3, 4, 5]
         assert evaluate("5L119.I") == [5, 4, 3, 2, 1]
+    end
+
+    test "exchange capitalization" do
+        assert evaluate("\"abcd\"\"QrsT\".Ï") == "AbcD"
+        assert evaluate("\"abcdefg\"\"QrsT\".Ï") == "AbcDefg"
+        assert evaluate("\"abcd\"\"QrsTuVW\".Ï") == "AbcD"
+        assert evaluate("\"abcde\"\"Q1sTY\".Ï") == "AbcDE"
+        assert evaluate("\"aBc1e\"\"Q1sTY\".Ï") == "ABc1E"
     end
 end

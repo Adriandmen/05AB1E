@@ -21,8 +21,8 @@ defmodule SpecialOpsTest do
         assert evaluate("3F3FN} N})") == [0, 1, 2, 0, 0, 1, 2, 1, 0, 1, 2, 2]
     end
 
-    test "for loop [0, x]" do
-        assert evaluate("5EN})") == [0, 1, 2, 3, 4, 5]
+    test "for loop [1, N]" do
+        assert evaluate("5EN})") == [1, 2, 3, 4, 5]
     end
 
     test "for loop [1, N)" do

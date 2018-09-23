@@ -213,6 +213,9 @@ z       = pop a      push 1 / a
         žX           push "http://"
         žY           push "https://"
         žZ           push "http://www."
+        žƵ           push "https://www."
+        žÀ           push aeiouAEIOU
+        žÁ           push aeiouyAEIOUY
        
        
 Ÿ 24    = pop (a),b  push [a, ..., b] if b not a list, otherwise push [b[0],...,b[1],...,b[n]]
@@ -352,6 +355,7 @@ z       = pop a      push 1 / a
 .ª      = pop a      push sentence_cased(a)
 .Ó      = pop a      push the number from prime exponents a
 .ï      = pop a      push is int(a)
+.Ï      = pop a,b    push a with the capitalization of b
 .±      = pop a      push sign(a) (1 if a > 0, -1 if a < 0, 0 if a == 0)
 .¿      = pop (a),b  push lcm(b) if b is list, else push lcm(b, a)
 .æ      = pop a      compute permutations by function, usage: .æ<func>}

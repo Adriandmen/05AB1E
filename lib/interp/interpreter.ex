@@ -107,6 +107,8 @@ defmodule Interp.Interpreter do
             "žY" -> Stack.push(stack, "https://")
             "žZ" -> Stack.push(stack, "http://www.")
             "žƵ" -> Stack.push(stack, "https://www.")
+            "žÀ" -> Stack.push(stack, "aeiouAEIOU")
+            "žÁ" -> Stack.push(stack, "aeiouyAEIOUY")
             ".À" -> %Stack{elements: ListCommands.rotate(stack.elements, -1)}
             ".Á" -> %Stack{elements: ListCommands.rotate(stack.elements, 1)}
             ".g" -> Stack.push(stack, GeneralCommands.length_of(stack.elements))
@@ -365,6 +367,7 @@ defmodule Interp.Interpreter do
            ".м" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.list_subtraction(to_list(x), Enum.to_list(to_list(y))) end, a, b, true, true))
            ".I" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.permutation_index(x, to_integer!(y)) end, a, b, true, false))
            ".i" -> Stack.push(stack, call_binary(fn x, y -> to_number(ListCommands.increasing_contains(to_list(x), to_number(y))) end, a, b, true, false))
+           ".Ï" -> Stack.push(stack, call_binary(fn x, y -> StrCommands.exchange_capitalization(x, y) end, a, b))
            ".ι" -> Stack.push(stack, ListCommands.interleave(to_list(a), to_list(b)))
            ".k" -> Stack.push(stack, ListCommands.flat_index_in_list(a, b))
            ".ý" -> Stack.push(stack, to_list(a) |> Stream.intersperse(b) |> Stream.map(fn x -> x end))
@@ -576,11 +579,11 @@ defmodule Interp.Interpreter do
                 {new_stack, new_env} = GeneralCommands.loop(subcommands, stack, environment, 0, to_integer!(a) - 1)
                 {new_stack, %{new_env | range_variable: current_n}}
 
-            # For N in range [0, n]
+            # For N in range [1, n]
             "E" ->
                 {a, stack, environment} = Stack.pop(stack, environment)
                 current_n = environment.range_variable
-                {new_stack, new_env} = GeneralCommands.loop(subcommands, stack, environment, 0, to_integer!(a))
+                {new_stack, new_env} = GeneralCommands.loop(subcommands, stack, environment, 1, to_integer!(a))
                 {new_stack, %{new_env | range_variable: current_n}}
 
             # For N in range [1, n)
