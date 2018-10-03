@@ -53,6 +53,7 @@ defmodule SpecialOpsTest do
     test "sort by program" do
         assert evaluate("5LΣÈ") == [1, 3, 5, 2, 4]
         assert evaluate("12345 123 123456789) Σg") == ["123", "12345", "123456789"]
+        assert evaluate("123Sï Σε132sk") == [1, 3, 2]
     end
 
     test "run until no change" do

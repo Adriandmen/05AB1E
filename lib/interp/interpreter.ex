@@ -659,7 +659,7 @@ defmodule Interp.Interpreter do
                         |> Stream.transform(environment, fn ({x, index}, curr_env) ->
                             {result_stack, new_env} = interp(subcommands, %Stack{elements: [x]}, %{curr_env | range_variable: index, range_element: x})
                             {result, _, new_env} = Stack.pop(result_stack, new_env)
-                            {[{result, x}], new_env} end)
+                            {[{eval(result), x}], new_env} end)
                         |> Enum.sort_by(fn {a, _} -> a end)
                         |> Stream.map(fn {_, x} -> x end)
                 {Stack.push(stack, result), environment}
