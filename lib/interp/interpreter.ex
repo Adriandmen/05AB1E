@@ -109,8 +109,8 @@ defmodule Interp.Interpreter do
             "žƵ" -> Stack.push(stack, "https://www.")
             "žÀ" -> Stack.push(stack, "aeiouAEIOU")
             "žÁ" -> Stack.push(stack, "aeiouyAEIOUY")
-            ".À" -> %Stack{elements: ListCommands.rotate(stack.elements, -1)}
-            ".Á" -> %Stack{elements: ListCommands.rotate(stack.elements, 1)}
+            ".À" -> %Stack{elements: ListCommands.rotate(stack.elements, -1) |> Enum.to_list}
+            ".Á" -> %Stack{elements: ListCommands.rotate(stack.elements, 1) |> Enum.to_list}
             ".g" -> Stack.push(stack, GeneralCommands.length_of(stack.elements))
         end
 

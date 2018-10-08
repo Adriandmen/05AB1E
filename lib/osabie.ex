@@ -49,7 +49,7 @@ defmodule Osabie.CLI do
 
         # Set the debug parameters to the global environment
         if parsed_args.debug.enabled do
-            Globals.set(%{Globals.get() | debug: parsed_args.debug})            
+            Globals.set(%{Globals.get() | debug: parsed_args.debug})
         end
 
         # Run the code and retrieve the last element of the stack
