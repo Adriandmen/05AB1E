@@ -334,7 +334,7 @@ defmodule Interp.Interpreter do
             "‰" -> Stack.push(stack, call_binary(fn x, y -> [IntCommands.divide(to_number(x), to_number(y)), IntCommands.mod(to_number(x), to_number(y))] end, a, b))
             "‹" -> Stack.push(stack, call_binary(fn x, y -> to_number(to_number(x) < to_number(y)) end, a, b))
             "›" -> Stack.push(stack, call_binary(fn x, y -> to_number(to_number(x) > to_number(y)) end, a, b))
-            "@" -> Stack.push(stack, call_binary(fn x, y -> to_number!(to_number!(x) >= to_number!(y)) end, a, b))
+            "@" -> Stack.push(stack, call_binary(fn x, y -> to_number!(to_number(x) >= to_number(y)) end, a, b))
             "ô" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.split_into(x, to_integer!(y)) end, a, b, true, false))
             "Ö" -> Stack.push(stack, call_binary(fn x, y -> to_number(IntCommands.mod(to_number(x), to_number(y)) == 0) end, a, b))
             "ù" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.keep_with_length(x, to_integer!(y)) end, a, b, true, false))
@@ -857,6 +857,15 @@ defmodule Interp.Interpreter do
                 {a, stack, environment} = Stack.pop(stack, environment)
                 result = ListCommands.permute_by_function(Enum.to_list(to_list(a)), subcommands, environment)
                 {Stack.push(stack, result), environment}
+
+            # Split on function
+            ".¬" ->
+                {a, stack, environment} = Stack.pop(stack, environment)
+                a = to_list(a)
+                result = a |> Stream.chunk_every(2, 1, :discard)
+                           |> Stream.with_index
+                           |> Stream.map(fn {items, index} -> flat_interp(subcommands, items, %{environment | range_variable: index, range_element: items}) end)
+                {Stack.push(stack, ListCommands.split_on_truthy_indices(a, Stream.concat([0], result))), environment}
         end
     end
     
