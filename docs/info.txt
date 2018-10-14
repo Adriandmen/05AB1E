@@ -436,3 +436,4 @@ z       = pop a      push 1 / a
 Å«      = pop a      cumulative reduce right with func on a, usage: Å«<func>}
 ÅÈ      = pop a      push a list of even numbers <= a
 ÅÉ      = pop a      push a list of uneven numbers <= a
+Å¡      = pop a,b    split a on truthy indices in b, e.g. [1, 2, 3, 4], [0, 1, 0, 0] → [[1], [2, 3, 4]]

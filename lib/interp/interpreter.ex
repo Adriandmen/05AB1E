@@ -396,6 +396,7 @@ defmodule Interp.Interpreter do
            "ÅΓ" -> Stack.push(stack, call_binary(fn x, y -> StrCommands.run_length_decode(to_list(x), to_integer!(to_list(y))) end, a, b, true, true))
            "Å?" -> Stack.push(stack, call_binary(fn x, y -> to_number(GeneralCommands.starts_with(x, y)) end, a, b, true, true))
            "Å¿" -> Stack.push(stack, call_binary(fn x, y -> to_number(GeneralCommands.ends_with(x, y)) end, a, b, true, true))
+           "Å¡" -> Stack.push(stack, ListCommands.split_on_truthy_indices(to_list(a), to_list(b)))
         end
 
         {new_stack, environment}
