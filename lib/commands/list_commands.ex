@@ -621,4 +621,21 @@ defmodule Commands.ListCommands do
             true -> Enum.at(list, mid)
         end
     end
+
+    def split_on_truthy_indices(a, b) do
+        Stream.zip(a, Stream.concat(b, Stream.cycle([0]))) |> Stream.chunk_while(
+            [],
+            fn {item, index}, acc ->
+                if GeneralCommands.equals(index, 1) do
+                    {:cont, Enum.reverse(acc), [item]}
+                else
+                    {:cont, [item | acc]}
+                end
+            end,
+            fn
+                [] -> {:cont, []}
+                acc -> {:cont, Enum.reverse(acc), []}
+            end
+        ) |> Stream.map(fn x -> x end)
+    end
 end

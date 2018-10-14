@@ -713,4 +713,10 @@ defmodule BinaryTest do
         assert evaluate("\"abcde\"\"Q1sTY\".Ï") == "AbcDE"
         assert evaluate("\"aBc1e\"\"Q1sTY\".Ï") == "ABc1E"
     end
+
+    test "split on truthy indices" do
+        assert evaluate("4L 0100Sï Å¡") == [[1], [2, 3, 4]]
+        assert evaluate("1234 0100 Å¡ï") == [[1], [2, 3, 4]]
+        assert evaluate("\"codegolfballoon\"ÇDü@0šÅ¡") == [[99, 111], [100, 101, 103, 111], [108], [102], [98], [97, 108], [108, 111], [111], [110]]
+    end
 end
