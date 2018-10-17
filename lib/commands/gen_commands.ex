@@ -21,7 +21,7 @@ defmodule Commands.GeneralCommands do
 
     def dehead(value) do
         cond do
-            Functions.is_iterable(value) -> Stream.drop(value, 1)
+            Functions.is_iterable(value) -> Stream.drop(value, 1) |> Stream.map(fn x -> x end)
             true -> String.slice(to_string(value), 1..-1)
         end
     end
@@ -36,20 +36,14 @@ defmodule Commands.GeneralCommands do
 
     def detail(value) do
         cond do
-            Functions.is_iterable(value) -> Stream.take(value, length(Enum.to_list(value)) - 1)
+            Functions.is_iterable(value) -> Stream.take(value, length(Enum.to_list(value)) - 1) |> Stream.map(fn x -> x end)
             true -> String.slice(to_string(value), 0..-2)
         end
     end
 
-    # def slice(value, a, b) do
-    #     cond do
-    #         is_map(value) -> Stream.cycle(value) |> Stream.drop(a) 
-    #     end
-    # end
-
     def element_at(value, index) do
         cond do
-            Functions.is_iterable(value) -> Stream.cycle(value) |> Stream.drop(index) |> Stream.take(1) |> Enum.to_list |> hd
+            Functions.is_iterable(value) -> Stream.cycle(value) |> Stream.drop(index) |> Stream.take(1) |> Enum.to_list |> List.first
             is_integer(value) -> element_at(Functions.to_non_number(value), index)
             true -> String.at(value, rem(index, String.length(value)))
         end

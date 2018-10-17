@@ -12,6 +12,7 @@ defmodule BinaryTest do
         assert evaluate("5L 6è") == 2
 
         assert evaluate("∞L 6è") == [1, 2, 3, 4, 5, 6, 7]
+        assert evaluate("5Lû¨\"programmingpuzzles\"g∍11è") == 4
     end
 
     test "addition" do
@@ -712,5 +713,11 @@ defmodule BinaryTest do
         assert evaluate("\"abcd\"\"QrsTuVW\".Ï") == "AbcD"
         assert evaluate("\"abcde\"\"Q1sTY\".Ï") == "AbcDE"
         assert evaluate("\"aBc1e\"\"Q1sTY\".Ï") == "ABc1E"
+    end
+
+    test "split on truthy indices" do
+        assert evaluate("4L 0100Sï Å¡") == [[1], [2, 3, 4]]
+        assert evaluate("1234 0100 Å¡ï") == [[1], [2, 3, 4]]
+        assert evaluate("\"codegolfballoon\"ÇDü@0šÅ¡") == [[99, 111], [100, 101, 103, 111], [108], [102], [98], [97, 108], [108, 111], [111], [110]]
     end
 end

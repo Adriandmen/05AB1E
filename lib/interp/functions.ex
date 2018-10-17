@@ -198,11 +198,23 @@ defmodule Interp.Functions do
 
     def try_default([function], exception_function), do: try_default(function, exception_function)
     def try_default([function | remaining], exception_function), do: (try do function.() rescue _ -> try_default(remaining, exception_function) end)
-    def try_default(function, exception_function), do: (try do function.() rescue x -> exception_function.(x) end)
+    def try_default(function, exception_function) do
+        cond do
+            Globals.get().debug.test -> function.()
+            true -> 
+                try do
+                    function.()
+                rescue
+                    x -> exception_function.(x) 
+                end
+        end
+    end 
 
     defp throw_test_or_return(exception, value) do
         case Globals.get().debug.test do
-            true -> raise(exception)
+            true -> 
+                IO.inspect({:caught_error, exception})
+                throw(exception)
             false -> value
         end
     end
