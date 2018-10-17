@@ -256,4 +256,10 @@ defmodule SpecialOpsTest do
         assert evaluate("10L21SÅ€0}ï") == [0, 0, 3, 0, 0, 6, 0, 0, 9, 0]
         assert evaluate("10L320SÅ€0}ï") == [0, 2, 0, 4, 5, 6, 7, 8, 9, 10]
     end
+
+    test "split on function" do
+        assert evaluate("5L.¬+5Q") == [[1, 2], [3, 4, 5]]
+        assert evaluate("10L.¬3Ö") == [[1, 2], [3, 4, 5], [6, 7, 8], [9, 10]]
+        assert evaluate("\"codegolfballoon\".¬@}J") == ["co", "dego", "l", "f", "b", "al", "lo", "o", "n"]
+    end
 end
