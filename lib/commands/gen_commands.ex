@@ -42,7 +42,10 @@ defmodule Commands.GeneralCommands do
     end
 
     def element_at(value, index) do
-        Stream.cycle(value) |> Stream.drop(index) |> Stream.take(1) |> Enum.to_list |> List.first
+        case value |> Stream.drop(index) |> Stream.take(1) |> Enum.to_list |> List.first do
+            nil -> Stream.cycle(value) |> Stream.drop(index) |> Stream.take(1) |> Enum.to_list |> List.first
+            head -> head
+        end
     end
 
     def remove_from(value, filter_chars) do
