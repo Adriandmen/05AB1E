@@ -42,11 +42,7 @@ defmodule Commands.GeneralCommands do
     end
 
     def element_at(value, index) do
-        cond do
-            Functions.is_iterable(value) -> Stream.cycle(value) |> Stream.drop(index) |> Stream.take(1) |> Enum.to_list |> List.first
-            is_integer(value) -> element_at(Functions.to_non_number(value), index)
-            true -> String.at(value, rem(index, String.length(value)))
-        end
+        Stream.cycle(value) |> Stream.drop(index) |> Stream.take(1) |> Enum.to_list |> List.first
     end
 
     def remove_from(value, filter_chars) do
