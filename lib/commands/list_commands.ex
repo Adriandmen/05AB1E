@@ -469,8 +469,8 @@ defmodule Commands.ListCommands do
             |> Stream.map(fn x -> x end)
     end
 
-    def shape_like(a, b) when Functions.is_iterable(a) and Functions.is_iterable(b), do: a |> Stream.cycle |> Stream.take(length(Enum.to_list b))
-    def shape_like(a, b) when Functions.is_iterable(a), do: a |> Stream.cycle |> Stream.take(if Functions.is_number?(b) do Functions.to_integer(b) else String.length(to_string(b)) end)
+    def shape_like(a, b) when Functions.is_iterable(a) and Functions.is_iterable(b), do: a |> Stream.cycle |> Stream.take(length(Enum.to_list b)) |> Enum.to_list
+    def shape_like(a, b) when Functions.is_iterable(a), do: a |> Stream.cycle |> Stream.take(if Functions.is_number?(b) do Functions.to_integer(b) else String.length(to_string(b)) end) |> Enum.to_list
     def shape_like(a, b), do: Enum.join(shape_like(Functions.to_list(a), b), "")
 
     def cartesian(a, b) do

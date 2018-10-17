@@ -202,7 +202,7 @@ defmodule Interp.Functions do
 
     defp throw_test_or_return(exception, value) do
         case Globals.get().debug.test do
-            true -> raise(exception)
+            true -> throw(exception)
             false -> value
         end
     end

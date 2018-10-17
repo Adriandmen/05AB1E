@@ -12,6 +12,7 @@ defmodule BinaryTest do
         assert evaluate("5L 6è") == 2
 
         assert evaluate("∞L 6è") == [1, 2, 3, 4, 5, 6, 7]
+        assert evaluate("5Lû¨\"programmingpuzzles\"g∍11è") == 4
     end
 
     test "addition" do
