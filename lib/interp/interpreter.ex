@@ -630,11 +630,7 @@ defmodule Interp.Interpreter do
                         end)
                         |> Stream.map(fn x -> x end)
 
-                result = cond do
-                    is_iterable(a) -> result
-                    true -> Enum.join(Enum.to_list(result), "")
-                end
-                {Stack.push(stack, result), environment}
+                {Stack.push(stack, normalize_to(result, a)), environment}
             
             # Filter by command
             "w" ->
@@ -663,7 +659,7 @@ defmodule Interp.Interpreter do
                             {[{eval(result), x}], new_env} end)
                         |> Enum.sort_by(fn {a, _} -> a end)
                         |> Stream.map(fn {_, x} -> x end)
-                {Stack.push(stack, result), environment}
+                {Stack.push(stack, normalize_to(result, a)), environment}
 
             # Run until a doesn't change
             "Δ" ->
@@ -676,7 +672,6 @@ defmodule Interp.Interpreter do
                 {a, stack, environment} = Stack.pop(stack, environment)
                 {result, new_env} = GeneralCommands.run_while(a, subcommands, environment, 0, [])
                 {Stack.push(stack, result), new_env}
-
 
             # Find first
             ".Δ" ->

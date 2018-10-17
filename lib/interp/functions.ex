@@ -159,7 +159,7 @@ defmodule Interp.Functions do
         stream |> Stream.map(fn x -> x end)
     end
 
-    def normalize_to(value, initial) when is_iterable(value) and not is_iterable(initial), do: value |> Enum.join("")
+    def normalize_to(value, initial) when is_iterable(value) and not is_iterable(initial), do: value |> Enum.to_list |> Enum.join("")
     def normalize_to(value, _), do: value
 
     def normalize_inner(value, initial) when is_iterable(value) and not is_iterable(initial), do: value |> Stream.map(fn x -> x |> Stream.map(fn y -> Enum.join(y, "") end) end)
