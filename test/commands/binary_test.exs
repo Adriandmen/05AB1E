@@ -332,6 +332,7 @@ defmodule BinaryTest do
         assert evaluate("1234S 5k") == -1
         assert evaluate("1234S 54Sk") == [-1, 3]
         assert evaluate("∞ 5k") == 4
+        assert evaluate("\"ƵƵÅ\"'Åk") == 2
     end
 
     test "list multiply" do

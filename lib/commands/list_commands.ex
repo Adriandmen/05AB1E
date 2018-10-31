@@ -255,9 +255,9 @@ defmodule Commands.ListCommands do
     end
 
     def index_in(value, element) when Functions.is_single?(value) do
-        case :binary.match(to_string(value), to_string(element)) do
-            :nomatch -> -1
-            {index, _} -> index
+        case String.split(to_string(value), to_string(element), parts: 2) do
+            [left, _] -> String.length(left)
+            [_] -> -1
         end
     end
     def index_in(value, element) when Functions.is_iterable(value) do
