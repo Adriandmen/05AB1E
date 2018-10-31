@@ -364,9 +364,6 @@ z       = pop a      push 1 / a
 .ø      = pop a,b    surround a with b
 .«      = pop a      push reduce right with command, usage: .«<command>
 .»      = pop a      push reduce left with command, usage: .»<command>
-.¼      = pop a      tan(a)
-.½      = pop a      sin(a)
-.¾      = pop a      cos(a)
 .Þ      = pop a      push continued a, a with the last element cycled, e.g. [1, 2, 3] .Þ --> [1, 2, 3, 3, 3, 3, ...]
 .¢      = pop a,b    push number of occurrences of b in a (non-vectorizing version)
 .ι      = pop a,b    push interleaved(a, b)
@@ -390,6 +387,7 @@ z       = pop a      push 1 / a
 .œ      = pop a      push partitions(a)
 .¬      = pop a      split a on function f, where f = [(a, b) → bool], usage: .¬<func>}
 .µ      =            reset the counter_variable to 0
+.¼      =            counter_variable -= 1
 
 
 Å!      = pop a      push a list of all factorials <= a
@@ -440,3 +438,6 @@ z       = pop a      push 1 / a
 ÅÈ      = pop a      push a list of even numbers <= a
 ÅÉ      = pop a      push a list of uneven numbers <= a
 Å¡      = pop a,b    split a on truthy indices in b, e.g. [1, 2, 3, 4], [0, 1, 0, 0] → [[1], [2, 3, 4]]
+Å¼      = pop a      tan(a)
+Å½      = pop a      sin(a)
+Å¾      = pop a      cos(a)

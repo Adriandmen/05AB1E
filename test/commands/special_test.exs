@@ -141,6 +141,7 @@ defmodule SpecialOpsTest do
         assert evaluate("¾") == 0
         assert evaluate("¼¼¼¾") == 3
         assert evaluate("1½1½0½¾") == 2
+        assert evaluate("¼¼¼¼¼.¼.¼¼.¼.¼¾") == 2
     end
 
     test "counter loop" do

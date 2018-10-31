@@ -113,6 +113,7 @@ defmodule Interp.Interpreter do
             ".Á" -> %Stack{elements: ListCommands.rotate(stack.elements, 1) |> Enum.to_list}
             ".g" -> Stack.push(stack, GeneralCommands.length_of(stack.elements))
             ".µ" -> Globals.set(%{Globals.get() | counter_variable: 0}); stack
+            ".¼" -> Globals.set(%{Globals.get() | counter_variable: Globals.get().counter_variable - 1}); stack
         end
 
         {new_stack, environment}
@@ -182,9 +183,6 @@ defmodule Interp.Interpreter do
            ".l" -> Stack.push(stack, call_unary(fn x -> to_number Regex.match?(~r/^[a-z]+$/, to_string(x)) end, a))
            ".u" -> Stack.push(stack, call_unary(fn x -> to_number Regex.match?(~r/^[A-Z]+$/, to_string(x)) end, a))
            ".p" -> Stack.push(stack, call_unary(fn x -> ListCommands.prefixes(x) end, a, true))
-           ".¼" -> Stack.push(stack, call_unary(fn x -> :math.tan(to_number(x)) end, a))
-           ".½" -> Stack.push(stack, call_unary(fn x -> :math.sin(to_number(x)) end, a))
-           ".¾" -> Stack.push(stack, call_unary(fn x -> :math.cos(to_number(x)) end, a))
            ".ï" -> Stack.push(stack, call_unary(fn x -> to_number(is_integer(to_number(x))) end, a))
            ".²" -> Stack.push(stack, call_unary(fn x -> :math.log2(to_number(x)) end, a))
            ".E" -> Stack.push(stack, call_unary(fn x -> {result, _} = Code.eval_string(to_string(x)); result end, a))
@@ -296,6 +294,9 @@ defmodule Interp.Interpreter do
            "Å≠" -> Stack.push(stack, call_unary(fn x -> ListCommands.deck_unshuffle(to_list(x)) end, a, true))
            "Åm" -> Stack.push(stack, call_unary(fn x -> IntCommands.median(Enum.to_list(to_number(to_list(x)))) end, a, true))
            "Ås" -> Stack.push(stack, call_unary(fn x -> ListCommands.middle_of(x) end, a, true))
+           "Å¼" -> Stack.push(stack, call_unary(fn x -> :math.tan(to_number(x)) end, a))
+           "Å½" -> Stack.push(stack, call_unary(fn x -> :math.sin(to_number(x)) end, a))
+           "Å¾" -> Stack.push(stack, call_unary(fn x -> :math.cos(to_number(x)) end, a))
           "Å\\" -> Stack.push(stack, MatrixCommands.left_diagonal(a))
            "Å/" -> Stack.push(stack, MatrixCommands.right_diagonal(a))
            "Åu" -> Stack.push(stack, MatrixCommands.upper_triangular_matrix(a))
