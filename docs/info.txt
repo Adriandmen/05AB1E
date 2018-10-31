@@ -389,6 +389,7 @@ z       = pop a      push 1 / a
 .£      = pop a,b    push a[:-b]
 .œ      = pop a      push partitions(a)
 .¬      = pop a      split a on function f, where f = [(a, b) → bool], usage: .¬<func>}
+.µ      =            reset the counter_variable to 0
 
 
 Å!      = pop a      push a list of all factorials <= a

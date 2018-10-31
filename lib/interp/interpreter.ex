@@ -112,6 +112,7 @@ defmodule Interp.Interpreter do
             ".À" -> %Stack{elements: ListCommands.rotate(stack.elements, -1) |> Enum.to_list}
             ".Á" -> %Stack{elements: ListCommands.rotate(stack.elements, 1) |> Enum.to_list}
             ".g" -> Stack.push(stack, GeneralCommands.length_of(stack.elements))
+            ".µ" -> Globals.set(%{Globals.get() | counter_variable: 0}); stack
         end
 
         {new_stack, environment}
