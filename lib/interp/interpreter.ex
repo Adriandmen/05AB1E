@@ -378,6 +378,7 @@ defmodule Interp.Interpreter do
            ".Q" -> Stack.push(stack, to_number(GeneralCommands.equals(a, b)))
             "Û" -> Stack.push(stack, ListCommands.remove_leading(a, b))
             "Ü" -> Stack.push(stack, ListCommands.remove_trailing(a, b))
+            "Ú" -> Stack.push(stack, ListCommands.remove_leading(ListCommands.remove_trailing(a, b), b))
             "∍" -> Stack.push(stack, ListCommands.shape_like(a, b))
             "Q" -> Stack.push(stack, to_number(if is_iterable(a) and is_iterable(b) do GeneralCommands.equals(a, b) else GeneralCommands.vectorized_equals(a, b) end))
             "Ê" -> Stack.push(stack, to_number(if is_iterable(a) and is_iterable(b) do GeneralCommands.equals(a, b) == false else call_unary(fn n -> n == false end, GeneralCommands.vectorized_equals(a, b)) end))

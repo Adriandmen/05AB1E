@@ -728,4 +728,9 @@ defmodule BinaryTest do
         assert evaluate("12S 23S 34S)ï 23Sï .K") == 1
         assert evaluate("12S 23S 34S)ï 24Sï .K") == -1
     end
+
+    test "trim leading and trailing elements" do
+        assert evaluate("11223355324221111 1Ú") == "22335532422"
+        assert evaluate("1122332231Sï 1ïÚ") == [2, 2, 3, 3, 2, 2, 3]
+    end
 end
