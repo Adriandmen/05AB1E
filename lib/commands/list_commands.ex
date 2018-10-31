@@ -66,6 +66,8 @@ defmodule Commands.ListCommands do
 
     def take_first(value, count) do
         cond do
+            count == 0 and Functions.is_iterable(value) -> []
+            count == 0 -> ""
             Functions.is_iterable(count) -> take_split(value, count)
             Functions.is_iterable(value) -> Stream.take(value, Functions.to_number(count))
             true -> String.slice(to_string(value), 0..count - 1)
