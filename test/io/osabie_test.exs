@@ -38,4 +38,11 @@ defmodule OsabieTest do
             "    a"
         ]
     end
+
+    test "run with canvas on stack" do
+        assert run_osabie("5 'a 3.Λ 11£") == [
+            "a    ",
+            " a   "
+        ]
+    end
 end

@@ -423,7 +423,7 @@ defmodule Interp.Interpreter do
            ".Λ" -> 
                 global_env = Globals.get()
                 new_canvas = Canvas.write(global_env.canvas, to_integer!(a), to_non_number(b), to_non_number(c), environment)
-                Globals.set(%{global_env | canvas: new_canvas}); Stack.push(stack, Canvas.canvas_to_string(new_canvas))
+                Globals.set(%{global_env | canvas: %{new_canvas | on_stack: true}}); Stack.push(stack, Canvas.canvas_to_string(new_canvas))
            ".:" -> Stack.push(stack, StrCommands.replace_all(a, b, c))
            ".;" -> Stack.push(stack, StrCommands.replace_first(a, b, c))
         end
