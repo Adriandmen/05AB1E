@@ -965,7 +965,7 @@ defmodule Interp.Interpreter do
                     {:if_statement, if_statement, else_statement} -> interp_if_statement(if_statement, else_statement, stack, environment)
                     {:no_op, _} -> {stack, environment}
                     {:eof, _} -> {stack, environment}
-                    x -> IO.inspect x
+                    _ -> {stack, environment}
                 end
                 interp(remaining, new_stack, new_env)
             :break -> {stack, environment}
