@@ -680,12 +680,16 @@ defmodule Interp.Interpreter do
             # Find first
             ".Δ" ->
                 {a, stack, environment} = Stack.pop(stack, environment)
-                {result, _} = to_list(a)
+                result = to_list(a)
                     |> Stream.with_index
                     |> Enum.find(-1, fn {x, index} -> 
                         result = flat_interp(subcommands, [x], %{environment | range_variable: index, range_element: x})
                         GeneralCommands.equals(result, 1) end)
-                {Stack.push(stack, result), environment}
+
+                case result do
+                    {res, _} -> {Stack.push(stack, res), environment}
+                    _ -> {Stack.push(stack, -1), environment}
+                end
             
             # Find first index
             "ÅΔ" ->
