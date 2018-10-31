@@ -328,6 +328,7 @@ z       = pop a      push 1 / a
 .i      = pop a,b    push b in a (for infinite lists that are guaranteed to be non-decreasing (allowance = 5))
 .I      = pop a,b    push the bth permutation of a
 .k      = pop a,b    push flat index of b in a
+.K      = pop a,b    push index of b in a (non-vectorizing)
 .l      = pop a      push is_lower(a)
 .L      = pop a,b    push levenshtein(a, b)
 .M      = pop a      push most frequent in a

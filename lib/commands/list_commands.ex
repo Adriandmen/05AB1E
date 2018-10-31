@@ -638,4 +638,11 @@ defmodule Commands.ListCommands do
             end
         ) |> Stream.map(fn x -> x end)
     end
+
+    def non_vectorizing_index_in(a, b) do
+        case Functions.to_list(a) |> Stream.with_index |> first_where(fn {x, _} -> GeneralCommands.equals(x, b) end) do
+            nil -> -1
+            {_, index} -> index
+        end
+    end
 end

@@ -370,6 +370,7 @@ defmodule Interp.Interpreter do
            ".Ï" -> Stack.push(stack, call_binary(fn x, y -> StrCommands.exchange_capitalization(x, y) end, a, b))
            ".ι" -> Stack.push(stack, ListCommands.interleave(to_list(a), to_list(b)))
            ".k" -> Stack.push(stack, ListCommands.flat_index_in_list(a, b))
+           ".K" -> Stack.push(stack, ListCommands.non_vectorizing_index_in(a, b))
            ".ý" -> Stack.push(stack, to_list(a) |> Stream.intersperse(b) |> Stream.map(fn x -> x end))
            ".o" -> Stack.push(stack, StrCommands.overlap(a, b))
            ".ø" -> Stack.push(stack, ListCommands.surround(a, b))

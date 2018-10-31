@@ -720,4 +720,9 @@ defmodule BinaryTest do
         assert evaluate("1234 0100 Å¡ï") == [[1], [2, 3, 4]]
         assert evaluate("\"codegolfballoon\"ÇDü@0šÅ¡") == [[99, 111], [100, 101, 103, 111], [108], [102], [98], [97, 108], [108, 111], [111], [110]]
     end
+
+    test "non vectorizing index in" do
+        assert evaluate("12S 23S 34S)ï 23Sï .K") == 1
+        assert evaluate("12S 23S 34S)ï 24Sï .K") == -1
+    end
 end
