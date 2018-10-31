@@ -141,12 +141,19 @@ defmodule SpecialOpsTest do
         assert evaluate("¾") == 0
         assert evaluate("¼¼¼¾") == 3
         assert evaluate("1½1½0½¾") == 2
+        assert evaluate("¼¼¼¼¼.¼.¼¼.¼.¼¾") == 2
     end
 
     test "counter loop" do
         assert evaluate("6µND2Öi¼}") == 12
         assert evaluate("6µND2Ö½") == 12
         assert evaluate("6µND2Ö") == 12
+    end
+
+    test "reset counter variable" do
+        assert evaluate(".µ¾") == 0
+        assert evaluate("¼¼¼¼.µ¾") == 0
+        assert evaluate("¼¼¼¼.µ¼¼¾") == 2
     end
 
     test "quit program" do

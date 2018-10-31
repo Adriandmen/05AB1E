@@ -112,6 +112,8 @@ defmodule Interp.Interpreter do
             ".À" -> %Stack{elements: ListCommands.rotate(stack.elements, -1) |> Enum.to_list}
             ".Á" -> %Stack{elements: ListCommands.rotate(stack.elements, 1) |> Enum.to_list}
             ".g" -> Stack.push(stack, GeneralCommands.length_of(stack.elements))
+            ".µ" -> Globals.set(%{Globals.get() | counter_variable: 0}); stack
+            ".¼" -> Globals.set(%{Globals.get() | counter_variable: Globals.get().counter_variable - 1}); stack
         end
 
         {new_stack, environment}
@@ -181,9 +183,6 @@ defmodule Interp.Interpreter do
            ".l" -> Stack.push(stack, call_unary(fn x -> to_number Regex.match?(~r/^[a-z]+$/, to_string(x)) end, a))
            ".u" -> Stack.push(stack, call_unary(fn x -> to_number Regex.match?(~r/^[A-Z]+$/, to_string(x)) end, a))
            ".p" -> Stack.push(stack, call_unary(fn x -> ListCommands.prefixes(x) end, a, true))
-           ".¼" -> Stack.push(stack, call_unary(fn x -> :math.tan(to_number(x)) end, a))
-           ".½" -> Stack.push(stack, call_unary(fn x -> :math.sin(to_number(x)) end, a))
-           ".¾" -> Stack.push(stack, call_unary(fn x -> :math.cos(to_number(x)) end, a))
            ".ï" -> Stack.push(stack, call_unary(fn x -> to_number(is_integer(to_number(x))) end, a))
            ".²" -> Stack.push(stack, call_unary(fn x -> :math.log2(to_number(x)) end, a))
            ".E" -> Stack.push(stack, call_unary(fn x -> {result, _} = Code.eval_string(to_string(x)); result end, a))
@@ -295,6 +294,9 @@ defmodule Interp.Interpreter do
            "Å≠" -> Stack.push(stack, call_unary(fn x -> ListCommands.deck_unshuffle(to_list(x)) end, a, true))
            "Åm" -> Stack.push(stack, call_unary(fn x -> IntCommands.median(Enum.to_list(to_number(to_list(x)))) end, a, true))
            "Ås" -> Stack.push(stack, call_unary(fn x -> ListCommands.middle_of(x) end, a, true))
+           "Å¼" -> Stack.push(stack, call_unary(fn x -> :math.tan(to_number(x)) end, a))
+           "Å½" -> Stack.push(stack, call_unary(fn x -> :math.sin(to_number(x)) end, a))
+           "Å¾" -> Stack.push(stack, call_unary(fn x -> :math.cos(to_number(x)) end, a))
           "Å\\" -> Stack.push(stack, MatrixCommands.left_diagonal(a))
            "Å/" -> Stack.push(stack, MatrixCommands.right_diagonal(a))
            "Åu" -> Stack.push(stack, MatrixCommands.upper_triangular_matrix(a))
@@ -378,6 +380,7 @@ defmodule Interp.Interpreter do
            ".Q" -> Stack.push(stack, to_number(GeneralCommands.equals(a, b)))
             "Û" -> Stack.push(stack, ListCommands.remove_leading(a, b))
             "Ü" -> Stack.push(stack, ListCommands.remove_trailing(a, b))
+            "Ú" -> Stack.push(stack, ListCommands.remove_leading(ListCommands.remove_trailing(a, b), b))
             "∍" -> Stack.push(stack, ListCommands.shape_like(a, b))
             "Q" -> Stack.push(stack, to_number(if is_iterable(a) and is_iterable(b) do GeneralCommands.equals(a, b) else GeneralCommands.vectorized_equals(a, b) end))
             "Ê" -> Stack.push(stack, to_number(if is_iterable(a) and is_iterable(b) do GeneralCommands.equals(a, b) == false else call_unary(fn n -> n == false end, GeneralCommands.vectorized_equals(a, b)) end))
@@ -420,7 +423,7 @@ defmodule Interp.Interpreter do
            ".Λ" -> 
                 global_env = Globals.get()
                 new_canvas = Canvas.write(global_env.canvas, to_integer!(a), to_non_number(b), to_non_number(c), environment)
-                Globals.set(%{global_env | canvas: new_canvas}); Stack.push(stack, Canvas.canvas_to_string(new_canvas))
+                Globals.set(%{global_env | canvas: %{new_canvas | on_stack: true}}); Stack.push(stack, Canvas.canvas_to_string(new_canvas))
            ".:" -> Stack.push(stack, StrCommands.replace_all(a, b, c))
            ".;" -> Stack.push(stack, StrCommands.replace_first(a, b, c))
         end

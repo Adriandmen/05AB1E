@@ -680,15 +680,15 @@ defmodule UnaryTest do
     end
 
     test "tan" do
-        assert_in_delta evaluate("3.1415926535.¼"), 0, 0.00000001
+        assert_in_delta evaluate("3.1415926535Å¼"), 0, 0.00000001
     end
 
     test "sin" do
-        assert_in_delta evaluate("3.1415926535.½"), 0, 0.00000001
+        assert_in_delta evaluate("3.1415926535Å½"), 0, 0.00000001
     end
 
     test "cos" do
-        assert_in_delta evaluate("3.1415926535.¾"), -1, 0.00000001
+        assert_in_delta evaluate("3.1415926535Å¾"), -1, 0.00000001
     end
     
     test "undelta" do

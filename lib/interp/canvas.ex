@@ -7,7 +7,9 @@ defmodule Interp.Canvas do
     require Interp.Functions
 
     defstruct canvas: %{},
-              cursor: [0, 0]
+              cursor: [0, 0],
+              on_stack: false
+              
 
     def is_single_direction_list?(directions) do
         case directions do

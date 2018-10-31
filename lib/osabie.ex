@@ -56,14 +56,14 @@ defmodule Osabie.CLI do
         commands = Parser.parse(Reader.read(Enum.join(Reader.read_file(file_name, encoding), "")))
         {stack, environment} = Interpreter.interp(commands, %Stack{}, %Environment{})
 
-        if Globals.get().canvas.canvas != %{} do
+        if Globals.get().canvas.canvas != %{} and Globals.get().canvas.on_stack == false do
             Output.print(Canvas.canvas_to_string(Globals.get().canvas))
-        end
-        
-        {last, _, _} = Stack.pop(stack, environment)
-        case Globals.get().printed do
-            true -> nil
-            false -> Output.print(last)
+        else
+            {last, _, _} = Stack.pop(stack, environment)
+            case Globals.get().printed do
+                true -> nil
+                false -> Output.print(last)
+            end
         end
     end
 
