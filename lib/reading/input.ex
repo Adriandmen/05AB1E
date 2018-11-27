@@ -1,8 +1,6 @@
 defmodule Reading.InputHandler do
 
     alias Interp.Globals
-    alias Interp.Functions
-    require Interp.Functions
 
     defp parse_multiline_string(chars) do
         cond do

@@ -17,7 +17,6 @@ defmodule Osabie.CLI do
     alias Interp.Interpreter
     alias Interp.Stack
     alias Interp.Environment
-    alias Interp.Functions
     alias Interp.Output
     alias Interp.Globals
     alias Interp.Canvas

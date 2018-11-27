@@ -6,7 +6,7 @@ defmodule OsabieTest do
     import TestHelper
 
     def run_osabie(code, args \\ []) do
-        String.trim_trailing(capture_io(fn -> file_test(fn file -> File.write!(file, code); Osabie.CLI.main([file | args]) end) end), "\n") |> String.split("\n")
+        String.trim_trailing(capture_io(fn -> file_test(fn file -> File.write!(file, code); CLI.main([file | args]) end) end), "\n") |> String.split("\n")
     end
 
     test "run normal program" do

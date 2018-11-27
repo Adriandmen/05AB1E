@@ -523,8 +523,8 @@ defmodule Commands.ListCommands do
 
     def integer_partitions(number), do: integer_partitions(number, [], 1)
     defp integer_partitions(0, acc, _), do: [acc |> Enum.reverse]
-    defp integer_partitions(x, acc, _) when x < 0, do: []
-    defp integer_partitions(x, acc, min_index) when min_index > x, do: []
+    defp integer_partitions(x, _, _) when x < 0, do: []
+    defp integer_partitions(x, _, min_index) when min_index > x, do: []
     defp integer_partitions(number, acc, min_index), do: min_index..number |> Enum.flat_map(fn index -> integer_partitions(number - index, [index | acc], index) end)
 
     def increasing_contains([], _), do: false
