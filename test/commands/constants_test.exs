@@ -63,6 +63,11 @@ defmodule ConstantsTest do
         assert evaluate("žƵ") == "https://www."
         assert evaluate("žÀ") == "aeiouAEIOU"
         assert evaluate("žÁ") == "aeiouyAEIOUY"
+        assert evaluate("žĆ") == "ǝʒαβγδεζηθ\nвимнтΓΔΘιΣΩ≠∊∍∞₁₂₃₄₅₆ !\"#$%&'()*+,-./0123456789" <>
+                                 ":;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrst" <>
+                                 "uvwxyz{|}~Ƶ€Λ‚ƒ„…†‡ˆ‰Š‹ŒĆŽƶĀ‘’“”•–—˜™š›œćžŸā¡¢£¤¥¦§¨©ª«¬λ®¯°" <> 
+                                 "±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëì" <>
+                                 "íîïðñòóôõö÷øùúûüýþÿ"
     end
 
     test "time based constants" do
