@@ -341,7 +341,7 @@ defmodule Interp.Interpreter do
             "Ö" -> Stack.push(stack, call_binary(fn x, y -> to_number(IntCommands.mod(to_number(x), to_number(y)) == 0) end, a, b))
             "ù" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.keep_with_length(x, to_integer!(y)) end, a, b, true, false))
             "k" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.index_in(x, y) end, a, b, true, false))
-            "и" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.list_multiply(x, to_number(y)) end, a, b, true, false))
+            "и" -> Stack.push(stack, call_binary(fn x, y -> ListCommands.list_multiply(x, to_integer(y)) end, a, b, true, false))
             "¢" -> Stack.push(stack, call_binary(fn x, y -> GeneralCommands.count(x, y) end, a, b, true, false))
             "×" -> Stack.push(stack, call_binary(fn x, y -> String.duplicate(to_string(x), to_integer!(y)) end, a, b))
             "в" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.to_base_arbitrary(to_integer!(x), to_integer!(y)) end, a, b))
