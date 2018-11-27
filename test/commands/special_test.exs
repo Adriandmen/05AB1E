@@ -269,4 +269,11 @@ defmodule SpecialOpsTest do
         assert evaluate("10L.¬3Ö") == [[1, 2], [3, 4, 5], [6, 7, 8], [9, 10]]
         assert evaluate("\"codegolfballoon\".¬@}J") == ["co", "dego", "l", "f", "b", "al", "lo", "o", "n"]
     end
+
+    test "apply function at indices" do
+        assert evaluate("\"abcd\"S 1101S ÅÏu}") == ["A", "B", "c", "D"]
+        assert evaluate("\"abcd\" 1101S ÅÏu}") == "ABcD"
+        assert evaluate("\"abcdef\" 1101S ÅÏu}") == "ABcDef"
+        assert evaluate("∞ 10Þ ÅÏ5+} 10£") == [6, 2, 8, 4, 10, 6, 12, 8, 14, 10]
+    end
 end

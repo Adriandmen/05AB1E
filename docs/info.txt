@@ -341,7 +341,8 @@ z       = pop a      push 1 / a
 .r      = pop a      push random_shuffle(a)
 .s      = pop a      push suffixes(a)
 .S      = pop a,b    push 1 if a > b, -1 if a < b, 0 if a == b 
-.u      = pop a      push is_upper(a) 
+.u      = pop a      push is_upper(a)
+.U      = pop a,b    push a with 
 .V      = pop a      run as 05AB1E code
 .w      = pop a      push the data read from the url a
 .W      = pop a      wait a milliseconds
@@ -433,6 +434,7 @@ z       = pop a      push 1 / a
 Åβ      = pop a,b    push a converted from custom base b
 Åв      = pop a,b    push a converted to custom base b
 Å²      = pop a      push is square(a)
+ÅÏ      = pop a,b    apply func to the elements in a where the index in b is truthy (1), usage ÅÏ<func>}
 Å»      = pop a      cumulative reduce left with func on a, usage: Å»<func>}
 Å«      = pop a      cumulative reduce right with func on a, usage: Å«<func>}
 ÅÈ      = pop a      push a list of even numbers <= a
