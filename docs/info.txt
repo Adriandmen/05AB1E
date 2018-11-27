@@ -216,6 +216,7 @@ z       = pop a      push 1 / a
         žƵ           push "https://www."
         žÀ           push aeiouAEIOU
         žÁ           push aeiouyAEIOUY
+        žĆ           push the 05AB1E code page
        
        
 Ÿ 24    = pop (a),b  push [a, ..., b] if b not a list, otherwise push [b[0],...,b[1],...,b[n]]
