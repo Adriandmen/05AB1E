@@ -342,6 +342,7 @@ defmodule BinaryTest do
         assert evaluate("3L 3и") == [1, 2, 3, 1, 2, 3, 1, 2, 3]
         assert evaluate("3L 0и") == []
         assert evaluate("3L 123Sи") == [[1, 2, 3], [1, 2, 3, 1, 2, 3], [1, 2, 3, 1, 2, 3, 1, 2, 3]]
+        assert evaluate("3L 3.0и") == [1, 2, 3, 1, 2, 3, 1, 2, 3]
     end
 
     test "extract each nth" do
