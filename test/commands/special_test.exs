@@ -211,6 +211,11 @@ defmodule SpecialOpsTest do
         assert evaluate("37 1λj+") == 0
     end
 
+    test "recursive list with first n flag" do
+        assert evaluate("5 1λ£+") == [1, 1, 2, 3, 5]
+        assert evaluate("234S 1λ£+") == [[1, 1], [2, 3, 5], [8, 13, 21, 34]]
+    end
+
     test "group by function" do
         assert evaluate("5L.γ4‹") == [[1, 2, 3], [4, 5]]
         assert evaluate("12345.γ4‹") == ["123", "45"]

@@ -200,6 +200,7 @@ defmodule Interp.SubprogramInterp do
 
                 {flag, subcommands} = case subcommands do
                     [{_, "j"} | remaining] -> {:contains, remaining}
+                    [{_, "£"} | remaining] -> {:first_n, remaining}
                     _ -> {:normal, subcommands}
                 end
                 
@@ -210,6 +211,9 @@ defmodule Interp.SubprogramInterp do
                     :contains -> 
                         {b, stack, environment} = Stack.pop(stack, environment)
                         {Stack.push(stack, to_number(ListCommands.increasing_contains(result, to_number(b)))), environment}
+                    :first_n ->
+                        {b, stack, environment} = Stack.pop(stack, environment)
+                        {Stack.push(stack, ListCommands.take_first(result, to_integer(b))), environment}
                 end
 
             # Group by function
