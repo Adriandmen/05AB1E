@@ -144,6 +144,7 @@ defmodule Commands.IntCommands do
     Converts the given number to the given base and returns it as a string using the characters
     from the 05AB1E code page, except for '•', which is used to decompress base-255 strings.
     """
+    def to_base(value, base) when value < 0, do: "-" <> to_base(-value, base)
     def to_base(value, base) do
         Integer.digits(value, base) |> Enum.map(fn x -> Enum.at(digits(), x) end) |> List.to_string
     end

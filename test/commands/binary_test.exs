@@ -64,6 +64,8 @@ defmodule BinaryTest do
     test "convert to base" do
         assert evaluate("55 2B") == "110111"
         assert evaluate("5545646 47B") == "16JMM"
+        assert evaluate("11 12B") == "B"
+        assert evaluate("11(12B") == "-B"
     end
 
     test "string subtraction" do
