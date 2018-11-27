@@ -4,6 +4,7 @@ defmodule Interp.NullaryInterp do
     alias Commands.ListCommands
     alias Commands.IntCommands
     alias Commands.GeneralCommands
+    alias Reading.CodePage
     use Bitwise
     
     def interp_step(op, stack, environment) do
