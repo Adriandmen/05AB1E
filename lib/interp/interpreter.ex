@@ -869,6 +869,27 @@ defmodule Interp.Interpreter do
                            |> Stream.with_index
                            |> Stream.map(fn {items, index} -> flat_interp(subcommands, items, %{environment | range_variable: index, range_element: items}) end)
                 {Stack.push(stack, ListCommands.split_on_truthy_indices(a, Stream.concat([0], result))), environment}
+
+            # Apply function at indices
+            "ÅÏ" ->
+                {b, stack, environment} = Stack.pop(stack, environment)
+                b = Stream.concat(to_list(b), Stream.cycle([0]))
+
+                {a, stack, environment} = Stack.pop(stack, environment)
+                a_list = to_list(a)
+
+                result = a_list |> Stream.zip(b)
+                                |> Stream.with_index
+                                |> Stream.map(
+                                    fn {{item, val}, index} ->
+                                        if GeneralCommands.equals(val, 1) do 
+                                            flat_interp(subcommands, [item], %{environment | range_variable: index, range_element: [item]}) 
+                                        else 
+                                            item 
+                                        end 
+                                    end)
+                
+                {Stack.push(stack, normalize_to(result, a)), environment}
         end
     end
     
