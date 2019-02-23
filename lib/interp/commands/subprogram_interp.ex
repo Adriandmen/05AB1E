@@ -1,6 +1,7 @@
 defmodule Interp.SubprogramInterp do
     alias Interp.Stack
     alias Interp.Interpreter
+    alias Interp.Globals
     alias Commands.ListCommands
     alias Commands.GeneralCommands
     import Interp.Functions
@@ -64,6 +65,7 @@ defmodule Interp.SubprogramInterp do
                             end
                         end)
                         |> Stream.map(fn x -> x end)
+                        |> Globals.lazy_safe
 
                 {Stack.push(stack, normalize_to(result, a)), environment}
             
@@ -81,6 +83,8 @@ defmodule Interp.SubprogramInterp do
                             {result, _, new_env} = Stack.pop(result_stack, new_env)
                             {[result], new_env} end)
                         |> Stream.map(fn x -> x end)
+                        |> Globals.lazy_safe
+
                 {Stack.push(stack, result), environment}
 
             # Sort by (finite lists only)
@@ -94,6 +98,8 @@ defmodule Interp.SubprogramInterp do
                             {[{eval(result), x}], new_env} end)
                         |> Enum.sort_by(fn {a, _} -> a end)
                         |> Stream.map(fn {_, x} -> x end)
+                        |> Globals.lazy_safe
+
                 {Stack.push(stack, normalize_to(result, a)), environment}
 
             # Run until a doesn't change
@@ -152,6 +158,8 @@ defmodule Interp.SubprogramInterp do
                             {result_stack, new_env} = Interpreter.interp(subcommands, %Stack{elements: [x]}, %{curr_env | range_variable: index, range_element: x})
                             {result_stack.elements, new_env} end)
                         |> Stream.map(fn x -> x end)
+                        |> Globals.lazy_safe
+
                 {Stack.push(stack, result), environment}
             
             # 2-arity map for each
@@ -166,7 +174,8 @@ defmodule Interp.SubprogramInterp do
                     is_iterable(b) -> b |> Stream.with_index |> Stream.map(fn {y, y_index} -> Interpreter.flat_interp(subcommands, [a, y], %{environment | range_variable: y_index, range_element: y}) end)
                     true -> Interpreter.flat_interp(subcommands, [a, b], environment)
                 end
-                {Stack.push(stack, result), environment}
+
+                {Stack.push(stack, Globals.lazy_safe(result)), environment}
             
             # Pairwise command
             "ü" ->
@@ -185,7 +194,7 @@ defmodule Interp.SubprogramInterp do
                     _ -> to_list(a) |> Stream.chunk_every(2, 1, :discard)
                                     |> Stream.map(fn [x, y] -> Interpreter.flat_interp(subcommands, [x, y], environment) end)
                 end
-                {Stack.push(stack, result), environment}
+                {Stack.push(stack, Globals.lazy_safe(result)), environment}
             
             # Recursive list generation
             "λ" ->
@@ -204,7 +213,7 @@ defmodule Interp.SubprogramInterp do
                     _ -> {:normal, subcommands}
                 end
                 
-                result = ListCommands.listify(0, :infinity) |> Stream.map(fn x -> GeneralCommands.recursive_program(subcommands, base_cases, x) end)
+                result = ListCommands.listify(0, :infinity) |> Stream.map(fn x -> GeneralCommands.recursive_program(subcommands, base_cases, x) end) |> Globals.lazy_safe
 
                 case flag do
                     :normal -> {Stack.push(stack, result), environment}
@@ -228,6 +237,7 @@ defmodule Interp.SubprogramInterp do
                                     to_number(result_elem)
                                 end)
                             |> Stream.map(fn x -> x |> Stream.map(fn {element, _} -> element end) end)
+                            |> Globals.lazy_safe
 
                 result = cond do
                     is_iterable(a) -> result
@@ -256,6 +266,7 @@ defmodule Interp.SubprogramInterp do
                                         end)
                                       |> Stream.map(fn {element, _} -> element end)
                                     end)
+                            |> Globals.lazy_safe
 
                 {Stack.push(stack, result), environment}
 
@@ -303,6 +314,8 @@ defmodule Interp.SubprogramInterp do
                 result = a |> Stream.chunk_every(2, 1, :discard)
                            |> Stream.with_index
                            |> Stream.map(fn {items, index} -> Interpreter.flat_interp(subcommands, items, %{environment | range_variable: index, range_element: items}) end)
+                           |> Globals.lazy_safe
+
                 {Stack.push(stack, ListCommands.split_on_truthy_indices(a, Stream.concat([0], result))), environment}
 
             # Apply function at indices
@@ -323,6 +336,7 @@ defmodule Interp.SubprogramInterp do
                                             item 
                                         end 
                                     end)
+                                |> Globals.lazy_safe
                 
                 {Stack.push(stack, normalize_to(result, a)), environment}
         end

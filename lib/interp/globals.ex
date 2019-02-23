@@ -11,7 +11,8 @@ defmodule Interp.GlobalEnvironment do
               status: :ok,
               array: [],
               printed: false,
-              debug: %{:stack => false, :local_env => false, :global_env => false, :enabled => false, :test => false}
+              debug: %{:stack => false, :local_env => false, :global_env => false, :enabled => false, :test => false},
+              lazy: true
 end
 
 defmodule Interp.Globals do
@@ -53,6 +54,14 @@ defmodule Interp.Globals do
             get_input(n)
         else
             Enum.at(get().inputs, n)
+        end
+    end
+
+    def lazy_safe(value) do
+        if get().lazy do
+            value
+        else
+            Enum.to_list value
         end
     end
 end
