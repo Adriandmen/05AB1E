@@ -19,6 +19,7 @@ defmodule Interp.Globals do
 
     alias Interp.GlobalEnvironment
     alias Reading.InputHandler
+    alias Interp.Functions
 
     def initialize do
         receive do
@@ -61,7 +62,7 @@ defmodule Interp.Globals do
         if get().lazy do
             value
         else
-            Enum.to_list value
+            Functions.eval value
         end
     end
 end
