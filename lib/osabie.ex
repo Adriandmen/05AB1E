@@ -7,7 +7,8 @@ defmodule OsabieProgramArguments do
               debug: %{:stack => false, :local_env => false, :global_env => false, :enabled => false, :test => false},
               osabie_encoded: false,
               safe_mode: false,
-              timer: false
+              timer: false,
+              no_lazy: false
 end
 
 
@@ -51,6 +52,11 @@ defmodule Osabie.CLI do
             Globals.set(%{Globals.get() | debug: parsed_args.debug})
         end
 
+        # Check if we need to apply lazy-evaluation if needed
+        if parsed_args.no_lazy do
+            Globals.set(%{Globals.get() | lazy: false})
+        end
+
         # Run the code and retrieve the last element of the stack
         commands = Parser.parse(Reader.read(Enum.join(Reader.read_file(file_name, encoding), "")))
         {stack, environment} = Interpreter.interp(commands, %Stack{}, %Environment{})
@@ -77,6 +83,7 @@ defmodule Osabie.CLI do
             :debug_stack -> normalize_args(remaining, %{parsed | debug: %{parsed.debug | enabled: true, stack: true}})
             :debug_local_env -> normalize_args(remaining, %{parsed | debug: %{parsed.debug | enabled: true, local_env: true}})
             :debug_global_env -> normalize_args(remaining, %{parsed | debug: %{parsed.debug | enabled: true, global_env: true}})
+            :no_lazy -> normalize_args(remaining, %{parsed | no_lazy: true})
         end
     end
 end
