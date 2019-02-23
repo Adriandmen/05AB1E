@@ -279,6 +279,7 @@ defmodule UnaryTest do
         assert evaluate("\"5.0\"È") == 0
         assert evaluate("\"4.01\"È") == 0
         assert evaluate("\"4.000\" 2 3)È") == [1, 1, 0]
+        assert evaluate("0 4 8 12)4/È") == [1, 0, 1, 0]
     end
 
     test "is odd" do

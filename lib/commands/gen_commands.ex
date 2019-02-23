@@ -10,6 +10,7 @@ defmodule Commands.GeneralCommands do
     alias HTTPoison
     alias Commands.ListCommands
     alias Commands.IntCommands
+    alias Commands.GeneralCommands
     require Interp.Functions
     
     def head(value) do
@@ -175,8 +176,8 @@ defmodule Commands.GeneralCommands do
         {result_stack, new_env} = Interpreter.interp(commands, %Stack{elements: [prev_result]}, %{environment | range_variable: index, range_element: prev_result})
         {result, _, new_env} = Stack.pop(result_stack, new_env)
         cond do
-            result == prev_result and prev_results == nil -> {result, new_env}
-            result == prev_result -> {prev_results |> Enum.reverse, new_env}
+            GeneralCommands.equals(prev_result, result) and prev_results == nil -> {result, new_env}
+            GeneralCommands.equals(prev_result, result) -> {prev_results |> Enum.reverse, new_env}
             prev_results == nil -> run_while(result, commands, new_env, index + 1)
             true -> run_while(result, commands, new_env, index + 1, [result | prev_results])
         end
