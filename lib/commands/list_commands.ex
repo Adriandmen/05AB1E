@@ -69,7 +69,8 @@ defmodule Commands.ListCommands do
             count == 0 and Functions.is_iterable(value) -> []
             count == 0 -> ""
             Functions.is_iterable(count) -> take_split(value, count)
-            Functions.is_iterable(value) -> Stream.take(value, Functions.to_number(count))
+            Functions.is_iterable(value) and count < 0 -> Stream.take(value, length(Enum.to_list(value)) + count) |> Stream.map(fn x -> x end)
+            Functions.is_iterable(value) -> Stream.take(value, Functions.to_number(count)) |> Stream.map(fn x -> x end)
             true -> String.slice(to_string(value), 0..count - 1)
         end
     end
