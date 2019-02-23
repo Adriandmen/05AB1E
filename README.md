@@ -65,6 +65,7 @@ In addition, you can append the following arguments before running the 05AB1E fi
 |`--debug-local-env` | Activates the **debug** flag and will print the local environment as well after each iteration. |
 |`-c` or `--osabie`|Reads the file as a file with a **05AB1E** encoding. If this flag is not activated, the file will be read as a normal **UTF-8** file.| 
 |`-t` or `--time`|Times the duration of executing the program. Given in seconds.|
+|`--no-lazy` | Disables lazy evaluation where needed. This is done because lazy evaluation can interfere with the way and order how things are printed. |
 
 **Note** that when debugging, the debug logs can become very weird and cluttered due to tail-call optimization and lazy evaluation.
 
