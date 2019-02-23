@@ -45,4 +45,18 @@ defmodule OsabieTest do
             " a   "
         ]
     end
+
+    test "run without no-lazy option" do
+        assert run_osabie("\"ab\"εXJDU}=,") == [
+            "[\"a1\", \"ba1\"]",
+            "[\"aba1\", \"baba1\"]"
+        ]
+    end
+
+    test "run with lazy option" do
+        assert run_osabie("\"ab\"εXJDU}=,", ["--no-lazy"]) == [
+            "[\"a1\", \"ba1\"]",
+            "[\"a1\", \"ba1\"]"
+        ]
+    end
 end
