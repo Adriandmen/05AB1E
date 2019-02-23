@@ -9,6 +9,7 @@ defmodule Commands.GeneralCommands do
     alias Interp.RecursiveEnvironment
     alias HTTPoison
     alias Commands.ListCommands
+    alias Commands.IntCommands
     require Interp.Functions
     
     def head(value) do
@@ -41,6 +42,7 @@ defmodule Commands.GeneralCommands do
         end
     end
 
+    def element_at(value, index) when index < 0, do: element_at(value, IntCommands.mod(index, length_of(value)))
     def element_at(value, index) do
         case value |> Stream.drop(index) |> Stream.take(1) |> Enum.to_list |> List.first do
             nil -> Stream.cycle(value) |> Stream.drop(index) |> Stream.take(1) |> Enum.to_list |> List.first
