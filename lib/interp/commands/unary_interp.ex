@@ -151,7 +151,7 @@ defmodule Interp.UnaryInterp do
             "—" -> if GeneralCommands.equals(a, 1) do Output.print(environment.range_element) end; stack
            ".M" -> a = to_list(a); Stack.push(stack, Enum.max_by(a, fn x -> Enum.count(a, fn y -> GeneralCommands.equals(x, y) end) end))
            ".m" -> a = to_list(a); Stack.push(stack, Enum.min_by(a, fn x -> Enum.count(a, fn y -> GeneralCommands.equals(x, y) end) end))
-           ".W" -> :timer.sleep(to_number(a)); stack
+           ".W" -> :timer.sleep(to_integer(a)); stack
            "\\" -> stack
 
            # Extended commands

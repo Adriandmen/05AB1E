@@ -93,7 +93,7 @@ defmodule Commands.ListCommands do
     def deltas(value) do
         cond do
             Functions.is_iterable(value) -> Stream.chunk_every(value, 2, 1, :discard) |> Stream.map(fn [x, y] -> Functions.to_number(y) - Functions.to_number(x) end)
-            true -> deltas(String.graphemes(value))
+            true -> deltas(String.graphemes(to_string(value)))
         end
     end
 

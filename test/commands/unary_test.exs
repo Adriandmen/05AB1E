@@ -250,8 +250,10 @@ defmodule UnaryTest do
 
     test "deltas" do
         assert evaluate("1234¥") == [1, 1, 1]
+        assert evaluate("1234ï¥") == [1, 1, 1]
         assert evaluate("4150¥") == [-3, 4, -5]
         assert evaluate("∞¥5£") == [1, 1, 1, 1, 1]
+        assert evaluate("10L12*€¥") == [[1], [2], [3], [4], [-6], [-5], [-4], [-3], [-1, 8], [1, -2]]
     end
 
     test "first element" do
