@@ -151,6 +151,7 @@ defmodule BinaryTest do
         assert evaluate("5L 0£") == []
         assert evaluate("TL3(£") == [1, 2, 3, 4, 5, 6, 7]
         assert evaluate("\"abcdefghij\"3(£") == "abcdefg"
+        assert evaluate("•1ýÑ•3L£") == ["1", "29", "493"]
     end
 
     test "modulo" do
