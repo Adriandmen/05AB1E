@@ -167,6 +167,11 @@ defmodule Interp.SubprogramInterp do
                 {b, stack, environment} = Stack.pop(stack, environment)
                 {a, stack, environment} = Stack.pop(stack, environment)
 
+                {a, b} = cond do
+                    is_number?(a) and is_number?(b) -> {1..to_integer!(a), 1..to_integer!(b)}
+                    true -> {a, b}
+                end
+
                 result = cond do
                     is_iterable(a) and is_iterable(b) -> a |> Stream.with_index |> Stream.map(fn {x, x_index} -> Stream.map(b |> Stream.with_index, fn {y, y_index} ->
                         Interpreter.flat_interp(subcommands, [x, y], %{environment | range_variable: [y_index, x_index], range_element: [x, y]}) end) end)
