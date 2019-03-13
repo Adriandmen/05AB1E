@@ -118,7 +118,7 @@ defmodule Interp.SpecialInterp do
                     {Stack.push(stack, Enum.reduce(to_number(b), &IntCommands.gcd_of/2)), environment}
                 else
                     {a, stack, environment} = Stack.pop(stack, environment)
-                    {Stack.push(stack, IntCommands.gcd_of(to_number(a), to_number(b))), environment}
+                    {Stack.push(stack, call_binary(fn x, y -> IntCommands.gcd_of(to_number(x), to_number(y)) end, a, b)), environment}
                 end
             ".¿" ->
                 {b, stack, environment} = Stack.pop(stack, environment)
@@ -126,7 +126,7 @@ defmodule Interp.SpecialInterp do
                     {Stack.push(stack, Enum.reduce(to_number(b), &IntCommands.lcm_of/2)), environment}
                 else
                     {a, stack, environment} = Stack.pop(stack, environment)
-                    {Stack.push(stack, IntCommands.lcm_of(to_number(a), to_number(b))), environment}
+                    {Stack.push(stack, call_binary(fn x, y -> IntCommands.lcm_of(to_number(x), to_number(y)) end, a, b)), environment}
                 end
             ".V" ->
                 {a, stack, environment} = Stack.pop(stack, environment)

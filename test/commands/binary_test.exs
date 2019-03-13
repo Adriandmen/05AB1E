@@ -378,6 +378,7 @@ defmodule BinaryTest do
         assert evaluate("8 16 36)¿") == 4
         assert evaluate("1024 32 64 128 8 256 512 24 36)¿") == 4
         assert evaluate("1475.5 615.5¿") == 0.5
+        assert evaluate("8L 4¿") == [1, 2, 1, 4, 1, 2, 1, 4]
     end
 
     test "cartesian product" do
@@ -519,6 +520,7 @@ defmodule BinaryTest do
     test "lcm of" do
         assert evaluate("1 2.¿ 3.¿ 4.¿ 5.¿ 6.¿ 7.¿ 8.¿ 9.¿ 10.¿") == 2520
         assert evaluate("10L.¿") == 2520
+        assert evaluate("8L4.¿") == [4, 4, 12, 4, 20, 12, 28, 8]
     end
 
     test "n-plicate" do
