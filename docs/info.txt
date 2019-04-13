@@ -344,10 +344,12 @@ z       = pop a      push 1 / a
 .S      = pop a,b    push 1 if a > b, -1 if a < b, 0 if a == b 
 .u      = pop a      push is_upper(a)
 .U      = pop a,b    push a with 
+.v      = pop a      push a converted from roman number
 .V      = pop a      run as 05AB1E code
 .w      = pop a      push the data read from the url a
 .W      = pop a      wait a milliseconds
 .x      = pop a,b    push the element in a closest to b (abs_difference if possible else string distance)
+.X      = pop a      push a converted to roman number
 .Z      =            wait one second
 .$      = pop a,b    push a with b elements dropped (a[b:])
 ._      = pop a,b    push a rotated b to the left
