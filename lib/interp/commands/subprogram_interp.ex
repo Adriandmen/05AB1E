@@ -215,6 +215,7 @@ defmodule Interp.SubprogramInterp do
                 {flag, subcommands} = case subcommands do
                     [{_, "j"} | remaining] -> {:contains, remaining}
                     [{_, "£"} | remaining] -> {:first_n, remaining}
+                    [{_, "è"} | remaining] -> {:at_n, remaining}
                     _ -> {:normal, subcommands}
                 end
                 
@@ -228,6 +229,9 @@ defmodule Interp.SubprogramInterp do
                     :first_n ->
                         {b, stack, environment} = Stack.pop(stack, environment)
                         {Stack.push(stack, ListCommands.take_first(result, to_integer(b))), environment}
+                    :at_n ->
+                        {b, stack, environment} = Stack.pop(stack, environment)
+                        {Stack.push(stack, GeneralCommands.element_at(result, to_integer(b))), environment}
                 end
 
             # Group by function
