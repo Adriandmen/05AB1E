@@ -135,6 +135,9 @@ defmodule BinaryTest do
         assert evaluate("2.5 3.5m") == 24.705294220065465
         assert evaluate("11.0 4.0m") == 14641
         assert evaluate("6 2/ 20 4/m") == 243.0
+        assert evaluate("T1.0m") == 10
+        assert evaluate("T1zm") == 10.0
+        assert evaluate("TÐ/m") == 10.0
     end
 
     test "take first" do
