@@ -69,7 +69,9 @@ defmodule Commands.IntCommands do
 
     ## Returns
 
-    The result of n ** k.
+    The result of n ** k. If either n or k is a floating point number, the result will
+    become a floating point number as well. Otherwise, the pow method will calculate the
+    result with arbitrary precision.
     """
     def pow(n, k) do
         cond do
@@ -78,7 +80,8 @@ defmodule Commands.IntCommands do
         end 
     end
     defp pow(_, 0, acc), do: acc
-    defp pow(n, k, acc) when k > 0 and k < 1, do: acc * :math.pow(n, k)
+    defp pow(n, k, acc) when k >= 0 and k < 1, do: acc * :math.pow(n, k)
+    defp pow(n, k, acc) when is_float(n) or is_float(k), do: acc * :math.pow(n, k)
     defp pow(n, k, acc), do: pow(n, k - 1, n * acc)
 
     # Modulo operator:

@@ -40,7 +40,7 @@ defmodule Interp.Functions do
                 new_val = String.slice(value, 1..-1)
                 -to_number(new_val)
             rescue
-                _ -> value 
+                _ -> value
             end
         else
             try do
@@ -82,20 +82,20 @@ defmodule Interp.Functions do
             true ->
                 case Integer.parse(to_string(value)) do
                     :error -> value
-                    {int, string} -> 
+                    {int, string} ->
                         cond do
                             string == "" -> int
                             Regex.match?(~r/^\.\d+$/, string) -> int
                             true -> value
                         end
-                end 
+                end
         end
     end
 
     def to_integer!(value) do
         cond do
             is_iterable(value) -> value |> Stream.map(&to_integer!/1)
-            true -> 
+            true ->
                 case to_integer(value) do
                     x when is_integer(x) -> x
                     _ -> raise("Could not convert #{value} to integer.")
@@ -114,7 +114,7 @@ defmodule Interp.Functions do
                 Float.to_string(value)
             _ when is_iterable(value) ->
                 value |> Stream.map(&to_non_number/1)
-            _ -> 
+            _ ->
                 value
         end
     end
@@ -181,7 +181,7 @@ defmodule Interp.Functions do
         try_default(fn -> func.(a) end, fn exception -> throw_test_or_return(exception, a) end)
     end
 
-    
+
     # ---------------------
     # Binary method calling
     # ---------------------
@@ -191,7 +191,7 @@ defmodule Interp.Functions do
     def call_binary(func, a, b, false, _) when is_iterable(a), do: a |> Stream.map(fn x -> call_binary(func, x, b, false, true) end)
     def call_binary(func, a, b, _, _) do
         try_default([
-            fn -> func.(a, b) end, 
+            fn -> func.(a, b) end,
             fn -> func.(b, a) end
         ], fn exception -> throw_test_or_return(exception, a) end)
     end

@@ -6,7 +6,7 @@ defmodule BinaryTest do
         assert evaluate("123§ 0è") == "1"
         assert evaluate("123ï 0è") == "1"
         assert evaluate("5L 0è") == 1
-        
+
         assert evaluate("123§ 5è") == "3"
         assert evaluate("123ï 5è") == "3"
         assert evaluate("5L 6è") == 2
@@ -134,6 +134,12 @@ defmodule BinaryTest do
         assert evaluate("1 2 3)2m") == [1, 4, 9]
         assert evaluate("2.5 3.5m") == 24.705294220065465
         assert evaluate("11.0 4.0m") == 14641
+        assert evaluate("6 2/ 20 4/m") == 243.0
+        assert evaluate("T1.0m") == 10
+        assert evaluate("T1zm") == 10
+        assert evaluate("TÐ/m") == 10
+        assert evaluate("T2zm") == 3.1622776601683795
+        assert evaluate("T0.5m") == 3.1622776601683795
     end
 
     test "take first" do
@@ -403,7 +409,7 @@ defmodule BinaryTest do
         assert evaluate("1233213S 23S¢") == [2, 3]
         assert evaluate("1232334 23¢") == 2
     end
-    
+
     test "count strict occurrences" do
         assert evaluate("1122332233S 3.¢") == 4
         assert evaluate("1122332233S 3ï.¢") == 4
@@ -420,7 +426,7 @@ defmodule BinaryTest do
         assert evaluate("12345 7(в") == [6, 6, 0, 1, 4]
         assert evaluate("15 38 12345) 7в") == [[2, 1], [5, 3], [5, 0, 6, 6, 4]]
     end
-    
+
     test "keep chars" do
         assert evaluate("12345 43Ã") == "34"
         assert evaluate("12345S 43SÃ") == ["3", "4"]
@@ -491,7 +497,7 @@ defmodule BinaryTest do
         assert evaluate("5 5.S") == 0
         assert evaluate("543S 4.S") == [1, 0, -1]
     end
-    
+
     test "surround with" do
         assert evaluate("456 1.ø") == "14561"
         assert evaluate("456 12.ø") == "1245612"
@@ -559,7 +565,7 @@ defmodule BinaryTest do
         assert evaluate("∞ 0ï.ý 8£") == [1, 0, 2, 0, 3, 0, 4, 0]
         assert evaluate("12345 0ï.ýï") == [1, 0, 2, 0, 3, 0, 4, 0, 5]
     end
-    
+
     test "non-vectorizing equals" do
         assert evaluate("123 123.Q") == 1
         assert evaluate("123 124.Q") == 0
@@ -575,7 +581,7 @@ defmodule BinaryTest do
         assert evaluate("0.128 4.ò") == 0.128
         assert evaluate("0.1 0.12 0.123 0.1234) 2.ò") == [0.1, 0.12, 0.12, 0.12]
     end
-    
+
     test "pad with spaces" do
         assert evaluate("123 5j") == "  123"
         assert evaluate("1 23 456) 5j") == ["    1", "   23", "  456"]
@@ -681,7 +687,7 @@ defmodule BinaryTest do
         assert evaluate("123 0ªï") == [1, 2, 3, 0]
         assert evaluate("345 12Sªï") == [3, 4, 5, [1, 2]]
     end
-    
+
     test "prepend to list" do
         assert evaluate("3L 0ïš") == [0, 1, 2, 3]
         assert evaluate("123 0šï") == [0, 1, 2, 3]
