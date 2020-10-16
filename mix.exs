@@ -31,7 +31,7 @@ defmodule Osabie.MixProject do
       {:memoize, "~> 1.2"},
       {:httpoison, "~> 1.2"},
       {:excoveralls, "~> 0.9.1", only: :test},
-      {:mock, "~> 0.3.0", only: :test}
+      {:mock, "~> 0.3.0"}
     ]
   end
 

@@ -2,7 +2,7 @@ defmodule UnaryTest do
     use ExUnit.Case
     alias HTTPoison
     import TestHelper
-    import Mock
+    # import Mock
 
     test "add one" do
         assert evaluate("5ï>") == 6
@@ -997,11 +997,11 @@ defmodule UnaryTest do
         assert evaluate("112233223SïÅγ)") == [[1, 2, 3, 2, 3], [2, 2, 2, 2, 1]]
     end
 
-    test "retrieve web page" do
-        with_mock HTTPoison, [get!: fn "https://codegolf.stackexchange.com/" -> %{:body => "<example body>"} end] do
-            assert evaluate("\"https://codegolf.stackexchange.com/\".w") == "<example body>"
-        end
-    end
+    # test "retrieve web page" do
+    #     with_mock HTTPoison, [get!: fn "https://codegolf.stackexchange.com/" -> %{:body => "<example body>"} end] do
+    #         assert evaluate("\"https://codegolf.stackexchange.com/\".w") == "<example body>"
+    #     end
+    # end
 
     test "deck shuffle" do
         assert evaluate("123456SïÅ=") == [1, 4, 2, 5, 3, 6]

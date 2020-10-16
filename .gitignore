@@ -29,3 +29,5 @@ run*.*
 
 # Ignore the compiled file for now
 osabie
+
+.elixir_ls/
