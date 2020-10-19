@@ -38,7 +38,8 @@ defmodule Commands.GeneralCommands do
 
     def detail(value) do
         cond do
-            Functions.is_iterable(value) -> Stream.take(value, length(Enum.to_list(value)) - 1) |> Stream.map(fn x -> x end)
+            Functions.is_iterable(value) -> 
+                value |> Enum.reverse |> tl |> Enum.reverse |> Stream.map(fn x -> x end)
             true -> String.slice(to_string(value), 0..-2)
         end
     end
@@ -46,7 +47,11 @@ defmodule Commands.GeneralCommands do
     def element_at(value, index) when index < 0, do: element_at(value, IntCommands.mod(index, length_of(value)))
     def element_at(value, index) do
         case value |> Stream.drop(index) |> Stream.take(1) |> Enum.to_list |> List.first do
-            nil -> Stream.cycle(value) |> Stream.drop(index) |> Stream.take(1) |> Enum.to_list |> List.first
+            nil -> 
+                cond do
+                    value |> length_of() == 0 -> value
+                    true -> Stream.cycle(value) |> Stream.drop(index) |> Stream.take(1) |> Enum.to_list |> List.first
+                end
             head -> head
         end
     end

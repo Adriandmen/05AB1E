@@ -246,6 +246,8 @@ defmodule UnaryTest do
         assert evaluate("\"\"¨") == ""
         assert evaluate("12345ï¨") == "1234"
         assert evaluate("5L¨") == [1, 2, 3, 4]
+        assert evaluate("1L¨") == []
+        assert evaluate("1L¨¨") == []
     end
 
     test "deltas" do

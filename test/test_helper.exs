@@ -1,4 +1,5 @@
-ExUnit.start()
+# Timeout is currently configured to 2000ms for a single set of tests.
+ExUnit.start(timeout: 2000)
 
 defmodule TestHelper do
     use ExUnit.Case
