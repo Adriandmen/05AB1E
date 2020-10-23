@@ -75,7 +75,7 @@ defmodule Interp.UnaryInterp do
            ".l" -> Stack.push(stack, call_unary(fn x -> to_number Regex.match?(~r/^[a-z]+$/, to_string(x)) end, a))
            ".u" -> Stack.push(stack, call_unary(fn x -> to_number Regex.match?(~r/^[A-Z]+$/, to_string(x)) end, a))
            ".p" -> Stack.push(stack, call_unary(fn x -> ListCommands.prefixes(x) end, a, true))
-           ".ï" -> Stack.push(stack, call_unary(fn x -> to_number(to_number(x) == to_integer(x)) end, a))
+           ".ï" -> Stack.push(stack, call_unary(fn x -> to_number(is_integer?(x)) end, a))
            ".²" -> Stack.push(stack, call_unary(fn x -> :math.log2(to_number(x)) end, a))
            ".E" -> Stack.push(stack, call_unary(fn x -> {result, _} = Code.eval_string(to_string(x)); result end, a))
            ".Ø" -> Stack.push(stack, call_unary(fn x -> IntCommands.get_prime_index(to_number(x)) end, a))
