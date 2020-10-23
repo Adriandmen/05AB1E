@@ -706,6 +706,7 @@ defmodule UnaryTest do
         assert evaluate("4(.ï") == 1
         assert evaluate("4.5.ï") == 0
         assert evaluate("4.0.ï") == 1
+        assert evaluate("3 3.0) 1/ .ï") == [1, 1]
     end
     
     test "log 2" do
