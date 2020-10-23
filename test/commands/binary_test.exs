@@ -586,6 +586,7 @@ defmodule BinaryTest do
     test "pad with spaces" do
         assert evaluate("123 5j") == "  123"
         assert evaluate("1 23 456) 5j") == ["    1", "   23", "  456"]
+        assert evaluate("1 23 456)ï 5j") == ["    1", "   23", "  456"]
     end
 
     test "non-vectorizing contains" do

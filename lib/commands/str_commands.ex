@@ -245,7 +245,8 @@ defmodule Commands.StrCommands do
     def vertical_intersected_mirror(string), do: vertical_intersected_mirror(String.split(to_string(string), "\n"))
 
     def leftpad_with(list, length, pad_char) when Functions.is_iterable(list), do: list |> Stream.map(fn x -> leftpad_with(x, length, pad_char) end)
-    def leftpad_with(string, length, pad_char), do: String.duplicate(pad_char, max(length - String.length(string), 0)) <> string
+    def leftpad_with(string, length, pad_char) when is_bitstring(string), do: String.duplicate(pad_char, max(length - String.length(string), 0)) <> string
+    def leftpad_with(value, length, pad_char), do: leftpad_with(Functions.to_non_number(value), length, pad_char)
 
     def run_length_encode(string) when not Functions.is_iterable(string), do: run_length_encode(Functions.to_list(string))
     def run_length_encode(list) do
