@@ -103,7 +103,7 @@ defmodule Interp.Functions do
         end
     end
 
-    def is_integer?(value), do: (try do is_integer(to_number(value)) catch _ -> false end)
+    def is_integer?(value), do: (to_number(value) == to_integer(value) and not(is_bitstring(to_number(value))))
     def is_number?(value), do: (try do is_number(to_number(value)) catch _ -> false end)
 
     def to_non_number(value) do
