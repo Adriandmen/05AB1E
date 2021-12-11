@@ -10,7 +10,7 @@ defmodule Osabie.MixProject do
       deps: deps(),
       escript: escript(),
       preferred_cli_env: [
-        "coveralls": :test,
+        coveralls: :test,
         "coveralls.html": :test,
         "coveralls.json": :test,
       ],
