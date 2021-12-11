@@ -39,9 +39,10 @@ defmodule Commands.StrCommands do
         replace_infinite(String.replace(a, b, c), b, c, a)
     end
     def replace_infinite(a, b, c) when Functions.is_single?(a) and Functions.is_iterable(b) and Functions.is_iterable(c), do: Enum.reduce(Stream.zip(b, c), a, fn ({from, to}, acc) -> replace_infinite(acc, from, to) end)
-    def replace_infinite(a, b, c) when Functions.is_single?(a) and Functions.is_iterable(b) and Functions.is_single?(c), do: Enum.reduce(b, a, fn (from, acc) -> replace_infinite(acc, from, c) end)
+    def replace_infinite(a, b, c) when Functions.is_single?(a) and Functions.is_iterable(b) and Functions.is_single?(c) do (case Enum.reduce(b, a, fn (from, acc) -> replace_infinite(acc, from, c) end) do; ^a -> a; x -> replace_infinite(x, b, c) end) end
     def replace_infinite(a, b, c) when Functions.is_single?(a) and Functions.is_single?(b) and Functions.is_iterable(c), do: Enum.reduce(c, a, fn (to, acc) -> replace_infinite(acc, b, to) end)
     def replace_infinite(a, b, c) when Functions.is_iterable(a), do: a |> Stream.map(fn x -> replace_infinite(x, b, c) end)
+    
     defp replace_infinite(a, b, c, acc) do (case String.replace(a, b, c) do; ^acc -> acc; x -> replace_infinite(x, b, c, a) end) end
 
     def replace_all(a, b, c) when Functions.is_single?(a) and Functions.is_single?(b) and Functions.is_single?(c) do
