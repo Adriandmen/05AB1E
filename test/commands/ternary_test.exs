@@ -31,6 +31,7 @@ defmodule TernaryTest do
         assert evaluate("1232 23S 34S:") == "1444"
         assert evaluate("12 32) 2 3:ï") == [13, 33]
         assert evaluate("12 32) 2 3‚ 4 5‚:ï") == [14, 54]
+        assert evaluate("\"<{([{{}}[<[[[<>{}]]]>[]]\" žu2ôõ:") == "<{(["
     end
 
     test "replace at index" do
