@@ -20,8 +20,8 @@ jobs:
     - name: Elixir setup
       uses: erlef/setup-beam@988e02bfe678367a02564f65ca2e37726dc0268f
       with:
-        elixir-version: '1.6.4'  # Note: outdated Elixir version, update whenever possible.
-        otp-version: '20.0'      # Note: outdated OTP version, update whenever possible.
+        elixir-version: '1.13.0'  # Note: outdated Elixir version, update whenever possible.
+        otp-version: '24.1.7'      # Note: outdated OTP version, update whenever possible.
 
     # --------------------------------------
     #  Retrieve Cached Dependencies

@@ -5,12 +5,12 @@ defmodule Osabie.MixProject do
     [
       app: :osabie,
       version: "1.0.1",
-      elixir: ">= 1.6.0",
+      elixir: ">= 1.9.0",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       escript: escript(),
       preferred_cli_env: [
-        "coveralls": :test,
+        coveralls: :test,
         "coveralls.html": :test,
         "coveralls.json": :test,
       ],
@@ -28,10 +28,10 @@ defmodule Osabie.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:memoize, "~> 1.2"},
-      {:httpoison, "~> 1.2"},
-      {:excoveralls, "~> 0.9.1", only: :test},
-      {:mock, "~> 0.3.0"}
+      {:memoize, "~> 1.4"},
+      {:httpoison, "~> 1.8"},
+      {:excoveralls, "~> 0.14.4", only: :test},
+      {:mock, "~> 0.3.7"}
     ]
   end
 

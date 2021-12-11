@@ -46,7 +46,7 @@ defmodule Interp.SpecialInterp do
                 end
             "M" ->
                 if length(stack.elements) == 0 do
-                    {a, stack, environment} = Stack.pop(stack, environment)
+                    {_a, stack, environment} = Stack.pop(stack, environment)
                     {Stack.push(stack, IntCommands.max_of(stack.elements)), environment}
                 else
                     {Stack.push(stack, IntCommands.max_of(stack.elements)), environment}

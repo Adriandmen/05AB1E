@@ -23,7 +23,7 @@ defmodule Interp.BinaryInterp do
             "*" -> Stack.push(stack, call_binary(fn x, y -> to_number(x) * to_number(y) end, a, b))
             "%" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.mod(to_number(x), to_number(y)) end, a, b))
             "&" -> Stack.push(stack, call_binary(fn x, y -> to_integer!(x) &&& to_integer!(y) end, a, b))
-            "^" -> Stack.push(stack, call_binary(fn x, y -> to_integer!(x) ^^^ to_integer!(y) end, a, b))
+            "^" -> Stack.push(stack, call_binary(fn x, y -> Bitwise.bxor(to_integer!(x), to_integer!(y)) end, a, b))
             "~" -> Stack.push(stack, call_binary(fn x, y -> to_integer!(x) ||| to_integer!(y) end, a, b))
             "B" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.to_base(to_integer!(x), to_integer!(y)) end, a, b))
             "c" -> Stack.push(stack, call_binary(fn x, y -> IntCommands.n_choose_k(to_integer!(x), to_integer!(y)) end, a, b))

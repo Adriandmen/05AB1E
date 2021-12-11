@@ -13,7 +13,6 @@ end
 
 
 defmodule Interp.Interpreter do
-    alias Reading.CodePage
     alias Interp.Stack
     alias Interp.Globals
     alias Interp.Output
