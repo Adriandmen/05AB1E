@@ -1,0 +1,54 @@
+name: Elixir CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    # --------------------------------------
+    #  Setup Phase
+    # --------------------------------------
+    - name: Elixir setup
+      uses: erlef/setup-beam@988e02bfe678367a02564f65ca2e37726dc0268f
+      with:
+        elixir-version: '1.6.4'  # Note: outdated Elixir version, update whenever possible.
+        otp-version: '20.0'      # Note: outdated OTP version, update whenever possible.
+
+    # --------------------------------------
+    #  Retrieve Cached Dependencies
+    # --------------------------------------
+    - name: Restore dependencies cache
+      uses: actions/cache@v2
+      with:
+        path: deps
+        key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+        restore-keys: ${{ runner.os }}-mix-
+
+    # --------------------------------------
+    #  Install Missing Dependencies
+    # --------------------------------------
+    - name: Install dependencies
+      run: mix deps.get
+
+    # --------------------------------------
+    #  Compile and Test
+    # --------------------------------------
+    - name: Run tests
+      env:
+        MIX_ENV: test
+      run: mix do compile, coveralls.json
+
+    # --------------------------------------
+    #  Code Coverage
+    # --------------------------------------
+    - name: Upload code coverage report
+      uses: codecov/codecov-action@v2
