@@ -29,7 +29,7 @@ A golfing language is a language that specializes in [code golf](https://en.wiki
 ### Installation
 
  1. Clone this repository (e.g. with `git clone https://github.com/Adriandmen/05AB1E.git`).
- 2. Install **Elixir 1.6.0** or higher using one of the installation options [here](https://elixir-lang.org/install.html).
+ 2. Install **Elixir 1.9.0** or higher using one of the installation options [here](https://elixir-lang.org/install.html).
  3. Install the package manager **Hex** with `mix local.hex`.
 
 ### Compilation
