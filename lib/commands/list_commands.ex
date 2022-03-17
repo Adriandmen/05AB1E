@@ -326,19 +326,19 @@ defmodule Commands.ListCommands do
     def rotate(value, shift) when shift == 0, do: value
     def rotate(value, shift) when not Functions.is_iterable(value), do: Enum.join(rotate(String.graphemes(to_string(value)), shift), "")
     def rotate(value, shift) when shift > 0 do
-        case length(Enum.to_list value) do
+        case Enum.count value do
             0 -> []
             x -> 
                 shift = rem(shift, x)
-                Stream.concat(value |> Stream.drop(shift), value |> Stream.take(shift)) |> Stream.map(fn x -> x end)
+                Stream.concat(value |> Stream.drop(shift), value |> Stream.take(shift)) |> Enum.to_list
         end
     end
     def rotate(value, shift) when shift < 0 do
-        case length(Enum.to_list value) do
+        case Enum.count value do
             0 -> []
             x ->
                 shift = rem(shift, x)
-                Stream.concat(value |> Stream.take(shift), value |> Stream.drop(shift)) |> Stream.map(fn x -> x end)
+                Stream.concat(value |> Stream.take(shift), value |> Stream.drop(shift)) |> Enum.to_list
         end
     end
 
