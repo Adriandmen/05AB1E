@@ -285,4 +285,8 @@ defmodule SpecialOpsTest do
         assert evaluate("\"abcdef\" 1101S ÅÏu}") == "ABcDef"
         assert evaluate("∞ 10Þ ÅÏ5+} 10£") == [6, 2, 8, 4, 10, 6, 12, 8, 14, 10]
     end
+
+    test "performance of repeated rotation" do
+        assert evaluate("123456789S256FÀ") == ["5", "6", "7", "8", "9", "1", "2", "3", "4"]
+    end
 end
