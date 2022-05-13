@@ -180,7 +180,7 @@ z       = pop a      push 1 / a
         žq           push pi
         žr           push e
         žs           push digits of pi
-        žt           pop digits of e
+        žt           push digits of e
         žu           push ()<>[]{}
         žv           push 16
         žw           push 32
