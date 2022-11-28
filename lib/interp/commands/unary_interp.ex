@@ -133,7 +133,7 @@ defmodule Interp.UnaryInterp do
             "ć" -> Stack.push(Stack.push(stack, GeneralCommands.dehead(a)), GeneralCommands.head(a))
             "Â" -> Stack.push(Stack.push(stack, a), if is_iterable(a) do a |> Enum.reverse else to_string(a) |> String.reverse end)
             "ê" -> Stack.push(stack, if is_iterable(a) do Enum.sort(Enum.to_list(a)) |> ListCommands.uniques else Enum.join(Enum.sort(String.graphemes(to_string(a))) |> ListCommands.uniques, "") end)
-            "{" -> Stack.push(stack, if is_iterable(a) do Enum.sort(Enum.to_list(a)) else Enum.join(Enum.sort(String.graphemes(to_string(a)))) end)
+            "{" -> Stack.push(stack, if is_iterable(a) do Enum.sort(eval(a)) else Enum.join(Enum.sort(String.graphemes(to_string(a)))) end)
             "`" -> %Stack{elements: Enum.reverse(if is_iterable(a) do Enum.to_list(a) else String.graphemes(to_string(a)) end) ++ stack.elements}
             "O" -> if is_iterable(a) do Stack.push(stack, ListCommands.sum(a)) else Stack.push(%Stack{}, ListCommands.sum(Stack.push(stack, a).elements)) end
             "Æ" -> if is_iterable(a) do Stack.push(stack, ListCommands.reduce_subtraction(a)) else Stack.push(%Stack{}, ListCommands.reduce_subtraction(Stack.push(stack, a).elements |> Enum.reverse)) end
