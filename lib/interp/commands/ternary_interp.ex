@@ -4,7 +4,6 @@ defmodule Interp.TernaryInterp do
     alias Interp.Canvas
     alias Commands.StrCommands
     import Interp.Functions
-    use Bitwise
 
     def interp_step(op, stack, environment) do
         {c, stack, environment} = Stack.pop(stack, environment)

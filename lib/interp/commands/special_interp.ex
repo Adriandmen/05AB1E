@@ -9,7 +9,6 @@ defmodule Interp.SpecialInterp do
     alias Reading.Reader
     alias Parsing.Parser
     import Interp.Functions
-    use Bitwise
     
     def interp_step(op, stack, environment) do
         case op do
@@ -33,6 +32,7 @@ defmodule Interp.SpecialInterp do
             "I" -> {Stack.push(stack, InputHandler.read_input()), environment}
             "$" -> {Stack.push(Stack.push(stack, 1), InputHandler.read_input()), environment}
             "Î" -> {Stack.push(Stack.push(stack, 0), InputHandler.read_input()), environment}
+            ".|" -> {Stack.push(stack, InputHandler.read_until_eof()), environment}
             "|" -> {Stack.push(stack, InputHandler.read_until_newline()), environment}
             "#" ->
                 {element, new_stack, environment} = Stack.pop(stack, environment)

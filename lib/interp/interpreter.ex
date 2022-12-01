@@ -24,9 +24,6 @@ defmodule Interp.Interpreter do
     alias Interp.TernaryInterp
     alias Interp.SpecialInterp
     alias Interp.SubprogramInterp
-
-    use Bitwise
-
     
     def interp_if_statement(if_statement, else_statement, stack, environment) do
         {a, stack, environment} = Stack.pop(stack, environment)
