@@ -32,6 +32,7 @@ defmodule Interp.SpecialInterp do
             "I" -> {Stack.push(stack, InputHandler.read_input()), environment}
             "$" -> {Stack.push(Stack.push(stack, 1), InputHandler.read_input()), environment}
             "Î" -> {Stack.push(Stack.push(stack, 0), InputHandler.read_input()), environment}
+            ".|" -> {Stack.push(stack, InputHandler.read_until_eof()), environment}
             "|" -> {Stack.push(stack, InputHandler.read_until_newline()), environment}
             "#" ->
                 {element, new_stack, environment} = Stack.pop(stack, environment)
