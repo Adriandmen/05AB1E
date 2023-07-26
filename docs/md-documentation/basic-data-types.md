@@ -54,7 +54,7 @@ Lists can contain all basic data types and can be inputted as such. To create a 
 
 This leaves `['1', '2', '3', '4']` on the stack. [Try it online!](https://tio.run/##MzBNTDJM/f/f0MjYJPj/fwA "05AB1E – Try It Online") 
 
-Another possiblity is to use the `<string of code points>Ç` snippet. For example, take a look at the following program:
+Another possibility is to use the `<string of code points>Ç` snippet. For example, take a look at the following program:
 
     "abcd"Ç
     
