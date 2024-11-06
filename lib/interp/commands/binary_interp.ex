@@ -5,7 +5,7 @@ defmodule Interp.BinaryInterp do
     alias Commands.IntCommands
     alias Commands.GeneralCommands
     import Interp.Functions
-    use Bitwise
+    import Bitwise
 
     def interp_step(op, stack, environment) do
         {b, stack, environment} = Stack.pop(stack, environment)
