@@ -1,4 +1,4 @@
-<p align="center"><a href="https://github.com/Adriandmen/05AB1E"><img src="https://i.stack.imgur.com/kUDMr.png"/></a></p>
+<p align="center"><a href="https://github.com/Adriandmen/05AB1E"><img src="https://i.sstatic.net/kUDMr.png"/></a></p>
 <p align="center"><a href="https://github.com/Adriandmen/05AB1E/actions/workflows/workflow.yml"><img src="https://github.com/Adriandmen/05AB1E/actions/workflows/workflow.yml/badge.svg"/></a>&nbsp;&nbsp;<a href="https://codecov.io/gh/Adriandmen/05AB1E">
   <img src="https://codecov.io/gh/Adriandmen/05AB1E/branch/master/graph/badge.svg?token=gm5kwyV17u" />
 </a></p>
