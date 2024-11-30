@@ -5,7 +5,6 @@ defmodule Interp.SubprogramInterp do
     alias Commands.ListCommands
     alias Commands.GeneralCommands
     import Interp.Functions
-    use Bitwise
     
     def interp_step(op, subcommands, stack, environment) do
         case op do

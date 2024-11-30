@@ -37,7 +37,7 @@ defmodule Interp.Functions do
 
         if is_bitstring(value) and String.starts_with?(value, "-") do
             try do
-                new_val = String.slice(value, 1..-1)
+                new_val = String.slice(value, 1..-1//1)
                 -to_number(new_val)
             rescue
                 _ -> value

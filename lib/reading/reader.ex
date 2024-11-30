@@ -70,7 +70,7 @@ defmodule Reading.Reader do
                 String.graphemes(File.read!(file_path))
             :osabie -> 
                 {_, file} = :file.open(file_path, [:read, :binary])
-                IO.binread(file, :all) |> :binary.bin_to_list |> Enum.map(fn x -> CodePage.osabie_to_utf8(x) end)
+                IO.binread(file, :eof) |> :binary.bin_to_list |> Enum.map(fn x -> CodePage.osabie_to_utf8(x) end)
         end
     end
 

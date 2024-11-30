@@ -9,7 +9,6 @@ defmodule Interp.SpecialInterp do
     alias Reading.Reader
     alias Parsing.Parser
     import Interp.Functions
-    use Bitwise
     
     def interp_step(op, stack, environment) do
         case op do

@@ -143,7 +143,7 @@ defmodule Commands.StrCommands do
         cond do
             Regex.match?(~r/^[a-zA-Z]/, string) ->
                 matches = Regex.named_captures(~r/^(?<string>[a-zA-Z].+?)(?<remaining>(\.|!|\?|$).*)/s, string)
-                sentence_case(matches["remaining"], parsed <> String.capitalize(String.slice(matches["string"], 0..0)) <> String.slice(matches["string"], 1..-1))
+                sentence_case(matches["remaining"], parsed <> String.capitalize(String.slice(matches["string"], 0..0)) <> String.slice(matches["string"], 1..-1//1))
             true ->
                 matches = Regex.named_captures(~r/^(?<string>.)(?<remaining>.*)/s, string)
                 sentence_case(matches["remaining"], parsed <> matches["string"])
@@ -236,7 +236,7 @@ defmodule Commands.StrCommands do
         string = to_string(string)
         cond do
             String.contains?(string, "\n") -> Enum.join(intersected_mirror(String.split(string, "\n")), "\n")
-            true -> string <> (string |> String.reverse |> String.slice(1..-1) |> transliterate("<>{}()[]\\/", "><}{)(][/\\"))
+            true -> string <> (string |> String.reverse |> String.slice(1..-1//1) |> transliterate("<>{}()[]\\/", "><}{)(][/\\"))
         end
     end
 

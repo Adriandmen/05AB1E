@@ -24,9 +24,6 @@ defmodule Interp.Interpreter do
     alias Interp.TernaryInterp
     alias Interp.SpecialInterp
     alias Interp.SubprogramInterp
-
-    use Bitwise
-
     
     def interp_if_statement(if_statement, else_statement, stack, environment) do
         {a, stack, environment} = Stack.pop(stack, environment)
@@ -58,7 +55,7 @@ defmodule Interp.Interpreter do
     def interp_string(string, stack, environment) do
         dissected_string = String.split(string, "ÿ")
 
-        {elements, stack, environment} = Enum.reduce(Enum.slice(dissected_string, 0..-2), {[], stack, environment}, 
+        {elements, stack, environment} = Enum.reduce(Enum.slice(dissected_string, 0..-2//1), {[], stack, environment}, 
             fn (_, {acc, curr_stack, curr_env}) ->
                 case Stack.pop(curr_stack, curr_env) do
                     nil -> {acc, curr_stack, curr_env}
@@ -70,7 +67,7 @@ defmodule Interp.Interpreter do
             elements == [] -> 
                 {Stack.push(stack, string), environment}
             true -> 
-                string = Enum.zip(Enum.slice(dissected_string, 0..-2), Stream.cycle(elements)) ++ [{hd(Enum.slice(dissected_string, -1..-1)), ""}]
+                string = Enum.zip(Enum.slice(dissected_string, 0..-2//1), Stream.cycle(elements)) ++ [{hd(Enum.slice(dissected_string, -1..-1//1)), ""}]
                        |> Enum.reduce("", fn ({a, b}, acc) -> acc <> to_string(a) <> to_string(b) end)
                 {Stack.push(stack, string), environment}
         end

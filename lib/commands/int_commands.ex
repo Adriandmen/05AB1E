@@ -471,7 +471,7 @@ defmodule Commands.IntCommands do
     defp from_roman_numeral("", number), do: number
     defp from_roman_numeral(roman, number) do
         [curr_number, curr_roman] = Enum.find(@roman_number_list, fn [_, y] -> String.starts_with?(roman, y) end)
-        from_roman_numeral(roman |> String.slice(String.length(curr_roman)..-1), number + curr_number)
+        from_roman_numeral(roman |> String.slice(String.length(curr_roman)..-1//1), number + curr_number)
     end
 
     def median([]), do: []

@@ -5,7 +5,6 @@ defmodule Interp.NullaryInterp do
     alias Commands.IntCommands
     alias Commands.GeneralCommands
     alias Reading.CodePage
-    use Bitwise
     
     def interp_step(op, stack, environment) do
         new_stack = case op do

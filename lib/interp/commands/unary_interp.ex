@@ -8,7 +8,7 @@ defmodule Interp.UnaryInterp do
     alias Commands.GeneralCommands
     alias Commands.MatrixCommands
     import Interp.Functions
-    use Bitwise
+    import Bitwise
 
     def interp_step(op, stack, environment) do
         {a, stack, environment} = Stack.pop(stack, environment)

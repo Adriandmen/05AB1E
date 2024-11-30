@@ -4,7 +4,7 @@ defmodule Reading.InputHandler do
 
     defp parse_multiline_string(chars) do
         cond do
-            String.ends_with?(chars, "\"\"\"") -> String.slice(chars, 0..-4)
+            String.ends_with?(chars, "\"\"\"") -> String.slice(chars, 0..-4//1)
             true -> chars <> "\n" <> parse_multiline_string(String.trim_trailing(IO.read(:stdio, :line), "\n"))
             :eof -> ""
         end
@@ -26,7 +26,7 @@ defmodule Reading.InputHandler do
                 Globals.set(%{global_env | inputs: global_env.inputs ++ [result]})
                 result
             String.starts_with?(input, "\"\"\"") ->
-                result = parse_multiline_string(String.slice(input, 3..-1))
+                result = parse_multiline_string(String.slice(input, 3..-1//1))
                 global_env = Globals.get()
                 Globals.set(%{global_env | inputs: global_env.inputs ++ [result]})
                 result

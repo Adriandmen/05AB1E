@@ -24,15 +24,15 @@ defmodule Commands.GeneralCommands do
     def dehead(value) do
         cond do
             Functions.is_iterable(value) -> Stream.drop(value, 1) |> Stream.map(fn x -> x end)
-            true -> String.slice(to_string(value), 1..-1)
+            true -> String.slice(to_string(value), 1..-1//1)
         end
     end
 
     def tail(value) do
         cond do
-            Functions.is_iterable(value) -> hd(Enum.slice(Enum.to_list(value), -1..-1))
+            Functions.is_iterable(value) -> hd(Enum.slice(Enum.to_list(value), -1..-1//1))
             is_integer(value) -> tail(Functions.to_non_number(value))
-            true -> String.slice(value, -1..-1)
+            true -> String.slice(value, -1..-1//1)
         end
     end
 
@@ -40,7 +40,7 @@ defmodule Commands.GeneralCommands do
         cond do
             Functions.is_iterable(value) -> 
                 value |> Enum.reverse |> tl |> Enum.reverse |> Stream.map(fn x -> x end)
-            true -> String.slice(to_string(value), 0..-2)
+            true -> String.slice(to_string(value), 0..-2//1)
         end
     end
 
@@ -98,7 +98,7 @@ defmodule Commands.GeneralCommands do
     def count(value, element) when Functions.is_iterable(value), do: value |> Enum.count(fn x -> equals(x, element) end)
     def count(value, element), do: count(value, element, 0)
     defp count("", _, count), do: count
-    defp count(value, element, count), do: count(value |> String.slice(1..-1), element, count + Functions.to_number(value |> String.starts_with?(element)))
+    defp count(value, element, count), do: count(value |> String.slice(1..-1//1), element, count + Functions.to_number(value |> String.starts_with?(element)))
 
     def strict_count(value, element) when not Functions.is_iterable(value) and not Functions.is_iterable(element), do: element |> Stream.map(fn x -> count(value, x) end)
     def strict_count(value, element) when not Functions.is_iterable(value), do: count(value, element)

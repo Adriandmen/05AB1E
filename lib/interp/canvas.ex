@@ -60,8 +60,8 @@ defmodule Interp.Canvas do
 
             true -> 
                 case List.last(parsed) do
-                    [:code, prev_op] -> parse_directions(String.slice(string, 1..-1), Enum.slice(parsed, 0..-2) ++ [[:code, prev_op <> String.first(string)]])
-                    _ -> parse_directions(String.slice(string, 1..-1), parsed ++ [[:code, String.first(string)]])
+                    [:code, prev_op] -> parse_directions(String.slice(string, 1..-1//1), Enum.slice(parsed, 0..-2//1) ++ [[:code, prev_op <> String.first(string)]])
+                    _ -> parse_directions(String.slice(string, 1..-1//1), parsed ++ [[:code, String.first(string)]])
                 end
         end
     end
