@@ -9,7 +9,7 @@
 
 **05AB1E** is a golfing language. If the name **05AB1E** were interpreted as a hexadecimal number and converted to base64, it would result into "Base". I wanted to make a language which has an advantage in base conversion, but now it is more of a general-purpose language. The name 05AB1E can be pronounced in multiple ways, such as '_osabie_', '_osable_' or even '_usable_'.
 
-You can try this language out yourself at: [Try it online!](http://05ab1e.tryitonline.net/). This interpreter is provided by [DennisMitchell](https://github.com/DennisMitchell).
+You can try this language out yourself at: [Try it online!](http://osabie.tryitonline.net/). This interpreter is provided by [DennisMitchell](https://github.com/DennisMitchell).
 
 A reference list containing all the commands/functions can be found at [_Info.txt_](https://github.com/Adriandmen/05AB1E/blob/master/docs/info.txt) or at the [_Commands Wiki page_](https://github.com/Adriandmen/05AB1E/wiki/Commands).
 
